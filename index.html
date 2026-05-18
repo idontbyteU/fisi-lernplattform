@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FISI Lernplattform</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#1D9E75;--gh:#E1F5EE;--gd:#085041;
+  --b:#0C447C;--bh:#E6F1FB;
+  --v:#3C3489;--vh:#EEEDFE;
+  --a:#854F0B;--ah:#FAEEDA;
+  --rand:#e0dfd8;--bg:#f5f5f3;--w:white;
+  --t:#1a1a18;--t2:#555;--t3:#888;
+}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--t);min-height:100vh}
+.hdr{background:var(--w);border-bottom:1px solid var(--rand);padding:1rem 1.25rem;position:sticky;top:0;z-index:100}
+.hdr-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.hdr h1{font-size:18px;font-weight:500;flex:1}
+.hdr-sub{font-size:12px;color:var(--t3)}
+.pbadge{background:var(--gh);color:var(--gd);font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.wrap{max-width:900px;margin:0 auto;padding:1rem 1rem 5rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin-bottom:1.25rem}
+.stat{background:var(--w);border:1px solid var(--rand);border-radius:12px;padding:.75rem 1rem;text-align:center}
+.stat .n{font-size:22px;font-weight:500;color:var(--g)}
+.stat .l{font-size:11px;color:var(--t3);margin-top:2px}
+.fp{background:var(--w);border:1px solid var(--rand);border-radius:12px;padding:.875rem 1rem;margin-bottom:1.25rem}
+.fp h3{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--t3);margin-bottom:.75rem}
+.frow{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:5px}
+.frow:last-child{margin-bottom:0}
+.fl{width:160px;color:var(--t2);flex-shrink:0;font-size:11px}
+.fb{flex:1;height:5px;background:var(--rand);border-radius:3px;overflow:hidden}
+.ff{height:100%;border-radius:3px;background:var(--g)}
+.fp-pct{width:32px;text-align:right;color:var(--t3);font-size:11px}
+.ib{background:var(--gh);border-left:3px solid var(--g);border-radius:0 10px 10px 0;padding:.75rem 1rem;font-size:13px;color:var(--gd);margin-bottom:1.25rem;line-height:1.5}
+.sek{display:flex;align-items:center;gap:10px;margin:1.5rem 0 .75rem}
+.sek h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);white-space:nowrap}
+.sl{flex:1;height:1px;background:var(--rand)}
+.sb{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.sb-ap1{background:var(--bh);color:var(--b)}
+.sb-ap2{background:var(--vh);color:var(--v)}
+.sb-beide{background:var(--gh);color:var(--gd)}
+.sb-ub{background:var(--ah);color:var(--a)}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:9px}
+.m{background:var(--w);border:1px solid var(--rand);border-radius:13px;padding:.875rem 1rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:3px;transition:border-color .15s,box-shadow .15s;min-height:120px;position:relative}
+.m:hover{border-color:var(--g);box-shadow:0 2px 8px rgba(29,158,117,.1)}
+.m.fertig{border-left:3px solid var(--g)}
+.m.teil{border-left:3px solid #E8A020}
+.m.offen{border-left:3px solid var(--rand);pointer-events:none}
+.m-tag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--t3)}
+.m h3{font-size:13px;font-weight:500;line-height:1.35}
+.m p{font-size:11px;color:var(--t2);line-height:1.45;flex:1}
+.m-foot{margin-top:6px;display:flex;align-items:center;gap:6px}
+.ms{font-size:11px;font-weight:500;display:flex;align-items:center;gap:4px}
+.ms::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block}
+.ms.ok{color:var(--g)}.ms.teil{color:#E8A020}.ms.nein{color:#ccc}
+.mk{margin-left:auto;font-size:10px;color:var(--t3);background:var(--bg);padding:2px 7px;border-radius:20px}
+footer{text-align:center;font-size:12px;color:var(--t3);padding:2rem 1rem;border-top:1px solid var(--rand);margin-top:1rem}
+footer a{color:var(--g);text-decoration:none}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <h1>FISI Lernplattform</h1>
+    <span class="hdr-sub">Fachinformatiker Systemintegration</span>
+    <span class="pbadge">Prüfung Sommer 2026</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="stats">
+    <div class="stat"><div class="n">1</div><div class="l">Module fertig</div></div>
+    <div class="stat"><div class="n">38</div><div class="l">Karteikarten</div></div>
+    <div class="stat"><div class="n">18</div><div class="l">Module geplant</div></div>
+    <div class="stat"><div class="n" id="tage">–</div><div class="l">Tage bis AP1</div></div>
+  </div>
+
+  <div class="fp">
+    <h3>Gesamtfortschritt</h3>
+    <div class="frow"><span class="fl">AP1 Handlungsbereiche</span><div class="fb"><div class="ff" style="width:14%"></div></div><span class="fp-pct">1 / 7</span></div>
+    <div class="frow"><span class="fl">Lernfelder Berufsschule</span><div class="fb"><div class="ff" style="width:0%"></div></div><span class="fp-pct">0 / 5</span></div>
+    <div class="frow"><span class="fl">Übungen & Berechnungen</span><div class="fb"><div class="ff" style="width:0%"></div></div><span class="fp-pct">0 / 4</span></div>
+    <div class="frow"><span class="fl">Prüfungsaufgaben</span><div class="fb"><div class="ff" style="width:0%"></div></div><span class="fp-pct">0 / 2</span></div>
+  </div>
+
+  <div class="ib">Diese Plattform wächst täglich. Grün = fertig · Gelb = in Arbeit · Grau = geplant. Neue Module kommen nach und nach hinzu.</div>
+
+  <!-- AP1 -->
+  <div class="sek"><h2>AP1 – Handlungsbereiche</h2><div class="sl"></div><span class="sb sb-ap1">Prüfungsteil 1</span></div>
+  <div class="mgrid">
+    <div class="m offen"><div class="m-tag">LB 1 · AP1</div><h3>Planen & Projektmanagement</h3><p>Netzplan, Gantt, SMART, Scrum, Lasten-/Pflichtenheft, Stakeholder</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+    <div class="m offen"><div class="m-tag">LB 2 · AP1</div><h3>Kunden & Markt</h3><p>Nutzwertanalyse, Kalkulation, Marktformen, Angebotsbewertung, Verträge</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+    <div class="m offen"><div class="m-tag">LB 3 · AP1</div><h3>IT-Systeme & Hardware</h3><p>Mainboard, RAM, RAID, USV, Cloud-Modelle, Virtualisierung, Speicher</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+    <div class="m offen"><div class="m-tag">LB 4 · AP1</div><h3>IT-Lösungen entwickeln</h3><p>UML, SQL, Schreibtischtest, Lasten-/Pflichtenheft, Softwarelebenszyklus</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+    <div class="m offen"><div class="m-tag">LB 5 · AP1</div><h3>Qualitätssicherung</h3><p>ISO 9000, PDCA-Zyklus, Testarten, Fehlerarten, Dokumentation</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+    <a class="m fertig" href="lf4_it_sicherheit.html"><div class="m-tag">LB 6 · LF4 · AP1 & AP2</div><h3>IT-Sicherheit & Datenschutz</h3><p>CIA, ISMS, DSGVO, Firewall, Malware, Verschlüsselung, Lizenzen, BSI</p><div class="m-foot"><span class="ms ok">Fertig</span><span class="mk">38 Karten</span></div></a>
+    <div class="m offen"><div class="m-tag">LB 7 · AP1</div><h3>Auftragsabschluss & Verträge</h3><p>BGB, Gewährleistung, Garantie, SLA, ITIL, Support-Level, Ticketsystem</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+  </div>
+
+  <!-- LERNFELDER -->
+  <div class="sek"><h2>Lernfelder – Berufsschule</h2><div class="sl"></div><span class="sb sb-ap2">AP2 relevant</span></div>
+  <div class="mgrid">
+    <div class="m offen"><div class="m-tag">LF 1–2</div><h3>Grundlagen IT-Berufe</h3><p>Berufsfeld, Unternehmen, Organigramme, Arbeitsrecht, Ergonomie</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+    <div class="m offen"><div class="m-tag">LF 3</div><h3>Netzwerk & Clients</h3><p>IPv4, IPv6, Subnetting, Routing, OSI, DHCP, DNS, VLAN, NAT, Topologien</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+    <div class="m offen"><div class="m-tag">LF 4</div><h3>Schutzbedarfsanalyse</h3><p>IT-Grundschutz BSI, Risikoanalyse, Schutzbedarfsfeststellung, Maßnahmen</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+    <div class="m offen"><div class="m-tag">LF 5</div><h3>Software zur Verwaltung</h3><p>Python, SQL, Datenbanken, ER-Modell, Normalisierung, Abfragen</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+    <div class="m offen"><div class="m-tag">LF 8–9</div><h3>Netzwerke & Serverdienste</h3><p>VLAN, Routing, Firewall, VPN, Active Directory, Cloud, RAID, Backup</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+  </div>
+
+  <!-- ÜBUNGEN -->
+  <div class="sek"><h2>Übungen & Berechnungen</h2><div class="sl"></div><span class="sb sb-ub">Aktiv üben</span></div>
+  <div class="mgrid">
+    <div class="m offen"><div class="m-tag">AP1 & AP2</div><h3>Einheiten & Berechnungen</h3><p>Speicher, RAM-Bandbreite, RAID-Kapazität, Subnetting, Stromkosten, Bilddaten</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+    <div class="m offen"><div class="m-tag">LF 3</div><h3>Subnetting-Trainer</h3><p>Netzadresse, Broadcast, Hosts – Magic-Number-Methode Schritt für Schritt</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+    <div class="m offen"><div class="m-tag">AP1</div><h3>Schreibtischtest-Trainer</h3><p>Trace Tables mit Schleifen und Bedingungen – im Prüfungsstil</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+    <div class="m offen"><div class="m-tag">AP1</div><h3>Nutzwertanalyse-Trainer</h3><p>Gewichtung, Bewertung, Entscheidung – Dauerbrenner in 9/9 Prüfungen</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+  </div>
+
+  <!-- PRÜFUNG -->
+  <div class="sek"><h2>Prüfungsunterlagen 2026</h2><div class="sl"></div><span class="sb sb-beide">Sommer 2026</span></div>
+  <div class="mgrid">
+    <div class="m offen"><div class="m-tag">AP1 · Sommer 2026</div><h3>AP1 – Originalprüfung</h3><p>Aufgaben mit Musterlösung, Zeitplanung, Bewertungsschlüssel</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+    <div class="m offen"><div class="m-tag">FISI · AP2 · Sommer 2026</div><h3>AP2 – GA1 & GA2 + WISO</h3><p>Ganzheitliche Aufgaben FISI mit Musterlösungen und Erklärungen</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+  </div>
+
+</div>
+
+<footer>
+  FISI Lernplattform · <a href="https://github.com/idontbyteU/fisi-lernplattform" target="_blank">github.com/idontbyteU</a> · wird täglich erweitert
+</footer>
+
+<script>
+const p=new Date('2026-05-25');
+const h=new Date();
+const d=Math.ceil((p-h)/(1000*60*60*24));
+document.getElementById('tage').textContent=d>0?d:'–';
+</script>
+</body>
+</html>
