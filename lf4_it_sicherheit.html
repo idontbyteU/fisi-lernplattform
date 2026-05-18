@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LF4 – IT-Sicherheit & Datenschutz</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;font-size:15px;background:#f5f5f3;color:#1a1a18;padding:0 0 5rem}
+.hdr{background:white;border-bottom:1px solid #e0dfd8;padding:.875rem 1.25rem;position:sticky;top:0;z-index:10}
+.hdr h1{font-size:17px;font-weight:500}
+.hdr p{font-size:12px;color:#666;margin-top:2px}
+.tabs{display:flex;border-bottom:1px solid #e0dfd8;background:white;overflow-x:auto}
+.tab{padding:10px 16px;font-size:13px;cursor:pointer;border:none;background:none;color:#666;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0}
+.tab.on{color:#0F6E56;border-bottom-color:#1D9E75;font-weight:500}
+.wrap{max-width:700px;margin:0 auto;padding:1rem}
+.sec{display:none}.sec.on{display:block}
+
+/* THEMEN */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:1rem}
+.tc{background:white;border:1px solid #e0dfd8;border-radius:12px;padding:10px 12px;cursor:pointer}
+.tc.on{border-color:#1D9E75;background:#E1F5EE}
+.tc .num{font-size:10px;font-weight:600;color:#1D9E75;text-transform:uppercase;margin-bottom:3px}
+.tc h3{font-size:13px;font-weight:500;margin-bottom:2px}
+.tc p{font-size:11px;color:#666;line-height:1.4}
+.tdetail{border:1px solid #e0dfd8;border-radius:12px;overflow:hidden;background:white}
+.trow{padding:10px 14px;border-bottom:1px solid #e0dfd8;font-size:13px;line-height:1.5}
+.trow:last-child{border-bottom:none}
+.trow b{color:#1a1a18;display:block;margin-bottom:2px;font-weight:500}
+.trow span{color:#555}
+
+/* KARTEIKARTEN */
+.fbar{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:.875rem}
+.fbtn{padding:5px 11px;font-size:12px;border-radius:20px;cursor:pointer;border:1px solid #ccc;background:none;color:#666}
+.fbtn.on{background:#E1F5EE;color:#04342C;border-color:#1D9E75}
+
+/* Fortschritt */
+.prow{display:flex;align-items:center;gap:10px;margin-bottom:.5rem}
+.pbar{flex:1;height:6px;background:#e0dfd8;border-radius:3px;overflow:hidden;display:flex}
+.pfill-r{height:100%;background:#1D9E75;transition:width .3s}
+.pfill-f{height:100%;background:#E8504A;transition:width .3s}
+.pmeta{font-size:12px;color:#888;white-space:nowrap}
+.status-row{display:flex;gap:14px;margin-bottom:.875rem;font-size:12px}
+.s-item{display:flex;align-items:center;gap:5px;color:#666}
+.s-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.s-dot.r{background:#1D9E75}.s-dot.f{background:#E8504A}.s-dot.o{background:#ccc}
+
+/* KARTE */
+.card{background:white;border:2px solid #e0dfd8;border-radius:14px;padding:1.5rem 1.25rem;min-height:175px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;margin-bottom:.75rem;transition:border-color .2s}
+.card.flipped{border-color:#1D9E75}
+.card.war-r{border-color:#1D9E75}
+.card.war-f{border-color:#E8504A}
+.side{position:absolute;top:11px;left:13px;font-size:10px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.5px}
+.side.ans{color:#1D9E75}
+.cbadge{position:absolute;top:11px;right:13px;font-size:10px;padding:2px 8px;background:#f1efe8;color:#666;border-radius:20px}
+.cnum{position:absolute;bottom:11px;right:13px;font-size:10px;color:#bbb}
+.cq{font-size:15px;font-weight:500;text-align:center;line-height:1.5;padding:0 .25rem}
+.ca{display:none;font-size:13px;color:#444;text-align:left;line-height:1.65;margin-top:12px;background:#f5f5f3;padding:12px 14px;border-radius:9px;width:100%;white-space:pre-line}
+.card.flipped .ca{display:block}
+
+/* BEWERTUNG */
+.flip-hint{text-align:center;font-size:13px;color:#aaa;margin-bottom:.75rem}
+.bewertung{display:none;gap:10px;margin-bottom:.75rem}
+.bewertung.show{display:flex}
+.btn-f{flex:1;padding:12px;font-size:14px;font-weight:500;border:none;border-radius:10px;cursor:pointer;background:#FCEBEB;color:#791F1F}
+.btn-r{flex:1;padding:12px;font-size:14px;font-weight:500;border:none;border-radius:10px;cursor:pointer;background:#E1F5EE;color:#085041}
+
+/* NAV */
+.nav-row{display:flex;gap:8px;justify-content:center}
+.nav-row button{padding:8px 18px;font-size:13px;border:1px solid #ccc;border-radius:8px;background:white;cursor:pointer}
+
+/* ERGEBNIS */
+.result{background:white;border:1px solid #e0dfd8;border-radius:14px;padding:2rem 1.25rem;text-align:center;display:none}
+.result .big{font-size:40px;font-weight:500;margin-bottom:.5rem}
+.result .big.gut{color:#1D9E75}.result .big.ok{color:#E8A020}.result .big.schlecht{color:#E8504A}
+.result .msg{font-size:14px;color:#666;margin-bottom:1.5rem;line-height:1.5}
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.5rem}
+.score-cell{background:#f5f5f3;border-radius:10px;padding:10px 8px}
+.score-cell .n{font-size:22px;font-weight:500}
+.score-cell .l{font-size:11px;color:#666;margin-top:2px}
+.result-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.result-btns button{padding:10px 20px;font-size:13px;border:1px solid #ccc;border-radius:9px;background:white;cursor:pointer}
+.btn-wdh{background:#1D9E75 !important;color:white !important;border-color:#1D9E75 !important}
+
+/* TABELLEN */
+table{width:100%;font-size:13px;border-collapse:collapse;background:white;border-radius:12px;overflow:hidden;border:1px solid #e0dfd8}
+th{text-align:left;padding:8px 10px;background:#f5f5f3;font-weight:500;font-size:11px;color:#666}
+td{padding:9px 10px;border-bottom:1px solid #e0dfd8;vertical-align:top;line-height:1.5}
+tr:last-child td{border-bottom:none}
+.g{font-weight:500;color:#1a1a18;white-space:nowrap}
+.frage{font-size:12px;color:#0F6E56;font-style:italic}
+.ib{background:#E1F5EE;border-left:3px solid #1D9E75;border-radius:0 8px 8px 0;padding:9px 14px;font-size:13px;color:#085041;margin-bottom:1rem}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>LF4 – IT-Sicherheit & Datenschutz</h1>
+  <p>Schutzziele · ISMS · DSGVO · Firewall · Malware · Lizenzen</p>
+</div>
+<div class="tabs">
+  <button class="tab on" onclick="st('themen',this)">Themen</button>
+  <button class="tab" onclick="st('karten',this)">Karteikarten</button>
+  <button class="tab" onclick="st('gesetze',this)">Gesetze</button>
+  <button class="tab" onclick="st('dsgvo',this)">DSGVO</button>
+</div>
+<div class="wrap">
+
+<!-- THEMEN -->
+<div id="themen" class="sec on">
+  <div class="tgrid">
+    <div class="tc on" onclick="showT(0,this)"><div class="num">T1</div><h3>CIA-Schutzziele</h3><p>Vertraulichkeit, Integrität, Verfügbarkeit</p></div>
+    <div class="tc" onclick="showT(1,this)"><div class="num">T2</div><h3>ISMS & PDCA</h3><p>Komponenten, Rollen, Phasen</p></div>
+    <div class="tc" onclick="showT(2,this)"><div class="num">T3</div><h3>IT-Grundschutz</h3><p>BSI, 8 Schritte, Schutzbedarf</p></div>
+    <div class="tc" onclick="showT(3,this)"><div class="num">T4</div><h3>Firewall-Typen</h3><p>Stateless, Stateful, DPI, NGFW</p></div>
+    <div class="tc" onclick="showT(4,this)"><div class="num">T5</div><h3>Proxy & VPN</h3><p>Forward/Reverse, Unterschiede</p></div>
+    <div class="tc" onclick="showT(5,this)"><div class="num">T6</div><h3>Verschlüsselung</h3><p>Symmetrisch, Hash, 2FA, TLS</p></div>
+    <div class="tc" onclick="showT(6,this)"><div class="num">T7</div><h3>Malware</h3><p>Virus, Wurm, Trojaner, Ransomware</p></div>
+    <div class="tc" onclick="showT(7,this)"><div class="num">T8</div><h3>Datensicherung</h3><p>Voll, inkrementell, 3-2-1-Regel</p></div>
+    <div class="tc" onclick="showT(8,this)"><div class="num">T9</div><h3>Lizenzen</h3><p>EULA, OEM, Open Source</p></div>
+  </div>
+  <div id="tdetail" class="tdetail"></div>
+</div>
+
+<!-- KARTEIKARTEN -->
+<div id="karten" class="sec">
+  <div class="fbar">
+    <button class="fbtn on" onclick="filt('all',this)">Alle</button>
+    <button class="fbtn" onclick="filt('cia',this)">CIA</button>
+    <button class="fbtn" onclick="filt('isms',this)">ISMS</button>
+    <button class="fbtn" onclick="filt('dsgvo',this)">DSGVO</button>
+    <button class="fbtn" onclick="filt('fw',this)">Firewall</button>
+    <button class="fbtn" onclick="filt('krypto',this)">Krypto</button>
+    <button class="fbtn" onclick="filt('malware',this)">Malware</button>
+    <button class="fbtn" onclick="filt('backup',this)">Backup</button>
+    <button class="fbtn" onclick="filt('lizenz',this)">Lizenzen</button>
+  </div>
+
+  <div class="prow">
+    <div class="pbar">
+      <div class="pfill-r" id="pfill-r" style="width:0%"></div>
+      <div class="pfill-f" id="pfill-f" style="width:0%"></div>
+    </div>
+    <div class="pmeta" id="pmeta">1 / 1</div>
+  </div>
+  <div class="status-row">
+    <div class="s-item"><div class="s-dot r"></div><span id="cnt-r">0 richtig</span></div>
+    <div class="s-item"><div class="s-dot f"></div><span id="cnt-f">0 falsch</span></div>
+    <div class="s-item"><div class="s-dot o"></div><span id="cnt-o">0 offen</span></div>
+  </div>
+
+  <div class="card" id="fc" onclick="flipCard()">
+    <span class="side" id="cside">Frage – antippen zum Umdrehen</span>
+    <div class="cq" id="cq"></div>
+    <div class="ca" id="ca"></div>
+    <span class="cbadge" id="cbadge"></span>
+    <span class="cnum" id="cnum"></span>
+  </div>
+
+  <p class="flip-hint" id="flip-hint">Karte umdrehen, dann bewerten ↓</p>
+  <div class="bewertung" id="bewertung">
+    <button class="btn-f" onclick="bewerte(false)">✗ &nbsp;Falsch</button>
+    <button class="btn-r" onclick="bewerte(true)">✓ &nbsp;Richtig</button>
+  </div>
+
+  <div class="nav-row" id="nav-row">
+    <button onclick="prev()">← Zurück</button>
+    <button onclick="shuf()">🔀 Mischen</button>
+  </div>
+
+  <div class="result" id="result">
+    <div class="big" id="res-pct"></div>
+    <div class="msg" id="res-msg"></div>
+    <div class="score-grid">
+      <div class="score-cell"><div class="n" id="res-r" style="color:#1D9E75"></div><div class="l">Richtig</div></div>
+      <div class="score-cell"><div class="n" id="res-f" style="color:#E8504A"></div><div class="l">Falsch</div></div>
+      <div class="score-cell"><div class="n" id="res-t"></div><div class="l">Gesamt</div></div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-wdh" id="btn-wdh" onclick="wiederhole()"></button>
+      <button onclick="neustart()">↺ Alle nochmal</button>
+    </div>
+  </div>
+</div>
+
+<!-- GESETZE -->
+<div id="gesetze" class="sec">
+  <div class="ib">Alle relevanten Gesetze und Normen für LF4</div>
+  <table>
+    <tr><th>Kürzel</th><th>Bedeutung</th></tr>
+    <tr><td class="g">BSI</td><td>Zentrale Cybersicherheitsbehörde des Bundes. Veröffentlicht IT-Grundschutz, Warnungen, Standards.</td></tr>
+    <tr><td class="g">DSGVO</td><td>EU-Datenschutz-Grundverordnung. Schutz personenbezogener Daten. Gilt EU-weit seit Mai 2018.</td></tr>
+    <tr><td class="g">BDSG</td><td>Bundesdatenschutzgesetz. Konkretisiert die DSGVO für Deutschland.</td></tr>
+    <tr><td class="g">NIS-2</td><td>EU-Richtlinie zur Cybersicherheit. Cybersicherheit wird Aufgabe der Leitungsebene.</td></tr>
+    <tr><td class="g">BSI-KritisV</td><td>Bestimmt kritische Infrastrukturen (Energie, Wasser, Gesundheit) und deren Schutzpflichten.</td></tr>
+    <tr><td class="g">TKG</td><td>Telekommunikationsgesetz. Sicherheitspflichten für TK-Anbieter nach „Stand der Technik".</td></tr>
+    <tr><td class="g">DDG</td><td>Digitale-Dienste-Gesetz. Regelt Online-Plattformen. Setzt EU Digital Services Act um.</td></tr>
+    <tr><td class="g">EU AI Act</td><td>KI-Verordnung. Regelt KI-Systeme nach Risikostufen: verboten / Hochrisiko / geringes Risiko.</td></tr>
+    <tr><td class="g">ISO 27001</td><td>Zertifizierungsnorm für ISMS. Drei Sichten: Governance, Risiko, Compliance.</td></tr>
+    <tr><td class="g">UrhG</td><td>Urheberrechtsgesetz. Schützt Quellcode, Dokumentation und Anwendungsdesign.</td></tr>
+  </table>
+</div>
+
+<!-- DSGVO -->
+<div id="dsgvo" class="sec">
+  <div class="ib">Wichtige DSGVO-Artikel – mit der Kernfrage dahinter</div>
+  <table>
+    <tr><th>Art.</th><th>Inhalt</th><th>Kernfrage</th></tr>
+    <tr><td class="g">Art. 5</td><td>Grundsätze: Zweckbindung, Datenminimierung, Richtigkeit, Speicherbegrenzung, Integrität & Vertraulichkeit</td><td class="frage">Dürfen diese Daten so verarbeitet werden?</td></tr>
+    <tr><td class="g">Art. 24</td><td>Verantwortung und Nachweispflicht (Accountability)</td><td class="frage">Kann die Organisation Datenschutz nachweisen?</td></tr>
+    <tr><td class="g">Art. 25</td><td>Privacy by Design & Privacy by Default</td><td class="frage">War Datenschutz schon bei der Planung dabei?</td></tr>
+    <tr><td class="g">Art. 30</td><td>Verzeichnis von Verarbeitungstätigkeiten (VVT)</td><td class="frage">Welche Daten werden warum und wie lange verarbeitet?</td></tr>
+    <tr><td class="g">Art. 32</td><td>Technisch-Organisatorische Maßnahmen (TOM)</td><td class="frage">Sind CIA-Ziele angemessen geschützt?</td></tr>
+    <tr><td class="g">Art. 33</td><td>Meldung von Datenpannen binnen 72 Stunden</td><td class="frage">Muss die Datenpanne gemeldet werden?</td></tr>
+    <tr><td class="g">Art. 34</td><td>Benachrichtigung der betroffenen Personen</td><td class="frage">Müssen auch die Betroffenen informiert werden?</td></tr>
+    <tr><td class="g">Rechte</td><td>Auskunft · Berichtigung · Löschung · Einschränkung · Widerspruch · Datenübertragbarkeit</td><td class="frage">Welche Rechte hat eine betroffene Person?</td></tr>
+  </table>
+</div>
+
+</div>
+<script>
+const TD=[
+  [{b:'Vertraulichkeit',v:'Nur Berechtigte haben Zugriff. Maßnahmen: Verschlüsselung, Zugriffsrechte, Passwörter.'},{b:'Integrität',v:'Daten sind korrekt und unverändert. Nachweis durch Hash-Werte (SHA-256).'},{b:'Verfügbarkeit',v:'Systeme sind erreichbar wenn gebraucht. Maßnahmen: Redundanz, RAID, Backup, USV.'},{b:'Authentizität',v:'Echtheit des Absenders wird bestätigt. Durch Zertifikate und digitale Signaturen.'},{b:'Verbindlichkeit',v:'Handlungen können nicht abgestritten werden. Nachweis durch digitale Signaturen.'},{b:'Informationssicherheit',v:'Schutz vor unbefugtem Zugriff, Veränderung und Nichtverfügbarkeit – Organisation, Recht und IT zusammen.'}],
+  [{b:'ISMS',v:'Geordneter Rahmen für Planung, Steuerung und Verbesserung der Informationssicherheit.'},{b:'4 Komponenten',v:'Managementprinzipien · Mitarbeiter · Sicherheitsprozess · Ressourcen'},{b:'PDCA',v:'Plan → Do → Check → Act. Kontinuierlicher Verbesserungsprozess.'},{b:'Gesamtverantwortung',v:'Liegt bei der Geschäftsführung – auch bei Delegation operativer Aufgaben.'},{b:'ISB',v:'Informationssicherheitsbeauftragter: steuert Prozess, berät Leitung, untersucht Vorfälle.'},{b:'ISMS-Phasen',v:'Initiierung → Leitlinie → Organisation → Sicherheitskonzept → Umsetzung → Verbesserung'},{b:'ISO 27001',v:'Zertifizierungsnorm für ISMS. Governance-, Risiko- und Compliance-Sicht.'}],
+  [{b:'IT-Grundschutz BSI',v:'Systematische Methodik. Bausteine aus dem IT-GS-Kompendium dem Informationsverbund zuordnen.'},{b:'Schritt 1 – Geltungsbereich',v:'Welche Systeme, Prozesse und Räume werden betrachtet?'},{b:'Schritt 2 – Strukturanalyse',v:'Geschäftsprozesse, Anwendungen, IT-Systeme erfassen.'},{b:'Schritt 3 – Schutzbedarf',v:'Bewertung nach Vertraulichkeit, Integrität, Verfügbarkeit: normal / hoch / sehr hoch.'},{b:'IT-GS-Check',v:'Soll-Ist-Vergleich: erfüllt / teilweise erfüllt / nicht erfüllt.'},{b:'Risikoanalyse',v:'Bei erhöhtem Schutzbedarf: zusätzliche Risiken identifizieren und bewerten.'},{b:'Maßnahmen',v:'Sicherheitslücken priorisieren, Verantwortliche festlegen, umsetzen, dokumentieren.'}],
+  [{b:'Stateless Firewall',v:'Prüft jeden Paket-Header einzeln. Kein Zustandsgedächtnis. Schnell, aber leicht zu umgehen.'},{b:'Stateful Firewall',v:'Verfolgt Verbindungszustände in State Tables. Erkennt Kontext. Standard in Unternehmen.'},{b:'DPI Firewall',v:'Deep Packet Inspection: analysiert auch den Inhalt (Payload). Erkennt Schadsoftware.'},{b:'Application-Level',v:'OSI-Schicht 7. Prüft Anwendungsprotokolle. Blockiert z.B. SQL-Injections.'},{b:'NGFW',v:'Next Generation Firewall: DPI + Application-Level + Signaturen + Cloud-Sandboxing.'},{b:'DMZ',v:'Demilitarisierte Zone: Segment zwischen internem Netz und Internet. Öffentliche Server stehen hier.'},{b:'Host-Firewall',v:'Läuft direkt auf dem Endgerät. Kontrolliert ein- und ausgehenden Traffic.'}],
+  [{b:'Forward Proxy',v:'Schützt den Client. LAN → Internet. Sendet mit seiner eigenen IP.'},{b:'Reverse Proxy',v:'Schützt den Server. Internet → interner Server. Prüft Anfragen vor Weiterleitung.'},{b:'Proxy-Funktionen',v:'Caching · Lastenverteilung · Filterung (Blacklists) · IP-Verschleierung · Protokollierung'},{b:'VPN',v:'Verschlüsselter Tunnel. Gesamter Traffic wird verschlüsselt. Sicherer als Proxy.'},{b:'Proxy vs. VPN',v:'Proxy: pro Anwendung, keine Verschlüsselung. VPN: gesamter Traffic, verschlüsselt.'},{b:'Site-to-Site VPN',v:'Verbindet zwei Firmennetzwerke über das Internet. Für Filialverbindungen.'},{b:'Client-VPN',v:'Einzelnes Gerät verbindet sich mit dem Unternehmensnetz. Für Homeoffice.'}],
+  [{b:'Symmetrisch',v:'Ein Schlüssel. Sehr schnell. Schlüsseltausch problematisch. Beispiel: AES.'},{b:'Asymmetrisch',v:'Public Key verschlüsselt, Private Key entschlüsselt. Sicherer Schlüsseltausch. Beispiel: RSA.'},{b:'Hybrid',v:'Asymmetrisch für Schlüsseltausch, symmetrisch für Datentransfer. Beispiel: HTTPS/TLS.'},{b:'Hash',v:'Digitaler Fingerabdruck. Nicht umkehrbar. Für Integritätsprüfung. SHA-256 ist Standard.'},{b:'2FA / MFA',v:'Wissen + Besitz + Biometrie. Schutz auch bei geleaktem Passwort.'},{b:'Digitale Signatur',v:'Mit Private Key signiert, mit Public Key prüfbar. Beweist Authentizität.'},{b:'TLS',v:'Transport Layer Security: Verschlüsselt HTTPS, SMTPS, IMAPS.'}],
+  [{b:'Virus',v:'Hängt sich an Dateien. Braucht Nutzeraktion zur Verbreitung.'},{b:'Wurm',v:'Repliziert sich selbst über Netzwerke. Keine Nutzeraktion nötig.'},{b:'Trojaner',v:'Tarnt sich als nützliche Software. Öffnet Hintertüren.'},{b:'Ransomware',v:'Verschlüsselt Daten und fordert Lösegeld. Schutz: regelmäßige Backups!'},{b:'Phishing',v:'Gefälschte E-Mails/Webseiten um Zugangsdaten zu stehlen. Social Engineering.'},{b:'Spyware',v:'Überwacht heimlich Nutzeraktivitäten. Stiehlt Passwörter und Daten.'},{b:'DDoS',v:'Botnet überlastet einen Server mit Anfragen bis er zusammenbricht.'}],
+  [{b:'Vollsicherung',v:'Gesamter Datenbestand. Einfachste Wiederherstellung. Viel Speicher und Zeit.'},{b:'Inkrementell',v:'Nur Änderungen seit letzter Sicherung. Wenig Speicher. Komplexe Wiederherstellung.'},{b:'Differenziell',v:'Alle Änderungen seit letzter Vollsicherung. Mittelweg.'},{b:'3-2-1-Regel',v:'3 Kopien · 2 verschiedene Medien · 1 Kopie extern/offsite.'},{b:'RTO',v:'Recovery Time Objective: Wie lange darf die Wiederherstellung dauern?'},{b:'RPO',v:'Recovery Point Objective: Wie alt darf das letzte Backup maximal sein?'}],
+  [{b:'EULA',v:'End User License Agreement. Wird oft ohne Lesen akzeptiert.'},{b:'OEM',v:'Software an ein Gerät gebunden. Nicht auf andere Hardware übertragbar.'},{b:'Volumenlizenz / KMS',v:'Zentrale Aktivierung vieler Lizenzen. Für große Organisationen.'},{b:'Open Source',v:'Quellcode öffentlich, frei nutzbar und modifizierbar. Beispiele: Linux, Firefox.'},{b:'Freeware',v:'Kostenlos nutzbar. Quellcode nicht einsehbar. Urheberrecht beim Entwickler.'},{b:'Proprietär',v:'Closed Source, meist kostenpflichtig. Beispiele: Windows, Adobe.'},{b:'Creative Commons',v:'Ermöglicht Urhebern Werke unter definierten Bedingungen freizugeben.'}],
+];
+
+const KARTEN=[
+  {cat:'cia',q:'Was sind die drei CIA-Schutzziele?',a:'Vertraulichkeit – nur Berechtigte haben Zugriff\nIntegrität – Daten sind korrekt und unverändert\nVerfügbarkeit – Systeme sind erreichbar wenn gebraucht'},
+  {cat:'cia',q:'Wie wird Integrität von Daten technisch sichergestellt?',a:'Durch Hash-Verfahren (SHA-256). Kleinste Datenänderungen verändern den Hash stark – Manipulation wird sofort erkannt.'},
+  {cat:'cia',q:'Was ist der Unterschied zwischen Datenschutz und Datensicherheit?',a:'Datenschutz: Schutz personenbezogener Daten (rechtlich, DSGVO)\nDatensicherheit: techn./org. Maßnahmen für alle Daten (CIA-Ziele)'},
+  {cat:'cia',q:'Was ist Informationssicherheit?',a:'Schutz vor unbefugtem Zugriff, Veränderung und Nichtverfügbarkeit – nicht nur IT, sondern auch Organisation, Recht und Prozesse.'},
+  {cat:'cia',q:'Was bedeutet Authentizität als Schutzziel?',a:'Echtheit einer Quelle oder eines Kommunikationspartners wird bestätigt. Umsetzung durch Zertifikate und digitale Signaturen.'},
+  {cat:'isms',q:'Was ist ein ISMS?',a:'Informationssicherheits-Managementsystem: geordneter Rahmen für Planung, Steuerung und Verbesserung der Informationssicherheit.'},
+  {cat:'isms',q:'Was sind die 4 Komponenten eines ISMS?',a:'1. Managementprinzipien\n2. Mitarbeiter (Schulung, Rollen)\n3. Sicherheitsprozess (Risikobewertung)\n4. Ressourcen (Budget, Technik, Personal)'},
+  {cat:'isms',q:'Was bedeutet PDCA im Sicherheitsprozess?',a:'Plan – Maßnahmen planen\nDo – umsetzen\nCheck – Erfolgskontrolle\nAct – Verbesserungen einleiten\n→ Kontinuierlicher Verbesserungsprozess'},
+  {cat:'isms',q:'Wer trägt die Gesamtverantwortung für das ISMS?',a:'Die Geschäftsführung / oberste Leitungsebene – auch wenn operative Aufgaben an den ISB delegiert werden.'},
+  {cat:'isms',q:'Was macht der ISB?',a:'Steuert den Sicherheitsprozess, berät die Leitung, koordiniert Maßnahmen, untersucht Vorfälle, berichtet über den Sicherheitsstatus.'},
+  {cat:'isms',q:'Welche Phasen hat der Sicherheitsprozess nach IT-Grundschutz?',a:'1. Initiierung\n2. Leitlinie erstellen\n3. Organisation\n4. Sicherheitskonzept\n5. Umsetzung\n6. Aufrechterhaltung & Verbesserung'},
+  {cat:'dsgvo',q:'Was regelt Art. 5 DSGVO?',a:'Grundsätze der Verarbeitung:\n– Rechtmäßigkeit & Transparenz\n– Zweckbindung\n– Datenminimierung\n– Richtigkeit\n– Speicherbegrenzung\n– Integrität & Vertraulichkeit'},
+  {cat:'dsgvo',q:'Was ist Privacy by Design (Art. 25)?',a:'Datenschutz wird von Anfang an in die Technik eingebaut – nicht nachträglich hinzugefügt.'},
+  {cat:'dsgvo',q:'Was ist Privacy by Default (Art. 25)?',a:'Software und Hardware müssen bei Auslieferung datenschutzfreundlich vorkonfiguriert sein.'},
+  {cat:'dsgvo',q:'Binnen welcher Frist muss eine Datenpanne gemeldet werden?',a:'Innerhalb von 72 Stunden nach Bekanntwerden bei der Datenschutz-Aufsichtsbehörde (Art. 33 DSGVO).'},
+  {cat:'dsgvo',q:'Was ist der Unterschied zwischen Anonymisierung und Pseudonymisierung?',a:'Anonymisierung: kein Personenbezug mehr möglich, nicht rückführbar.\nPseudonymisierung: mit Zusatzwissen rückführbar.'},
+  {cat:'dsgvo',q:'Welche Betroffenenrechte gibt es nach DSGVO?',a:'Auskunft · Berichtigung · Löschung · Einschränkung · Datenübertragbarkeit · Widerspruch'},
+  {cat:'dsgvo',q:'Was regelt Art. 32 DSGVO?',a:'Sicherheit der Verarbeitung durch Technisch-Organisatorische Maßnahmen (TOM). Vertraulichkeit, Integrität, Verfügbarkeit und Belastbarkeit müssen geschützt sein.'},
+  {cat:'fw',q:'Was ist der Unterschied zwischen Stateless und Stateful Firewall?',a:'Stateless: prüft jeden Paket-Header einzeln, kein Gedächtnis.\nStateful: verfolgt Verbindungszustände – erkennt Kontext. Stateful ist sicherer.'},
+  {cat:'fw',q:'Was macht eine DPI-Firewall?',a:'Deep Packet Inspection: analysiert den Inhalt (Payload) des Pakets, nicht nur den Header. Erkennt Schadsoftware im Datenstrom.'},
+  {cat:'fw',q:'Was ist eine DMZ?',a:'Demilitarisierte Zone: Netzwerksegment zwischen internem Netz und Internet. Öffentliche Server stehen hier – getrennt vom internen Netz.'},
+  {cat:'fw',q:'Was ist eine NGFW?',a:'Next Generation Firewall: DPI + Application-Level-Filterung + Signaturen + Cloud-Sandboxing.'},
+  {cat:'fw',q:'Was ist der Unterschied zwischen Forward Proxy und Reverse Proxy?',a:'Forward Proxy: schützt den Client (LAN → Internet).\nReverse Proxy: schützt den Server (Internet → interner Server).'},
+  {cat:'krypto',q:'Was ist der Unterschied zwischen symmetrischer und asymmetrischer Verschlüsselung?',a:'Symmetrisch: ein Schlüssel, sehr schnell, Schlüsseltausch problematisch (AES).\nAsymmetrisch: Public/Private Key, sicherer Schlüsseltausch (RSA).'},
+  {cat:'krypto',q:'Wie funktioniert hybride Verschlüsselung?',a:'Asymmetrisch für den Schlüsseltausch (sicher), symmetrisch für den Datentransfer (schnell). Beispiel: HTTPS/TLS.'},
+  {cat:'krypto',q:'Wozu dienen Hash-Verfahren?',a:'Integritätsprüfung. Digitaler Fingerabdruck fester Länge. Nicht umkehrbar. Kleinste Änderungen verändern den Hash stark. SHA-256 Standard.'},
+  {cat:'krypto',q:'Was sind die drei Faktoren der Mehrfaktor-Authentifizierung?',a:'Wissen (Passwort)\nBesitz (Smartphone, Token)\nInhärenz / Biometrie (Fingerabdruck, Gesicht)'},
+  {cat:'malware',q:'Was ist der Unterschied zwischen Virus, Wurm und Trojaner?',a:'Virus: an Dateien gebunden, braucht Nutzeraktion.\nWurm: repliziert sich über Netzwerke, keine Nutzeraktion.\nTrojaner: tarnt sich als nützliche Software.'},
+  {cat:'malware',q:'Was ist Ransomware und wie schützt man sich?',a:'Verschlüsselt Daten und fordert Lösegeld.\nSchutz: Backups (3-2-1-Regel), aktuelle Patches, Mitarbeiterschulungen.'},
+  {cat:'malware',q:'Was ist Phishing?',a:'Täuschungsangriff durch gefälschte E-Mails oder Webseiten. Ziel: Zugangsdaten stehlen. Nutzt Social Engineering.'},
+  {cat:'malware',q:'Was ist ein Botnet / DDoS-Angriff?',a:'Botnet: viele infizierte Geräte werden ferngesteuert.\nDDoS: Server wird mit Anfragen überflutet bis er zusammenbricht.'},
+  {cat:'backup',q:'Was ist der Unterschied zwischen inkrementeller und differenzieller Sicherung?',a:'Inkrementell: seit letzter Sicherung → wenig Speicher, komplexe Wiederherstellung.\nDifferenziell: seit letzter Vollsicherung → mehr Speicher, einfachere Wiederherstellung.'},
+  {cat:'backup',q:'Was besagt die 3-2-1-Regel?',a:'3 Kopien der Daten\n2 verschiedene Speichermedien\n1 Kopie extern / offsite\n→ Schutz vor Ransomware, Brand, Diebstahl.'},
+  {cat:'backup',q:'Was ist der Unterschied zwischen RTO und RPO?',a:'RTO: Wie lange darf die Wiederherstellung dauern?\nRPO: Wie alt darf das letzte Backup maximal sein?'},
+  {cat:'lizenz',q:'Was ist der Unterschied zwischen Open Source und Freeware?',a:'Open Source: Quellcode öffentlich, frei nutzbar und modifizierbar (Linux).\nFreeware: kostenlos nutzbar, Quellcode nicht einsehbar (VLC).'},
+  {cat:'lizenz',q:'Was ist eine OEM-Lizenz?',a:'Software ist an ein bestimmtes Gerät gebunden. Darf nicht auf andere Hardware übertragen werden.'},
+  {cat:'lizenz',q:'Was schützt das UrhG bei Software?',a:'Quellcode, Dokumentation, Datenbanken und Anwendungsdesign. Der Urheber hat Persönlichkeits- und Verwertungsrechte.'},
+  {cat:'lizenz',q:'Was ist der Unterschied zwischen Named User License und Concurrent License?',a:'Named User: Lizenz für eine konkret benannte Person.\nConcurrent/Floating: begrenzte Zahl gleichzeitiger Nutzer.'},
+];
+
+const L={cia:'CIA',isms:'ISMS',dsgvo:'DSGVO',fw:'Firewall',krypto:'Krypto',malware:'Malware',backup:'Backup',lizenz:'Lizenz'};
+let pool=[...KARTEN], bew={}, cidx=0;
+
+function filt(cat,btn){
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  pool=cat==='all'?[...KARTEN]:KARTEN.filter(c=>c.cat===cat);
+  bew={};cidx=0;
+  document.getElementById('result').style.display='none';
+  document.getElementById('fc').style.display='flex';
+  document.getElementById('nav-row').style.display='flex';
+  showC();
+}
+
+function showC(){
+  if(cidx>=pool.length){zeigeErgebnis();return;}
+  const c=pool[cidx];
+  document.getElementById('cq').textContent=c.q;
+  document.getElementById('ca').textContent=c.a;
+  document.getElementById('cside').textContent='Frage – antippen zum Umdrehen';
+  document.getElementById('cside').className='side';
+  const fc=document.getElementById('fc');
+  fc.className='card';
+  if(bew[cidx]===true)fc.classList.add('war-r');
+  if(bew[cidx]===false)fc.classList.add('war-f');
+  document.getElementById('cbadge').textContent=L[c.cat]||'';
+  document.getElementById('cnum').textContent=(cidx+1)+' / '+pool.length;
+  document.getElementById('bewertung').classList.remove('show');
+  document.getElementById('flip-hint').style.display='block';
+  document.getElementById('pmeta').textContent=(cidx+1)+' / '+pool.length;
+  updateStats();
+}
+
+function flipCard(){
+  const fc=document.getElementById('fc');
+  const fl=fc.classList.toggle('flipped');
+  const s=document.getElementById('cside');
+  s.textContent=fl?'Antwort':'Frage – antippen zum Umdrehen';
+  s.className=fl?'side ans':'side';
+  if(fl&&bew[cidx]===undefined){
+    document.getElementById('bewertung').classList.add('show');
+    document.getElementById('flip-hint').style.display='none';
+  }
+}
+
+function bewerte(richtig){
+  bew[cidx]=richtig;
+  document.getElementById('bewertung').classList.remove('show');
+  document.getElementById('flip-hint').style.display='block';
+  updateStats();
+  setTimeout(()=>{cidx++;showC();},250);
+}
+
+function prev(){if(cidx>0){cidx--;showC();}}
+
+function updateStats(){
+  const r=Object.values(bew).filter(v=>v===true).length;
+  const f=Object.values(bew).filter(v=>v===false).length;
+  const o=pool.length-r-f;
+  document.getElementById('pfill-r').style.width=(r/pool.length*100)+'%';
+  document.getElementById('pfill-f').style.width=(f/pool.length*100)+'%';
+  document.getElementById('cnt-r').textContent=r+' richtig';
+  document.getElementById('cnt-f').textContent=f+' falsch';
+  document.getElementById('cnt-o').textContent=o+' offen';
+}
+
+function zeigeErgebnis(){
+  const r=Object.values(bew).filter(v=>v===true).length;
+  const f=Object.values(bew).filter(v=>v===false).length;
+  const t=pool.length;
+  const pct=t>0?Math.round(r/t*100):0;
+  document.getElementById('fc').style.display='none';
+  document.getElementById('nav-row').style.display='none';
+  document.getElementById('bewertung').classList.remove('show');
+  document.getElementById('flip-hint').style.display='none';
+  const res=document.getElementById('result');
+  res.style.display='block';
+  const pe=document.getElementById('res-pct');
+  pe.textContent=pct+'%';
+  pe.className='big '+(pct>=80?'gut':pct>=60?'ok':'schlecht');
+  document.getElementById('res-msg').textContent=
+    pct>=80?'Sehr gut! Diese Karten hast du im Griff.':
+    pct>=60?'Guter Fortschritt – die falschen Karten nochmal üben.':
+    'Nochmal von vorn – Antworten noch nicht sicher genug.';
+  document.getElementById('res-r').textContent=r;
+  document.getElementById('res-f').textContent=f;
+  document.getElementById('res-t').textContent=t;
+  const bw=document.getElementById('btn-wdh');
+  if(f>0){bw.style.display='block';bw.textContent='↺  '+f+' falsche Karten wiederholen';}
+  else bw.style.display='none';
+}
+
+function wiederhole(){
+  const fi=Object.entries(bew).filter(([,v])=>v===false).map(([k])=>parseInt(k));
+  pool=fi.map(i=>pool[i]);
+  bew={};cidx=0;
+  document.getElementById('result').style.display='none';
+  document.getElementById('fc').style.display='flex';
+  document.getElementById('nav-row').style.display='flex';
+  showC();
+}
+
+function neustart(){
+  bew={};cidx=0;
+  document.getElementById('result').style.display='none';
+  document.getElementById('fc').style.display='flex';
+  document.getElementById('nav-row').style.display='flex';
+  showC();
+}
+
+function shuf(){
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  bew={};cidx=0;
+  document.getElementById('result').style.display='none';
+  document.getElementById('fc').style.display='flex';
+  document.getElementById('nav-row').style.display='flex';
+  showC();
+}
+
+function showT(i,el){
+  document.querySelectorAll('.tc').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('tdetail').innerHTML=
+    TD[i].map(r=>`<div class="trow"><b>${r.b}</b><span>${r.v}</span></div>`).join('');
+}
+showT(0,document.querySelector('.tc'));
+
+function st(id,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+
+pool=[...KARTEN];showC();
+</script>
+</body>
+</html>
