@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISMS & IT-Grundschutz – FISI Lernplattform</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#1D9E75;--gh:#E1F5EE;--gd:#085041;
+  --b:#0C447C;--bh:#E6F1FB;--bd:#04284d;
+  --v:#3C3489;--vh:#EEEDFE;
+  --r:#B91C1C;--rh:#FEE2E2;
+  --a:#854F0B;--ah:#FAEEDA;
+  --rand:#e0dfd8;--bg:#f5f5f3;--w:white;
+  --t:#1a1a18;--t2:#444;--t3:#888;
+}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--t);min-height:100vh}
+
+/* HEADER */
+.hdr{background:var(--w);border-bottom:1px solid var(--rand);padding:.875rem 1.25rem;position:sticky;top:0;z-index:100}
+.hdr-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.back{font-size:13px;color:var(--t3);text-decoration:none;display:flex;align-items:center;gap:4px}
+.back:hover{color:var(--g)}
+.hdr-title{flex:1;font-size:16px;font-weight:500}
+.badge{background:var(--gh);color:var(--gd);font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px}
+
+/* LAYOUT */
+.wrap{max-width:860px;margin:0 auto;padding:1rem 1rem 5rem}
+
+/* INTRO-BOX */
+.intro{background:var(--w);border:1px solid var(--rand);border-radius:14px;padding:1.25rem;margin-bottom:1.25rem}
+.intro h1{font-size:19px;font-weight:500;margin-bottom:.4rem}
+.intro p{font-size:13px;color:var(--t2);line-height:1.6}
+.doc-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:.875rem}
+.pill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;border:1px solid}
+.pill.b{color:var(--b);border-color:#c3d9f5;background:var(--bh)}
+.pill.g{color:var(--gd);border-color:#a8dfc7;background:var(--gh)}
+.pill.v{color:var(--v);border-color:#c7c4f5;background:var(--vh)}
+.pill.a{color:var(--a);border-color:#f5d8a0;background:var(--ah)}
+
+/* SECTION HEADERS */
+.sek{margin:1.5rem 0 .625rem;display:flex;align-items:center;gap:.625rem}
+.sek h2{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3)}
+.sek-line{flex:1;height:1px;background:var(--rand)}
+.sek-src{font-size:10px;color:var(--t3);font-weight:400;white-space:nowrap}
+
+/* KARTEN-GRID */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+
+/* LERNKARTE */
+.karte{background:var(--w);border:1px solid var(--rand);border-radius:13px;padding:1rem 1.125rem;cursor:pointer;transition:border-color .15s,box-shadow .15s;position:relative}
+.karte:hover{border-color:var(--g);box-shadow:0 2px 10px rgba(29,158,117,.1)}
+.karte.open .antwort{display:block}
+.karte.open .hint{display:none}
+.karte-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem;color:var(--t3)}
+.frage{font-size:14px;font-weight:500;line-height:1.4;color:var(--t);margin-bottom:.5rem}
+.hint{font-size:11px;color:var(--t3);font-style:italic}
+.antwort{display:none;margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--rand)}
+.antwort p, .antwort li{font-size:13px;color:var(--t2);line-height:1.6}
+.antwort ul{padding-left:1.1rem}
+.antwort li{margin-bottom:.2rem}
+.antwort strong{color:var(--t);font-weight:600}
+.antwort .highlight{background:var(--gh);color:var(--gd);font-size:12px;font-weight:600;padding:2px 7px;border-radius:6px;display:inline-block;margin:.15rem 2px}
+
+/* TABELLEN */
+.tbl{background:var(--w);border:1px solid var(--rand);border-radius:13px;overflow:hidden;margin-bottom:10px}
+.tbl table{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:#f9f8f7;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--t3);padding:.625rem .875rem;text-align:left;border-bottom:1px solid var(--rand)}
+.tbl td{padding:.625rem .875rem;border-bottom:1px solid #f0efea;vertical-align:top;line-height:1.5;color:var(--t2)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl td:first-child{font-weight:600;color:var(--t);white-space:nowrap}
+.tag-b{background:var(--bh);color:var(--b);font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap}
+.tag-g{background:var(--gh);color:var(--gd);font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap}
+.tag-v{background:var(--vh);color:var(--v);font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap}
+.tag-a{background:var(--ah);color:var(--a);font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap}
+.tag-r{background:var(--rh);color:var(--r);font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;white-space:nowrap}
+
+/* FLOW-DIAGRAM */
+.flow{background:var(--w);border:1px solid var(--rand);border-radius:13px;padding:1rem;margin-bottom:10px}
+.flow-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:.875rem}
+.flow-steps{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.step{background:var(--bg);border:1px solid var(--rand);border-radius:9px;padding:.5rem .75rem;font-size:12px;font-weight:500;color:var(--t);text-align:center;min-width:90px}
+.step.g{background:var(--gh);border-color:#a8dfc7;color:var(--gd)}
+.step.b{background:var(--bh);border-color:#c3d9f5;color:var(--bd)}
+.arrow{color:var(--t3);font-size:16px;font-weight:300}
+
+/* MERKSATZ-BOX */
+.memo{background:linear-gradient(135deg,var(--gh),#f0fdf8);border:1px solid #a8dfc7;border-radius:13px;padding:1rem 1.125rem;margin-bottom:10px}
+.memo-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gd);margin-bottom:.4rem}
+.memo p{font-size:13px;color:var(--gd);line-height:1.5;font-weight:500}
+
+/* FORTSCHRITT */
+.progress-bar{background:var(--w);border:1px solid var(--rand);border-radius:13px;padding:.875rem 1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:.875rem}
+.progress-bar .label{font-size:12px;color:var(--t3);white-space:nowrap}
+.bar-wrap{flex:1;background:#f0efea;border-radius:20px;height:8px;overflow:hidden}
+.bar-fill{height:100%;background:var(--g);border-radius:20px;transition:width .5s}
+.progress-bar .pct{font-size:12px;font-weight:600;color:var(--g);white-space:nowrap}
+
+/* QUIZ */
+.quiz-btn{display:inline-flex;align-items:center;gap:6px;background:var(--g);color:white;border:none;border-radius:10px;padding:.5rem 1rem;font-size:13px;font-weight:500;cursor:pointer;margin-top:.625rem;transition:background .15s}
+.quiz-btn:hover{background:var(--gd)}
+.quiz-result{margin-top:.5rem;font-size:12px;padding:.4rem .75rem;border-radius:8px;display:none}
+.quiz-result.ok{background:var(--gh);color:var(--gd)}
+.quiz-result.no{background:var(--rh);color:var(--r)}
+
+/* FOOTER NAV */
+.fnav{background:var(--w);border-top:1px solid var(--rand);padding:.875rem 1.25rem;display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;margin-top:2rem;border-radius:13px}
+.fnav a{font-size:13px;color:var(--t3);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:background .15s}
+.fnav a:hover{background:var(--gh);color:var(--gd)}
+.fnav a.active{background:var(--gh);color:var(--gd);font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-inner">
+    <a class="back" href="index.html">← Startseite</a>
+    <div class="hdr-title">🛡️ ISMS & IT-Grundschutz</div>
+    <span class="badge">AP1 · AP2</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- INTRO -->
+  <div class="intro">
+    <h1>IT-Grundschutz & Informationssicherheit</h1>
+    <p>Alles was du für die Prüfung brauchst: ISMS-Aufbau, BSI-Standards, Schutzbedarfskategorien, PDCA-Zyklus, Risikoanalyse und DSGVO. Klicke auf eine Karte um die Antwort aufzudecken.</p>
+    <div class="doc-pills">
+      <span class="pill b">BSI 200-1 (ISMS)</span>
+      <span class="pill g">BSI 200-2 (Methodik)</span>
+      <span class="pill v">BSI 200-3 (Risikoanalyse)</span>
+      <span class="pill a">BSI 100-2 (alt)</span>
+      <span class="pill g">Leitfaden Basis-Absicherung</span>
+      <span class="pill b">DSGVO & BDSG</span>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar">
+    <span class="label">Lernfortschritt</span>
+    <div class="bar-wrap"><div class="bar-fill" id="pbar" style="width:0%"></div></div>
+    <span class="pct" id="ppct">0 / 0 aufgedeckt</span>
+  </div>
+
+  <!-- ===== ABSCHNITT 1: GRUNDLAGEN ===== -->
+  <div class="sek"><h2>Grundlagen Informationssicherheit</h2><div class="sek-line"></div><span class="sek-src">BSI 200-1</span></div>
+
+  <div class="kgrid">
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">Definition</div>
+      <div class="frage">Was ist der Unterschied zwischen IT-Sicherheit, Informationssicherheit und Cyber-Sicherheit?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <ul>
+          <li><strong>IT-Sicherheit</strong> – Schutz elektronisch gespeicherter Informationen & ihrer Verarbeitung</li>
+          <li><strong>Informationssicherheit</strong> – übergeordneter Begriff; schützt Informationen jeder Art (Papier, IT, mündlich)</li>
+          <li><strong>Cyber-Sicherheit</strong> – erweitert IT-Sicherheit auf den gesamten Cyber-Raum (Internet, vernetzte Systeme)</li>
+        </ul>
+        <p style="margin-top:.5rem">→ Informationssicherheit ist der umfassendste Begriff!</p>
+      </div>
+    </div>
+
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">CIA-Triade</div>
+      <div class="frage">Was sind die drei klassischen Grundwerte der Informationssicherheit?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <ul>
+          <li><strong>Vertraulichkeit</strong> – nur autorisierte Personen dürfen auf Daten zugreifen</li>
+          <li><strong>Integrität</strong> – Daten sind korrekt, vollständig und unmanipuliert</li>
+          <li><strong>Verfügbarkeit</strong> – Systeme & Daten sind für Berechtigte erreichbar</li>
+        </ul>
+        <p style="margin-top:.5rem">Weitere: Authentizität, Verbindlichkeit, Zuverlässigkeit, Resilienz, Nichtabstreitbarkeit</p>
+      </div>
+    </div>
+
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">ISMS</div>
+      <div class="frage">Was ist ein ISMS und welche 4 Hauptkomponenten hat es?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <p><strong>ISMS</strong> = Informationssicherheitsmanagementsystem – alle Regelungen zur Steuerung der Informationssicherheit</p>
+        <ul style="margin-top:.5rem">
+          <li><span class="highlight">Managementprinzipien</span></li>
+          <li><span class="highlight">Ressourcen</span></li>
+          <li><span class="highlight">Mitarbeiter</span></li>
+          <li><span class="highlight">Sicherheitsprozess</span> (Leitlinie + Konzept + Organisation)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">Merksatz</div>
+      <div class="frage">Warum ist Informationssicherheit „Chefsache"?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <ul>
+          <li>Leitungsebene trägt Gesamtverantwortung für gesetzliche Einhaltung</li>
+          <li>Nur sie kann Risikentscheidungen treffen</li>
+          <li>Nur sie kann IS in alle Prozesse integrieren</li>
+          <li>Nur sie stellt ausreichend Ressourcen bereit</li>
+        </ul>
+        <p style="margin-top:.5rem;font-style:italic">„Informationssicherheit ist Chefsache!" – BSI 200-1</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ABSCHNITT 2: BSI-STANDARDS ===== -->
+  <div class="sek"><h2>BSI-Standardreihe im Überblick</h2><div class="sek-line"></div><span class="sek-src">BSI 200-1 / 200-2 / 200-3</span></div>
+
+  <div class="tbl">
+    <table>
+      <tr><th>Standard</th><th>Inhalt</th><th>Typ</th></tr>
+      <tr><td>BSI 200-1</td><td>Managementsysteme für Informationssicherheit (ISMS) – allgemeiner Rahmen, kompatibel mit ISO 27001</td><td><span class="tag-b">Management</span></td></tr>
+      <tr><td>BSI 200-2</td><td>IT-Grundschutz-Methodik – konkrete Schritt-für-Schritt-Anleitung; Basis-, Standard-, Kern-Absicherung</td><td><span class="tag-g">Methodik</span></td></tr>
+      <tr><td>BSI 200-3</td><td>Risikoanalyse auf Basis IT-Grundschutz – vereinfachte Risikoanalyse für erhöhten Schutzbedarf</td><td><span class="tag-v">Risiko</span></td></tr>
+      <tr><td>BSI 100-4</td><td>Notfallmanagement – Methodik für behörden-/unternehmensweites Notfallmanagement</td><td><span class="tag-a">Notfall</span></td></tr>
+      <tr><td>IT-GS-Kompendium</td><td>Prozess- und Systembausteine mit konkreten Sicherheitsanforderungen; jährlich aktualisiert</td><td><span class="tag-g">Praxiswissen</span></td></tr>
+    </table>
+  </div>
+
+  <div class="kgrid">
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">Prüfungsfrage</div>
+      <div class="frage">Welcher BSI-Standard ist kompatibel mit ISO/IEC 27001?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <p><strong>BSI-Standard 200-1</strong> ist vollständig kompatibel mit ISO/IEC 27001.</p>
+        <p style="margin-top:.4rem">Außerdem berücksichtigt er ISO 27000 (Begriffe) und ISO 27002 (Empfehlungen).</p>
+        <p style="margin-top:.4rem">Die Standard- und Kern-Absicherung aus 200-2 bilden die Anforderungen der ISO 27001 ab → Grundlage für ISO-27001-Zertifizierung auf Basis IT-Grundschutz.</p>
+      </div>
+    </div>
+
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">Absicherungsvarianten</div>
+      <div class="frage">Was sind die 3 Absicherungsvarianten des IT-Grundschutzes und wofür sind sie?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <ul>
+          <li><strong>Basis-Absicherung</strong> – flächendeckend alle Basis-Anforderungen; Einstieg für KMU; „Bonsai-ISMS"</li>
+          <li><strong>Standard-Absicherung</strong> – vollständige Vorgehensweise für normalen Schutzbedarf; bildet ISO 27001 ab</li>
+          <li><strong>Kern-Absicherung</strong> – Fokus auf besonders schützenswerte „Kronjuwelen" (hoher/sehr hoher Schutzbedarf)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ABSCHNITT 3: PDCA-ZYKLUS ===== -->
+  <div class="sek"><h2>PDCA-Zyklus & Lebenszyklus</h2><div class="sek-line"></div><span class="sek-src">BSI 200-1 Kap. 3.2</span></div>
+
+  <div class="flow">
+    <div class="flow-title">PDCA-Zyklus (Deming-Kreis) – Lebenszyklus der Informationssicherheit</div>
+    <div class="flow-steps">
+      <div class="step b">📋 PLAN<br><small>Planung & Konzeption</small></div>
+      <div class="arrow">→</div>
+      <div class="step g">⚙️ DO<br><small>Umsetzung</small></div>
+      <div class="arrow">→</div>
+      <div class="step b">🔍 CHECK<br><small>Erfolgskontrolle</small></div>
+      <div class="arrow">→</div>
+      <div class="step g">✅ ACT<br><small>Optimierung</small></div>
+      <div class="arrow">→</div>
+      <div class="step" style="opacity:.5">🔄 Neustart</div>
+    </div>
+  </div>
+
+  <div class="kgrid">
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">PDCA Detail</div>
+      <div class="frage">Was passiert in jeder PDCA-Phase konkret?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <ul>
+          <li><strong>Plan</strong> – Rahmenbedingungen analysieren, Sicherheitsziele & Strategie festlegen</li>
+          <li><strong>Do</strong> – Sicherheitskonzept & -organisation umsetzen</li>
+          <li><strong>Check</strong> – Wirksamkeit prüfen, Audits, Managementberichte</li>
+          <li><strong>Act</strong> – Mängel beheben, Verbesserungen einführen; bei großen Änderungen → zurück zu Plan</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">Lebenszyklus IT-System</div>
+      <div class="frage">In welche 6 Phasen wird der Lebenszyklus eines IT-Systems im IT-Grundschutz eingeteilt?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <ul>
+          <li>1. Planung und Konzeption</li>
+          <li>2. Beschaffung (falls erforderlich)</li>
+          <li>3. Umsetzung</li>
+          <li>4. Betrieb (inkl. Überwachung & Erfolgskontrolle)</li>
+          <li>5. Aussonderung (falls erforderlich)</li>
+          <li>6. Notfallvorsorge</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ABSCHNITT 4: SICHERHEITSKONZEPT ===== -->
+  <div class="sek"><h2>Sicherheitskonzept & Risikoanalyse</h2><div class="sek-line"></div><span class="sek-src">BSI 200-1 Kap. 8 / BSI 200-3</span></div>
+
+  <div class="flow">
+    <div class="flow-title">Erstellung Sicherheitskonzept – Schritte nach IT-Grundschutz</div>
+    <div class="flow-steps">
+      <div class="step b">1. Informationsverbund<br><small>Geltungsbereich</small></div>
+      <div class="arrow">→</div>
+      <div class="step b">2. Struktur­analyse<br><small>Schutzobjekte</small></div>
+      <div class="arrow">→</div>
+      <div class="step b">3. Schutz­bedarf<br><small>normal/hoch/sehr hoch</small></div>
+      <div class="arrow">→</div>
+      <div class="step b">4. Modellierung<br><small>Bausteine auswählen</small></div>
+      <div class="arrow">→</div>
+      <div class="step g">5. GS-Check<br><small>Soll-Ist-Vergleich</small></div>
+      <div class="arrow">→</div>
+      <div class="step g">6. Risiko­analyse<br><small>bei erhöhtem Bedarf</small></div>
+    </div>
+  </div>
+
+  <div class="tbl">
+    <table>
+      <tr><th>Schutzbedarfskategorie</th><th>Bedeutung</th><th>Beispiel finanzieller Schaden (Kleinbetrieb)</th></tr>
+      <tr><td><span class="tag-g">Normal</span></td><td>Schadensauswirkungen begrenzt & überschaubar</td><td>unter 10.000 €</td></tr>
+      <tr><td><span class="tag-a">Hoch</span></td><td>Schadensauswirkungen können beträchtlich sein</td><td>10.000 – 100.000 €</td></tr>
+      <tr><td><span class="tag-r">Sehr hoch</span></td><td>Existenzbedrohend / katastrophal</td><td>über 100.000 €</td></tr>
+    </table>
+  </div>
+
+  <div class="kgrid">
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">Schutzbedarfsfeststellung</div>
+      <div class="frage">Wie „vererbt" sich der Schutzbedarf im IT-Grundschutz?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <p><strong>Maximumprinzip</strong>: Der höchste Schutzbedarf eines Objekts bestimmt den Schutzbedarf aller abhängigen Objekte.</p>
+        <ul style="margin-top:.4rem">
+          <li>Geschäftsprozesse → Anwendungen</li>
+          <li>Anwendungen → IT-Systeme</li>
+          <li>IT-Systeme → Räume</li>
+        </ul>
+        <p style="margin-top:.4rem">Beispiel: Server mit hohem Schutzbedarf → Serverraum hat mindestens hohen Schutzbedarf.</p>
+      </div>
+    </div>
+
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">Risikobehandlung</div>
+      <div class="frage">Welche 4 Optionen gibt es zur Risikobehandlung?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <ul>
+          <li><strong>Vermeiden</strong> – Risikoursache ausschließen</li>
+          <li><strong>Reduzieren</strong> – Rahmenbedingungen ändern (Sicherheitsmaßnahmen)</li>
+          <li><strong>Transferieren</strong> – Risiko teilen z.B. durch Outsourcing oder Versicherung</li>
+          <li><strong>Akzeptieren</strong> – bewusste Entscheidung auf Basis nachvollziehbarer Faktenlage</li>
+        </ul>
+        <p style="margin-top:.4rem">Das verbleibende Restrisiko muss von der Leitungsebene genehmigt werden.</p>
+      </div>
+    </div>
+
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">IT-Grundschutz-Check</div>
+      <div class="frage">Was ist der IT-Grundschutz-Check und welche Ergebnisse liefert er?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <p>Soll-Ist-Vergleich: Interviews zum Umsetzungsgrad der Sicherheitsanforderungen.</p>
+        <p style="margin-top:.4rem">Mögliche Status je Anforderung:</p>
+        <ul>
+          <li><span class="highlight">entbehrlich</span></li>
+          <li><span class="highlight">ja</span></li>
+          <li><span class="highlight">teilweise</span></li>
+          <li><span class="highlight">nein</span></li>
+        </ul>
+        <p style="margin-top:.4rem">Ergebnis: Katalog mit Verbesserungsmöglichkeiten.</p>
+      </div>
+    </div>
+
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">Wann Risikoanalyse?</div>
+      <div class="frage">Wann muss zusätzlich zur IT-Grundschutz-Vorgehensweise eine explizite Risikoanalyse durchgeführt werden?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <p>Eine Risikoanalyse (nach BSI 200-3) ist nötig wenn:</p>
+        <ul>
+          <li>Schutzbedarf <strong>hoch oder sehr hoch</strong> in mind. einem Grundwert</li>
+          <li>Zielobjekte mit vorhandenen Bausteinen <strong>nicht hinreichend abgebildet</strong> werden können</li>
+          <li>Einsatzszenarios im IT-Grundschutz <strong>nicht vorgesehen</strong> sind</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ABSCHNITT 5: IT-GS-KOMPENDIUM ===== -->
+  <div class="sek"><h2>IT-Grundschutz-Kompendium – Bausteinschichten</h2><div class="sek-line"></div><span class="sek-src">BSI 200-2 / Kompendium</span></div>
+
+  <div class="tbl">
+    <table>
+      <tr><th>Kürzel</th><th>Schicht</th><th>Beispiele</th></tr>
+      <tr><td>ISMS</td><td>Sicherheitsmanagement</td><td>Sicherheitsmanagement-Prozess</td></tr>
+      <tr><td>ORP</td><td>Organisation & Personal</td><td>Organisation, Personal, Datenschutz</td></tr>
+      <tr><td>CON</td><td>Konzepte & Vorgehensweisen</td><td>Kryptokonzept, Softwareentwicklung, Datenschutz</td></tr>
+      <tr><td>OPS</td><td>Betrieb</td><td>Schutz vor Schadprogrammen, Cloud Computing</td></tr>
+      <tr><td>DER</td><td>Detektion & Reaktion</td><td>Sicherheitsvorfälle, Notfallmanagement</td></tr>
+      <tr><td>INF</td><td>Infrastruktur</td><td>Gebäude, Rechenzentrum, Büro</td></tr>
+      <tr><td>SYS</td><td>IT-Systeme</td><td>Server, Clients, Mobile Devices</td></tr>
+      <tr><td>NET</td><td>Netze & Kommunikation</td><td>Netzarchitektur, WLAN, VPN</td></tr>
+      <tr><td>APP</td><td>Anwendungen</td><td>E-Mail, Browser, Datenbanken</td></tr>
+      <tr><td>IND</td><td>Industrielle IT</td><td>ICS, Steuerungstechnik, Leitstand</td></tr>
+    </table>
+  </div>
+
+  <!-- ===== ABSCHNITT 6: DSGVO ===== -->
+  <div class="sek"><h2>DSGVO & Datenschutz</h2><div class="sek-line"></div><span class="sek-src">DSGVO (EU) 2016/679 · BDSG</span></div>
+
+  <div class="memo">
+    <div class="memo-label">⚖️ Wichtig</div>
+    <p>Seit 25. Mai 2018 gilt die DSGVO – sie ersetzt die EG-Datenschutzrichtlinie 95/46/EG und schafft für über 433 Mio. EU-Bürger einen einheitlichen Datenschutzstandard.</p>
+  </div>
+
+  <div class="tbl">
+    <table>
+      <tr><th>Grundsatz (Art. 5 DSGVO)</th><th>Bedeutung</th></tr>
+      <tr><td>Rechtmäßigkeit</td><td>Verarbeitung braucht Rechtsgrundlage oder Einwilligung</td></tr>
+      <tr><td>Zweckbindung</td><td>Nur für festgelegte, eindeutige & rechtmäßige Zwecke</td></tr>
+      <tr><td>Datenminimierung</td><td>Nur was für den Zweck nötig ist</td></tr>
+      <tr><td>Richtigkeit</td><td>Daten müssen sachlich richtig & aktuell sein</td></tr>
+      <tr><td>Speicherbegrenzung</td><td>Nur so lange wie erforderlich aufbewahren</td></tr>
+      <tr><td>Integrität & Vertraulichkeit</td><td>Angemessene technisch-organisatorische Maßnahmen (TOMs)</td></tr>
+      <tr><td>Rechenschaftspflicht</td><td>Verantwortlicher muss Einhaltung nachweisen können</td></tr>
+    </table>
+  </div>
+
+  <div class="kgrid">
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">Betroffenenrechte</div>
+      <div class="frage">Welche 7 wichtigen Rechte haben betroffene Personen laut DSGVO?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <ul>
+          <li>Auskunftsrecht (Art. 15)</li>
+          <li>Recht auf Berichtigung (Art. 16)</li>
+          <li>Recht auf Löschung / „Recht auf Vergessenwerden" (Art. 17)</li>
+          <li>Recht auf Einschränkung der Verarbeitung (Art. 18)</li>
+          <li>Recht auf Datenübertragbarkeit (Art. 20)</li>
+          <li>Widerspruchsrecht (Art. 21)</li>
+          <li>Recht auf nicht-automatisierte Entscheidung (Art. 22)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">Meldepflicht</div>
+      <div class="frage">Innerhalb welcher Frist muss eine Datenpanne der Aufsichtsbehörde gemeldet werden?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <p><strong>72 Stunden</strong> nach Bekanntwerden (Art. 33 DSGVO).</p>
+        <p style="margin-top:.4rem">Wenn die Meldung nicht fristgerecht erfolgt, muss die Verspätung begründet werden.</p>
+        <p style="margin-top:.4rem">Bei hohem Risiko für betroffene Personen: zusätzlich direkte Benachrichtigung der Betroffenen (Art. 34).</p>
+      </div>
+    </div>
+
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">DSGVO vs. Informationssicherheit</div>
+      <div class="frage">Was ist der Unterschied zwischen Datenschutz und Informationssicherheit?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <p><strong>Informationssicherheit</strong> schützt primär die <em>datenverarbeitende Institution</em> (Vertraulichkeit, Integrität, Verfügbarkeit).</p>
+        <p style="margin-top:.4rem"><strong>Datenschutz</strong> schützt primär die <em>natürliche Person</em> – ihr Recht auf informationelle Selbstbestimmung.</p>
+        <p style="margin-top:.4rem">→ Beide ergänzen sich; Datenschutz braucht Informationssicherheit als Grundlage.</p>
+      </div>
+    </div>
+
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">Sanktionen</div>
+      <div class="frage">Welche Bußgelder drohen bei DSGVO-Verstößen?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <ul>
+          <li><strong>Bis 10 Mio. € oder 2 % des globalen Jahresumsatzes</strong> – bei leichteren Verstößen (z.B. Datenschutz-by-Design)</li>
+          <li><strong>Bis 20 Mio. € oder 4 % des globalen Jahresumsatzes</strong> – bei schweren Verstößen (z.B. Grundsätze Artikel 5, Betroffenenrechte)</li>
+        </ul>
+        <p style="margin-top:.4rem">Es gilt immer der höhere der beiden Beträge.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ABSCHNITT 7: MANAGEMENT-AUFGABEN ===== -->
+  <div class="sek"><h2>Management-Aufgaben & ISB</h2><div class="sek-line"></div><span class="sek-src">BSI 200-1 Kap. 4 & 7</span></div>
+
+  <div class="kgrid">
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">6 Managementpflichten</div>
+      <div class="frage">Welche 6 Kernaufgaben hat die Leitungsebene im Bereich Informationssicherheit?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <ul>
+          <li>1. Gesamtverantwortung übernehmen</li>
+          <li>2. Sicherheitsprozess initiieren, steuern & kontrollieren</li>
+          <li>3. IS in alle Prozesse integrieren</li>
+          <li>4. Erreichbare Ziele setzen</li>
+          <li>5. Sicherheitskosten gegen Nutzen abwägen</li>
+          <li>6. Vorbildfunktion übernehmen</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">ISB-Rolle</div>
+      <div class="frage">Was ist die Rolle des Informationssicherheitsbeauftragten (ISB)?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <ul>
+          <li>Fördert und koordiniert den IS-Prozess</li>
+          <li>Operative Aufgabe delegiert vom Management</li>
+          <li>Gesamtverantwortung verbleibt bei Leitungsebene</li>
+          <li>Sollte als <strong>Stabsstelle</strong> organisiert sein (direkter Zugang zur Leitung)</li>
+          <li>Berichtet an verantwortlichen Manager auf Leitungsebene</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">Sicherheitsleitlinie</div>
+      <div class="frage">Was muss die Leitlinie zur Informationssicherheit mindestens enthalten?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <ul>
+          <li>Stellenwert der IS & Bedeutung für die Institution</li>
+          <li>Bezug der IS-Ziele zu den Geschäftszielen</li>
+          <li>Sicherheitsziele & Kernelemente der Strategie</li>
+          <li>Zusicherung der Durchsetzung durch Institutionsleitung</li>
+          <li>Beschreibung der etablierten Organisationsstruktur</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="karte" onclick="flip(this)">
+      <div class="karte-tag">TOMs</div>
+      <div class="frage">Was sind Technische und Organisatorische Maßnahmen (TOMs) – Beispiele?</div>
+      <div class="hint">Tippe um die Antwort zu sehen</div>
+      <div class="antwort">
+        <p><strong>Technisch:</strong></p>
+        <ul>
+          <li>Zutrittskontrolle (Chipkarte, Alarmanlage)</li>
+          <li>Zugangskontrolle (MFA, Passwörter, VPN)</li>
+          <li>Zugriffskontrolle (ACLs, Berechtigungskonzept)</li>
+          <li>Verschlüsselung, Backup, Firewall</li>
+        </ul>
+        <p style="margin-top:.4rem"><strong>Organisatorisch:</strong></p>
+        <ul>
+          <li>Sicherheitsrichtlinien, Schulungen</li>
+          <li>Datenschutzbeauftragter, Prozesse, Verfahrensverzeichnis</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- MERKSÄTZE -->
+  <div class="sek"><h2>Merksätze für die Prüfung</h2><div class="sek-line"></div></div>
+
+  <div class="memo">
+    <div class="memo-label">📌 Merksatz 1</div>
+    <p>Ein angemessenes Sicherheitsniveau ist in erster Linie abhängig vom systematischen Vorgehen und erst in zweiter Linie von einzelnen technischen Maßnahmen.</p>
+  </div>
+  <div class="memo">
+    <div class="memo-label">📌 Merksatz 2</div>
+    <p>IT-Grundschutz = integrierte Risikobewertung für normalen Schutzbedarf. BSI 200-3 = ergänzende Risikoanalyse für hohen / sehr hohen Schutzbedarf.</p>
+  </div>
+  <div class="memo">
+    <div class="memo-label">📌 Merksatz 3 – DSGVO</div>
+    <p>Jede Verarbeitung personenbezogener Daten braucht eine Rechtsgrundlage (Einwilligung oder gesetzliche Erlaubnis). Datenpanne → 72h Meldepflicht.</p>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="fnav">
+    <a href="index.html">🏠 Startseite</a>
+    <a href="lf4_it_sicherheit.html">🔒 LF4 IT-Sicherheit</a>
+    <a href="lf_isms_grundschutz.html" class="active">🛡️ ISMS & Grundschutz</a>
+  </div>
+
+</div>
+
+<script>
+let total = 0, opened = 0;
+
+function flip(el) {
+  const wasOpen = el.classList.contains('open');
+  el.classList.toggle('open');
+  if (!wasOpen) {
+    opened++;
+    updateProgress();
+  }
+}
+
+function updateProgress() {
+  const cards = document.querySelectorAll('.karte');
+  total = cards.length;
+  const pct = Math.round((opened / total) * 100);
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('ppct').textContent = opened + ' / ' + total + ' aufgedeckt';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  total = document.querySelectorAll('.karte').length;
+  document.getElementById('ppct').textContent = '0 / ' + total + ' aufgedeckt';
+});
+</script>
+</body>
+</html>

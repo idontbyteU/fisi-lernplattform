@@ -21,123 +21,283 @@ body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--t);min-he
 .hdr-sub{font-size:12px;color:var(--t3)}
 .pbadge{background:var(--gh);color:var(--gd);font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap}
 .wrap{max-width:900px;margin:0 auto;padding:1rem 1rem 5rem}
+
+/* STATS */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin-bottom:1.25rem}
 .stat{background:var(--w);border:1px solid var(--rand);border-radius:12px;padding:.75rem 1rem;text-align:center}
 .stat .n{font-size:22px;font-weight:500;color:var(--g)}
 .stat .l{font-size:11px;color:var(--t3);margin-top:2px}
+
+/* FORTSCHRITTSBALKEN */
 .fp{background:var(--w);border:1px solid var(--rand);border-radius:12px;padding:.875rem 1rem;margin-bottom:1.25rem}
-.fp h3{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--t3);margin-bottom:.75rem}
-.frow{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:5px}
-.frow:last-child{margin-bottom:0}
-.fl{width:160px;color:var(--t2);flex-shrink:0;font-size:11px}
-.fb{flex:1;height:5px;background:var(--rand);border-radius:3px;overflow:hidden}
-.ff{height:100%;border-radius:3px;background:var(--g)}
-.fp-pct{width:32px;text-align:right;color:var(--t3);font-size:11px}
-.ib{background:var(--gh);border-left:3px solid var(--g);border-radius:0 10px 10px 0;padding:.75rem 1rem;font-size:13px;color:var(--gd);margin-bottom:1.25rem;line-height:1.5}
-.sek{display:flex;align-items:center;gap:10px;margin:1.5rem 0 .75rem}
-.sek h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);white-space:nowrap}
-.sl{flex:1;height:1px;background:var(--rand)}
-.sb{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;white-space:nowrap}
-.sb-ap1{background:var(--bh);color:var(--b)}
-.sb-ap2{background:var(--vh);color:var(--v)}
-.sb-beide{background:var(--gh);color:var(--gd)}
-.sb-ub{background:var(--ah);color:var(--a)}
-.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:9px}
-.m{background:var(--w);border:1px solid var(--rand);border-radius:13px;padding:.875rem 1rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:3px;transition:border-color .15s,box-shadow .15s;min-height:120px;position:relative}
-.m:hover{border-color:var(--g);box-shadow:0 2px 8px rgba(29,158,117,.1)}
+.fp h3{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:.625rem}
+.fp-row{display:flex;align-items:center;gap:.625rem;margin-bottom:.4rem}
+.fp-row:last-child{margin-bottom:0}
+.fp-label{font-size:12px;color:var(--t2);width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fp-bar{flex:1;background:#f0efea;border-radius:20px;height:6px;overflow:hidden}
+.fp-fill{height:100%;border-radius:20px;background:var(--g)}
+.fp-pct{font-size:11px;color:var(--t3);width:28px;text-align:right}
+
+/* COUNTDOWN */
+.countdown{background:var(--w);border:1px solid var(--rand);border-radius:12px;padding:.875rem 1rem;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.countdown .ct-label{font-size:13px;color:var(--t2)}
+.countdown .ct-val{font-size:20px;font-weight:600;color:var(--b)}
+.countdown .ct-sub{font-size:11px;color:var(--t3);margin-top:1px}
+.ct-group{text-align:center}
+
+/* SECTION LABEL */
+.sek{margin:1.5rem 0 .625rem;display:flex;align-items:center;gap:.625rem}
+.sek h2{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);white-space:nowrap}
+.sek-line{flex:1;height:1px;background:var(--rand)}
+.sek-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.sek-badge.g{background:var(--gh);color:var(--gd)}
+.sek-badge.b{background:var(--bh);color:var(--b)}
+.sek-badge.beide{background:#f0fdf4;color:var(--gd)}
+
+/* MODUL-GRID */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-bottom:.5rem}
+
+/* MODUL-KARTE */
+.m{background:var(--w);border:1px solid var(--rand);border-radius:14px;padding:1rem 1.125rem;text-decoration:none;color:inherit;display:block;transition:border-color .15s,box-shadow .15s;position:relative}
 .m.fertig{border-left:3px solid var(--g)}
-.m.teil{border-left:3px solid #E8A020}
-.m.offen{border-left:3px solid var(--rand);pointer-events:none}
-.m-tag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;color:var(--t3)}
-.m h3{font-size:13px;font-weight:500;line-height:1.35}
-.m p{font-size:11px;color:var(--t2);line-height:1.45;flex:1}
-.m-foot{margin-top:6px;display:flex;align-items:center;gap:6px}
-.ms{font-size:11px;font-weight:500;display:flex;align-items:center;gap:4px}
-.ms::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block}
-.ms.ok{color:var(--g)}.ms.teil{color:#E8A020}.ms.nein{color:#ccc}
-.mk{margin-left:auto;font-size:10px;color:var(--t3);background:var(--bg);padding:2px 7px;border-radius:20px}
+.m.fertig:hover{border-color:var(--g);box-shadow:0 2px 8px rgba(29,158,117,.12)}
+.m.offen{opacity:.6;cursor:default;border-left:3px solid var(--rand)}
+.m .m-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.m-tag.ap1{color:var(--b)}
+.m-tag.ap2{color:var(--v)}
+.m-tag.beide{color:var(--gd)}
+.m h3{font-size:14px;font-weight:500;margin-bottom:3px;line-height:1.3}
+.m p{font-size:12px;color:var(--t2);line-height:1.4;margin-bottom:.625rem}
+.m-foot{display:flex;align-items:center;gap:6px}
+.ms{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500}
+.ms::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+.ms.ja{color:var(--gd)}
+.ms.nein{color:#ccc}
+.ms.nein::before{background:#ccc}
+.m-karten{font-size:11px;color:var(--t3)}
+
+/* NEUIGKEITS-BADGE */
+.new-badge{position:absolute;top:.75rem;right:.875rem;background:var(--g);color:white;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;letter-spacing:.3px}
+
+/* HINWEIS-BOX */
+.hint-box{background:var(--bh);border:1px solid #c3d9f5;border-radius:12px;padding:.875rem 1rem;font-size:13px;color:var(--b);margin-bottom:1rem}
+.hint-box strong{font-weight:600}
+
 footer{text-align:center;font-size:12px;color:var(--t3);padding:2rem 1rem;border-top:1px solid var(--rand);margin-top:1rem}
-footer a{color:var(--g);text-decoration:none}
+footer a{color:var(--t3);text-decoration:none}
+footer a:hover{color:var(--g)}
 </style>
 </head>
 <body>
 
-<header class="hdr">
+<div class="hdr">
   <div class="hdr-inner">
-    <h1>FISI Lernplattform</h1>
+    <h1>🖥️ FISI Lernplattform</h1>
     <span class="hdr-sub">Fachinformatiker Systemintegration</span>
-    <span class="pbadge">Prüfung Sommer 2026</span>
+    <span class="pbadge" id="gesamt-badge">2 Module verfügbar</span>
   </div>
-</header>
+</div>
 
 <div class="wrap">
 
+  <!-- COUNTDOWN -->
+  <div class="countdown">
+    <div>
+      <div class="ct-label">⏳ Prüfungs-Countdown</div>
+      <div class="ct-sub">AP1 Sommer 2026</div>
+    </div>
+    <div style="display:flex;gap:1.25rem">
+      <div class="ct-group">
+        <div class="ct-val" id="tage">–</div>
+        <div class="ct-sub">Tage</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
   <div class="stats">
-    <div class="stat"><div class="n">1</div><div class="l">Module fertig</div></div>
-    <div class="stat"><div class="n">38</div><div class="l">Karteikarten</div></div>
-    <div class="stat"><div class="n">18</div><div class="l">Module geplant</div></div>
-    <div class="stat"><div class="n" id="tage">–</div><div class="l">Tage bis AP1</div></div>
+    <div class="stat"><div class="n">2</div><div class="l">Module fertig</div></div>
+    <div class="stat"><div class="n">8</div><div class="l">Geplant</div></div>
+    <div class="stat"><div class="n">40+</div><div class="l">Karteikarten</div></div>
+    <div class="stat"><div class="n">7</div><div class="l">Dokumente</div></div>
   </div>
 
+  <!-- FORTSCHRITT -->
   <div class="fp">
-    <h3>Gesamtfortschritt</h3>
-    <div class="frow"><span class="fl">AP1 Handlungsbereiche</span><div class="fb"><div class="ff" style="width:14%"></div></div><span class="fp-pct">1 / 7</span></div>
-    <div class="frow"><span class="fl">Lernfelder Berufsschule</span><div class="fb"><div class="ff" style="width:0%"></div></div><span class="fp-pct">0 / 5</span></div>
-    <div class="frow"><span class="fl">Übungen & Berechnungen</span><div class="fb"><div class="ff" style="width:0%"></div></div><span class="fp-pct">0 / 4</span></div>
-    <div class="frow"><span class="fl">Prüfungsaufgaben</span><div class="fb"><div class="ff" style="width:0%"></div></div><span class="fp-pct">0 / 2</span></div>
+    <h3>Lernfelder Fortschritt</h3>
+    <div class="fp-row">
+      <span class="fp-label">LF4 IT-Sicherheit</span>
+      <div class="fp-bar"><div class="fp-fill" style="width:60%"></div></div>
+      <span class="fp-pct">60%</span>
+    </div>
+    <div class="fp-row">
+      <span class="fp-label">ISMS & Grundschutz</span>
+      <div class="fp-bar"><div class="fp-fill" style="width:30%"></div></div>
+      <span class="fp-pct">30%</span>
+    </div>
+    <div class="fp-row">
+      <span class="fp-label">LF3 Netzwerke</span>
+      <div class="fp-bar"><div class="fp-fill" style="width:0%"></div></div>
+      <span class="fp-pct">0%</span>
+    </div>
+    <div class="fp-row">
+      <span class="fp-label">LF2 Wirtschaft</span>
+      <div class="fp-bar"><div class="fp-fill" style="width:0%"></div></div>
+      <span class="fp-pct">0%</span>
+    </div>
   </div>
 
-  <div class="ib">Diese Plattform wächst täglich. Grün = fertig · Gelb = in Arbeit · Grau = geplant. Neue Module kommen nach und nach hinzu.</div>
-
-  <!-- AP1 -->
-  <div class="sek"><h2>AP1 – Handlungsbereiche</h2><div class="sl"></div><span class="sb sb-ap1">Prüfungsteil 1</span></div>
+  <!-- ===== SEKTION: SICHERHEIT ===== -->
+  <div class="sek"><h2>IT-Sicherheit & Datenschutz</h2><div class="sek-line"></div><span class="sek-badge g">LF4 · AP1 · AP2</span></div>
   <div class="mgrid">
-    <div class="m offen"><div class="m-tag">LB 1 · AP1</div><h3>Planen & Projektmanagement</h3><p>Netzplan, Gantt, SMART, Scrum, Lasten-/Pflichtenheft, Stakeholder</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
-    <div class="m offen"><div class="m-tag">LB 2 · AP1</div><h3>Kunden & Markt</h3><p>Nutzwertanalyse, Kalkulation, Marktformen, Angebotsbewertung, Verträge</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
-    <div class="m offen"><div class="m-tag">LB 3 · AP1</div><h3>IT-Systeme & Hardware</h3><p>Mainboard, RAM, RAID, USV, Cloud-Modelle, Virtualisierung, Speicher</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
-    <div class="m offen"><div class="m-tag">LB 4 · AP1</div><h3>IT-Lösungen entwickeln</h3><p>UML, SQL, Schreibtischtest, Lasten-/Pflichtenheft, Softwarelebenszyklus</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
-    <div class="m offen"><div class="m-tag">LB 5 · AP1</div><h3>Qualitätssicherung</h3><p>ISO 9000, PDCA-Zyklus, Testarten, Fehlerarten, Dokumentation</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
-    <a class="m fertig" href="lf4_it_sicherheit.html"><div class="m-tag">LB 6 · LF4 · AP1 & AP2</div><h3>IT-Sicherheit & Datenschutz</h3><p>CIA, ISMS, DSGVO, Firewall, Malware, Verschlüsselung, Lizenzen, BSI</p><div class="m-foot"><span class="ms ok">Fertig</span><span class="mk">38 Karten</span></div></a>
-    <div class="m offen"><div class="m-tag">LB 7 · AP1</div><h3>Auftragsabschluss & Verträge</h3><p>BGB, Gewährleistung, Garantie, SLA, ITIL, Support-Level, Ticketsystem</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+
+    <a class="m fertig" href="lf4_it_sicherheit.html">
+      <div class="m-tag ap1">AP1 · AP2</div>
+      <h3>LF4 – IT-Sicherheit & Datenschutz</h3>
+      <p>CIA-Triade, TOMs, Schutzmaßnahmen, Sicherheitsvorfälle, DSGVO-Grundlagen</p>
+      <div class="m-foot">
+        <span class="ms ja">Verfügbar</span>
+        <span class="m-karten">· 20+ Karten</span>
+      </div>
+    </a>
+
+    <a class="m fertig" href="lf_isms_grundschutz.html">
+      <span class="new-badge">NEU</span>
+      <div class="m-tag beide">AP1 · AP2</div>
+      <h3>🛡️ ISMS & IT-Grundschutz</h3>
+      <p>BSI 200-1/2/3, Schutzbedarfskategorien, PDCA, Risikoanalyse, DSGVO vertieft</p>
+      <div class="m-foot">
+        <span class="ms ja">Verfügbar</span>
+        <span class="m-karten">· 20+ Karten</span>
+      </div>
+    </a>
+
   </div>
 
-  <!-- LERNFELDER -->
-  <div class="sek"><h2>Lernfelder – Berufsschule</h2><div class="sl"></div><span class="sb sb-ap2">AP2 relevant</span></div>
+  <!-- ===== SEKTION: NETZWERKE ===== -->
+  <div class="sek"><h2>Netzwerke & Kommunikation</h2><div class="sek-line"></div><span class="sek-badge b">LF3 · AP1</span></div>
   <div class="mgrid">
-    <div class="m offen"><div class="m-tag">LF 1–2</div><h3>Grundlagen IT-Berufe</h3><p>Berufsfeld, Unternehmen, Organigramme, Arbeitsrecht, Ergonomie</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
-    <div class="m offen"><div class="m-tag">LF 3</div><h3>Netzwerk & Clients</h3><p>IPv4, IPv6, Subnetting, Routing, OSI, DHCP, DNS, VLAN, NAT, Topologien</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
-    <div class="m offen"><div class="m-tag">LF 4</div><h3>Schutzbedarfsanalyse</h3><p>IT-Grundschutz BSI, Risikoanalyse, Schutzbedarfsfeststellung, Maßnahmen</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
-    <div class="m offen"><div class="m-tag">LF 5</div><h3>Software zur Verwaltung</h3><p>Python, SQL, Datenbanken, ER-Modell, Normalisierung, Abfragen</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
-    <div class="m offen"><div class="m-tag">LF 8–9</div><h3>Netzwerke & Serverdienste</h3><p>VLAN, Routing, Firewall, VPN, Active Directory, Cloud, RAID, Backup</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+
+    <div class="m offen">
+      <div class="m-tag ap1">AP1</div>
+      <h3>LF3 – Netzwerktopologien</h3>
+      <p>Bus, Stern, Ring, Mesh – Vor- und Nachteile, OSI-Modell</p>
+      <div class="m-foot"><span class="ms nein">Geplant</span></div>
+    </div>
+
+    <div class="m offen">
+      <div class="m-tag ap1">AP1</div>
+      <h3>LF3 – IPv4 & Subnetting</h3>
+      <p>IP-Klassen, Subnetzmaske, Netzadresse, Broadcast, CIDR-Notation</p>
+      <div class="m-foot"><span class="ms nein">Geplant</span></div>
+    </div>
+
+    <div class="m offen">
+      <div class="m-tag ap1">AP1</div>
+      <h3>LF3 – Netzwerkprotokolle</h3>
+      <p>TCP/IP, UDP, HTTP/S, DNS, DHCP, FTP – Protokollstapel</p>
+      <div class="m-foot"><span class="ms nein">Geplant</span></div>
+    </div>
+
+    <div class="m offen">
+      <div class="m-tag ap1">AP1</div>
+      <h3>LF3 – RAID & Backup</h3>
+      <p>RAID 0/1/5/6/10, Backup-Strategien, Großvater-Vater-Sohn</p>
+      <div class="m-foot"><span class="ms nein">Geplant</span></div>
+    </div>
+
   </div>
 
-  <!-- ÜBUNGEN -->
-  <div class="sek"><h2>Übungen & Berechnungen</h2><div class="sl"></div><span class="sb sb-ub">Aktiv üben</span></div>
+  <!-- ===== SEKTION: WIRTSCHAFT ===== -->
+  <div class="sek"><h2>Wirtschaft & Recht</h2><div class="sek-line"></div><span class="sek-badge b">LF2 · WISO</span></div>
   <div class="mgrid">
-    <div class="m offen"><div class="m-tag">AP1 & AP2</div><h3>Einheiten & Berechnungen</h3><p>Speicher, RAM-Bandbreite, RAID-Kapazität, Subnetting, Stromkosten, Bilddaten</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
-    <div class="m offen"><div class="m-tag">LF 3</div><h3>Subnetting-Trainer</h3><p>Netzadresse, Broadcast, Hosts – Magic-Number-Methode Schritt für Schritt</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
-    <div class="m offen"><div class="m-tag">AP1</div><h3>Schreibtischtest-Trainer</h3><p>Trace Tables mit Schleifen und Bedingungen – im Prüfungsstil</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
-    <div class="m offen"><div class="m-tag">AP1</div><h3>Nutzwertanalyse-Trainer</h3><p>Gewichtung, Bewertung, Entscheidung – Dauerbrenner in 9/9 Prüfungen</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+
+    <div class="m offen">
+      <div class="m-tag ap2">WISO</div>
+      <h3>LF2 – Beschaffung & Nutzwertanalyse</h3>
+      <p>Beschaffungsprozess, Nutzwertanalyse, Make-or-Buy</p>
+      <div class="m-foot"><span class="ms nein">Geplant</span></div>
+    </div>
+
+    <div class="m offen">
+      <div class="m-tag ap2">WISO</div>
+      <h3>LF2 – Wirtschaftlichkeit & Kalkulation</h3>
+      <p>Kostenarten, Kalkulation, Break-Even, Deckungsbeitrag</p>
+      <div class="m-foot"><span class="ms nein">Geplant</span></div>
+    </div>
+
+    <div class="m offen">
+      <div class="m-tag ap2">WISO</div>
+      <h3>LF2 – Finanzierung & Leasing</h3>
+      <p>Finanzierungsarten, Leasing vs. Kauf, Eigen-/Fremdfinanzierung</p>
+      <div class="m-foot"><span class="ms nein">Geplant</span></div>
+    </div>
+
+    <div class="m offen">
+      <div class="m-tag ap2">WISO</div>
+      <h3>LF2 – Arbeitssicherheit</h3>
+      <p>ArbSchG, ASiG, Gefährdungsbeurteilung, Berufsgenossenschaften</p>
+      <div class="m-foot"><span class="ms nein">Geplant</span></div>
+    </div>
+
   </div>
 
-  <!-- PRÜFUNG -->
-  <div class="sek"><h2>Prüfungsunterlagen 2026</h2><div class="sl"></div><span class="sb sb-beide">Sommer 2026</span></div>
+  <!-- ===== SEKTION: TRAINER ===== -->
+  <div class="sek"><h2>Prüfungstrainer</h2><div class="sek-line"></div><span class="sek-badge beide">AP1 · AP2</span></div>
   <div class="mgrid">
-    <div class="m offen"><div class="m-tag">AP1 · Sommer 2026</div><h3>AP1 – Originalprüfung</h3><p>Aufgaben mit Musterlösung, Zeitplanung, Bewertungsschlüssel</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
-    <div class="m offen"><div class="m-tag">FISI · AP2 · Sommer 2026</div><h3>AP2 – GA1 & GA2 + WISO</h3><p>Ganzheitliche Aufgaben FISI mit Musterlösungen und Erklärungen</p><div class="m-foot"><span class="ms nein">Geplant</span></div></div>
+
+    <div class="m offen">
+      <div class="m-tag ap1">AP1</div>
+      <h3>Subnetting-Trainer</h3>
+      <p>Netzadresse, Broadcast, Hosts – Magic-Number-Methode Schritt für Schritt</p>
+      <div class="m-foot"><span class="ms nein">Geplant</span></div>
+    </div>
+
+    <div class="m offen">
+      <div class="m-tag ap1">AP1</div>
+      <h3>Nutzwertanalyse-Trainer</h3>
+      <p>Gewichtung, Bewertung, Entscheidung – Dauerbrenner in AP-Prüfungen</p>
+      <div class="m-foot"><span class="ms nein">Geplant</span></div>
+    </div>
+
+    <div class="m offen">
+      <div class="m-tag ap1">AP1</div>
+      <h3>Schreibtischtest-Trainer</h3>
+      <p>Trace Tables mit Schleifen und Bedingungen – im Prüfungsstil</p>
+      <div class="m-foot"><span class="ms nein">Geplant</span></div>
+    </div>
+
+  </div>
+
+  <!-- ===== SEKTION: PRÜFUNGSUNTERLAGEN ===== -->
+  <div class="sek"><h2>Prüfungsunterlagen 2026</h2><div class="sek-line"></div><span class="sek-badge g">Sommer 2026</span></div>
+  <div class="mgrid">
+    <div class="m offen">
+      <div class="m-tag ap1">AP1 · Sommer 2026</div>
+      <h3>AP1 – Originalprüfung</h3>
+      <p>Aufgaben mit Musterlösung, Zeitplanung, Bewertungsschlüssel</p>
+      <div class="m-foot"><span class="ms nein">Geplant</span></div>
+    </div>
+    <div class="m offen">
+      <div class="m-tag ap2">FISI · AP2 · Sommer 2026</div>
+      <h3>AP2 – GA1 & GA2 + WISO</h3>
+      <p>Ganzheitliche Aufgaben FISI mit Musterlösungen und Erklärungen</p>
+      <div class="m-foot"><span class="ms nein">Geplant</span></div>
+    </div>
   </div>
 
 </div>
 
 <footer>
-  FISI Lernplattform · <a href="https://github.com/idontbyteU/fisi-lernplattform" target="_blank">github.com/idontbyteU</a> · wird täglich erweitert
+  FISI Lernplattform · <a href="https://github.com/idontbyteU/fisi-lernplattform" target="_blank">github.com/idontbyteU</a> · wird laufend erweitert
 </footer>
 
 <script>
-const p=new Date('2026-05-25');
-const h=new Date();
-const d=Math.ceil((p-h)/(1000*60*60*24));
-document.getElementById('tage').textContent=d>0?d:'–';
+const prüfung = new Date('2026-06-01');
+const heute = new Date();
+const tage = Math.ceil((prüfung - heute) / (1000*60*60*24));
+document.getElementById('tage').textContent = tage > 0 ? tage : '–';
 </script>
+
 </body>
 </html>
