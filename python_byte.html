@@ -430,7 +430,7 @@
   <div class="progress-bar-wrap">
     <span class="progress-label">Fortschritt</span>
     <div class="bar-track"><div class="bar-fill" id="progress-fill" style="width:0%"></div></div>
-    <span class="progress-num" id="progress-text">0 / 12</span>
+    <span class="progress-num" id="progress-text">0 / 16</span>
   </div>
 
   <div style="display:grid;gap:12px;margin-top:8px;">
@@ -442,14 +442,14 @@
       </div>
     </div>
     <div class="ref-card">
-      <div class="ref-card-header"><span class="ref-icon">🟡</span> Level 2 – Logik & Schleifen (Aufgaben 5–8)</div>
+      <div class="ref-card-header"><span class="ref-icon">🟡</span> Level 2 – Logik & Schleifen (Aufgaben 5–12)</div>
       <div style="padding:16px 18px;font-size:14px;color:var(--muted);line-height:1.7">
         <code>if/else</code>, <code>for</code>, <code>while</code>, Listen, String-Methoden.<br>
         <strong style="color:var(--text)">Ziel:</strong> Du kannst Programme mit Entscheidungen und Wiederholungen bauen.
       </div>
     </div>
     <div class="ref-card">
-      <div class="ref-card-header"><span class="ref-icon">🔴</span> Level 3 – Programme (Aufgaben 9–12)</div>
+      <div class="ref-card-header"><span class="ref-icon">🔴</span> Level 3 – Programme (Aufgaben 13–16)</div>
       <div style="padding:16px 18px;font-size:14px;color:var(--muted);line-height:1.7">
         Funktionen, Fehlerbehandlung, Dateioperationen, Mini-Projekte.<br>
         <strong style="color:var(--text)">Ziel:</strong> Du baust dein erstes echtes kleines Programm.
@@ -815,12 +815,198 @@ versuche = <span class="num">0</span>
     </div>
   </div>
 
+  <!-- Aufgabe 9 – NEU aus Unterricht -->
+  <div class="exercise-card" id="card-13">
+    <div class="card-header">
+      <span class="card-num">#09</span>
+      <span class="card-title">Schwimmbadkarte – Preisberechnung</span>
+      <span class="done-badge">✓ Erledigt</span>
+    </div>
+    <div class="card-body">
+      Schreibe ein Programm das den <strong>Eintrittspreis</strong> für ein Schwimmbad berechnet:<br>
+      • Alter &lt; 6 → <strong>kostenlos (0,00 €)</strong><br>
+      • Alter 6–12 → <strong>2,00 €</strong><br>
+      • Alter 13–20 → <strong>4,00 €</strong><br>
+      • Alter &gt; 20 → <strong>6,00 €</strong><br><br>
+      Gib den Preis mit einem <strong>f-String</strong> aus: <code>"Der Preis ist: 4.00 €"</code><br>
+      Tipp: <code>{preis:4.2f}</code> sorgt für immer 2 Nachkommastellen.
+    </div>
+    <div class="card-actions">
+      <button class="btn btn-hint" onclick="toggleHint(13)">💡 Hinweis</button>
+      <button class="btn btn-solution" onclick="toggleSolution(13)">👁 Lösung</button>
+      <button class="btn btn-done" onclick="markDone(13)">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-13">
+      <div class="hint-title">💡 Hinweis</div>
+      Denke an die Reihenfolge der Bedingungen – prüfe von <strong>klein nach groß</strong>:<br>
+      <code>if a &lt; 6:</code> → zuerst die Kleinsten<br>
+      <code>elif a &lt;= 12:</code> → dann bis 12 (du musst nicht mehr &gt;= 6 schreiben, das ist schon ausgeschlossen!)<br><br>
+      <code>:4.2f</code> im f-String = mindestens 4 Zeichen breit, immer 2 Nachkommastellen
+    </div>
+    <div class="solution-box" id="solution-13">
+      <div class="solution-title">✓ Musterlösung</div>
+      <div class="code-block">a = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Alter> "</span>))
+
+<span class="kw">if</span> a < <span class="num">6</span>:
+    preis = <span class="num">0.0</span>
+<span class="kw">elif</span> a <= <span class="num">12</span>:
+    preis = <span class="num">2.0</span>
+<span class="kw">elif</span> a <= <span class="num">20</span>:
+    preis = <span class="num">4.0</span>
+<span class="kw">else</span>:
+    preis = <span class="num">6.0</span>
+
+<span class="fn">print</span>(<span class="str">f"Der Preis ist: {preis:<span class="num">4.2f</span>} €"</span>)</div>
+    </div>
+  </div>
+
+  <!-- Aufgabe 10 – NEU aus Unterricht -->
+  <div class="exercise-card" id="card-14">
+    <div class="card-header">
+      <span class="card-num">#10</span>
+      <span class="card-title">Schaltjahr berechnen</span>
+      <span class="done-badge">✓ Erledigt</span>
+    </div>
+    <div class="card-body">
+      Schreibe das Programm <strong>schaltjahr.py</strong>. Der Benutzer gibt eine Jahreszahl ein.<br>
+      Ein Jahr ist ein Schaltjahr wenn:<br>
+      • Es durch <strong>4</strong> teilbar ist<br>
+      • <strong>Außer</strong> es ist durch <strong>100</strong> teilbar<br>
+      • <strong>Es sei denn</strong> es ist auch durch <strong>400</strong> teilbar<br><br>
+      Teste mit: 1900 (kein SJ), 2000 (SJ), 2004 (SJ), 2006 (kein SJ)<br><br>
+      Ausgabe: <code>"2000 ist ein Schaltjahr"</code> oder <code>"1900 ist kein Schaltjahr"</code>
+    </div>
+    <div class="card-actions">
+      <button class="btn btn-hint" onclick="toggleHint(14)">💡 Hinweis</button>
+      <button class="btn btn-solution" onclick="toggleSolution(14)">👁 Lösung</button>
+      <button class="btn btn-done" onclick="markDone(14)">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-14">
+      <div class="hint-title">💡 Hinweis</div>
+      Die <strong>Reihenfolge</strong> der if/elif ist entscheidend – prüfe von speziell nach allgemein:<br>
+      1. Zuerst: durch 400 teilbar? → Schaltjahr<br>
+      2. Dann: durch 100 teilbar? → kein Schaltjahr<br>
+      3. Dann: durch 4 teilbar? → Schaltjahr<br>
+      4. Sonst → kein Schaltjahr<br><br>
+      Verwende eine Boolean-Variable: <code>schaltjahr = True</code> oder <code>False</code>
+    </div>
+    <div class="solution-box" id="solution-14">
+      <div class="solution-title">✓ Musterlösung</div>
+      <div class="code-block">j = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Jahreszahl> "</span>))
+
+<span class="kw">if</span> j % <span class="num">400</span> == <span class="num">0</span>:
+    schaltjahr = <span class="kw">True</span>
+<span class="kw">elif</span> j % <span class="num">100</span> == <span class="num">0</span>:
+    schaltjahr = <span class="kw">False</span>
+<span class="kw">elif</span> j % <span class="num">4</span> == <span class="num">0</span>:
+    schaltjahr = <span class="kw">True</span>
+<span class="kw">else</span>:
+    schaltjahr = <span class="kw">False</span>
+
+<span class="fn">print</span>(<span class="str">"Prüfung abgeschlossen."</span>)
+<span class="kw">if</span> schaltjahr:
+    <span class="fn">print</span>(<span class="str">f"{j} ist ein Schaltjahr"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">f"{j} ist kein Schaltjahr"</span>)</div>
+    </div>
+  </div>
+
+  <!-- Aufgabe 11 – NEU aus Unterricht -->
+  <div class="exercise-card" id="card-15">
+    <div class="card-header">
+      <span class="card-num">#11</span>
+      <span class="card-title">Zahlenreihen mit for & range()</span>
+      <span class="done-badge">✓ Erledigt</span>
+    </div>
+    <div class="card-body">
+      Schreibe <strong>5 kurze Programme</strong> – jedes gibt eine Zahlenreihe aus (nur eine <code>print()</code> pro Schleife!):<br><br>
+      1. <code>0 1 2 3 … 10</code> (nebeneinander in einer Zeile)<br>
+      2. <code>-10 -8 -6 … 10</code><br>
+      3. <code>0 3 6 9 … 21</code><br>
+      4. <code>0 2 4 6 8 … 20</code><br>
+      5. Von <strong>a</strong> bis <strong>b</strong> mit Schrittweite <strong>s</strong> – alle drei Werte vom Benutzer eingeben lassen<br><br>
+      Bonus: Schreibe Aufgabe 1 als <strong>Einzeiler</strong>!
+    </div>
+    <div class="card-actions">
+      <button class="btn btn-hint" onclick="toggleHint(15)">💡 Hinweis</button>
+      <button class="btn btn-solution" onclick="toggleSolution(15)">👁 Lösung</button>
+      <button class="btn btn-done" onclick="markDone(15)">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-15">
+      <div class="hint-title">💡 Hinweis</div>
+      <code>range(start, stop, schritt)</code> – stop ist <strong>nicht</strong> dabei!<br><br>
+      Zahlen nebeneinander: <code>print(i, end=" ")</code> – unterdrückt den Zeilenumbruch<br><br>
+      Rückwärts zählen: negativer Schritt z.B. <code>range(10, -1, -1)</code><br>
+      Einzeiler: <code>for i in range(11): print(i, end=" ")</code>
+    </div>
+    <div class="solution-box" id="solution-15">
+      <div class="solution-title">✓ Musterlösung</div>
+      <div class="code-block"><span class="cm"># 1. – Einzeiler</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">11</span>): <span class="fn">print</span>(i, end=<span class="str">" "</span>)
+
+<span class="cm"># 2.</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">-10</span>, <span class="num">11</span>, <span class="num">2</span>): <span class="fn">print</span>(i, end=<span class="str">" "</span>)
+
+<span class="cm"># 3.</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, <span class="num">22</span>, <span class="num">3</span>): <span class="fn">print</span>(i, end=<span class="str">" "</span>)
+
+<span class="cm"># 4.</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, <span class="num">21</span>, <span class="num">2</span>): <span class="fn">print</span>(i, end=<span class="str">" "</span>)
+
+<span class="cm"># 5. – Benutzereingabe</span>
+a = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Start: "</span>))
+b = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Ende: "</span>))
+s = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Schrittweite: "</span>))
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(a, b + <span class="num">1</span>, s): <span class="fn">print</span>(i, end=<span class="str">" "</span>)</div>
+    </div>
+  </div>
+
+  <!-- Aufgabe 12 – NEU aus Unterricht -->
+  <div class="exercise-card" id="card-16">
+    <div class="card-header">
+      <span class="card-num">#12</span>
+      <span class="card-title">Summe & Mittelwert berechnen</span>
+      <span class="done-badge">✓ Erledigt</span>
+    </div>
+    <div class="card-body">
+      Setze dieses <strong>Struktogramm</strong> in Python um:<br><br>
+      • <code>summe = 0</code><br>
+      • Benutzer gibt Anzahl der Durchläufe ein (<code>anzahl</code>)<br>
+      • for-Schleife von 1 bis anzahl: <code>summe = summe + z</code><br>
+      • Ausgabe: Summe und Mittelwert<br><br>
+      Beispiel: anzahl = 4 → addiert 1+2+3+4 = 10, Mittelwert = 2.5<br>
+      Format: <code>{summe:13}</code> und <code>{mittelwert:8.2f}</code>
+    </div>
+    <div class="card-actions">
+      <button class="btn btn-hint" onclick="toggleHint(16)">💡 Hinweis</button>
+      <button class="btn btn-solution" onclick="toggleSolution(16)">👁 Lösung</button>
+      <button class="btn btn-done" onclick="markDone(16)">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-16">
+      <div class="hint-title">💡 Hinweis</div>
+      Summen-Akkumulator: <code>summe = summe + z</code> oder kürzer <code>summe += z</code><br><br>
+      range(1, anzahl+1) – warum +1? Weil range() den letzten Wert <strong>nicht</strong> mitmacht!<br><br>
+      Mittelwert: <code>summe / anzahl</code>
+    </div>
+    <div class="solution-box" id="solution-16">
+      <div class="solution-title">✓ Musterlösung</div>
+      <div class="code-block">summe = <span class="num">0</span>
+anzahl = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Anzahl Durchläufe> "</span>))
+
+<span class="kw">for</span> z <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, anzahl + <span class="num">1</span>):
+    summe = summe + z
+
+<span class="fn">print</span>(<span class="str">f"Summe:     {summe:<span class="num">13</span>}"</span>)
+<span class="fn">print</span>(<span class="str">f"Mittelwert: {summe/anzahl:<span class="num">8.2f</span>}"</span>)</div>
+    </div>
+  </div>
+
   <div class="level-title"><span class="dot dot-hard"></span> Level 3 – Programme</div>
 
   <!-- Aufgabe 9 -->
-  <div class="exercise-card" id="card-9">
+  <div class="exercise-card" id="card-13">
     <div class="card-header">
-      <span class="card-num">#09</span>
+      <span class="card-num">#13</span>
       <span class="card-title">Funktionen – Taschenrechner</span>
       <span class="done-badge">✓ Erledigt</span>
     </div>
@@ -832,11 +1018,11 @@ versuche = <span class="num">0</span>
       • Bei Division durch 0 soll eine sinnvolle Meldung kommen (kein Absturz!)
     </div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(9)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(9)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(9)">✓ Erledigt</button>
+      <button class="btn btn-hint" onclick="toggleHint(13)">💡 Hinweis</button>
+      <button class="btn btn-solution" onclick="toggleSolution(13)">👁 Lösung</button>
+      <button class="btn btn-done" onclick="markDone(13)">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-9">
+    <div class="hint-box" id="hint-13">
       <div class="hint-title">💡 Hinweis</div>
       Funktion mit return:<br>
       <code>def addieren(a, b):</code><br>
@@ -845,7 +1031,7 @@ versuche = <span class="num">0</span>
       Division durch 0 abfangen: <code>if b == 0: return "Fehler!"</code><br>
       Oder mit try/except: <code>try: return a/b</code> — <code>except ZeroDivisionError: return "Fehler"</code>
     </div>
-    <div class="solution-box" id="solution-9">
+    <div class="solution-box" id="solution-13">
       <div class="solution-title">✓ Musterlösung</div>
       <div class="code-block"><span class="kw">def</span> <span class="fn">addieren</span>(a, b):
     <span class="kw">return</span> a + b
@@ -874,23 +1060,23 @@ b = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str
   </div>
 
   <!-- Aufgaben 10-12 kürzer -->
-  <div class="exercise-card" id="card-10">
-    <div class="card-header"><span class="card-num">#10</span><span class="card-title">Fehlerbehandlung mit try/except</span><span class="done-badge">✓ Erledigt</span></div>
+  <div class="exercise-card" id="card-14">
+    <div class="card-header"><span class="card-num">#14</span><span class="card-title">Fehlerbehandlung mit try/except</span><span class="done-badge">✓ Erledigt</span></div>
     <div class="card-body">
       Schreibe ein Programm das den Benutzer nach einer <strong>ganzen Zahl</strong> fragt – aber nicht abstürzt wenn er Buchstaben eingibt. Benutze <code>try/except</code>. Das Programm soll so lange fragen bis eine gültige Zahl eingegeben wurde. Gib danach Quadrat und Kubik der Zahl aus.
     </div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(10)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(10)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(10)">✓ Erledigt</button>
+      <button class="btn btn-hint" onclick="toggleHint(14)">💡 Hinweis</button>
+      <button class="btn btn-solution" onclick="toggleSolution(14)">👁 Lösung</button>
+      <button class="btn btn-done" onclick="markDone(14)">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-10">
+    <div class="hint-box" id="hint-14">
       <div class="hint-title">💡 Hinweis</div>
       <code>try:</code> – hier kommt der gefährliche Code<br>
       <code>except ValueError:</code> – wird ausgeführt wenn int() einen String bekommt<br><br>
       Kombiniere das mit einer <code>while True:</code> Schleife und <code>break</code> wenn es klappt.
     </div>
-    <div class="solution-box" id="solution-10">
+    <div class="solution-box" id="solution-14">
       <div class="solution-title">✓ Musterlösung</div>
       <div class="code-block"><span class="kw">while</span> <span class="kw">True</span>:
     <span class="kw">try</span>:
@@ -904,8 +1090,8 @@ b = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str
     </div>
   </div>
 
-  <div class="exercise-card" id="card-11">
-    <div class="card-header"><span class="card-num">#11</span><span class="card-title">Datei schreiben & lesen</span><span class="done-badge">✓ Erledigt</span></div>
+  <div class="exercise-card" id="card-15">
+    <div class="card-header"><span class="card-num">#15</span><span class="card-title">Datei schreiben & lesen</span><span class="done-badge">✓ Erledigt</span></div>
     <div class="card-body">
       Schreibe ein Programm das ein <strong>Tagebuch</strong> in einer Textdatei führt:<br>
       • Benutzer gibt einen Eintrag ein<br>
@@ -914,17 +1100,17 @@ b = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str
       Tipp: <code>import datetime</code>
     </div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(11)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(11)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(11)">✓ Erledigt</button>
+      <button class="btn btn-hint" onclick="toggleHint(15)">💡 Hinweis</button>
+      <button class="btn btn-solution" onclick="toggleSolution(15)">👁 Lösung</button>
+      <button class="btn btn-done" onclick="markDone(15)">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-11">
+    <div class="hint-box" id="hint-15">
       <div class="hint-title">💡 Hinweis</div>
       Modus <code>"a"</code> = append (anhängen, nicht überschreiben!)<br>
       <code>datetime.datetime.now().strftime("%d.%m.%Y %H:%M")</code> → aktuelles Datum/Uhrzeit als String<br>
       Zum Lesen: Modus <code>"r"</code>, dann <code>for zeile in datei:</code>
     </div>
-    <div class="solution-box" id="solution-11">
+    <div class="solution-box" id="solution-15">
       <div class="solution-title">✓ Musterlösung</div>
       <div class="code-block"><span class="kw">import</span> datetime
 
@@ -941,8 +1127,8 @@ jetzt = datetime.datetime.now().strftime(<span class="str">"%d.%m.%Y %H:%M"</spa
     </div>
   </div>
 
-  <div class="exercise-card" id="card-12">
-    <div class="card-header"><span class="card-num">#12</span><span class="card-title">Mini-Projekt: Kontaktverwaltung</span><span class="done-badge">✓ Erledigt</span></div>
+  <div class="exercise-card" id="card-16">
+    <div class="card-header"><span class="card-num">#16</span><span class="card-title">Mini-Projekt: Kontaktverwaltung</span><span class="done-badge">✓ Erledigt</span></div>
     <div class="card-body">
       Baue eine einfache <strong>Kontaktverwaltung</strong> mit Listen oder einem Dictionary:<br>
       • Kontakt hinzufügen (Name + Telefon)<br>
@@ -953,11 +1139,11 @@ jetzt = datetime.datetime.now().strftime(<span class="str">"%d.%m.%Y %H:%M"</spa
       <em>Dies ist dein erstes echtes Mini-Programm – baue es selbst, ohne direkt zur Lösung zu schauen!</em>
     </div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(12)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(12)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(12)">✓ Erledigt</button>
+      <button class="btn btn-hint" onclick="toggleHint(16)">💡 Hinweis</button>
+      <button class="btn btn-solution" onclick="toggleSolution(16)">👁 Lösung</button>
+      <button class="btn btn-done" onclick="markDone(16)">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-12">
+    <div class="hint-box" id="hint-16">
       <div class="hint-title">💡 Hinweis</div>
       Datenstruktur-Vorschlag: Dictionary mit Name als Key:<br>
       <code>kontakte = {"Max": "0171-123456"}</code><br><br>
@@ -965,7 +1151,7 @@ jetzt = datetime.datetime.now().strftime(<span class="str">"%d.%m.%Y %H:%M"</spa
       <code>kontakte = [{"name": "Max", "tel": "0171..."}]</code><br><br>
       Struktur: <code>while True:</code> → Menü anzeigen → Eingabe lesen → if/elif für jede Option
     </div>
-    <div class="solution-box" id="solution-12">
+    <div class="solution-box" id="solution-16">
       <div class="solution-title">✓ Musterlösung (Kurzversion)</div>
       <div class="code-block">kontakte = {}
 
@@ -1264,7 +1450,7 @@ SyntaxError: expected ':'</div>
   }
 
   function updateProgress() {
-    const total = 12;
+    const total = 16;
     const pct = Math.round((done.size / total) * 100);
     document.getElementById('progress-fill').style.width = pct + '%';
     document.getElementById('progress-text').textContent = done.size + ' / ' + total;
