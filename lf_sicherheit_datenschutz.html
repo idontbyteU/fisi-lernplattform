@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT-Sicherheit & Datenschutz – FISI Lernmodul</title>
+<style>
+:root {
+  --accent: #0F6E56;
+  --accent-light: #E1F5EE;
+  --accent-mid: #1D9E75;
+  --text: #1a1a1a;
+  --text-muted: #666;
+  --border: #e5e5e0;
+  --bg: #fff;
+  --bg-sec: #f8f7f4;
+  --radius: 10px;
+  --correct: #3B6D11;
+  --correct-bg: #EAF3DE;
+  --wrong: #A32D2D;
+  --wrong-bg: #FCEBEB;
+  --amber: #854F0B;
+  --amber-bg: #FAEEDA;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--bg-sec); color: var(--text); min-height: 100vh; }
+
+.top-bar { background: var(--accent); color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 12px; }
+.top-bar h1 { font-size: 17px; font-weight: 500; }
+.top-bar .badge { background: rgba(255,255,255,0.2); font-size: 12px; padding: 3px 10px; border-radius: 20px; }
+.back-btn { font-size: 13px; color: rgba(255,255,255,0.8); text-decoration: none; margin-right: 8px; }
+.back-btn:hover { color: #fff; }
+
+.main { max-width: 860px; margin: 0 auto; padding: 24px 20px; }
+
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+.stat-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 12px 14px; text-align: center; }
+.stat-card .num { font-size: 24px; font-weight: 500; }
+.stat-card .lbl { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.stat-card.total .num { color: var(--accent); }
+.stat-card.correct .num { color: var(--correct); }
+.stat-card.wrong .num { color: var(--wrong); }
+.stat-card.open .num { color: var(--amber); }
+
+.controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+.search-wrap { flex: 1; min-width: 200px; position: relative; }
+.search-wrap input { width: 100%; padding: 9px 12px 9px 36px; border: 0.5px solid var(--border); border-radius: var(--radius); font-size: 14px; background: var(--bg); color: var(--text); outline: none; }
+.search-wrap input:focus { border-color: var(--accent-mid); box-shadow: 0 0 0 2px rgba(29,158,117,0.15); }
+.search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 15px; pointer-events: none; }
+.filter-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.filter-btn { padding: 7px 14px; font-size: 13px; border: 0.5px solid var(--border); border-radius: 20px; background: var(--bg); color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+.filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.filter-btn:hover:not(.active) { border-color: var(--accent-mid); color: var(--accent); }
+
+.mode-bar { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap; }
+.mode-btn { padding: 8px 16px; font-size: 13px; border: 0.5px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.mode-btn.active { background: var(--accent-light); color: var(--accent); border-color: var(--accent-mid); font-weight: 500; }
+.mode-btn:hover:not(.active) { border-color: var(--accent-mid); }
+.spacer { flex: 1; }
+.reset-btn { padding: 7px 14px; font-size: 12px; border: 0.5px solid var(--border); border-radius: var(--radius); background: transparent; color: var(--text-muted); cursor: pointer; }
+.reset-btn:hover { border-color: var(--wrong); color: var(--wrong); }
+
+.section-header { font-size: 13px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin: 20px 0 10px; }
+
+.card-grid { display: flex; flex-direction: column; gap: 10px; }
+.card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); cursor: pointer; overflow: hidden; transition: box-shadow 0.15s; }
+.card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.card.correct-card { border-left: 3px solid var(--correct); }
+.card.wrong-card { border-left: 3px solid var(--wrong); }
+.card-front { padding: 14px 16px; display: flex; align-items: flex-start; gap: 12px; }
+.card-cat { font-size: 11px; padding: 2px 8px; border-radius: 20px; white-space: nowrap; margin-top: 2px; flex-shrink: 0; }
+.cat-bsi { background: #E6F1FB; color: #0C447C; }
+.cat-dsgvo { background: var(--amber-bg); color: var(--amber); }
+.cat-grundschutz { background: var(--accent-light); color: var(--accent); }
+.cat-toms { background: #EEEDFE; color: #3C3489; }
+.cat-schutz { background: #FBEAF0; color: #72243E; }
+.cat-recht { background: #F1EFE8; color: #444441; }
+.card-q { font-size: 14px; line-height: 1.5; flex: 1; }
+.card-status { font-size: 18px; margin-left: auto; flex-shrink: 0; }
+.card-back { display: none; padding: 14px 16px; border-top: 0.5px solid var(--border); background: var(--bg-sec); }
+.card-back .answer { font-size: 14px; line-height: 1.6; color: var(--text); }
+.card-back .answer ul { padding-left: 18px; margin-top: 4px; }
+.card-back .answer li { margin-bottom: 3px; }
+.card.open .card-back { display: block; }
+.vote-row { display: flex; gap: 8px; margin-top: 12px; }
+.vote-btn { padding: 7px 18px; font-size: 13px; border-radius: 20px; border: 0.5px solid; cursor: pointer; font-weight: 500; }
+.vote-correct { background: var(--correct-bg); color: var(--correct); border-color: var(--correct); }
+.vote-correct:hover { background: #d4e8b4; }
+.vote-wrong { background: var(--wrong-bg); color: var(--wrong); border-color: var(--wrong); }
+.vote-wrong:hover { background: #f7c1c1; }
+
+.no-results { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; }
+
+.progress-bar-wrap { background: var(--border); border-radius: 10px; height: 6px; margin-bottom: 20px; overflow: hidden; }
+.progress-bar { background: linear-gradient(90deg, var(--correct) 0%, var(--accent-mid) 100%); height: 100%; border-radius: 10px; transition: width 0.4s; }
+
+footer { text-align: center; padding: 28px 20px; font-size: 12px; color: #aaa; }
+footer a { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 600px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .top-bar h1 { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="index.html" class="back-btn">← Startseite</a>
+  <h1>IT-Sicherheit & Datenschutz</h1>
+  <span class="badge">LF 2 – aktuell</span>
+</div>
+
+<div class="main">
+
+  <div class="stats-row">
+    <div class="stat-card total"><div class="num" id="statTotal">0</div><div class="lbl">Gesamt</div></div>
+    <div class="stat-card correct"><div class="num" id="statCorrect">0</div><div class="lbl">Richtig ✓</div></div>
+    <div class="stat-card wrong"><div class="num" id="statWrong">0</div><div class="lbl">Falsch ✗</div></div>
+    <div class="stat-card open"><div class="num" id="statOpen">0</div><div class="lbl">Offen</div></div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar" id="progressBar" style="width:0%"></div>
+  </div>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Karteikarten durchsuchen..." oninput="filterCards()">
+    </div>
+    <div class="filter-btns">
+      <button class="filter-btn active" onclick="setFilter('all',this)">Alle</button>
+      <button class="filter-btn" onclick="setFilter('open',this)">Offen</button>
+      <button class="filter-btn" onclick="setFilter('wrong',this)">Falsch wiederholen</button>
+      <button class="filter-btn" onclick="setFilter('correct',this)">Richtig</button>
+    </div>
+  </div>
+
+  <div class="mode-bar">
+    <button class="mode-btn active" onclick="setMode('alle',this)">📚 Alle Themen</button>
+    <button class="mode-btn" onclick="setMode('bsi',this)">🏛 BSI-Standards</button>
+    <button class="mode-btn" onclick="setMode('dsgvo',this)">⚖️ DSGVO</button>
+    <button class="mode-btn" onclick="setMode('grundschutz',this)">🛡 IT-Grundschutz</button>
+    <button class="mode-btn" onclick="setMode('toms',this)">🔐 TOMs</button>
+    <div class="spacer"></div>
+    <button class="reset-btn" onclick="resetAll()">↺ Alle zurücksetzen</button>
+  </div>
+
+  <div id="cardContainer" class="card-grid"></div>
+
+</div>
+
+<footer>FISI Lernplattform · <a href="https://github.com/idontbyteU/fisi-lernplattform">github.com/idontbyteU/fisi-lernplattform</a></footer>
+
+<script>
+const CARDS = [
+  {id:1, cat:'bsi', q:'Was ist das BSI und welche Aufgaben hat es?', a:'Das Bundesamt für Sicherheit in der Informationstechnik (BSI) ist die zentrale IT-Sicherheitsbehörde Deutschlands. Aufgaben: Untersuchung von IT-Produkten auf Sicherheit, zentrale Meldestelle für IT-Sicherheit kritischer Infrastrukturen, Herausgabe des IT-Grundschutz-Kompendiums und der BSI-Standards.'},
+  {id:2, cat:'bsi', q:'Welche BSI-Standards gibt es und wofür stehen sie?', a:'BSI-Standard 200-1: ISMS (Managementsysteme für Informationssicherheit)\nBSI-Standard 200-2: IT-Grundschutz-Methodik\nBSI-Standard 200-3: Risikoanalyse auf Basis IT-Grundschutz\nBSI-Standard 200-4: Business Continuity Management\n(Vorgänger: BSI-Standard 100-2 = Vorgehensweise IT-Grundschutz)'},
+  {id:3, cat:'bsi', q:'Was beschreibt der BSI-Standard 200-1?', a:'200-1 beschreibt den Aufbau und Betrieb eines Informationssicherheitsmanagementsystems (ISMS). Er ist vollständig kompatibel mit ISO/IEC 27001 und legt die Grundsätze und Ziele der Informationssicherheit fest. Leitgedanke: "Informationssicherheit ist Chefsache."'},
+  {id:4, cat:'bsi', q:'Was beschreibt der BSI-Standard 200-2?', a:'200-2 beschreibt die IT-Grundschutz-Methodik mit den Schritten: 1) Strukturanalyse, 2) Schutzbedarfsfeststellung, 3) Modellierung des Informationsverbunds, 4) IT-Grundschutz-Check (Soll-Ist-Vergleich), 5) Risikoanalyse. Ziel: Erstellung einer Sicherheitskonzeption.'},
+  {id:5, cat:'bsi', q:'Was ist der PDCA-Zyklus im ISMS?', a:'Plan → Do → Check → Act\nPlan: Sicherheitsziele festlegen, Risiken bewerten\nDo: Maßnahmen umsetzen\nCheck: Wirksamkeit messen, Audits\nAct: Verbesserungen einleiten\nDer Zyklus sorgt für kontinuierliche Verbesserung der Informationssicherheit.'},
+  {id:6, cat:'bsi', q:'Was ist ISO/IEC 27001 und wie hängt es mit BSI zusammen?', a:'ISO/IEC 27001 ist ein internationaler Standard für ISMS. Unternehmen können sich nach ISO 27001 zertifizieren lassen – auch "auf Basis von IT-Grundschutz". Das Zertifikat zeigt: Informationssicherheit ist anerkannter Wert, funktionierendes IS-Management vorhanden, definiertes Sicherheitsniveau wurde erreicht.'},
+  {id:7, cat:'grundschutz', q:'Was sind die drei klassischen Schutzziele (CIA-Triade)?', a:'Vertraulichkeit (Confidentiality): Nur autorisierte Personen/Systeme haben Zugriff auf Daten.\nIntegrität (Integrity): Daten sind korrekt, vollständig und unverändert.\nVerfügbarkeit (Availability): Systeme und Daten sind für Berechtigte bei Bedarf zugänglich.\nMerkhilfe: CIA oder VIV'},
+  {id:8, cat:'grundschutz', q:'Was sind die drei Schutzbedarfskategorien des BSI?', a:'Normal: Schaden ist begrenzt und überschaubar (geringe finanzielle Schäden, geringfügige Verstöße)\nHoch: Schaden kann beträchtlich sein (erhebliche finanzielle Schäden, Rufschädigung, Verstöße gegen Gesetze)\nSehr hoch: Schaden kann existenzbedrohlich oder katastrophal sein (Gefahr für Leib und Leben, existenzielle Schäden)'},
+  {id:9, cat:'grundschutz', q:'Was ist die Strukturanalyse nach IT-Grundschutz?', a:'Die Strukturanalyse erfasst alle schutzbedürftigen Komponenten eines Informationsverbunds:\n• Geschäftsprozesse und Informationen\n• Anwendungen (Software)\n• IT-Systeme (Hardware)\n• Räume und Gebäude\n• Kommunikationsnetze\nZiel: WAS muss geschützt werden?'},
+  {id:10, cat:'grundschutz', q:'Was ist die Schutzbedarfsfeststellung?', a:'Für jedes erfasste Objekt aus der Strukturanalyse wird der Schutzbedarf bezüglich Vertraulichkeit, Integrität und Verfügbarkeit bestimmt. Grundlage: mögliche Schäden bei Beeinträchtigung. Kategorien: normal / hoch / sehr hoch.\nZiel: WIE STARK muss es geschützt werden?'},
+  {id:11, cat:'grundschutz', q:'Was versteht man unter Modellierung im IT-Grundschutz?', a:'Die Bausteine des IT-Grundschutz-Kompendiums werden den Zielobjekten des Informationsverbunds zugeordnet. Ergebnis: IT-Grundschutz-Modell = Prüfplan (für bestehende Verbünde) oder Entwicklungsplan (für geplante Verbünde). Bausteine sind in prozess- und systemorientierte Bausteine aufgeteilt.'},
+  {id:12, cat:'grundschutz', q:'Was ist der IT-Grundschutz-Check?', a:'Der IT-Grundschutz-Check ist ein Soll-Ist-Vergleich. Mithilfe von Interviews wird der Umsetzungsgrad der Sicherheitsanforderungen des IT-Grundschutz-Kompendiums geprüft. Ergebnis: für jede Anforderung wird "entbehrlich", "ja", "teilweise" oder "nein" erfasst.'},
+  {id:13, cat:'grundschutz', q:'Was sind Basis-, Standard- und erhöhte Anforderungen im IT-Grundschutz?', a:'Basis-Anforderungen: Müssen vorrangig erfüllt werden – hoher Nutzen bei geringem Aufwand. Grundlage der Basis-Absicherung.\nStandard-Anforderungen: Bauen auf Basis-Anforderungen auf, adressieren normalen Schutzbedarf.\nAnforderungen bei erhöhtem Schutzbedarf: Für hoch/sehr hoch schutzbedürftige Bereiche.'},
+  {id:14, cat:'grundschutz', q:'Welche Schichten hat das IT-Grundschutz-Schichtenmodell (BSI 100-2)?', a:'Schicht 1: Übergreifende Aspekte (Personal, Datensicherung, Outsourcing)\nSchicht 2: Infrastruktur (Gebäude, Serverraum, häuslicher Arbeitsplatz)\nSchicht 3: IT-Systeme (Client, Server, Laptop, Mobiltelefon)\nSchicht 4: Netz (WLAN, VoIP, Netzmanagement)\nSchicht 5: Anwendungen (E-Mail, Webserver, Datenbanken)'},
+  {id:15, cat:'grundschutz', q:'Was sind die 47 elementaren Gefährdungen im IT-Grundschutz?', a:'Das BSI hat aus vielen Einzelgefährdungen 47 elementare Gefährdungen herausgearbeitet. Sie sind: produktneutral, technikneutral (soweit möglich), kompatibel mit internationalen Standards und für Risikoanalysen optimiert. Aus ihnen werden die spezifischen Gefährdungen der Bausteine abgeleitet.'},
+  {id:16, cat:'dsgvo', q:'Was regelt die DSGVO?', a:'Die Datenschutz-Grundverordnung (EU 2016/679) regelt den Schutz und die Grundrechte natürlicher Personen bei der Verarbeitung personenbezogener Daten. Sie hat Anwendungsvorrang vor nationalem Recht (BDSG). Gilt seit 25. Mai 2018 in der gesamten EU.'},
+  {id:17, cat:'dsgvo', q:'Welche 7 Grundsätze für die Verarbeitung gibt es laut Art. 5 DSGVO?', a:'1. Rechtmäßigkeit, Treu und Glauben, Transparenz\n2. Zweckbindung (nur für festgelegte Zwecke)\n3. Datenminimierung (nur notwendige Daten)\n4. Richtigkeit (sachlich richtig, aktuell)\n5. Speicherbegrenzung (nur solange wie nötig)\n6. Integrität und Vertraulichkeit (TOMs)\n7. Rechenschaftspflicht (Nachweis der Einhaltung)'},
+  {id:18, cat:'dsgvo', q:'Was bedeutet Zweckbindung (Art. 5 Abs. 1 lit. b DSGVO)?', a:'Personenbezogene Daten dürfen nur für festgelegte, eindeutige und rechtmäßige Zwecke erhoben werden. Eine Weiterverarbeitung für andere Zwecke ist grundsätzlich verboten. Beispiel: Adressen für Lieferung dürfen nicht für Werbung genutzt werden.'},
+  {id:19, cat:'dsgvo', q:'Was ist Datenminimierung nach Art. 5 DSGVO?', a:'Es dürfen nur so viele personenbezogene Daten verarbeitet werden, wie für den jeweiligen Zweck erforderlich sind. "Dem Zweck nach angemessen und erheblich sowie auf das für die Zwecke der Verarbeitung notwendige Maß beschränkt."'},
+  {id:20, cat:'dsgvo', q:'Welche Rechte haben betroffene Personen laut DSGVO?', a:'Art. 15: Auskunftsrecht\nArt. 16: Recht auf Berichtigung\nArt. 17: Recht auf Löschung ("Recht auf Vergessenwerden")\nArt. 18: Recht auf Einschränkung der Verarbeitung\nArt. 20: Recht auf Datenübertragbarkeit\nArt. 21: Widerspruchsrecht\nArt. 22: Recht auf Überprüfung automatisierter Entscheidungen'},
+  {id:21, cat:'dsgvo', q:'Was ist ein Datenschutzbeauftragter (DSB) und wann ist er Pflicht?', a:'Der DSB überwacht die Einhaltung der DSGVO im Unternehmen. Pflicht ab: ≥20 Personen die regelmäßig personenbezogene Daten verarbeiten, bei sensiblen Daten, oder bei Profiling/Scoring. Der DSB ist weisungsfrei und darf nicht abberufen werden (außer bei wichtigem Grund).'},
+  {id:22, cat:'dsgvo', q:'Was ist eine Datenpanne und was muss bei einer Datenpanne getan werden?', a:'Eine Datenpanne (Verletzung des Schutzes personenbezogener Daten) muss innerhalb von 72 Stunden der zuständigen Datenschutzaufsichtsbehörde gemeldet werden. Betroffene Personen müssen informiert werden, wenn ein hohes Risiko für ihre Rechte und Freiheiten besteht.'},
+  {id:23, cat:'dsgvo', q:'Was ist der Unterschied zwischen Datenschutz und Datensicherheit?', a:'Datenschutz: Schutz personenbezogener Daten vor Missbrauch – Schutz der Person. Gesetzlich durch DSGVO/BDSG geregelt.\nDatensicherheit: Technisch-organisatorischer Schutz aller Daten (auch nicht-personenbezogene) gegen Verlust, Manipulation, unberechtigten Zugriff. Umgesetzt durch IT-Grundschutz.'},
+  {id:24, cat:'dsgvo', q:'Was ist das Verhältnis von DSGVO, BDSG und Landesrecht?', a:'DSGVO hat Anwendungsvorrang (EU-Verordnung, direkt geltend). BDSG gilt ergänzend wo DSGVO Spielraum lässt. Bereichsspezifische Gesetze (z.B. SGB, AO) gehen BDSG vor. Landesrecht gilt für öffentliche Stellen der Bundesländer.'},
+  {id:25, cat:'toms', q:'Was sind TOMs und wozu dienen sie?', a:'Technische und Organisatorische Maßnahmen (TOMs) nach Art. 32 DSGVO schützen personenbezogene Daten. Sie sollen ein dem Risiko angemessenes Schutzniveau gewährleisten und die Sicherheit der Verarbeitung sicherstellen.'},
+  {id:26, cat:'toms', q:'Erkläre den Unterschied zwischen Zutritts-, Zugangs- und Zugriffskontrolle.', a:'Zutrittskontrolle: Physischer Zutritt zu Räumen/Gebäuden wird verhindert. Maßnahmen: Chipkarte, Alarmanlage, Schließanlage, Videoüberwachung.\nZugangskontrolle: Zugang zu IT-Systemen wird verhindert. Maßnahmen: Passwort, PIN, MFA, VPN, Bildschirmsperre.\nZugriffskontrolle: Zugriff auf Daten/Dateien wird eingeschränkt. Maßnahmen: ACL, Rollenkonzept, Berechtigungen.'},
+  {id:27, cat:'toms', q:'Welche weiteren TOMs-Kategorien gibt es neben Zugangs-/Zutrittskontrolle?', a:'Verfügbarkeitskontrolle: Backup, USV, Redundanz, Notfallplan\nTrennungsgebot: Mandantentrennung, Netzwerksegmentierung\nWeitergabekontrolle: Verschlüsselung bei Übertragung, sichere Löschung\nEingabekontrolle: Logging/Protokollierung aller Änderungen\nAuftragskontrolle: Verarbeitung nur nach Weisung'},
+  {id:28, cat:'toms', q:'Was ist ein Verzeichnis von Verarbeitungstätigkeiten (VVT)?', a:'Das VVT ist nach Art. 30 DSGVO Pflicht für Unternehmen ab 250 Mitarbeiter (und kleiner bei sensiblen Daten). Es dokumentiert alle Verarbeitungsvorgänge: Zweck, Kategorien, Empfänger, Speicherfristen, TOMs. Es dient als Nachweis der DSGVO-Compliance (Rechenschaftspflicht).'},
+  {id:29, cat:'toms', q:'Was versteht man unter Multi-Faktor-Authentifizierung (MFA)?', a:'MFA kombiniert mindestens zwei verschiedene Faktoren zur Anmeldung:\n1. Wissen (Passwort, PIN)\n2. Besitz (Smartphone, Token, Chipkarte)\n3. Biometrie (Fingerabdruck, Gesichtserkennung)\nVorteil: Selbst bei gestohlenem Passwort kein Zugang ohne zweiten Faktor.'},
+  {id:30, cat:'toms', q:'Was sind Schutzmaßnahmen am Arbeitsplatz laut IT-Grundschutz?', a:'Anti-Schadsoftware (Virenscanner, EDR)\nAuthentifizierung nach Richtlinien (starke Passwörter, MFA)\nMitarbeitersensibilisierung (Phishing, Social Engineering)\nFirewall (Netz- und Host-Firewall)\nBackup (regelmäßige Datensicherung nach 3-2-1-Regel)\nBildschirmsperre (nach Inaktivität)\nVerschlüsselung (Festplatten, Kommunikation)'},
+  {id:31, cat:'schutz', q:'Was ist ein Informationssicherheitsmanagementsystem (ISMS)?', a:'Ein ISMS ist ein System zur Planung, Umsetzung, Überwachung und Verbesserung der Informationssicherheit in einer Institution. Es besteht aus: Managementprinzipien, Ressourcen, Mitarbeitern und dem Sicherheitsprozess. Grundlage: PDCA-Zyklus. Standard: ISO 27001 / BSI 200-1.'},
+  {id:32, cat:'schutz', q:'Was ist der Informationsverbund im IT-Grundschutz?', a:'Der Informationsverbund umfasst alle Elemente, die zur Aufgabenerfüllung beitragen: Infrastruktur, Organisationseinheiten, Personal, Prozesse und IT-Systeme. Die Modellierung erfolgt anhand von Bausteinen aus dem IT-Grundschutz-Kompendium.'},
+  {id:33, cat:'schutz', q:'Was ist ein Sicherheitskonzept nach IT-Grundschutz?', a:'Das Sicherheitskonzept umfasst: Beschreibung des Informationsverbunds (Strukturanalyse), Schutzbedarfsfeststellung, Modellierung, IT-Grundschutz-Check, Risikoanalyse. Es ist die Basis für alle Sicherheitsmaßnahmen und wird regelmäßig überprüft.'},
+  {id:34, cat:'schutz', q:'Was ist die Risikoanalyse nach BSI-Standard 200-3?', a:'Die Risikoanalyse wird durchgeführt bei: hohem/sehr hohem Schutzbedarf, besonderen Einsatzbedingungen oder Komponenten ohne passenden Grundschutz-Baustein. Vorgehen: Gefährdungen identifizieren → Risiken bewerten → Maßnahmen festlegen → Restrisiko akzeptieren oder weiter behandeln.'},
+  {id:35, cat:'recht', q:'Was ist das IT-Sicherheitsgesetz (IT-SIG)?', a:'Das IT-Sicherheitsgesetz regelt die Informationssicherheit von Unternehmen und Institutionen sowie die Sicherung digitaler Infrastrukturen. Besonderer Fokus auf KRITIS (kritische Infrastrukturen): Energie, Wasser, Ernährung, IT, Transport, Gesundheit, Finanzen. Ergänzt durch die BSI-KritisV.'},
+  {id:36, cat:'recht', q:'Was sind Aufbewahrungsfristen nach GoB?', a:'10 Jahre: Handelsbücher, Bilanzen, Buchungsbelege\n8 Jahre: Rechnungen (seit 01.01.2025, davor 10 Jahre)\n6 Jahre: Geschäftsbriefe, empfangene Handels- und Geschäftsbriefe, sonstige kaufmännische Unterlagen'},
+  {id:37, cat:'recht', q:'Was ist Cyber-Sicherheit und wie unterscheidet sie sich von Informationssicherheit?', a:'Informationssicherheit: Schutz von Informationen und IT-Systemen in Organisationen.\nCyber-Sicherheit: Erweitert auf den gesamten Cyber-Raum (alle mit dem Internet verbundenen Systeme, Kommunikation, Anwendungen, Prozesse). Legt oft besonderen Fokus auf Angriffe aus dem Cyber-Raum.'},
+  {id:38, cat:'dsgvo', q:'Was sind besondere Kategorien personenbezogener Daten nach Art. 9 DSGVO?', a:'Gesundheitsdaten, genetische Daten, biometrische Daten (zur Identifizierung), rassische und ethnische Herkunft, politische Meinungen, religiöse Überzeugungen, Gewerkschaftszugehörigkeit, Sexualleben/sexuelle Orientierung. Diese Daten genießen besonderen Schutz und dürfen grundsätzlich nur mit ausdrücklicher Einwilligung verarbeitet werden.'},
+  {id:39, cat:'grundschutz', q:'Was ist Basis-Absicherung vs. Standard-Absicherung vs. Kern-Absicherung?', a:'Kern-Absicherung: Schnell wirkender Schutz für die wichtigsten ("Kronjuwelen") Assets.\nBasis-Absicherung: Breiter erster Überblick – alle Basis-Anforderungen aller relevanten Bausteine. Einstieg für kleinere Institutionen.\nStandard-Absicherung: Vollständige IT-Grundschutz-Methodik – umfassend, für normalen Schutzbedarf.'},
+  {id:40, cat:'toms', q:'Was ist das Prinzip "need-to-know"?', a:'Mitarbeiter erhalten nur die Zugriffsrechte auf Daten und Systeme, die sie für ihre Aufgaben tatsächlich benötigen. Auch "least privilege" oder Minimalprinzip genannt. Verhindert unnötige Datenzugriffe und reduziert Schadenspotenzial bei kompromittierten Accounts.'},
+  {id:41, cat:'schutz', q:'Was ist der Schutzbedarf "Fortführung des Informationsverbunds" und welche Rolle spielen Backups?', a:'Backups sichern die Verfügbarkeit (eines der drei Schutzziele). Die 3-2-1-Backup-Regel: 3 Kopien, auf 2 verschiedenen Medientypen, davon 1 extern/offline. Backups müssen regelmäßig getestet werden (Restore-Test). Aufbewahrungszeit und Backup-Strategie sind Teil des Sicherheitskonzepts.'},
+  {id:42, cat:'recht', q:'Was ist der Unterschied zwischen Datensicherheit und Datenschutz?', a:'Datenschutz (Privacy/Data Protection): Schutz von Persönlichkeitsrechten – schützt Personen vor Missbrauch ihrer personenbezogenen Daten. Rechtsgrundlage: DSGVO.\nDatensicherheit: Technischer/organisatorischer Schutz aller Daten gegen Verlust, Manipulation oder unberechtigten Zugriff. Keine eigene Rechtsgrundlage, aber Teil der TOMs nach DSGVO.'}
+];
+
+let cardState = {};
+let currentFilter = 'all';
+let currentMode = 'alle';
+
+function init() {
+  const saved = localStorage.getItem('sicherheit_cards');
+  if (saved) cardState = JSON.parse(saved);
+  renderCards();
+}
+
+function save() {
+  localStorage.setItem('sicherheit_cards', JSON.stringify(cardState));
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterCards();
+}
+
+function setMode(m, btn) {
+  currentMode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterCards();
+}
+
+function filterCards() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const visible = CARDS.filter(c => {
+    const modeMatch = currentMode === 'alle' || c.cat === currentMode || 
+      (currentMode === 'bsi' && c.cat === 'bsi') ||
+      (currentMode === 'dsgvo' && c.cat === 'dsgvo') ||
+      (currentMode === 'grundschutz' && (c.cat === 'grundschutz' || c.cat === 'schutz' || c.cat === 'recht')) ||
+      (currentMode === 'toms' && c.cat === 'toms');
+    const status = cardState[c.id] || 'open';
+    const filterMatch = currentFilter === 'all' || status === currentFilter;
+    const searchMatch = !q || c.q.toLowerCase().includes(q) || c.a.toLowerCase().includes(q);
+    return modeMatch && filterMatch && searchMatch;
+  });
+  renderFiltered(visible);
+}
+
+function renderCards() {
+  filterCards();
+  updateStats();
+}
+
+function renderFiltered(cards) {
+  const container = document.getElementById('cardContainer');
+  if (cards.length === 0) {
+    container.innerHTML = '<div class="no-results">Keine Karteikarten gefunden. Suchbegriff ändern oder Filter anpassen.</div>';
+    return;
+  }
+  container.innerHTML = cards.map(c => {
+    const status = cardState[c.id] || 'open';
+    const catLabel = {bsi:'BSI-Standards', dsgvo:'DSGVO', grundschutz:'IT-Grundschutz', toms:'TOMs', schutz:'Sicherheitskonzept', recht:'Rechtliches'}[c.cat] || c.cat;
+    const statusIcon = status === 'correct' ? '✓' : status === 'wrong' ? '✗' : '●';
+    const answerHtml = c.a.replace(/\n/g,'<br>');
+    return `<div class="card ${status}-card" id="card-${c.id}">
+      <div class="card-front" onclick="toggleCard(${c.id})">
+        <span class="card-cat cat-${c.cat}">${catLabel}</span>
+        <span class="card-q">${c.q}</span>
+        <span class="card-status" title="${status}">${statusIcon}</span>
+      </div>
+      <div class="card-back">
+        <div class="answer">${answerHtml}</div>
+        <div class="vote-row">
+          <button class="vote-btn vote-correct" onclick="markCard(${c.id},'correct',event)">✓ Richtig gewusst</button>
+          <button class="vote-btn vote-wrong" onclick="markCard(${c.id},'wrong',event)">✗ Nochmal lernen</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  updateStats();
+}
+
+function toggleCard(id) {
+  const card = document.getElementById('card-'+id);
+  card.classList.toggle('open');
+}
+
+function markCard(id, status, e) {
+  e.stopPropagation();
+  cardState[id] = status;
+  save();
+  const card = document.getElementById('card-'+id);
+  card.classList.remove('open');
+  card.classList.remove('open-card','correct-card','wrong-card');
+  card.classList.add(status+'-card');
+  const icon = card.querySelector('.card-status');
+  icon.textContent = status === 'correct' ? '✓' : '✗';
+  updateStats();
+  setTimeout(() => filterCards(), 300);
+}
+
+function updateStats() {
+  const total = CARDS.length;
+  const correct = CARDS.filter(c => cardState[c.id] === 'correct').length;
+  const wrong = CARDS.filter(c => cardState[c.id] === 'wrong').length;
+  const open = total - correct - wrong;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statWrong').textContent = wrong;
+  document.getElementById('statOpen').textContent = open;
+  const pct = Math.round((correct / total) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function resetAll() {
+  if (!confirm('Alle Fortschritte zurücksetzen?')) return;
+  cardState = {};
+  save();
+  filterCards();
+}
+
+init();
+</script>
+</body>
+</html>
