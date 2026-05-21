@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prio · Prüfungstraining AP1 · FISI Lernplattform</title>
+<style>
+:root{
+  --bg:#f5f5f3; --ink:#1a1a18; --muted:#888; --line:#e0dfd8;
+  --green:#1D9E75; --green-d:#157a5a; --green-soft:#e8f6f0;
+  --amber:#c98a00; --amber-soft:#fbf3df; --blue:#2b6cb0; --blue-soft:#e7f0fa;
+  --card:#ffffff; --shadow:0 1px 3px rgba(0,0,0,.05),0 6px 18px rgba(0,0,0,.04);
+  --rail:380px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+/* HEADER */
+.hdr{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:60}
+.hdr-in{max-width:1180px;margin:0 auto;padding:.85rem 1.1rem;display:flex;align-items:center;gap:.9rem;flex-wrap:wrap}
+.back{display:inline-flex;align-items:center;gap:.35rem;font-size:13px;color:var(--muted);text-decoration:none;border:1px solid var(--line);padding:5px 11px;border-radius:8px;transition:.15s}
+.back:hover{border-color:var(--green);color:var(--green)}
+.hdr h1{font-size:17px;font-weight:700;letter-spacing:-.2px}
+.hdr h1 .tag{font-size:10px;font-weight:700;color:#fff;background:var(--green);padding:2px 7px;border-radius:6px;vertical-align:middle;margin-right:7px;letter-spacing:.4px}
+.hdr .sub{font-size:11.5px;color:var(--muted)}
+.hdr-sp{flex:1}
+.rail-toggle{font-size:12.5px;font-weight:600;color:var(--green-d);background:var(--green-soft);border:1px solid #cfe9df;padding:6px 12px;border-radius:8px;cursor:pointer}
+.rail-toggle:hover{background:#dcf1e8}
+
+/* PROGRESS */
+.prog-wrap{max-width:1180px;margin:0 auto;padding:.7rem 1.1rem 0}
+.prog{background:#fff;border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem;display:flex;align-items:center;gap:1rem;box-shadow:var(--shadow)}
+.prog-bar{flex:1;height:9px;background:#eee;border-radius:99px;overflow:hidden}
+.prog-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),#2bbf8d);border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.prog-txt{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.prog-txt b{color:var(--ink);font-size:14px}
+
+/* LAYOUT */
+.shell{max-width:1180px;margin:0 auto;padding:1rem 1.1rem 4rem;display:grid;grid-template-columns:1fr var(--rail);gap:1.4rem;align-items:start}
+.shell.rail-closed{grid-template-columns:1fr 0}
+.main{min-width:0}
+
+/* FILTER */
+.tools{margin-bottom:1rem}
+.search{position:relative;margin-bottom:.7rem}
+.search input{width:100%;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 14px 9px 38px;font-size:13.5px;font-family:inherit;outline:none}
+.search input:focus{border-color:var(--green)}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.4}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:#fff;font-size:12px;color:#555;cursor:pointer;font-family:inherit;transition:.12s;white-space:nowrap}
+.chip:hover{border-color:var(--green);color:var(--green-d)}
+.chip.on{background:var(--green);border-color:var(--green);color:#fff;font-weight:600}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden;transition:.2s}
+.card.done{border-color:#cfe9df;background:linear-gradient(0deg,#fbfffd,#fff)}
+.card.hide{display:none}
+.c-top{display:flex;align-items:flex-start;gap:.7rem;padding:1rem 1.1rem .4rem}
+.badge{font-size:10.5px;font-weight:700;letter-spacing:.3px;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.b-net{background:var(--blue-soft);color:var(--blue)}
+.b-wi{background:var(--amber-soft);color:var(--amber)}
+.b-sec{background:#fdeaea;color:#c0392b}
+.b-pm{background:#efe7fb;color:#7c4dbd}
+.b-db{background:#e7f7f0;color:var(--green-d)}
+.b-pr{background:#eef1f4;color:#475569}
+.b-code{background:#e9edff;color:#4338ca}
+.c-title{font-size:15.5px;font-weight:700;flex:1;line-height:1.3;letter-spacing:-.2px}
+.diff{display:flex;gap:3px;margin-top:5px}
+.diff span{width:7px;height:7px;border-radius:99px;background:#dcdcd6}
+.diff span.on{background:var(--green)}
+.chk{appearance:none;width:22px;height:22px;border:2px solid var(--line);border-radius:7px;cursor:pointer;position:relative;flex-shrink:0;transition:.15s;background:#fff}
+.chk:hover{border-color:var(--green)}
+.chk:checked{background:var(--green);border-color:var(--green)}
+.chk:checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800}
+.c-body{padding:.2rem 1.1rem 1rem}
+.prompt{font-size:14px;color:#33332e}
+.prompt b{color:var(--ink)}
+.prompt .data{background:#f7f7f4;border:1px solid var(--line);border-left:3px solid var(--green);border-radius:8px;padding:.6rem .8rem;margin:.7rem 0;font-size:13.5px}
+.prompt table{border-collapse:collapse;margin:.6rem 0;font-size:12.5px;width:100%}
+.prompt th,.prompt td{border:1px solid var(--line);padding:5px 8px;text-align:left}
+.prompt th{background:#f7f7f4;font-weight:600}
+.ta{width:100%;min-height:62px;margin-top:.6rem;border:1px dashed var(--line);border-radius:9px;padding:.6rem .75rem;font-family:inherit;font-size:13.5px;resize:vertical;background:#fcfcfb;outline:none}
+.ta:focus{border-color:var(--green);border-style:solid;background:#fff}
+.ta::placeholder{color:#bbb}
+
+/* ACTION BUTTONS */
+.acts{display:flex;gap:7px;flex-wrap:wrap;margin-top:.85rem}
+.btn{font-family:inherit;font-size:12.5px;font-weight:600;border-radius:9px;padding:7px 13px;cursor:pointer;border:1px solid var(--line);background:#fff;color:#444;transition:.13s;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{border-color:#bbb;background:#fafafa}
+.btn.hint{border-color:#ecd9a8;background:var(--amber-soft);color:var(--amber)}
+.btn.hint:hover{background:#f6e9c6}
+.btn.sol{border-color:#bfe3d4;background:var(--green-soft);color:var(--green-d)}
+.btn.sol:hover{background:#d8efe6}
+.btn.expl{border-color:#c8dcf0;background:var(--blue-soft);color:var(--blue)}
+.btn.expl:hover{background:#d6e7f8}
+
+/* HINTS + PANELS */
+.hints{margin-top:.7rem;display:none}
+.hints.show{display:block}
+.hint-i{background:var(--amber-soft);border:1px solid #f0e3bf;border-radius:9px;padding:.55rem .8rem;font-size:13px;color:#7a5b00;margin-bottom:6px;display:flex;gap:.5rem}
+.hint-i .n{font-weight:800;color:var(--amber)}
+.panel{margin-top:.7rem;border:1px solid #cfe9df;border-radius:11px;overflow:hidden;display:none}
+.panel.show{display:block}
+.panel-h{background:var(--green-soft);padding:.5rem .85rem;font-size:12px;font-weight:700;color:var(--green-d);letter-spacing:.3px;display:flex;align-items:center;gap:.4rem}
+.panel-c{padding:.8rem .95rem;font-size:13.5px;color:#33332e}
+.panel-c b{color:var(--ink)}
+.panel-c .calc{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12.5px;background:#f7f7f4;border:1px solid var(--line);border-radius:7px;padding:.55rem .7rem;margin:.5rem 0;white-space:pre-wrap;line-height:1.7}
+.panel-c .res{background:#eafaf3;border:1px solid #bfe3d4;border-radius:8px;padding:.5rem .75rem;margin-top:.5rem;font-size:13.5px}
+.panel-c .res b{color:var(--green-d)}
+.panel-c ol,.panel-c ul{margin:.3rem 0 .3rem 1.2rem}
+.panel-c li{margin:.2rem 0}
+.full-btn{margin:.2rem .95rem .85rem;font-size:12px;font-weight:600;color:var(--green-d);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.full-wrap{display:none;border-top:1px dashed #cfe9df;margin-top:.2rem}
+.full-wrap.show{display:block}
+
+/* RIGHT RAIL */
+.rail{position:sticky;top:74px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;max-height:calc(100vh - 92px);display:flex;flex-direction:column}
+.shell.rail-closed .rail{display:none}
+.rail-h{padding:.85rem 1rem;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:.5rem}
+.rail-h .dot{width:9px;height:9px;border-radius:99px;background:var(--blue)}
+.rail-h h3{font-size:13px;font-weight:700;flex:1}
+.rail-h .x{cursor:pointer;color:var(--muted);font-size:18px;line-height:1;border:none;background:none}
+.rail-body{padding:.9rem 1rem;overflow-y:auto;font-size:13.5px;color:#33332e}
+.rail-empty{color:var(--muted);font-size:13px;text-align:center;padding:2rem 1rem}
+.rail-empty svg{opacity:.25;margin-bottom:.6rem}
+.rail-topic{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.2rem}
+.rail-title{font-size:15px;font-weight:700;margin-bottom:.7rem;letter-spacing:-.2px}
+details{border:1px solid var(--line);border-radius:9px;margin-bottom:7px;overflow:hidden}
+details[open]{border-color:#c8dcf0}
+summary{padding:.55rem .75rem;font-size:12.5px;font-weight:600;cursor:pointer;list-style:none;display:flex;align-items:center;gap:.4rem;color:#333;background:#fafafa}
+summary::-webkit-details-marker{display:none}
+summary .ar{margin-left:auto;transition:.2s;color:var(--muted)}
+details[open] summary .ar{transform:rotate(90deg)}
+details[open] summary{background:var(--blue-soft);color:var(--blue)}
+.det-c{padding:.65rem .8rem;font-size:13px;line-height:1.55}
+.det-c b{color:var(--ink)}
+.det-c.warn{background:#fff8f5}
+.merk{background:var(--green-soft);border-left:3px solid var(--green);padding:.5rem .7rem;border-radius:0 7px 7px 0;font-size:12.5px}
+
+footer{text-align:center;font-size:11.5px;color:var(--muted);padding:2rem 1rem;grid-column:1/-1}
+
+/* MOBILE */
+@media(max-width:880px){
+  .shell{grid-template-columns:1fr;gap:0}
+  .shell.rail-closed{grid-template-columns:1fr}
+  .rail{position:fixed;inset:auto 0 0 0;top:auto;border-radius:16px 16px 0 0;max-height:80vh;z-index:80;box-shadow:0 -8px 30px rgba(0,0,0,.18);border-bottom:none}
+  .shell.rail-closed .rail{display:none}
+  body.rail-open-mobile::after{content:"";position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:70}
+}
+@media(max-width:560px){
+  .c-title{font-size:14.5px}
+  .hdr h1{font-size:15px}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="index.html">← Übersicht</a>
+    <div>
+      <h1><span class="tag">PRIO</span>Prüfungstraining</h1>
+      <div class="sub">AP1-Stil · Themen der Frühjahrsprüfung · mit Lösungsweg &amp; Erklärungen</div>
+    </div>
+    <div class="hdr-sp"></div>
+    <button class="rail-toggle" id="railToggle">💡 Erklär-Leiste</button>
+  </div>
+</header>
+
+<div class="prog-wrap">
+  <div class="prog">
+    <div class="prog-bar"><i id="progFill"></i></div>
+    <div class="prog-txt"><b id="progNum">0</b> / <span id="progTot">0</span> als gelöst markiert</div>
+  </div>
+</div>
+
+<div class="shell" id="shell">
+  <div class="main">
+    <div class="tools">
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="search" type="text" placeholder="Aufgaben durchsuchen … (z. B. Subnetting, Kosten, SSH)">
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div id="list"></div>
+  </div>
+
+  <aside class="rail" id="rail">
+    <div class="rail-h"><span class="dot"></span><h3>Erklärungen &amp; Verständnis</h3><button class="x" id="railClose">×</button></div>
+    <div class="rail-body" id="railBody">
+      <div class="rail-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2Z"/><path d="M9 21h6"/><path d="M10 17v4"/><path d="M14 17v4"/></svg>
+        <div>Klicke bei einer Aufgabe auf <b>„Erklärung“</b> – hier erscheinen dann Verständnis-Hinweise, Merksätze und typische Fehler zum Lösungsweg.</div>
+      </div>
+    </div>
+  </aside>
+
+  <footer>FISI Lernplattform · Prio-Modul · eigene Übungen im AP1-Stil · Fortschritt wird lokal im Browser gespeichert</footer>
+</div>
+
+<script>
+/* ===== DATEN: eigene Aufgaben im AP1-Stil ===== */
+const EX = [
+{
+  id:"kosten-mfg", topic:"Wirtschaftlichkeit", badge:"b-wi", diff:2,
+  title:"Monatliche Gesamtkosten eines Multifunktionsgeräts",
+  prompt:`Ein Betrieb least ein Multifunktionsgerät und möchte die <b>monatlichen Gesamtkosten</b> ermitteln.
+  <div class="data">
+  • Anschaffung (auf Nutzungsdauer verteilt): <b>3.024 €</b> über <b>36 Monate</b><br>
+  • Druck pro Monat: <b>2.000</b> s/w-Seiten à <b>0,02 €</b> und <b>500</b> Farbseiten à <b>0,09 €</b><br>
+  • Wartungspauschale: <b>15 € / Monat</b>
+  </div>
+  Berechne die gesamten monatlichen Kosten.`,
+  hints:[
+    "Zerlege die Aufgabe in drei getrennte Kostenblöcke – das macht sie sofort übersichtlich.",
+    "Die Anschaffung wird gleichmäßig auf die Nutzungsdauer verteilt: Betrag ÷ Monate.",
+    "s/w- und Farbdruck haben unterschiedliche Preise – erst getrennt rechnen, dann addieren."
+  ],
+  partial:`<b>Block 1 – Geräteanteil:</b>
+  <div class="calc">3.024 € ÷ 36 Monate = 84 € / Monat</div>
+  Jetzt fehlen noch die Druck- und Wartungskosten. Versuch den Rest selbst – oder öffne den kompletten Weg.`,
+  full:`<b>Block 2 – Druckkosten:</b>
+  <div class="calc">2.000 × 0,02 € = 40 €
+500 × 0,09 € = 45 €
+Druck gesamt = 85 €</div>
+  <b>Block 3 – Wartung:</b> 15 € / Monat
+  <div class="calc">Gesamt = 84 € + 85 € + 15 € = 184 €</div>
+  <div class="res"><b>Ergebnis: 184 € monatliche Gesamtkosten.</b></div>`,
+  expl:[
+    ["Verständnis","Solche Aufgaben prüfen, ob du <b>gemischte Kosten</b> sauber trennen kannst: fixe Kosten (Gerät, Wartung) und variable Kosten (Druck, abhängig von der Menge). Immer in Blöcken denken statt alles in eine Zeile zu quetschen."],
+    ["Merksatz","<div class='merk'>Anschaffung wird über die Nutzungsdauer <b>verteilt</b> – nicht im ersten Monat voll angesetzt.</div>",1],
+    ["Typischer Fehler","Vergessen, s/w und Farbe getrennt zu rechnen, oder die Wartung zu unterschlagen. Schreib dir die drei Blöcke untereinander – dann fehlt nichts.","warn"]
+  ]
+},
+{
+  id:"subnet-gw", topic:"Netzwerke", badge:"b-net", diff:3,
+  title:"Subnetting: Gateway-, Host- und Broadcast-Adresse",
+  prompt:`Gegeben ist das Netz <b>172.20.40.0/26</b>. Das Gateway erhält die <b>letzte nutzbare Host-Adresse</b>.
+  <div class="data">Bestimme: a) Broadcast-Adresse · b) ersten &amp; letzten nutzbaren Host · c) die Gateway-Adresse</div>`,
+  hints:[
+    "/26 sagt dir die Blockgröße: 32 − 26 = 6 Hostbits.",
+    "Anzahl Adressen im Block = 2^Hostbits. Daraus ergeben sich Netz- und Broadcast-Adresse.",
+    "Erste Host = Netz +1, letzte Host = Broadcast −1. Das Gateway ist hier die letzte Host-Adresse."
+  ],
+  partial:`<b>Schritt 1 – Blockgröße:</b>
+  <div class="calc">32 − 26 = 6 Hostbits  →  2^6 = 64 Adressen
+Block: 172.20.40.0  bis  172.20.40.63</div>
+  Damit kennst du Anfang und Ende des Blocks. Leite jetzt Broadcast, Hosts und Gateway ab.`,
+  full:`<b>Schritt 2 – Adressen ableiten:</b>
+  <div class="calc">Netzadresse  : 172.20.40.0   (erste, nicht nutzbar)
+Broadcast    : 172.20.40.63  (letzte, nicht nutzbar)
+Erster Host  : 172.20.40.1
+Letzter Host : 172.20.40.62</div>
+  Das Gateway = letzte nutzbare Host-Adresse:
+  <div class="res">a) Broadcast: <b>172.20.40.63</b><br>b) Hosts: <b>.1 bis .62</b><br>c) Gateway: <b>172.20.40.62</b></div>`,
+  expl:[
+    ["Verständnis","Ein /26 zerlegt ein /24-Netz in vier gleich große Blöcke à 64 Adressen (0–63, 64–127, 128–191, 192–255). In jedem Block sind die <b>erste</b> Adresse (Netz) und die <b>letzte</b> (Broadcast) nicht für Hosts nutzbar."],
+    ["Merksatz","<div class='merk'>Nutzbare Hosts = 2^Hostbits − 2. Bei /26 also 64 − 2 = <b>62 Hosts</b>.</div>",1],
+    ["Typischer Fehler","Netz- und Broadcast-Adresse als nutzbar mitzählen. Und: „vorletzte vor dem Gateway“ ≠ „Gateway“ – lies die Fragestellung genau, ob die letzte oder vorletzte Adresse gemeint ist.","warn"]
+  ]
+},
+{
+  id:"asym", topic:"IT-Sicherheit", badge:"b-sec", diff:2,
+  title:"Asymmetrische Verschlüsselung einer E-Mail",
+  prompt:`Ein Mandant möchte dem Anwalt eine <b>vertrauliche E-Mail</b> mit asymmetrischer Verschlüsselung schicken.
+  <div class="data">a) Beschreibe den Ablauf (welche Schlüssel?) · b) Welches Schutzziel wird erreicht? · c) Nenne je einen Vor- und Nachteil gegenüber symmetrischer Verschlüsselung.</div>`,
+  hints:[
+    "Bei asymmetrischer Verschlüsselung gibt es immer ein Schlüsselpaar: öffentlich + privat.",
+    "Verschlüsselt wird mit dem öffentlichen Schlüssel des EMPFÄNGERS.",
+    "Entschlüsseln kann nur, wer den passenden privaten Schlüssel besitzt."
+  ],
+  partial:`<b>a) Ablauf (Anfang):</b>
+  <ol><li>Der Anwalt (Empfänger) stellt seinen <b>öffentlichen Schlüssel</b> bereit.</li><li>Der Mandant verschlüsselt die E-Mail mit diesem öffentlichen Schlüssel.</li></ol>
+  Wie geht es weiter und welches Schutzziel steckt dahinter? → kompletter Weg.`,
+  full:`<b>a) Vollständiger Ablauf:</b>
+  <ol><li>Anwalt sendet/veröffentlicht seinen <b>öffentlichen Schlüssel</b>.</li><li>Mandant <b>verschlüsselt</b> die Mail mit dem öffentlichen Schlüssel des Anwalts.</li><li>Die verschlüsselte Mail wird versendet.</li><li>Anwalt <b>entschlüsselt</b> sie mit seinem <b>privaten Schlüssel</b>.</li></ol>
+  <b>b) Schutzziel:</b> <b>Vertraulichkeit</b> – nur der Anwalt kann die Nachricht lesen.
+  <div class="res"><b>c) Vorteil:</b> Der geheime (private) Schlüssel muss nie übertragen werden – nur der öffentliche wird verteilt → sicherer Schlüsselaustausch.<br><b>Nachteil:</b> Asymmetrische Verfahren sind rechenintensiver und damit langsamer als symmetrische.</div>`,
+  expl:[
+    ["Verständnis","Merke die Richtung: <b>verschlüsseln mit dem öffentlichen</b> Schlüssel des Empfängers, <b>entschlüsseln mit dem privaten</b>. Für Vertraulichkeit zählt immer der Schlüssel des Empfängers."],
+    ["Merksatz","<div class='merk'>Öffentlich = Vorhängeschloss (jeder darf zumachen). Privat = Schlüssel (nur einer macht auf).</div>",1],
+    ["Abgrenzung Signatur","Wird stattdessen mit dem <b>privaten</b> Schlüssel verschlüsselt und mit dem öffentlichen geprüft, geht es nicht um Vertraulichkeit, sondern um <b>Authentizität/Integrität</b> (digitale Signatur)."],
+    ["Typischer Fehler","Den eigenen Schlüssel statt den des Empfängers nehmen. Frag dich: „Wer soll am Ende lesen können?“ – dessen öffentlicher Schlüssel wird benutzt.","warn"]
+  ]
+},
+{
+  id:"netzplan", topic:"Projektmanagement", badge:"b-pm", diff:3,
+  title:"Netzplan: Kritischen Pfad bestimmen",
+  prompt:`Gegeben ist folgende Vorgangsliste. Bestimme den <b>kritischen Pfad</b> und die <b>Projektdauer</b>.
+  <table><tr><th>Vorgang</th><th>Vorgänger</th><th>Dauer (Tage)</th></tr>
+  <tr><td>A</td><td>–</td><td>3</td></tr>
+  <tr><td>B</td><td>A</td><td>4</td></tr>
+  <tr><td>C</td><td>A</td><td>2</td></tr>
+  <tr><td>D</td><td>B, C</td><td>5</td></tr>
+  <tr><td>E</td><td>D</td><td>2</td></tr></table>`,
+  hints:[
+    "Vorwärtsrechnung: FAZ des ersten Vorgangs = 0. FEZ = FAZ + Dauer.",
+    "Hat ein Vorgang mehrere Vorgänger, gilt für die FAZ der GRÖSSTE FEZ der Vorgänger.",
+    "Kritischer Pfad = Kette mit Gesamtpuffer 0 (GP = SAZ − FAZ = 0)."
+  ],
+  partial:`<b>Vorwärtsrechnung (FAZ → FEZ):</b>
+  <div class="calc">A: 0 → 3
+B: 3 → 7
+C: 3 → 5
+D: max(7,5)=7 → 12
+E: 12 → 14</div>
+  Projektdauer steht damit fest. Welcher Pfad hat keinen Puffer? → kompletter Weg.`,
+  full:`<b>Rückwärtsrechnung (SEZ → SAZ), Projektende = 14:</b>
+  <div class="calc">E: SEZ 14, SAZ 12
+D: SEZ 12, SAZ 7
+C: SEZ 7,  SAZ 5   → GP = 5−3 = 2
+B: SEZ 7,  SAZ 3   → GP = 3−3 = 0
+A: SEZ 3,  SAZ 0   → GP = 0</div>
+  Vorgänge mit <b>GP = 0</b>: A, B, D, E.
+  <div class="res"><b>Kritischer Pfad: A – B – D – E · Projektdauer: 14 Tage.</b><br>C hat 2 Tage Puffer und ist nicht kritisch.</div>`,
+  expl:[
+    ["Verständnis","Der kritische Pfad ist die <b>längste</b> durchgehende Kette. Verzögert sich darauf ein Vorgang, verschiebt sich das gesamte Projektende – hier liegt kein Spielraum (Puffer)."],
+    ["Merksatz","<div class='merk'>Vorwärts = frühest mögliche Zeiten (max bei Zusammenführungen). Rückwärts = spätest erlaubte Zeiten (min bei Verzweigungen). GP = SAZ − FAZ.</div>",1],
+    ["Typischer Fehler","Bei mehreren Vorgängern den kleineren statt den größten FEZ nehmen. D darf erst starten, wenn B UND C fertig sind → also nach dem späteren (7).","warn"]
+  ]
+},
+{
+  id:"pseudo", topic:"Programmierung", badge:"b-code", diff:2,
+  title:"Kennzahlen im Pseudocode berechnen",
+  prompt:`Aus einer Web-Statistik sind bekannt: <b>33.000</b> Seitenaufrufe, <b>12.000</b> Besucher, davon <b>5.562</b> über Suchmaschinen, <b>7.554</b> mit nur einer aufgerufenen Seite (Bounces).
+  <div class="data">Berechne, jeweils auf <b>2 Nachkommastellen</b>:<br>a) durchschnittliche Seitenaufrufe pro Besucher · b) Anteil Suchmaschinen-Besucher in % · c) Non-Bounce-Rate in %</div>`,
+  hints:[
+    "a) ist eine einfache Division: Aufrufe geteilt durch Besucher.",
+    "Für Prozentwerte: (Teil ÷ Ganzes) × 100.",
+    "Non-Bounce = Besucher, die NICHT gebounct sind = Gesamt − Bounces."
+  ],
+  partial:`<b>a) Seitenaufrufe pro Besucher:</b>
+  <div class="calc">33.000 ÷ 12.000 = 2,75</div>
+  Jetzt die beiden Prozentwerte – b) direkt, c) erst die Non-Bouncer ermitteln.`,
+  full:`<div class="calc">b) (5.562 ÷ 12.000) × 100 = 46,35 %
+c) Non-Bouncer = 12.000 − 7.554 = 4.446
+   (4.446 ÷ 12.000) × 100 = 37,05 %</div>
+  <div class="res"><b>a) 2,75 &nbsp;·&nbsp; b) 46,35 % &nbsp;·&nbsp; c) 37,05 %</b></div>`,
+  expl:[
+    ["Verständnis","AP1 testet hier sauberes Umrechnen und das Runden. „Auf 2 Nachkommastellen“ heißt: kaufmännisch runden, nicht abschneiden."],
+    ["Merksatz","<div class='merk'>Prozent = Teil ÷ Ganzes × 100. Bei „Rate von etwas, das NICHT passiert“: erst Gegenmenge bilden (Gesamt − Ereignis).</div>",1],
+    ["Typischer Fehler","Bei der Non-Bounce-Rate direkt die Bounces nehmen statt vorher die Gegenmenge zu bilden. Und das ×100 fürs Prozent vergessen.","warn"]
+  ]
+},
+{
+  id:"software-kosten", topic:"Wirtschaftlichkeit", badge:"b-wi", diff:2,
+  title:"Jahreskosten einer neuen Software ermitteln",
+  prompt:`Eine Kanzlei mit <b>3 Anwälten</b> führt eine Cloud-Software ein.
+  <div class="data">
+  • Lizenz: <b>100 € pro User und Monat</b><br>
+  • Einmalige Pflichtschulung: <b>1.800 € pro Anwalt</b><br>
+  • Während der Schulung fällt Umsatz aus: <b>3 Std. × 200 €</b> pro Anwalt
+  </div>
+  Wie hoch sind die Gesamtkosten im <b>ersten Jahr</b>?`,
+  hints:[
+    "Drei Blöcke wieder getrennt: laufende Lizenz, einmalige Schulung, entgangener Umsatz.",
+    "Lizenz: pro User × 12 Monate × Anzahl User.",
+    "Umsatzausfall pro Anwalt = 3 × 200 €, dann × Anzahl Anwälte."
+  ],
+  partial:`<b>Block 1 – Lizenzgebühren:</b>
+  <div class="calc">100 € × 12 Monate × 3 Anwälte = 3.600 €</div>
+  Schulung und Umsatzausfall fehlen noch. → kompletter Weg.`,
+  full:`<div class="calc">Schulung : 3 × 1.800 € = 5.400 €
+Umsatzausfall: 3 × (3 × 200 €) = 3 × 600 € = 1.800 €
+Summe: 3.600 € + 5.400 € + 1.800 € = 10.800 €</div>
+  <div class="res"><b>Gesamtkosten im ersten Jahr: 10.800 €.</b></div>`,
+  expl:[
+    ["Verständnis","Wichtig ist, <b>Opportunitätskosten</b> (entgangener Umsatz) mitzudenken – nicht nur die Rechnung des Anbieters. Auch ausgefallene Arbeitszeit ist ein echter Kostenfaktor."],
+    ["Merksatz","<div class='merk'>Erstjahres-Kosten = laufende Kosten (×12) + einmalige Kosten + indirekte Kosten (Ausfall).</div>",1],
+    ["Typischer Fehler","Die Lizenz nur für einen Monat oder einen User rechnen. Immer prüfen: pro Wen? Mal wie oft?","warn"]
+  ]
+},
+{
+  id:"ssh", topic:"Netzwerke", badge:"b-net", diff:1,
+  title:"Sichere Remote-Verbindung zum Server",
+  prompt:`Ein Administrator soll sich <b>verschlüsselt</b> mit einem Cloud-Server verbinden. Alle Dienste laufen auf Standardports.
+  <div class="data">a) Welches Protokoll und welcher Port sind geeignet? · b) Warum sind Telnet und eine Serial-Verbindung hier ungeeignet?</div>`,
+  hints:[
+    "Gesucht ist ein verschlüsseltes Fernzugriffsprotokoll.",
+    "Der Standardport dieses Protokolls ist eine zweistellige Zahl.",
+    "Telnet überträgt im Klartext; Serial braucht physische Nähe."
+  ],
+  partial:`<b>a) Protokoll:</b> <b>SSH</b>, Standardport <b>22</b>.
+  Begründung und Abgrenzung zu Telnet/Serial → kompletter Weg.`,
+  full:`<b>a)</b> <b>SSH (Secure Shell), Port 22</b> – verschlüsselte Fernverbindung über das Internet.
+  <div class="res"><b>b) Warum nicht die Alternativen?</b><br>• <b>Telnet (Port 23):</b> überträgt Daten unverschlüsselt → unsicher für sensible Daten.<br>• <b>Serial:</b> erfordert physische Nähe zum Gerät → für einen Cloud-Server ungeeignet.</div>`,
+  expl:[
+    ["Verständnis","Die Frage prüft das Wissen um sichere vs. unsichere Protokolle und die wichtigsten Ports. SSH ist der Standard für sicheren Server-Fernzugriff."],
+    ["Wichtige Ports","<div class='merk'>SSH 22 · HTTP 80 · HTTPS 443 · DNS 53 · SMTP 25 · IMAP 143 / 993 (TLS) · RDP 3389 · Telnet 23 (unsicher).</div>",1],
+    ["Typischer Fehler","SSH (22) mit Telnet (23) verwechseln. Eselsbrücke: das Sichere kommt zuerst – 22 vor 23.","warn"]
+  ]
+},
+{
+  id:"redundanz", topic:"Datenbanken", badge:"b-db", diff:1,
+  title:"Datenredundanz und ihre Folgen",
+  prompt:`In einer Datenbank werden Kundendaten an mehreren Stellen gespeichert.
+  <div class="data">a) Was bedeutet Redundanz? · b) Welches typische Problem entsteht dadurch? · c) Nenne eine Folge.</div>`,
+  hints:[
+    "Redundanz = etwas ist mehrfach vorhanden.",
+    "Das Hauptproblem beginnt mit „In…“ und tritt auf, wenn man eine Stelle ändert, die andere aber nicht.",
+    "Denk auch an unnötigen Speicherplatz."
+  ],
+  partial:`<b>a)</b> Redundanz = <b>mehrfach gespeicherte</b> Daten/Informationen (derselbe Datensatz an mehreren Stellen).
+  Welches Problem folgt daraus? → kompletter Weg.`,
+  full:`<b>b) Hauptproblem – Inkonsistenz:</b> Wird eine Information an einer Stelle geändert, an anderer aber nicht, widersprechen sich die Daten.
+  <div class="res"><b>c) Folgen:</b> falsche Auswertungen/Entscheidungen sowie unnötig steigender Speicherbedarf.</div>`,
+  expl:[
+    ["Verständnis","Vermeidung von Redundanz ist das Ziel der <b>Normalisierung</b>. Jede Information soll nur an genau einer Stelle gepflegt werden („single source of truth“)."],
+    ["Merksatz","<div class='merk'>Redundanz → Gefahr der Inkonsistenz → falsche Auswertungen + Speicherverschwendung.</div>",1],
+    ["Abgrenzung","Geplante Redundanz gibt es bewusst bei <b>Backups</b> und <b>RAID</b> – dort ist sie zur Ausfallsicherheit gewollt. In der relationalen Modellierung ist sie dagegen unerwünscht.","warn"]
+  ]
+},
+{
+  id:"noten", topic:"Prüfung", badge:"b-pr", diff:1,
+  title:"IHK-Notenschlüssel anwenden",
+  prompt:`Eine Prüfung hat <b>100 Gesamtpunkte</b>. Ein Prüfling erreicht <b>78 Punkte</b>.
+  <div class="data">Welche Note ergibt das nach dem IHK-Schlüssel?</div>`,
+  hints:[
+    "Der IHK-Schlüssel hat feste Punktgrenzen für sechs Noten.",
+    "78 liegt zwischen den Grenzen für „gut“ und „befriedigend“.",
+    "Achte auf „bis unter“: 81 gehört schon zur nächstbesseren Note."
+  ],
+  partial:`78 Punkte liegen unter 81 und ab 67 → das ist der Bereich <b>befriedigend</b>.
+  Den kompletten Schlüssel siehst du im vollen Lösungsweg – den lohnt es sich zu merken.`,
+  full:`<b>IHK-Notenschlüssel (bei 100 Punkten):</b>
+  <div class="calc">sehr gut     : 92 – 100
+gut          : 81 – unter 92
+befriedigend : 67 – unter 81
+ausreichend  : 50 – unter 67
+mangelhaft   : 30 – unter 50
+ungenügend   :  0 – unter 30</div>
+  <div class="res"><b>78 Punkte → Note „befriedigend“.</b></div>`,
+  expl:[
+    ["Verständnis","Den Schlüssel solltest du auswendig kennen – er hilft dir einzuschätzen, wie viele Punkte du in der echten Prüfung für eine angepeilte Note brauchst."],
+    ["Merksatz","<div class='merk'>Bestanden ab <b>50 Punkten</b> (ausreichend). Untere Grenzen grob: 92 / 81 / 67 / 50 / 30.</div>",1],
+    ["Typischer Fehler","„bis unter“ falsch lesen: Genau 81 ist schon „gut“, nicht mehr „befriedigend“. Die obere Grenze gehört immer zur besseren Note.","warn"]
+  ]
+}
+];
+
+/* ===== STATE / STORAGE ===== */
+const LS="prio_ap1_v1";
+function load(){try{return JSON.parse(localStorage.getItem(LS))||{}}catch(e){return{}}}
+function save(s){try{localStorage.setItem(LS,JSON.stringify(s))}catch(e){}}
+let store=load();
+store.solved=store.solved||{}; store.ans=store.ans||{};
+
+const list=document.getElementById('list');
+const chipsEl=document.getElementById('chips');
+const railBody=document.getElementById('railBody');
+const shell=document.getElementById('shell');
+let activeTopic="Alle", query="";
+
+/* ===== RENDER ===== */
+function topics(){return ["Alle",...[...new Set(EX.map(e=>e.topic))]];}
+function buildChips(){
+  chipsEl.innerHTML="";
+  topics().forEach(t=>{
+    const c=document.createElement('button');
+    c.className="chip"+(t===activeTopic?" on":"");
+    c.textContent=t;
+    c.onclick=()=>{activeTopic=t;buildChips();render();};
+    chipsEl.appendChild(c);
+  });
+}
+function diffDots(n){let s="";for(let i=0;i<3;i++)s+=`<span class="${i<n?'on':''}"></span>`;return `<div class="diff" title="Schwierigkeit">${s}</div>`;}
+
+function render(){
+  list.innerHTML="";
+  const q=query.toLowerCase();
+  EX.forEach(e=>{
+    const match=(activeTopic==="Alle"||e.topic===activeTopic) &&
+      (q===""|| (e.title+e.prompt+e.topic).toLowerCase().includes(q));
+    const done=!!store.solved[e.id];
+    const card=document.createElement('div');
+    card.className="card"+(done?" done":"")+(match?"":" hide");
+    card.id="card-"+e.id;
+    card.innerHTML=`
+      <div class="c-top">
+        <div>
+          <span class="badge ${e.badge}">${e.topic}</span>
+          ${diffDots(e.diff)}
+        </div>
+        <div class="c-title">${e.title}</div>
+        <input type="checkbox" class="chk" title="als gelöst markieren" ${done?"checked":""}>
+      </div>
+      <div class="c-body">
+        <div class="prompt">${e.prompt}</div>
+        <textarea class="ta" placeholder="Dein Lösungsansatz … (wird lokal gespeichert)">${store.ans[e.id]||""}</textarea>
+        <div class="acts">
+          <button class="btn hint">💡 Tipp <span class="hc"></span></button>
+          <button class="btn sol">Lösung anzeigen</button>
+          <button class="btn expl">Erklärung →</button>
+        </div>
+        <div class="hints"></div>
+        <div class="panel">
+          <div class="panel-h">✓ Lösungsweg</div>
+          <div class="panel-c">${e.partial}</div>
+          <button class="full-btn">Kompletten Lösungsweg anzeigen ▾</button>
+          <div class="full-wrap"><div class="panel-c">${e.full}</div></div>
+        </div>
+      </div>`;
+    // checkbox
+    const chk=card.querySelector('.chk');
+    chk.onchange=()=>{store.solved[e.id]=chk.checked;if(!chk.checked)delete store.solved[e.id];save(store);card.classList.toggle('done',chk.checked);updateProg();};
+    // textarea
+    const ta=card.querySelector('.ta');
+    ta.oninput=()=>{store.ans[e.id]=ta.value;save(store);};
+    // hints progressive
+    const hb=card.querySelector('.hints'); const hc=card.querySelector('.hc');
+    let hi=0;
+    const hbtn=card.querySelector('.btn.hint');
+    hbtn.onclick=()=>{
+      hb.classList.add('show');
+      if(hi<e.hints.length){
+        const d=document.createElement('div');d.className="hint-i";
+        d.innerHTML=`<span class="n">${hi+1}.</span><span>${e.hints[hi]}</span>`;
+        hb.appendChild(d);hi++;
+      }
+      hc.textContent=hi<e.hints.length?`(${hi}/${e.hints.length})`:"(alle)";
+      if(hi>=e.hints.length)hbtn.style.opacity=.55;
+    };
+    // solution
+    const panel=card.querySelector('.panel');
+    card.querySelector('.btn.sol').onclick=(ev)=>{
+      panel.classList.toggle('show');
+      ev.target.textContent=panel.classList.contains('show')?"Lösung verbergen":"Lösung anzeigen";
+    };
+    const fw=card.querySelector('.full-wrap');
+    card.querySelector('.full-btn').onclick=(ev)=>{
+      fw.classList.toggle('show');
+      ev.target.textContent=fw.classList.contains('show')?"Lösungsweg einklappen ▴":"Kompletten Lösungsweg anzeigen ▾";
+    };
+    // explanation rail
+    card.querySelector('.btn.expl').onclick=()=>openRail(e);
+    list.appendChild(card);
+  });
+}
+
+/* ===== RIGHT RAIL ===== */
+function openRail(e){
+  shell.classList.remove('rail-closed');
+  document.body.classList.add('rail-open-mobile');
+  let secs="";
+  e.expl.forEach((s,i)=>{
+    const open=s[2]===1?"open":"";
+    const cls=s[2]==="warn"?"det-c warn":"det-c";
+    const icon=s[2]==="warn"?"⚠️ ":"";
+    secs+=`<details ${open}><summary>${icon}${s[0]}<span class="ar">›</span></summary><div class="${cls}">${s[1]}</div></details>`;
+  });
+  railBody.innerHTML=`<div class="rail-topic">${e.topic}</div><div class="rail-title">${e.title}</div>${secs}`;
+  if(window.innerWidth<=880) railBody.scrollIntoView({block:'nearest'});
+}
+function closeRail(){shell.classList.add('rail-closed');document.body.classList.remove('rail-open-mobile');}
+document.getElementById('railClose').onclick=closeRail;
+document.getElementById('railToggle').onclick=()=>{
+  if(shell.classList.contains('rail-closed')){shell.classList.remove('rail-closed');}
+  else{closeRail();}
+};
+
+/* ===== PROGRESS ===== */
+function updateProg(){
+  const tot=EX.length, n=EX.filter(e=>store.solved[e.id]).length;
+  document.getElementById('progTot').textContent=tot;
+  document.getElementById('progNum').textContent=n;
+  document.getElementById('progFill').style.width=(n/tot*100)+"%";
+}
+
+/* ===== SEARCH ===== */
+document.getElementById('search').oninput=(ev)=>{query=ev.target.value;render();};
+
+/* ===== INIT ===== */
+buildChips();render();updateProg();
+</script>
+</body>
+</html>

@@ -5,317 +5,164 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FISI Lernplattform</title>
 <style>
+:root{--bg:#f5f5f3;--ink:#1a1a18;--muted:#888;--line:#e0dfd8;--green:#1D9E75;--green-d:#157a5a;--green-soft:#e8f6f0;--card:#fff;--shadow:0 1px 3px rgba(0,0,0,.05),0 8px 22px rgba(0,0,0,.05)}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;background:#f5f5f3;color:#1a1a18;min-height:100vh}
-.hdr{background:white;border-bottom:1px solid #e0dfd8;padding:1.25rem 1.5rem;position:sticky;top:0;z-index:50}
-.hdr-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
-.hdr h1{font-size:18px;font-weight:600}
-.hdr p{font-size:12px;color:#888;margin-top:2px}
-.countdown{font-size:12px;color:#555;background:#f5f5f3;padding:5px 12px;border-radius:20px;border:1px solid #e0dfd8}
-.countdown b{color:#1D9E75;font-size:15px}
-.wrap{max-width:720px;margin:0 auto;padding:1.25rem 1rem 3rem}
-.search-bar{position:relative;margin-bottom:1.25rem}
-.search-bar input{width:100%;background:white;border:1px solid #e0dfd8;border-radius:10px;padding:10px 16px 10px 40px;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s}
-.search-bar input:focus{border-color:#1D9E75}
-.search-bar input::placeholder{color:#aaa}
-.search-clear{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#aaa;cursor:pointer;font-size:18px;display:none}
-.search-clear.vis{display:block}
-.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#aaa;font-size:15px;pointer-events:none}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem}
-.chip{padding:4px 12px;border-radius:20px;border:1px solid #e0dfd8;background:white;font-size:12px;color:#555;cursor:pointer;font-family:inherit;transition:all .12s}
-.chip:hover{border-color:#1D9E75;color:#1D9E75}
-.chip.on{background:#1D9E75;border-color:#1D9E75;color:white;font-weight:500}
-.sek{display:flex;align-items:center;gap:.75rem;margin:1.5rem 0 .75rem}
-.sek h2{font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.6px;white-space:nowrap}
-.sek .sl{flex:1;height:1px;background:#e0dfd8}
-.sb{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;white-space:nowrap}
-.sb-ap1{background:#dbeafe;color:#0C447C}
-.sb-ap2{background:#ede9fe;color:#3C3489}
-.sb-beide{background:#d1fae5;color:#085041}
-.sb-python{background:linear-gradient(90deg,#d1fae5,#dbeafe);color:#085041}
-.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-bottom:.5rem}
-.m{background:white;border:1px solid #e0dfd8;border-radius:14px;padding:1rem 1.125rem;position:relative;transition:box-shadow .15s,border-color .15s}
-.m.fertig{border-left:3px solid #1D9E75}
-.m.fertig:hover{border-color:#1D9E75;box-shadow:0 2px 10px rgba(29,158,117,.12)}
-.m.offen{border-left:3px solid #e0dfd8;opacity:.6}
-.m.neu{border-left:3px solid #f59e0b}
-.m.neu:hover{border-color:#f59e0b;box-shadow:0 2px 10px rgba(245,158,11,.12)}
-.m a{text-decoration:none;color:inherit;display:block}
-.m.hidden{display:none}
-.m-tag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;color:#888}
-.m h3{font-size:14px;font-weight:500;margin-bottom:4px;line-height:1.35}
-.m p{font-size:12px;color:#666;line-height:1.45;margin-bottom:.625rem}
-.m-foot{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.ms{font-size:11px;font-weight:500;display:inline-flex;align-items:center;gap:4px}
-.ms::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.ms.ja{color:#085041}.ms.ja::before{background:#1D9E75}
-.ms.nein{color:#aaa}.ms.nein::before{background:#ddd}
-.ms.neu-s{color:#b45309}.ms.neu-s::before{background:#f59e0b}
-.badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:4px}
-.badge-neu{background:#fef3c7;color:#b45309;border:1px solid #fcd34d}
-.badge-ref{background:#dbeafe;color:#0C447C;border:1px solid #bfdbfe}
-.no-results{text-align:center;padding:3rem;color:#aaa;font-size:14px;display:none}
-footer{text-align:center;padding:2rem;font-size:12px;color:#aaa}
-footer a{color:#1D9E75;text-decoration:none}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased}
 
-/* ── Python Byte Kachel ── */
-.python-tile-wrap {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1.5rem;
-}
-.python-tile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 130px;
-  height: 130px;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #0f7a5a 0%, #1a6fa8 100%);
-  box-shadow: 0 4px 18px rgba(15,122,90,.25), 0 2px 6px rgba(26,111,168,.2);
-  text-decoration: none;
-  color: white;
-  gap: 8px;
-  transition: transform .18s, box-shadow .18s;
-  border: none;
-  cursor: pointer;
-}
-.python-tile:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 8px 28px rgba(15,122,90,.32), 0 4px 12px rgba(26,111,168,.28);
-}
-.python-tile-emoji {
-  font-size: 44px;
-  line-height: 1;
-}
-.python-tile-label {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: .04em;
-  text-align: center;
-  line-height: 1.2;
-}
-.python-tile-sub {
-  font-size: 10px;
-  opacity: .75;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-}
+.hdr{background:#fff;border-bottom:1px solid var(--line);padding:1.1rem 1.5rem;position:sticky;top:0;z-index:50}
+.hdr-in{max-width:780px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem}
+.hdr h1{font-size:19px;font-weight:800;letter-spacing:-.4px}
+.hdr p{font-size:11.5px;color:var(--muted);margin-top:1px}
+.cds{display:flex;gap:8px;flex-wrap:wrap}
+.cd{font-size:11px;color:#555;background:var(--bg);padding:5px 12px;border-radius:99px;border:1px solid var(--line);white-space:nowrap}
+.cd b{color:var(--green-d);font-size:14px;font-weight:800}
+.cd small{display:block;font-size:9.5px;color:var(--muted);letter-spacing:.3px;text-transform:uppercase}
+
+.wrap{max-width:780px;margin:0 auto;padding:1.3rem 1rem 4rem}
+.search{position:relative;margin-bottom:1rem}
+.search input{width:100%;background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 16px 11px 40px;font-size:14px;font-family:inherit;outline:none}
+.search input:focus{border-color:var(--green)}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.4}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.4rem}
+.chip{padding:5px 13px;border-radius:99px;border:1px solid var(--line);background:#fff;font-size:12px;color:#555;cursor:pointer;font-family:inherit;transition:.12s}
+.chip:hover{border-color:var(--green);color:var(--green-d)}
+.chip.on{background:var(--green);border-color:var(--green);color:#fff;font-weight:600}
+
+.sek{display:flex;align-items:center;gap:.75rem;margin:1.7rem 0 .85rem}
+.sek h2{font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;white-space:nowrap}
+.sek .sl{flex:1;height:1px;background:var(--line)}
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.85rem}
+.tile{display:flex;flex-direction:column;gap:.4rem;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.05rem;text-decoration:none;color:inherit;box-shadow:var(--shadow);transition:.16s;position:relative;overflow:hidden}
+.tile:hover{transform:translateY(-2px);border-color:#cfe9df;box-shadow:0 4px 10px rgba(0,0,0,.06),0 14px 30px rgba(0,0,0,.07)}
+.tile .ic{font-size:22px;line-height:1}
+.tile h3{font-size:15px;font-weight:700;letter-spacing:-.2px}
+.tile p{font-size:12px;color:var(--muted);line-height:1.4}
+.tile .meta{margin-top:auto;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:5px}
+.st-ok{color:var(--green-d)} .st-soon{color:#b9892a}
+.dot{width:6px;height:6px;border-radius:99px;background:currentColor;display:inline-block}
+
+/* PRIO – Hero-Kachel */
+.prio{grid-column:1/-1;background:linear-gradient(120deg,#157a5a,#1D9E75 60%,#2bbf8d);color:#fff;border:none;padding:1.3rem 1.4rem}
+.prio:hover{box-shadow:0 6px 14px rgba(29,158,117,.3),0 18px 40px rgba(29,158,117,.25)}
+.prio .tag{font-size:10px;font-weight:800;letter-spacing:1px;background:rgba(255,255,255,.22);padding:3px 9px;border-radius:6px;align-self:flex-start}
+.prio h3{font-size:20px;color:#fff} .prio p{color:rgba(255,255,255,.9);font-size:13px}
+.prio .meta{color:#fff;opacity:.95}
+.prio .ic{font-size:26px}
+
+.note{grid-column:1/-1;font-size:11.5px;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:10px;padding:.7rem .9rem;margin-top:.3rem}
+.note b{color:var(--ink)}
+.hide{display:none}
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:2.5rem}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.prio h3{font-size:18px}}
 </style>
 </head>
 <body>
 
 <header class="hdr">
-  <div class="hdr-inner">
-    <div>
-      <h1>FISI Lernplattform</h1>
-      <p>Fachinformatiker Systemintegration · AP1 &amp; AP2 Vorbereitung</p>
+  <div class="hdr-in">
+    <div><h1>FISI Lernplattform</h1><p>Prüfungsvorbereitung · Fachinformatiker Systemintegration</p></div>
+    <div class="cds">
+      <div class="cd"><small>AP1 · Herbst 26</small><b id="cdAP1">–</b> Tage</div>
+      <div class="cd"><small>AP2 · Winter 27</small><b id="cdAP2">–</b> Tage</div>
     </div>
-    <div class="countdown">AP1 in <b id="tage">–</b> Tagen</div>
   </div>
 </header>
 
 <div class="wrap">
+  <div class="search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="search" type="text" placeholder="Modul oder Thema suchen … (z. B. Subnetting, Kalkulation, RAID)">
+  </div>
+  <div class="chips" id="chips"></div>
 
-  <!-- PYTHON BYTE KACHEL – oben rechts -->
-  <div class="python-tile-wrap">
-    <a href="python_byte.html" class="python-tile">
-      <span class="python-tile-emoji">🐍</span>
-      <span class="python-tile-label">Python Byte</span>
-      <span class="python-tile-sub">Lernzweig</span>
+  <div class="sek"><h2>Prüfungstraining</h2><div class="sl"></div></div>
+  <div class="grid">
+    <a class="tile prio" href="prio.html" data-tags="prio prüfung ap1 aufgaben lösung training">
+      <span class="tag">PRIO</span>
+      <span class="ic">🎯</span>
+      <h3>Prüfungen &amp; Aufgaben mit Lösungsweg</h3>
+      <p>Übungen im AP1-Stil mit abrufbaren Tipps, Teil- und Komplettlösung sowie aufklappbarer Erklär-Leiste.</p>
+      <span class="meta"><span class="dot"></span>9 Aufgaben · AP1 Frühjahr-Themen</span>
     </a>
   </div>
 
-  <div class="search-bar">
-    <span class="search-icon">⌕</span>
-    <input type="text" id="q" placeholder="Modul suchen …" autocomplete="off" oninput="filter()">
-    <button class="search-clear" id="clr" onclick="clearQ()">×</button>
+  <div class="sek"><h2>Programmierung</h2><div class="sl"></div></div>
+  <div class="grid">
+    <a class="tile" href="python_byte.html" data-tags="python byte code programmierung pseudocode verzweigung schleifen debugging cheatsheet">
+      <span class="ic">🐍</span><h3>Python Byte</h3>
+      <p>16 Aufgaben in 3 Levels (Basics → Logik &amp; Schleifen → Programme), Debugging-Hilfe und Befehlsreferenz.</p>
+      <span class="meta st-ok"><span class="dot"></span>Vorhanden · 16 Aufgaben</span>
+    </a>
   </div>
 
-  <div class="chips">
-    <button class="chip on" data-f="all">Alle</button>
-    <button class="chip" data-f="sicherheit">IT-Sicherheit</button>
-    <button class="chip" data-f="referenz">Referenz</button>
-    <button class="chip" data-f="geplant">Geplant</button>
+  <div class="sek"><h2>Lernfelder · Karteikarten</h2><div class="sl"></div></div>
+  <div class="grid">
+    <a class="tile" href="lf1.html" data-tags="lf1 kaufvertrag handelskalkulation inventur rechtsform gmbh kg streik risiko wirtschaft">
+      <span class="ic">📘</span><h3>Lernfeld 1</h3>
+      <p>Kaufverträge, Handelskalkulation, Inventurarten, Rechtsformen &amp; Kapital, Streik, Risiken.</p>
+      <span class="meta st-soon"><span class="dot"></span>Karteikarten in Arbeit</span>
+    </a>
+    <a class="tile" href="lf2.html" data-tags="lf2 beschaffung nutzwertanalyse leasing kalkulation netzplan projektmanagement usv arbeitssicherheit">
+      <span class="ic">📗</span><h3>Lernfeld 2</h3>
+      <p>Beschaffung, Nutzwertanalyse, Wirtschaftlichkeit, Projektmanagement, Netzplan, USV.</p>
+      <span class="meta st-soon"><span class="dot"></span>Karteikarten in Arbeit</span>
+    </a>
+    <a class="tile" href="lf3.html" data-tags="lf3 netzwerke osi tcp ip subnetting raid backup topologie protokolle">
+      <span class="ic">📙</span><h3>Lernfeld 3</h3>
+      <p>Netzwerke, OSI-Modell, TCP/IP &amp; Subnetting, RAID, Backup, Topologien, Protokolle.</p>
+      <span class="meta st-soon"><span class="dot"></span>Karteikarten in Arbeit</span>
+    </a>
+    <a class="tile" href="lf4.html" data-tags="lf4 it-sicherheit datenschutz dsgvo verschlüsselung firewall server">
+      <span class="ic">📕</span><h3>Lernfeld 4</h3>
+      <p>IT-Sicherheit, Datenschutz/DSGVO, Verschlüsselung, Firewall, Serverdienste.</p>
+      <span class="meta st-soon"><span class="dot"></span>Karteikarten in Arbeit</span>
+    </a>
   </div>
 
-  <!-- VERFÜGBAR -->
-  <div class="sek"><h2>IT-Sicherheit &amp; Datenschutz</h2><div class="sl"></div><span class="sb sb-beide">AP1 + AP2</span></div>
-  <div class="mgrid">
+  <div class="sek"><h2>Referenz &amp; Sicherheit</h2><div class="sl"></div></div>
+  <div class="grid">
+    <a class="tile" href="lf4_it_sicherheit.html" data-tags="it-sicherheit lf4 referenz">
+      <span class="ic">🔒</span><h3>IT-Sicherheit</h3>
+      <p>Lernmodul zu Schutzzielen, Bedrohungen und Maßnahmen.</p>
+      <span class="meta st-ok"><span class="dot"></span>Vorhanden</span>
+    </a>
+    <a class="tile" href="lf_isms_grundschutz.html" data-tags="isms bsi grundschutz">
+      <span class="ic">🛡️</span><h3>IT-Grundschutz &amp; ISMS</h3>
+      <p>BSI-Standards, Schutzbedarf, Strukturanalyse &amp; Modellierung.</p>
+      <span class="meta st-ok"><span class="dot"></span>Vorhanden</span>
+    </a>
+    <a class="tile" href="bsi_anforderungsindex.html" data-tags="bsi anforderungen index referenz nachschlagen">
+      <span class="ic">📖</span><h3>BSI-Anforderungsindex</h3>
+      <p>Durchsuchbares Nachschlagewerk aller Bausteine &amp; Anforderungen.</p>
+      <span class="meta st-ok"><span class="dot"></span>Vorhanden</span>
+    </a>
 
-    <div class="m fertig" data-lf="sicherheit" data-tags="it sicherheit datenschutz dsgvo bsi karteikarten cia toms lf4">
-      <a href="lf4_it_sicherheit.html">
-        <div class="m-tag">LF 4 · Karteikarten</div>
-        <h3>IT-Sicherheit &amp; Datenschutz</h3>
-        <p>CIA-Triade, DSGVO, TOMs, Schutzbedarf – Karteikarten mit richtig/falsch</p>
-        <div class="m-foot"><span class="ms ja">Verfügbar</span></div>
-      </a>
-    </div>
-
-    <div class="m fertig" data-lf="sicherheit" data-tags="isms grundschutz bsi 200 pdca strukturanalyse modellierung lf4">
-      <a href="lf_isms_grundschutz.html">
-        <div class="m-tag">LF 4 · ISMS</div>
-        <h3>IT-Grundschutz &amp; ISMS</h3>
-        <p>BSI 200-1/2/3, PDCA-Zyklus, Schutzbedarfsfeststellung, Modellierung</p>
-        <div class="m-foot"><span class="ms ja">Verfügbar</span></div>
-      </a>
-    </div>
-
-  </div>
-
-  <!-- REFERENZ -->
-  <div class="sek"><h2>Referenz &amp; Nachschlagewerke</h2><div class="sl"></div><span class="sb sb-beide">Alle LF</span></div>
-  <div class="mgrid">
-
-    <div class="m neu" data-lf="referenz sicherheit" data-tags="bsi anforderungen index kreuzreferenz grundschutz baustein 1846 krt">
-      <a href="bsi_anforderungsindex.html">
-        <div class="m-tag">Referenz · BSI &nbsp;<span class="badge badge-neu">NEU</span></div>
-        <h3>BSI Anforderungsindex 2023</h3>
-        <p>Alle 1.846 Anforderungen aus 111 Bausteinen – durchsuchbar nach ID und Bezeichnung</p>
-        <div class="m-foot">
-          <span class="ms neu-s">Neu</span>
-          <span class="badge badge-ref">KRT 2023</span>
-        </div>
-      </a>
-    </div>
-
-  </div>
-
-  <!-- GEPLANT LF2 -->
-  <div class="sek"><h2>Lernfeld 2 – geplant</h2><div class="sl"></div><span class="sb sb-ap1">AP1</span></div>
-  <div class="mgrid">
-    <div class="m offen" data-lf="geplant lf2" data-tags="projektplanung netzplan vorgangsliste lf2">
-      <div class="m-tag">LF 2</div><h3>Projektplanung &amp; Netzplan</h3>
-      <p>Vorgehen, Vorgangsliste, Netzplan – Planung von IT-Projekten</p>
-      <div class="m-foot"><span class="ms nein">Geplant</span></div>
-    </div>
-    <div class="m offen" data-lf="geplant lf2" data-tags="wirtschaftlichkeit kalkulation roi lf2">
-      <div class="m-tag">LF 2</div><h3>Wirtschaftlichkeit &amp; Kalkulation</h3>
-      <p>Kostenvergleich, ROI, Amortisation, Kalkulationsverfahren</p>
-      <div class="m-foot"><span class="ms nein">Geplant</span></div>
-    </div>
-    <div class="m offen" data-lf="geplant lf2" data-tags="beschaffung nutzwertanalyse lf2">
-      <div class="m-tag">LF 2</div><h3>Beschaffung &amp; Nutzwertanalyse</h3>
-      <p>Beschaffungsprozess, Nutzwertanalyse, Anbietervergleich</p>
-      <div class="m-foot"><span class="ms nein">Geplant</span></div>
-    </div>
-    <div class="m offen" data-lf="geplant lf2" data-tags="finanzierung leasing miete kauf lf2">
-      <div class="m-tag">LF 2</div><h3>Finanzierung &amp; Leasing</h3>
-      <p>Kauf, Leasing, Miete – Vergleichsrechnung und Entscheidungshilfe</p>
-      <div class="m-foot"><span class="ms nein">Geplant</span></div>
-    </div>
-    <div class="m offen" data-lf="geplant lf2" data-tags="greenit umweltschutz nachhaltigkeit lf2">
-      <div class="m-tag">LF 2</div><h3>Umweltschutz &amp; Green IT</h3>
-      <p>Energie, Nachhaltigkeit, Recycling, ökologische Verantwortung</p>
-      <div class="m-foot"><span class="ms nein">Geplant</span></div>
-    </div>
-    <div class="m offen" data-lf="geplant lf2" data-tags="arbeitssicherheit arbeitsschutz lf2">
-      <div class="m-tag">LF 2</div><h3>Arbeitssicherheit</h3>
-      <p>Arbeitsschutz, Gefährdungsbeurteilung, Unfallverhütung</p>
-      <div class="m-foot"><span class="ms nein">Geplant</span></div>
+    <div class="note">
+      <b>Hinweis zu den Dateinamen:</b> Die Lernfeld-Kacheln verlinken auf <code>lf1.html</code>–<code>lf4.html</code> (folgen als Nächstes). Die unteren drei verweisen auf <code>lf4_it_sicherheit.html</code>, <code>lf_isms_grundschutz.html</code> und <code>bsi_anforderungsindex.html</code>. Heißen sie im Repo anders, sag mir die echten Namen – dann passe ich die Links an.
     </div>
   </div>
 
-  <!-- GEPLANT LF3 -->
-  <div class="sek"><h2>Lernfeld 3 – geplant</h2><div class="sl"></div><span class="sb sb-ap1">AP1</span></div>
-  <div class="mgrid">
-    <div class="m offen" data-lf="geplant lf3" data-tags="netzwerke topologien stern bus ring lf3">
-      <div class="m-tag">LF 3</div><h3>Netzwerk-Topologien</h3>
-      <p>Stern, Bus, Ring, Mesh – Aufbau und Vergleich</p>
-      <div class="m-foot"><span class="ms nein">Geplant</span></div>
-    </div>
-    <div class="m offen" data-lf="geplant lf3" data-tags="protokolle tcp ip osi modell lf3">
-      <div class="m-tag">LF 3</div><h3>Netzwerkprotokolle &amp; OSI</h3>
-      <p>TCP/IP, OSI-Modell, Protokollschichten</p>
-      <div class="m-foot"><span class="ms nein">Geplant</span></div>
-    </div>
-    <div class="m offen" data-lf="geplant lf3" data-tags="ipv4 subnetting subnetzmaske cidr lf3">
-      <div class="m-tag">LF 3</div><h3>IPv4 &amp; Subnetting</h3>
-      <p>IP-Adressen, Subnetzmasken, CIDR, Magic-Number-Methode</p>
-      <div class="m-foot"><span class="ms nein">Geplant</span></div>
-    </div>
-    <div class="m offen" data-lf="geplant lf3 sicherheit" data-tags="netzwerk sicherheit firewall vlan dmz vpn lf3">
-      <div class="m-tag">LF 3 · Sicherheit</div><h3>Netzwerksicherheit</h3>
-      <p>Firewall, VPN, VLAN, DMZ, IDS/IPS</p>
-      <div class="m-foot"><span class="ms nein">Geplant</span></div>
-    </div>
-    <div class="m offen" data-lf="geplant lf3" data-tags="raid backup datensicherung lf3">
-      <div class="m-tag">LF 3</div><h3>RAID &amp; Backup</h3>
-      <p>RAID 0–6, Vollsicherung, differenziell, inkrementell</p>
-      <div class="m-foot"><span class="ms nein">Geplant</span></div>
-    </div>
-  </div>
-
-  <!-- GEPLANT PRÜFUNG -->
-  <div class="sek"><h2>Prüfungsunterlagen 2026</h2><div class="sl"></div><span class="sb sb-beide">Sommer 2026</span></div>
-  <div class="mgrid">
-    <div class="m offen" data-lf="geplant pruefung" data-tags="prüfung ap1 original 2026">
-      <div class="m-tag">AP1 · Sommer 2026</div><h3>AP1 – Originalprüfung</h3>
-      <p>Aufgaben mit Musterlösung, Zeitplanung, Bewertungsschlüssel</p>
-      <div class="m-foot"><span class="ms nein">Geplant</span></div>
-    </div>
-    <div class="m offen" data-lf="geplant pruefung" data-tags="prüfung ap2 ga1 ga2 wiso fisi 2026">
-      <div class="m-tag">FISI · AP2 · Sommer 2026</div><h3>AP2 – GA1 &amp; GA2 + WISO</h3>
-      <p>Ganzheitliche Aufgaben FISI mit Musterlösungen</p>
-      <div class="m-foot"><span class="ms nein">Geplant</span></div>
-    </div>
-  </div>
-
-  <div class="no-results" id="noRes">Keine Module gefunden.</div>
+  <footer>FISI Lernplattform · idontbyteU/fisi-lernplattform</footer>
 </div>
 
-<footer>
-  FISI Lernplattform · <a href="https://github.com/idontbyteU/fisi-lernplattform" target="_blank">github.com/idontbyteU</a> · wird laufend erweitert
-</footer>
-
 <script>
-const d = Math.ceil((new Date('2026-06-01') - new Date()) / 86400000);
-document.getElementById('tage').textContent = d > 0 ? d : '–';
+/* ===== COUNTDOWN – Daten hier anpassen, falls Termine feststehen ===== */
+const AP1 = "2026-09-22";  // AP1 Herbst 2026 (vorläufig – exaktes Datum hier eintragen)
+const AP2 = "2027-01-20";  // AP2 Winter 2026/27 (vorläufig)
+function daysTo(d){const t=new Date(d)-new Date();return Math.max(0,Math.ceil(t/86400000));}
+document.getElementById('cdAP1').textContent=daysTo(AP1);
+document.getElementById('cdAP2').textContent=daysTo(AP2);
 
-let activeF = 'all';
-document.querySelectorAll('.chip').forEach(c => {
-  c.addEventListener('click', () => {
-    document.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
-    c.classList.add('on');
-    activeF = c.dataset.f;
-    filter();
-  });
-});
-
-function filter() {
-  const q = document.getElementById('q').value.trim().toLowerCase();
-  document.getElementById('clr').classList.toggle('vis', q.length > 0);
-  let vis = 0;
-  document.querySelectorAll('.m').forEach(m => {
-    const lf   = (m.dataset.lf   || '').toLowerCase();
-    const tags = (m.dataset.tags || '').toLowerCase();
-    const h3   = (m.querySelector('h3')?.textContent || '').toLowerCase();
-    const p    = (m.querySelector('p')?.textContent  || '').toLowerCase();
-    const matchF =
-      activeF === 'all' ||
-      (activeF === 'sicherheit' && (lf.includes('sicherheit') || tags.includes('sicherheit') || tags.includes('bsi') || tags.includes('dsgvo') || tags.includes('isms'))) ||
-      (activeF === 'geplant'   && m.classList.contains('offen')) ||
-      (activeF === 'referenz'  && lf.includes('referenz'));
-    const matchQ = !q || tags.includes(q) || h3.includes(q) || p.includes(q);
-    const show = matchF && matchQ;
-    m.classList.toggle('hidden', !show);
-    if (show) vis++;
-  });
-  document.querySelectorAll('.sek').forEach(sek => {
-    const grid = sek.nextElementSibling;
-    if (!grid) return;
-    const any = grid.querySelectorAll('.m:not(.hidden)').length > 0;
-    sek.style.display = any ? '' : 'none';
-    grid.style.display = any ? '' : 'none';
-  });
-  document.getElementById('noRes').style.display = vis === 0 ? 'block' : 'none';
-}
-
-function clearQ() {
-  document.getElementById('q').value = '';
-  filter();
-}
+/* ===== SUCHE + FILTER ===== */
+const tiles=[...document.querySelectorAll('.tile')];
+const chipDefs=[["Alle",""],["Prio","prio"],["Python","python"],["LF 1","lf1"],["LF 2","lf2"],["LF 3","lf3"],["LF 4","lf4"],["Referenz","referenz"]];
+const chips=document.getElementById('chips');let active="";
+chipDefs.forEach(([label,tag],i)=>{const c=document.createElement('button');c.className="chip"+(i===0?" on":"");c.textContent=label;c.onclick=()=>{active=tag;[...chips.children].forEach(x=>x.classList.remove('on'));c.classList.add('on');apply();};chips.appendChild(c);});
+const search=document.getElementById('search');
+function apply(){const q=search.value.toLowerCase();tiles.forEach(t=>{const tags=(t.dataset.tags||"")+" "+t.textContent.toLowerCase();const ok=(active===""||tags.includes(active))&&(q===""||tags.includes(q));t.classList.toggle('hide',!ok);});
+  document.querySelectorAll('.note').forEach(n=>n.classList.toggle('hide',active!==""&&active!=="referenz"));}
+search.oninput=apply;
 </script>
 </body>
 </html>
