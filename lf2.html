@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernfeld 2 · Karteikarten · FISI Lernplattform</title>
+<style>
+:root{
+  --bg:#f5f5f3;--ink:#1a1a18;--muted:#888;--line:#e0dfd8;
+  --green:#1D9E75;--green-d:#157a5a;--green-soft:#e8f6f0;--card:#fff;
+  --shadow:0 1px 3px rgba(0,0,0,.05),0 8px 22px rgba(0,0,0,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+.hdr{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.hdr-in{max-width:820px;margin:0 auto;padding:.85rem 1.1rem;display:flex;align-items:center;gap:.9rem;flex-wrap:wrap}
+.back{display:inline-flex;align-items:center;gap:.35rem;font-size:13px;color:var(--muted);text-decoration:none;border:1px solid var(--line);padding:5px 11px;border-radius:8px;transition:.15s}
+.back:hover{border-color:var(--green);color:var(--green)}
+.hdr h1{font-size:17px;font-weight:800;letter-spacing:-.3px}
+.hdr h1 .tag{font-size:10px;font-weight:700;color:#fff;background:#3454d1;padding:2px 7px;border-radius:6px;margin-right:7px;letter-spacing:.4px;vertical-align:middle}
+.hdr .sub{font-size:11.5px;color:var(--muted)}
+.sp{flex:1}
+.mode{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:2px}
+.mode button{font-family:inherit;font-size:12.5px;font-weight:600;border:none;background:none;color:#666;padding:5px 12px;border-radius:7px;cursor:pointer}
+.mode button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+.wrap{max-width:820px;margin:0 auto;padding:1rem 1.1rem 4rem}
+
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.8rem}
+.chip{padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:#fff;font-size:12px;color:#555;cursor:pointer;font-family:inherit;transition:.12s;white-space:nowrap}
+.chip:hover{border-color:var(--green);color:var(--green-d)}
+.chip.on{background:var(--green);border-color:var(--green);color:#fff;font-weight:600}
+.chip .ct{opacity:.6;font-weight:600;margin-left:3px}
+
+.bar{display:flex;align-items:center;gap:.9rem;background:#fff;border:1px solid var(--line);border-radius:12px;padding:.65rem .9rem;margin-bottom:1rem;box-shadow:var(--shadow);flex-wrap:wrap}
+.pbar{flex:1;min-width:120px;height:8px;background:#eee;border-radius:99px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),#2bbf8d);transition:width .4s}
+.ptxt{font-size:12px;color:var(--muted);white-space:nowrap}.ptxt b{color:var(--ink)}
+.tools{display:flex;gap:6px}
+.tbtn{font-family:inherit;font-size:12px;font-weight:600;border:1px solid var(--line);background:#fff;color:#555;border-radius:8px;padding:5px 10px;cursor:pointer;transition:.12s}
+.tbtn:hover{border-color:var(--green);color:var(--green-d)}
+.tbtn.on{background:var(--green-soft);border-color:#bfe3d4;color:var(--green-d)}
+
+/* STUDY MODE */
+.study{display:flex;flex-direction:column;align-items:center}
+.counter{font-size:12.5px;color:var(--muted);margin-bottom:.6rem}.counter b{color:var(--ink)}
+.flash{width:100%;max-width:560px;perspective:1600px;cursor:pointer;margin-bottom:1rem}
+.flash-inner{position:relative;width:100%;min-height:300px;transition:transform .55s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
+.flash.flip .flash-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:1.6rem 1.5rem;display:flex;flex-direction:column;overflow:auto}
+.face.b{transform:rotateY(180deg);background:linear-gradient(0deg,#fbfffd,#fff);border-color:#cfe9df}
+.f-cat{font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-bottom:.8rem}
+.f-q{font-size:19px;font-weight:700;line-height:1.35;letter-spacing:-.3px;margin:auto 0}
+.f-lbl{font-size:11px;font-weight:700;color:var(--green-d);letter-spacing:.4px;text-transform:uppercase;margin-bottom:.6rem}
+.f-a{font-size:15.5px;line-height:1.55;margin:auto 0}
+.f-a b{color:var(--green-d)}
+.f-hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:11px;color:#bbb}
+.face.b .f-hint{color:#a9d8c6}
+
+.ans-btns{display:flex;gap:.7rem;width:100%;max-width:560px;margin-bottom:.8rem}
+.ans-btns button{flex:1;font-family:inherit;font-size:14px;font-weight:700;border-radius:11px;padding:13px;cursor:pointer;border:1px solid;transition:.13s}
+.again{background:#fff6f4;border-color:#f1cfc6;color:#c0392b}
+.again:hover{background:#fcebe6}
+.known{background:var(--green-soft);border-color:#bfe3d4;color:var(--green-d)}
+.known:hover{background:#d8efe6}
+.nav{display:flex;gap:.6rem;align-items:center;font-size:13px;color:var(--muted)}
+.nav button{font-family:inherit;font-size:13px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 13px;cursor:pointer;color:#555}
+.nav button:hover{border-color:var(--green);color:var(--green-d)}
+.done-msg{text-align:center;background:#fff;border:1px solid #cfe9df;border-radius:16px;padding:2.4rem 1.5rem;box-shadow:var(--shadow);max-width:560px}
+.done-msg .em{font-size:40px}.done-msg h3{font-size:18px;margin:.6rem 0 .3rem}.done-msg p{font-size:13.5px;color:var(--muted);margin-bottom:1rem}
+
+/* LIST MODE */
+.list .li{background:#fff;border:1px solid var(--line);border-radius:12px;padding:.85rem 1rem;margin-bottom:.6rem;box-shadow:var(--shadow);display:flex;gap:.8rem;align-items:flex-start}
+.list .li.k{border-color:#cfe9df;background:linear-gradient(0deg,#fbfffd,#fff)}
+.li-x{flex:1;min-width:0}
+.li-cat{font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;margin-bottom:.25rem}
+.li-q{font-size:14.5px;font-weight:700;margin-bottom:.3rem;line-height:1.35}
+.li-a{font-size:13.5px;color:#444;line-height:1.5;display:none}
+.li-a b{color:var(--green-d)}
+.li.open .li-a{display:block}
+.li-toggle{font-size:11.5px;color:var(--green-d);font-weight:600;cursor:pointer;user-select:none}
+.li-chk{appearance:none;width:22px;height:22px;border:2px solid var(--line);border-radius:7px;cursor:pointer;position:relative;flex-shrink:0;background:#fff;transition:.15s}
+.li-chk:hover{border-color:var(--green)}
+.li-chk:checked{background:var(--green);border-color:var(--green)}
+.li-chk:checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800}
+
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:2.5rem}
+@media(max-width:560px){.f-q{font-size:17px}.hdr h1{font-size:15px}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="index.html">← Übersicht</a>
+    <div>
+      <h1><span class="tag">LF 2</span>Karteikarten</h1>
+      <div class="sub">Beschaffung · Nutzwertanalyse · Wirtschaftlichkeit · Finanzierung · Projektmanagement · Netzplan</div>
+    </div>
+    <div class="sp"></div>
+    <div class="mode">
+      <button id="mLern" class="on">Lernen</button>
+      <button id="mList">Übersicht</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="chips" id="chips"></div>
+  <div class="bar">
+    <div class="pbar"><i id="pfill"></i></div>
+    <div class="ptxt"><b id="pnum">0</b> / <span id="ptot">0</span> gewusst</div>
+    <div class="tools">
+      <button class="tbtn" id="tShuffle">🔀 Mischen</button>
+      <button class="tbtn" id="tOpen">Nur offene</button>
+      <button class="tbtn" id="tReset">Zurücksetzen</button>
+    </div>
+  </div>
+
+  <div id="study" class="study"></div>
+  <div id="listView" class="list" style="display:none"></div>
+
+  <footer>FISI Lernplattform · Lernfeld 2 · Fortschritt wird lokal im Browser gespeichert · Leertaste = umdrehen, ← → = blättern</footer>
+</div>
+
+<script>
+/* ===== KATEGORIEN ===== */
+const CATS={
+  besch:{label:"Beschaffung",color:"#2b6cb0"},
+  nwa:{label:"Nutzwertanalyse",color:"#b9892a"},
+  wirt:{label:"Wirtschaftlichkeit",color:"#157a5a"},
+  fin:{label:"Finanzierung & Leasing",color:"#7c4dbd"},
+  pm:{label:"Projektmanagement",color:"#c0392b"},
+  netz:{label:"Netzplantechnik",color:"#0e7490"},
+  arb:{label:"Arbeit & Umwelt",color:"#475569"}
+};
+
+/* ===== KARTEN ===== */
+const CARDS=[
+/* LF2-Karten */
+{c:"besch",q:"Was ist das Ziel des Beschaffungsprozesses?",a:"Die <b>richtige Ware</b> in <b>richtiger Menge und Qualität</b>, zum <b>richtigen Zeitpunkt</b> am <b>richtigen Ort</b> und zu den <b>bestmöglichen Konditionen</b> zu beschaffen (6 R der Beschaffung)."},
+{c:"besch",q:"Unterschied Beschaffung und Einkauf?",a:"<b>Beschaffung</b> ist der weite, langfristige Prozess (inkl. Verhandlung, Lieferantenbeziehung, Erfassung). <b>Einkauf</b> ist nur der eigentliche Kaufakt – kurzfristig, fokussiert auf den besten Preis."},
+{c:"besch",q:"Nenne die Phasen des Beschaffungsprozesses.",a:"1. Bedarfsermittlung, 2. Bezugsquellen-/Lieferantenermittlung, 3. Verhandlung, 4. Bestellung, 5. Wareneingang &amp; Qualitätskontrolle, 6. Rechnungs- &amp; Zahlungsabwicklung."},
+{c:"besch",q:"Was gehört zur Bedarfsermittlung?",a:"Anforderungsanalyse, Menge (Einzel- vs. Vorratsbeschaffung), Lagerkapazität, erwarteter Verbrauch/Absatz, Preisschwankungen, Sicherheitsbestände und der Beschaffungszeitpunkt."},
+{c:"besch",q:"Was ist E-Procurement?",a:"Die <b>elektronische Beschaffung</b> über das Internet und spezielle Informations-/Kommunikationssysteme – beschleunigt und automatisiert Bestellprozesse."},
+{c:"besch",q:"Wozu dient die ABC-Analyse?",a:"Sie <b>klassifiziert Artikel nach Wertigkeit/Umsatz</b>, um die Beschaffung und Lagerhaltung gezielt zu steuern."},
+{c:"besch",q:"Was kennzeichnet A-Artikel?",a:"<b>Geringer Mengenanteil, hoher Wertanteil</b> (z. B. Server). Hohe Lagerhaltungskosten → am besten <b>bedarfsbezogen</b> beschaffen."},
+{c:"besch",q:"Was kennzeichnet C-Artikel?",a:"<b>Großer Mengenanteil, geringer Wertanteil</b> (z. B. Kabel, USB-Sticks). Geringe Lagerkosten → können <b>vorrätig</b> beschafft werden."},
+{c:"besch",q:"Was sind B-Artikel?",a:"Artikel mit <b>mittlerem Wert- und Mengenanteil</b> – liegen zwischen A- und C-Artikeln (ca. 15–20 %)."},
+{c:"besch",q:"Welche Vertragsarten sind in der Verhandlungsphase relevant?",a:"<b>Kaufvertrag, Werkvertrag, Dienstvertrag</b> sowie die <b>AGB</b> – je nach Leistung unterschiedlich."},
+{c:"nwa",q:"Wozu dient die Nutzwertanalyse?",a:"Zum <b>objektiven Vergleich von Angeboten/Lieferanten</b>, wenn nicht nur quantitative (Preis), sondern auch <b>qualitative</b> Kriterien (Qualität, Service, Image) entscheidend sind."},
+{c:"nwa",q:"Unterschied quantitative und qualitative Kriterien?",a:"<b>Quantitativ:</b> messbar, in Zahlen (Preis, Rabatt, Skonto, Transportkosten). <b>Qualitativ:</b> bewertbar, nicht direkt messbar (Qualität, Service, Image, Ökologie)."},
+{c:"nwa",q:"Wie läuft die Nutzwertanalyse Schritt für Schritt ab?",a:"1. Kriterien festlegen, 2. <b>Gewichtung in %</b> vergeben (Summe 100 %), 3. Angebote mit Punkten bewerten, 4. Punkte × Gewichtung → <b>gewichtete Punkte</b>, 5. höchste Gesamtpunktzahl gewinnt."},
+{c:"nwa",q:"Wie berechnet man die gewichtete Punktzahl je Kriterium?",a:"<b>Punkte × Gewichtung</b>. Beispiel: 30 % Gewicht, 2 Punkte → 0,30 × 2 = 0,6 gewichtete Punkte."},
+{c:"nwa",q:"Worauf muss die Summe der Gewichtungen kommen?",a:"Auf <b>genau 100 %</b> – sonst ist der Vergleich verzerrt."},
+{c:"nwa",q:"Welches Angebot gewinnt bei der Nutzwertanalyse?",a:"Das mit der <b>höchsten Summe der gewichteten Punkte</b>."},
+{c:"nwa",q:"Nenne typische qualitative Kriterien.",a:"Produktqualität, Folge-/Verbrauchskosten, zuverlässige Lieferung, Service &amp; Kundendienst, Image des Lieferanten, ökologische Aspekte."},
+{c:"wirt",q:"Was ist eine Make-or-Buy-Entscheidung?",a:"Die Entscheidung, eine Leistung <b>selbst zu erstellen (make)</b> oder <b>einzukaufen/auszulagern (buy)</b> – abhängig von Kosten, Kernkompetenzen, Zeit, Liquidität und Risiko."},
+{c:"wirt",q:"Welche Faktoren beeinflussen Make-or-Buy?",a:"Strategie, Projektdauer/Deadline, Kostenvergleich, Liquidität, vorhandene Kern-/Fachkompetenzen, Personalverfügbarkeit und Risikobetrachtung."},
+{c:"wirt",q:"Unterschied Einzelkosten und Gemeinkosten?",a:"<b>Einzelkosten:</b> direkt einem Produkt zurechenbar (z. B. Grafikkarte, Gehäuse). <b>Gemeinkosten:</b> fallen allgemein an (Strom, Miete, Verwaltung, Gehälter)."},
+{c:"wirt",q:"Was sind neutrale Kosten?",a:"Durchlaufende Posten wie <b>Mehrwertsteuer/Vorsteuer</b>, die das Betriebsergebnis nicht beeinflussen."},
+{c:"wirt",q:"Was ist der Handlungskostenzuschlag?",a:"Ein <b>prozentualer Zuschlag auf Basis der Gemeinkosten</b>, der in die Preiskalkulation eingeht, um die allgemeinen Kosten auf die Produkte umzulegen."},
+{c:"wirt",q:"Welche Faktoren bestimmen die Preisbildung?",a:"Produkteinkauf (Material/Ware), Bezugsnebenkosten (Transport, Zoll, Verpackung), Handlungskosten (Lager, Personal, Verwaltung) und Gewinn (inkl. Inflationsausgleich)."},
+{c:"wirt",q:"Cloud-Kostenmodell „Reserved“?",a:"Festgelegte Leistung wird für einen <b>festen Zeitraum reserviert</b> – günstiger, erfordert aber gute Bedarfsplanung."},
+{c:"wirt",q:"Cloud-Kostenmodell „Pay as you grow“?",a:"Mehrstufiges Modell, das mit einer <b>kostenlosen Startphase</b> beginnt und mit der Nutzung skaliert."},
+{c:"wirt",q:"Cloud-Kostenmodell „Combined“?",a:"<b>Kombination aus fixen und verbrauchsabhängigen Kosten</b> – Grunddienste fix, weitere Dienste bei Bedarf dazubuchbar."},
+{c:"wirt",q:"Vorteil verbrauchsabhängiger Cloud-Abrechnung?",a:"Es werden <b>nur tatsächlich genutzte Ressourcen</b> bezahlt; schnelle Bereitstellung und transparente Abrechnung nach Nutzung."},
+{c:"fin",q:"Vor- und Nachteil von Kauf?",a:"<b>Vorteil:</b> langfristig günstiger, volle Kontrolle, Abschreibung möglich. <b>Nachteil:</b> hohe Anfangsinvestition, Wertverlust-/Veralterungsrisiko, Wartung trägt der Käufer."},
+{c:"fin",q:"Vor- und Nachteil von Miete?",a:"<b>Vorteil:</b> hohe Flexibilität, kurze Laufzeit, keine hohe Anfangsinvestition, Service oft inklusive. <b>Nachteil:</b> langfristig teurer, kein Eigentum/keine Abschreibung."},
+{c:"fin",q:"Vor- und Nachteil von Leasing?",a:"<b>Vorteil:</b> geringe Anfangsinvestition, planbare Raten, oft bilanzneutral, stets aktuelle Technik. <b>Nachteil:</b> lange Vertragsbindung, oft teurer als Kauf, evtl. Restwertrisiko."},
+{c:"fin",q:"Was ist ein Fälligkeitsdarlehen?",a:"Der <b>gesamte Darlehensbetrag wird erst am Ende der Laufzeit</b> getilgt. Zinsen laufen voll weiter; sinnvoll bei großem Geldeingang zum Laufzeitende."},
+{c:"fin",q:"Was ist ein Ratendarlehen (Tilgungsdarlehen)?",a:"Die <b>Tilgung bleibt konstant</b> (linear). Da die Restschuld sinkt, sinken auch die Zinsen → die Gesamtrate wird kleiner."},
+{c:"fin",q:"Was ist ein Annuitätendarlehen?",a:"Die <b>gesamte Rate (Annuität) bleibt gleich</b>. Mit der Tilgung sinken die Zinsen, der Tilgungsanteil steigt entsprechend."},
+{c:"fin",q:"Wonach entscheidet man die Finanzierungsform?",a:"Nach <b>Budget, Nutzungsdauer, Flexibilitätsbedarf und steuerlichen Aspekten</b>."},
+{c:"fin",q:"Warum ist Leasing oft attraktiv für IT-Hardware?",a:"Weil IT schnell veraltet – Leasing erlaubt <b>stets aktuelle Technik ohne hohe Einmalzahlung</b> und mit planbaren Kosten."},
+{c:"pm",q:"Definition Projekt nach DIN 69901?",a:"Ein <b>Einzelvorhaben mit definierbarem Anfang und Ende</b>, das durch die <b>Einmaligkeit der Bedingungen</b> in seiner Gesamtheit gekennzeichnet ist."},
+{c:"pm",q:"Unterschied Projekt und Auftrag?",a:"<b>Projekt:</b> einmalig, zeitlich begrenzt, komplex, eigenes Ziel, Planung nötig. <b>Auftrag:</b> wiederholbar, Routine, geringer Planungsaufwand."},
+{c:"pm",q:"Was bedeutet SMART bei Projektzielen?",a:"Ziele sollen <b>S</b>pezifisch, <b>M</b>essbar, <b>A</b>ttraktiv/akzeptiert, <b>R</b>ealistisch und <b>T</b>erminiert sein."},
+{c:"pm",q:"Was ist ein Projektphasenmodell?",a:"Es beschreibt den <b>zeitlichen und sachlogischen Ablauf</b> eines Projekts und unterteilt es in aufeinander aufbauende Phasen für Planung, Durchführung und Kontrolle."},
+{c:"pm",q:"Nenne die fünf Phasen nach DIN 69901.",a:"<b>Initialisierung, Definition, Planung, Steuerung, Abschluss</b> (Phasen können mehrfach durchlaufen werden)."},
+{c:"pm",q:"Nenne die vier Phasen des 4-Phasen-Modells.",a:"Projektdefinition, Projektplanung, Projektumsetzung, Projektabschluss."},
+{c:"pm",q:"Was entsteht am Ende der Definitionsphase typischerweise?",a:"Der <b>Projektauftrag</b> – als Ergebnis von Stakeholder-Analyse, Zielentwicklung und Risikobetrachtung."},
+{c:"pm",q:"Welche Dokumente entstehen in der Planungsphase?",a:"Ablauf-/Terminplan, Ressourcenplan, Kostenplan, Meilensteinplan und die Liste offener Punkte (LOP)."},
+{c:"pm",q:"Was sind Erfolgsfaktoren im Projektmanagement?",a:"Klare SMART-Ziele, kompetentes Team mit klaren Rollen, Projekterfahrung, gute Motivation und ein akzeptierter Projektleiter."},
+{c:"pm",q:"Was ist ein Meilenstein?",a:"Ein <b>wichtiges Zwischenziel/Ereignis</b> im Projekt ohne eigene Dauer, an dem ein Zwischenergebnis überprüft wird."},
+{c:"netz",q:"Was bedeutet FAZ?",a:"<b>Frühester Anfangszeitpunkt</b> – frühestmöglicher Start eines Vorgangs. Beim ersten Knoten 0, sonst der höchste FEZ der Vorgänger."},
+{c:"netz",q:"Was bedeutet FEZ?",a:"<b>Frühester Endzeitpunkt</b> = eigener FAZ + Dauer."},
+{c:"netz",q:"Was bedeutet SEZ?",a:"<b>Spätester Endzeitpunkt</b> – spätestes Ende, ohne den Abschlusstermin zu gefährden. Beim letzten Knoten gleich dem FEZ; sonst niedrigster SAZ der Nachfolger."},
+{c:"netz",q:"Was bedeutet SAZ?",a:"<b>Spätester Anfangszeitpunkt</b> = eigener SEZ − Dauer."},
+{c:"netz",q:"Wie läuft die Vorwärtsrechnung?",a:"Von links nach rechts: FAZ des ersten Knotens = 0, FEZ = FAZ + Dauer. Bei mehreren Vorgängern wird der <b>höchste FEZ</b> als FAZ übernommen."},
+{c:"netz",q:"Wie läuft die Rückwärtsrechnung?",a:"Von rechts nach links: beim letzten Knoten SEZ = FEZ, SAZ = SEZ − Dauer. Bei mehreren Nachfolgern wird der <b>niedrigste SAZ</b> als SEZ übernommen."},
+{c:"netz",q:"Wie berechnet man den Gesamtpuffer (GP)?",a:"<b>GP = SAZ − FAZ</b> (oder SEZ − FEZ). Er zeigt, um wie viel ein Vorgang verschoben werden darf, ohne das Projektende zu gefährden."},
+{c:"netz",q:"Wie berechnet man den freien Puffer (FP)?",a:"<b>FP = FAZ des Nachfolgers − eigener FEZ</b>. Bei mehreren Nachfolgern wird der kleinste FAZ genommen."},
+{c:"netz",q:"Was ist der kritische Pfad?",a:"Die <b>längste Kette</b> von Vorgängen mit <b>Gesamtpuffer 0</b>. Eine Verzögerung darauf verschiebt das gesamte Projektende."},
+{c:"netz",q:"Warum ist der höchste FEZ bei Zusammenführungen maßgeblich?",a:"Weil ein Vorgang erst starten kann, wenn <b>alle</b> Vorgänger fertig sind – also nach dem spätesten von ihnen."},
+{c:"arb",q:"Wozu dient das Arbeitsschutzgesetz (ArbSchG)?",a:"Es legt den <b>Handlungsrahmen mit Rechten und Pflichten</b> zum Schutz von Sicherheit und Gesundheit der Beschäftigten fest und verpflichtet zur Zusammenarbeit über Gefahren."},
+{c:"arb",q:"Was regelt die Arbeitsstättenverordnung (ArbStättV)?",a:"Konkrete Anforderungen und Vorschriften zur <b>Einrichtung und zum Betreiben von Arbeitsstätten</b>, inkl. Gefährdungsbeurteilungen."},
+{c:"arb",q:"Welche Aufgabe haben Berufsgenossenschaften?",a:"Als <b>Träger der gesetzlichen Unfallversicherung</b> verhüten sie Arbeitsunfälle/Berufskrankheiten, rehabilitieren und entschädigen; sie erlassen verbindliche DGUV-Vorschriften."},
+{c:"arb",q:"Was ist eine Gefährdungsbeurteilung?",a:"Die <b>systematische Ermittlung und Bewertung von Gefahren</b> am Arbeitsplatz mit Festlegung von Schutzmaßnahmen – Pflicht des Arbeitgebers."},
+{c:"arb",q:"Was bedeutet Green-IT?",a:"Ein Leitbegriff für <b>umweltfreundliche IT über den gesamten Lebenszyklus</b> (Beschaffung, Nutzung, Verwertung, Entsorgung) mit möglichst geringem Ressourcenverbrauch."},
+{c:"arb",q:"Nenne Ziele des Umweltschutzes in der IT.",a:"Energiebedarf senken, Giftstoffe vermeiden, Ressourcen sparen, CO₂ senken, Abfall vermeiden, Refurbished-IT nutzen, Abwärme verwerten."},
+{c:"arb",q:"Wofür steht das Energy-Star-Zeichen?",a:"Ein ursprünglich amerikanisches Umweltzeichen (in Europa übernommen) für <b>energiesparende Geräte</b> – freiwillig nutzbar zur Erfüllung von Normen."},
+{c:"arb",q:"Was zertifiziert das TCO-Siegel?",a:"<b>Qualität und Nachhaltigkeit</b> von Produkten für Büroumgebungen (Monitore, Notebooks, Headsets usw.)."},
+{c:"arb",q:"Was ist Refurbished-IT?",a:"<b>Generalüberholte, wiederaufbereitete IT-Geräte</b> – schonen Ressourcen und reduzieren Elektroschrott."},
+];
+CARDS.forEach((c,i)=>c.id="c"+i);
+
+/* ===== STATE ===== */
+const LS="lf2_cards_v1";
+let store; try{store=JSON.parse(localStorage.getItem(LS))||{}}catch(e){store={}}
+store.known=store.known||{};
+function save(){try{localStorage.setItem(LS,JSON.stringify(store))}catch(e){}}
+
+let activeCat="alle", onlyOpen=false, shuffled=false, mode="lern";
+let deck=[], pos=0, flipped=false;
+
+/* ===== CHIPS ===== */
+const chipsEl=document.getElementById('chips');
+function count(cat){return CARDS.filter(c=>cat==="alle"||c.c===cat).length;}
+function buildChips(){
+  chipsEl.innerHTML="";
+  const all=document.createElement('button');
+  all.className="chip"+(activeCat==="alle"?" on":"");
+  all.innerHTML='Alle<span class="ct">'+CARDS.length+'</span>';
+  all.onclick=()=>{activeCat="alle";buildChips();rebuild();};
+  chipsEl.appendChild(all);
+  Object.keys(CATS).forEach(k=>{
+    const c=document.createElement('button');
+    c.className="chip"+(activeCat===k?" on":"");
+    c.innerHTML=CATS[k].label+'<span class="ct">'+count(k)+'</span>';
+    if(activeCat===k){c.style.background=CATS[k].color;c.style.borderColor=CATS[k].color;}
+    c.onclick=()=>{activeCat=k;buildChips();rebuild();};
+    chipsEl.appendChild(c);
+  });
+}
+
+/* ===== DECK ===== */
+function baseDeck(){
+  let d=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
+  if(onlyOpen) d=d.filter(c=>!store.known[c.id]);
+  return d;
+}
+function rebuild(){
+  deck=baseDeck();
+  if(shuffled){for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}}
+  pos=0;flipped=false;
+  updateProg();
+  if(mode==="lern")renderStudy();else renderList();
+}
+function updateProg(){
+  const scope=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
+  const k=scope.filter(c=>store.known[c.id]).length;
+  document.getElementById('ptot').textContent=scope.length;
+  document.getElementById('pnum').textContent=k;
+  document.getElementById('pfill').style.width=(scope.length?k/scope.length*100:0)+"%";
+}
+
+/* ===== STUDY ===== */
+const studyEl=document.getElementById('study');
+function renderStudy(){
+  if(deck.length===0){
+    studyEl.innerHTML='<div class="done-msg"><div class="em">🎉</div><h3>Alles gewusst!</h3><p>In dieser Auswahl sind keine offenen Karten mehr. Schalte „Nur offene“ aus oder setze zurück.</p><button class="tbtn" onclick="document.getElementById(\'tReset\').click()">Zurücksetzen</button></div>';
+    return;
+  }
+  if(pos>=deck.length)pos=deck.length-1;
+  const card=deck[pos];const cat=CATS[card.c];
+  studyEl.innerHTML=`
+    <div class="counter">Karte <b>${pos+1}</b> / ${deck.length}${store.known[card.id]?' · ✓ gewusst':''}</div>
+    <div class="flash${flipped?' flip':''}" id="flash">
+      <div class="flash-inner">
+        <div class="face">
+          <div class="f-cat" style="color:${cat.color}">${cat.label}</div>
+          <div class="f-q">${card.q}</div>
+          <div class="f-hint">Klick / Leertaste zum Umdrehen</div>
+        </div>
+        <div class="face b">
+          <div class="f-lbl">Antwort</div>
+          <div class="f-a">${card.a}</div>
+          <div class="f-hint">Wusstest du es?</div>
+        </div>
+      </div>
+    </div>
+    <div class="ans-btns">
+      <button class="again" id="bAgain">✗ Nochmal</button>
+      <button class="known" id="bKnown">✓ Gewusst</button>
+    </div>
+    <div class="nav">
+      <button id="bPrev">← Zurück</button>
+      <span>${pos+1} / ${deck.length}</span>
+      <button id="bNext">Weiter →</button>
+    </div>`;
+  document.getElementById('flash').onclick=()=>{flipped=!flipped;document.getElementById('flash').classList.toggle('flip',flipped);};
+  document.getElementById('bAgain').onclick=()=>{delete store.known[card.id];save();next();};
+  document.getElementById('bKnown').onclick=()=>{store.known[card.id]=true;save();next();};
+  document.getElementById('bPrev').onclick=()=>{if(pos>0){pos--;flipped=false;renderStudy();}};
+  document.getElementById('bNext').onclick=()=>next();
+}
+function next(){updateProg();if(pos<deck.length-1){pos++;flipped=false;renderStudy();}else{if(onlyOpen){rebuild();}else{pos=deck.length;renderStudy2done();}}}
+function renderStudy2done(){
+  studyEl.innerHTML='<div class="done-msg"><div class="em">✅</div><h3>Durch den Stapel!</h3><p>Du hast alle Karten dieser Auswahl einmal gesehen.</p><button class="tbtn" onclick="(function(){flippedReset()})()" id="bRestart">Nochmal von vorn</button></div>';
+  document.getElementById('bRestart').onclick=()=>{pos=0;flipped=false;renderStudy();};
+}
+function flippedReset(){pos=0;flipped=false;renderStudy();}
+
+/* ===== LIST ===== */
+const listEl=document.getElementById('listView');
+function renderList(){
+  const d=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
+  listEl.innerHTML="";
+  d.forEach(card=>{
+    const cat=CATS[card.c];const k=!!store.known[card.id];
+    const row=document.createElement('div');
+    row.className="li"+(k?" k":"");
+    row.innerHTML=`
+      <input type="checkbox" class="li-chk" ${k?"checked":""} title="gewusst">
+      <div class="li-x">
+        <div class="li-cat" style="color:${cat.color}">${cat.label}</div>
+        <div class="li-q">${card.q}</div>
+        <div class="li-a">${card.a}</div>
+        <span class="li-toggle">Antwort zeigen ▾</span>
+      </div>`;
+    const tog=row.querySelector('.li-toggle');
+    tog.onclick=()=>{row.classList.toggle('open');tog.textContent=row.classList.contains('open')?"Antwort verbergen ▴":"Antwort zeigen ▾";};
+    const chk=row.querySelector('.li-chk');
+    chk.onchange=()=>{if(chk.checked)store.known[card.id]=true;else delete store.known[card.id];save();row.classList.toggle('k',chk.checked);updateProg();};
+    listEl.appendChild(row);
+  });
+}
+
+/* ===== CONTROLS ===== */
+document.getElementById('tShuffle').onclick=function(){shuffled=!shuffled;this.classList.toggle('on',shuffled);rebuild();};
+document.getElementById('tOpen').onclick=function(){onlyOpen=!onlyOpen;this.classList.toggle('on',onlyOpen);rebuild();};
+document.getElementById('tReset').onclick=function(){
+  const scope=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
+  scope.forEach(c=>delete store.known[c.id]);save();rebuild();
+};
+document.getElementById('mLern').onclick=()=>{mode="lern";document.getElementById('mLern').classList.add('on');document.getElementById('mList').classList.remove('on');studyEl.style.display="";listEl.style.display="none";rebuild();};
+document.getElementById('mList').onclick=()=>{mode="list";document.getElementById('mList').classList.add('on');document.getElementById('mLern').classList.remove('on');studyEl.style.display="none";listEl.style.display="";rebuild();};
+
+/* keyboard */
+document.addEventListener('keydown',e=>{
+  if(mode!=="lern"||deck.length===0)return;
+  if(e.code==="Space"){e.preventDefault();flipped=!flipped;const f=document.getElementById('flash');if(f)f.classList.toggle('flip',flipped);}
+  else if(e.code==="ArrowRight")next();
+  else if(e.code==="ArrowLeft"){if(pos>0){pos--;flipped=false;renderStudy();}}
+});
+
+/* INIT */
+buildChips();rebuild();
+</script>
+</body>
+</html>
