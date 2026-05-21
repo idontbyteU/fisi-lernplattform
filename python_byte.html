@@ -1441,11 +1441,28 @@ SyntaxError: expected ':'</div>
     document.getElementById(id).classList.toggle('show');
   }
 
-  let done = new Set();
+  // Fortschritt aus localStorage laden
+  const STORAGE_KEY = 'pythonbyte_done';
+  let done = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+
+  // Beim Laden: abgehakte Karten sofort markieren
+  done.forEach(n => {
+    const card = document.getElementById('card-' + n);
+    if (card) card.classList.add('done');
+  });
+  updateProgress();
 
   function markDone(n) {
-    done.add(n);
-    document.getElementById('card-' + n).classList.add('done');
+    if (done.has(n)) {
+      // Zweiter Klick = rückgängig machen
+      done.delete(n);
+      document.getElementById('card-' + n).classList.remove('done');
+    } else {
+      done.add(n);
+      document.getElementById('card-' + n).classList.add('done');
+    }
+    // In localStorage speichern
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...done]));
     updateProgress();
   }
 
