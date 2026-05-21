@@ -6,419 +6,94 @@
 <title>Python Byte – FISI Lernplattform</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
-
-  :root {
-    --bg: #0d0f14;
-    --surface: #151820;
-    --card: #1c2030;
-    --border: #2a2f45;
-    --accent: #f0c040;
-    --accent2: #5b8aff;
-    --green: #3ecf6e;
-    --red: #ff5f6d;
-    --text: #e8eaf6;
-    --muted: #6b7299;
-    --mono: 'JetBrains Mono', monospace;
-    --sans: 'Syne', sans-serif;
+  :root{
+    --bg:#0d0f14;--surface:#151820;--card:#1c2030;--border:#2a2f45;
+    --accent:#f0c040;--accent2:#5b8aff;--green:#3ecf6e;--red:#ff5f6d;
+    --text:#e8eaf6;--muted:#6b7299;--mono:'JetBrains Mono',monospace;--sans:'Syne',sans-serif;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    min-height: 100vh;
-  }
-
-  /* NAV TABS */
-  .tabs {
-    display: flex;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-    gap: 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .tab-btn {
-    flex: 0 0 auto;
-    padding: 16px 24px;
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    transition: all .2s;
-    white-space: nowrap;
-  }
-  .tab-btn:hover { color: var(--text); }
-  .tab-btn.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
-
-  .page { display: none; padding: 32px 24px; max-width: 900px; margin: 0 auto; }
-  .page.active { display: block; }
-
-  /* HERO */
-  .hero {
-    text-align: center;
-    padding: 48px 0 32px;
-  }
-  .hero h1 {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 800;
-    letter-spacing: -.02em;
-    line-height: 1.1;
-  }
-  .hero h1 span { color: var(--accent); }
-  .hero p {
-    margin-top: 12px;
-    color: var(--muted);
-    font-size: 15px;
-    line-height: 1.6;
-  }
-  .badge {
-    display: inline-block;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 4px 14px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--accent2);
-    margin-bottom: 16px;
-  }
-
-  /* PROGRESS */
-  .progress-bar-wrap {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px 20px;
-    margin: 24px 0;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .progress-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; min-width: 80px; }
-  .bar-track { flex: 1; background: var(--border); border-radius: 999px; height: 8px; }
-  .bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent2), var(--accent)); transition: width .5s ease; }
-  .progress-num { font-size: 13px; font-weight: 700; color: var(--accent); min-width: 40px; text-align: right; }
-
-  /* EXERCISE CARDS */
-  .level-title {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 32px 0 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .level-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-  .dot-easy { background: var(--green); }
-  .dot-medium { background: var(--accent); }
-  .dot-hard { background: var(--red); }
-
-  .exercise-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 16px;
-    transition: border-color .2s;
-  }
-  .exercise-card:hover { border-color: var(--border); }
-  .exercise-card.done { border-color: var(--green); }
-  .exercise-card.done .card-header { opacity: .7; }
-
-  .card-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .card-num {
-    font-size: 11px;
-    font-weight: 700;
-    font-family: var(--mono);
-    color: var(--accent);
-    background: rgba(240,192,64,.1);
-    border-radius: 6px;
-    padding: 4px 10px;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .card-title {
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.3;
-  }
-  .card-body {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-bottom: 16px;
-  }
-  .card-body strong { color: var(--text); }
-
-  code, .code-block {
-    font-family: var(--mono);
-    background: rgba(255,255,255,.05);
-    border-radius: 6px;
-    padding: 2px 8px;
-    font-size: 13px;
-    color: var(--accent2);
-  }
-  .code-block {
-    display: block;
-    padding: 16px;
-    margin: 12px 0;
-    line-height: 1.7;
-    white-space: pre;
-    overflow-x: auto;
-    border: 1px solid var(--border);
-    color: var(--text);
-  }
-  .code-block .kw { color: #c792ea; }
-  .code-block .fn { color: #82aaff; }
-  .code-block .str { color: #c3e88d; }
-  .code-block .num { color: var(--accent); }
-  .code-block .cm { color: var(--muted); font-style: italic; }
-
-  .card-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-  .btn {
-    padding: 9px 18px;
-    border-radius: 8px;
-    border: none;
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all .15s;
-    letter-spacing: .04em;
-  }
-  .btn-hint {
-    background: rgba(91,138,255,.12);
-    color: var(--accent2);
-    border: 1px solid rgba(91,138,255,.25);
-  }
-  .btn-hint:hover { background: rgba(91,138,255,.22); }
-  .btn-solution {
-    background: rgba(240,192,64,.1);
-    color: var(--accent);
-    border: 1px solid rgba(240,192,64,.25);
-  }
-  .btn-solution:hover { background: rgba(240,192,64,.2); }
-  .btn-done {
-    background: rgba(62,207,110,.1);
-    color: var(--green);
-    border: 1px solid rgba(62,207,110,.25);
-  }
-  .btn-done:hover { background: rgba(62,207,110,.2); }
-
-  .hint-box {
-    display: none;
-    margin-top: 14px;
-    background: rgba(91,138,255,.07);
-    border: 1px solid rgba(91,138,255,.2);
-    border-radius: 10px;
-    padding: 14px 16px;
-    font-size: 13px;
-    line-height: 1.7;
-    color: var(--text);
-  }
-  .hint-box.show { display: block; }
-  .hint-title {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    color: var(--accent2);
-    margin-bottom: 8px;
-  }
-
-  .solution-box {
-    display: none;
-    margin-top: 14px;
-    background: rgba(240,192,64,.05);
-    border: 1px solid rgba(240,192,64,.2);
-    border-radius: 10px;
-    padding: 14px 16px;
-    font-size: 13px;
-    line-height: 1.7;
-  }
-  .solution-box.show { display: block; }
-  .solution-title {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    color: var(--accent);
-    margin-bottom: 8px;
-  }
-
-  .done-badge {
-    display: none;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--green);
-    margin-left: auto;
-    align-items: center;
-    gap: 5px;
-  }
-  .exercise-card.done .done-badge { display: flex; }
-
-  /* CHEAT SHEET */
-  .section-title {
-    font-size: 18px;
-    font-weight: 800;
-    margin: 32px 0 12px;
-    color: var(--accent);
-    letter-spacing: -.01em;
-  }
-  .ref-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    margin-bottom: 8px;
-  }
-  .ref-table th {
-    text-align: left;
-    padding: 10px 14px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-  }
-  .ref-table td {
-    padding: 10px 14px;
-    border-bottom: 1px solid rgba(255,255,255,.04);
-    vertical-align: top;
-  }
-  .ref-table tr:last-child td { border-bottom: none; }
-  .ref-table tr:hover td { background: rgba(255,255,255,.02); }
-  .ref-table td:first-child { font-family: var(--mono); color: var(--accent2); white-space: nowrap; }
-  .ref-table td:last-child { color: var(--muted); line-height: 1.6; }
-
-  .ref-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
-  .ref-card-header {
-    padding: 14px 18px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .ref-icon { font-size: 16px; }
-
-  /* DEBUG PAGE */
-  .debug-scenario {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 20px;
-  }
-  .error-box {
-    background: rgba(255,95,109,.07);
-    border: 1px solid rgba(255,95,109,.25);
-    border-radius: 10px;
-    padding: 14px 16px;
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--red);
-    margin: 12px 0;
-    line-height: 1.7;
-    white-space: pre-wrap;
-  }
-  .fix-box {
-    display: none;
-    background: rgba(62,207,110,.06);
-    border: 1px solid rgba(62,207,110,.2);
-    border-radius: 10px;
-    padding: 14px 16px;
-    font-size: 13px;
-    color: var(--text);
-    margin-top: 12px;
-    line-height: 1.7;
-  }
-  .fix-box.show { display: block; }
-
-  .btn-reveal {
-    background: rgba(255,95,109,.1);
-    color: var(--red);
-    border: 1px solid rgba(255,95,109,.25);
-    padding: 9px 18px;
-    border-radius: 8px;
-    border: none;
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all .15s;
-    border: 1px solid rgba(255,95,109,.25);
-  }
-  .btn-reveal:hover { background: rgba(255,95,109,.2); }
-
-  /* SCROLL */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
-
-  .tip {
-    background: rgba(91,138,255,.07);
-    border-left: 3px solid var(--accent2);
-    padding: 12px 16px;
-    border-radius: 0 8px 8px 0;
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.7;
-    margin: 16px 0;
-  }
-  .tip strong { color: var(--text); }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh}
+  .tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:100}
+  .tab-btn{flex:0 0 auto;padding:16px 24px;background:none;border:none;color:var(--muted);font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap}
+  .tab-btn:hover{color:var(--text)}
+  .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .page{display:none;padding:32px 24px;max-width:900px;margin:0 auto}
+  .page.active{display:block}
+  .hero{text-align:center;padding:48px 0 32px}
+  .hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+  .hero h1 span{color:var(--accent)}
+  .hero p{margin-top:12px;color:var(--muted);font-size:15px;line-height:1.6}
+  .badge{display:inline-block;background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px 14px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);margin-bottom:16px}
+  .progress-bar-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin:24px 0;display:flex;align-items:center;gap:16px}
+  .progress-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;min-width:80px}
+  .bar-track{flex:1;background:var(--border);border-radius:999px;height:8px}
+  .bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .5s ease}
+  .progress-num{font-size:13px;font-weight:700;color:var(--accent);min-width:40px;text-align:right}
+  .level-title{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:32px 0 12px;display:flex;align-items:center;gap:10px}
+  .level-title::after{content:'';flex:1;height:1px;background:var(--border)}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .dot-easy{background:var(--green)}.dot-medium{background:var(--accent)}.dot-hard{background:var(--red)}.dot-exam{background:var(--accent2)}
+  .exercise-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;transition:border-color .2s}
+  .exercise-card.done{border-color:var(--green)}
+  .exercise-card.done .card-header{opacity:.7}
+  .card-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+  .card-num{font-size:11px;font-weight:700;font-family:var(--mono);color:var(--accent);background:rgba(240,192,64,.1);border-radius:6px;padding:4px 10px;flex-shrink:0;margin-top:2px}
+  .card-title{font-size:16px;font-weight:700;line-height:1.3}
+  .card-body{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+  .card-body strong{color:var(--text)}
+  /* Inline-Code */
+  code{font-family:var(--mono);background:rgba(255,255,255,.05);border-radius:6px;padding:2px 8px;font-size:13px;color:var(--accent2)}
+  /* Codeblock – getrennt von inline code, mit pre-wrap fuer Mobil */
+  .code-block{display:block;font-family:var(--mono);background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:16px;margin:12px 0;font-size:13px;line-height:1.7;color:var(--text);white-space:pre-wrap;word-break:break-word;tab-size:4;overflow-x:auto}
+  .code-block .kw{color:#c792ea}.code-block .fn{color:#82aaff}.code-block .str{color:#c3e88d}.code-block .num{color:var(--accent)}.code-block .cm{color:var(--muted);font-style:italic}
+  .card-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{padding:9px 18px;border-radius:8px;border:none;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:.04em}
+  .btn-hint{background:rgba(91,138,255,.12);color:var(--accent2);border:1px solid rgba(91,138,255,.25)}
+  .btn-hint:hover{background:rgba(91,138,255,.22)}
+  .btn-solution{background:rgba(240,192,64,.1);color:var(--accent);border:1px solid rgba(240,192,64,.25)}
+  .btn-solution:hover{background:rgba(240,192,64,.2)}
+  .btn-done{background:rgba(62,207,110,.1);color:var(--green);border:1px solid rgba(62,207,110,.25)}
+  .btn-done:hover{background:rgba(62,207,110,.2)}
+  .hint-box{display:none;margin-top:14px;background:rgba(91,138,255,.07);border:1px solid rgba(91,138,255,.2);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.7;color:var(--text)}
+  .hint-box.show{display:block}
+  .hint-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent2);margin-bottom:8px}
+  .solution-box{display:none;margin-top:14px;background:rgba(240,192,64,.05);border:1px solid rgba(240,192,64,.2);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.7}
+  .solution-box.show{display:block}
+  .solution-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:8px}
+  .done-badge{display:none;font-size:11px;font-weight:700;color:var(--green);margin-left:auto;align-items:center;gap:5px}
+  .exercise-card.done .done-badge{display:flex}
+  .section-title{font-size:18px;font-weight:800;margin:32px 0 12px;color:var(--accent);letter-spacing:-.01em}
+  .ref-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:8px}
+  .ref-table th{text-align:left;padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:var(--surface);border-bottom:1px solid var(--border)}
+  .ref-table td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top}
+  .ref-table tr:last-child td{border-bottom:none}
+  .ref-table tr:hover td{background:rgba(255,255,255,.02)}
+  .ref-table td:first-child{font-family:var(--mono);color:var(--accent2);white-space:nowrap}
+  .ref-table td:last-child{color:var(--muted);line-height:1.6}
+  .ref-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px}
+  .ref-card-header{padding:14px 18px;background:var(--surface);border-bottom:1px solid var(--border);font-size:13px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .ref-icon{font-size:16px}
+  .debug-scenario{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px}
+  .error-box{background:rgba(255,95,109,.07);border:1px solid rgba(255,95,109,.25);border-radius:10px;padding:14px 16px;font-family:var(--mono);font-size:12px;color:var(--red);margin:12px 0;line-height:1.7;white-space:pre-wrap}
+  .fix-box{display:none;background:rgba(62,207,110,.06);border:1px solid rgba(62,207,110,.2);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--text);margin-top:12px;line-height:1.7}
+  .fix-box.show{display:block}
+  .btn-reveal{background:rgba(255,95,109,.1);color:var(--red);border:1px solid rgba(255,95,109,.25);padding:9px 18px;border-radius:8px;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
+  .btn-reveal:hover{background:rgba(255,95,109,.2)}
+  ::-webkit-scrollbar{width:6px;height:6px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+  .tip{background:rgba(91,138,255,.07);border-left:3px solid var(--accent2);padding:12px 16px;border-radius:0 8px 8px 0;font-size:13px;color:var(--muted);line-height:1.7;margin:16px 0}
+  .tip strong{color:var(--text)}
 </style>
 </head>
 <body>
-
 <div class="tabs">
-  <a href="index.html" style="flex:0 0 auto;padding:16px 20px;display:flex;align-items:center;gap:6px;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:3px solid transparent;transition:color .2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">← FISI</a>
-  <button class="tab-btn active" onclick="showPage('start')">🏠 Start</button>
-  <button class="tab-btn" onclick="showPage('exercises')">🧩 Aufgaben</button>
-  <button class="tab-btn" onclick="showPage('debug')">🐛 Debugging</button>
-  <button class="tab-btn" onclick="showPage('ref')">📖 Befehlsreferenz</button>
+  <a href="index.html" style="flex:0 0 auto;padding:16px 20px;display:flex;align-items:center;gap:6px;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:3px solid transparent">&larr; FISI</a>
+  <button class="tab-btn active" data-page="start">🏠 Start</button>
+  <button class="tab-btn" data-page="exercises">🧩 Aufgaben</button>
+  <button class="tab-btn" data-page="debug">🐛 Debugging</button>
+  <button class="tab-btn" data-page="ref">📖 Befehlsreferenz</button>
 </div>
-
 <!-- START -->
 <div id="page-start" class="page active">
   <div class="hero">
@@ -426,80 +101,51 @@
     <h1>Python <span>Byte</span></h1>
     <p>Schritt für Schritt – von Variablen bis zum ersten eigenen Programm.<br>Aufgaben · Hinweise · Lösungen · Befehlsreferenz</p>
   </div>
-
   <div class="progress-bar-wrap">
     <span class="progress-label">Fortschritt</span>
     <div class="bar-track"><div class="bar-fill" id="progress-fill" style="width:0%"></div></div>
-    <span class="progress-num" id="progress-text">0 / 16</span>
+    <span class="progress-num" id="progress-text">0 / 18</span>
   </div>
-
   <div style="display:grid;gap:12px;margin-top:8px;">
     <div class="ref-card">
       <div class="ref-card-header"><span class="ref-icon">🟢</span> Level 1 – Basics (Aufgaben 1–4)</div>
-      <div style="padding:16px 18px;font-size:14px;color:var(--muted);line-height:1.7">
-        Variablen, Datentypen, <code>print()</code>, <code>input()</code>, einfache Berechnungen.<br>
-        <strong style="color:var(--text)">Ziel:</strong> Du verstehst wie Python Daten speichert und ausgibt.
-      </div>
+      <div style="padding:16px 18px;font-size:14px;color:var(--muted);line-height:1.7">Variablen, Datentypen, <code>print()</code>, <code>input()</code>, einfache Berechnungen.<br><strong style="color:var(--text)">Ziel:</strong> Du verstehst wie Python Daten speichert und ausgibt.</div>
     </div>
     <div class="ref-card">
-      <div class="ref-card-header"><span class="ref-icon">🟡</span> Level 2 – Logik & Schleifen (Aufgaben 5–12)</div>
-      <div style="padding:16px 18px;font-size:14px;color:var(--muted);line-height:1.7">
-        <code>if/else</code>, <code>for</code>, <code>while</code>, Listen, String-Methoden.<br>
-        <strong style="color:var(--text)">Ziel:</strong> Du kannst Programme mit Entscheidungen und Wiederholungen bauen.
-      </div>
+      <div class="ref-card-header"><span class="ref-icon">🟡</span> Level 2 – Logik &amp; Schleifen (Aufgaben 5–12)</div>
+      <div style="padding:16px 18px;font-size:14px;color:var(--muted);line-height:1.7"><code>if/else</code>, <code>for</code>, <code>while</code>, Listen, String-Methoden.<br><strong style="color:var(--text)">Ziel:</strong> Du kannst Programme mit Entscheidungen und Wiederholungen bauen.</div>
     </div>
     <div class="ref-card">
       <div class="ref-card-header"><span class="ref-icon">🔴</span> Level 3 – Programme (Aufgaben 13–16)</div>
-      <div style="padding:16px 18px;font-size:14px;color:var(--muted);line-height:1.7">
-        Funktionen, Fehlerbehandlung, Dateioperationen, Mini-Projekte.<br>
-        <strong style="color:var(--text)">Ziel:</strong> Du baust dein erstes echtes kleines Programm.
-      </div>
+      <div style="padding:16px 18px;font-size:14px;color:var(--muted);line-height:1.7">Funktionen, Fehlerbehandlung, Dateioperationen, Mini-Projekte.<br><strong style="color:var(--text)">Ziel:</strong> Du baust dein erstes echtes kleines Programm.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-card-header"><span class="ref-icon">🔵</span> Level 4 – AP1-Training (Aufgaben 17–18)</div>
+      <div style="padding:16px 18px;font-size:14px;color:var(--muted);line-height:1.7">Kennzahlen mit Runden &amp; Schwellenwerte (<code>&gt;</code> vs. <code>&gt;=</code>) – genau im Stil der Abschlussprüfung Teil 1.<br><strong style="color:var(--text)">Ziel:</strong> Du löst typische Pseudocode-/Rechenaufgaben sicher.</div>
     </div>
   </div>
-
-  <div class="tip" style="margin-top:24px">
-    <strong>Wie du am besten lernst:</strong> Öffne IDLE oder VS Code parallel. Schreibe jede Aufgabe selbst ab – nicht kopieren! Wenn du einen Fehler bekommst, lies ihn genau. Python-Fehlermeldungen sind hilfreich, wenn du weißt wie man sie liest (→ Tab "Debugging").
-  </div>
+  <div class="tip" style="margin-top:24px"><strong>Wie du am besten lernst:</strong> Öffne IDLE oder VS Code parallel. Schreibe jede Aufgabe selbst ab – nicht kopieren! Wenn du einen Fehler bekommst, lies ihn genau (→ Tab "Debugging").</div>
 </div>
-
-<!-- EXERCISES -->
 <div id="page-exercises" class="page">
   <div class="level-title"><span class="dot dot-easy"></span> Level 1 – Basics</div>
-
-  <!-- Aufgabe 1 -->
   <div class="exercise-card" id="card-1">
     <div class="card-header">
       <span class="card-num">#01</span>
-      <span class="card-title">Variablen & Datentypen kennenlernen</span>
+      <span class="card-title">Variablen &amp; Datentypen kennenlernen</span>
       <span class="done-badge">✓ Erledigt</span>
     </div>
-    <div class="card-body">
-      Erstelle 4 Variablen – eine für jeden Datentyp:<br>
-      • <strong>String</strong> (dein Name)<br>
-      • <strong>Integer</strong> (dein Alter)<br>
-      • <strong>Float</strong> (deine Körpergröße in Metern)<br>
-      • <strong>Boolean</strong> (magst du Python? True/False)<br><br>
-      Gib alle 4 Variablen mit <code>print()</code> aus. Danach gib mit <code>type()</code> den Typ jeder Variable aus.
-    </div>
+    <div class="card-body">Erstelle 4 Variablen – eine für jeden Datentyp:<br>• <strong>String</strong> (dein Name)<br>• <strong>Integer</strong> (dein Alter)<br>• <strong>Float</strong> (deine Körpergröße in Metern)<br>• <strong>Boolean</strong> (magst du Python? True/False)<br><br>Gib alle 4 mit <code>print()</code> aus. Danach gib mit <code>type()</code> den Typ jeder Variable aus.</div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(1)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(1)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(1)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="1">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="1">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="1">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-1">
-      <div class="hint-title">💡 Hinweis</div>
-      Variablen brauchst du nicht mit einem Typ zu deklarieren – Python erkennt das automatisch.<br><br>
-      <code>name = "Max"</code> → das ist ein String (Anführungszeichen!)<br>
-      <code>alter = 20</code> → Integer (keine Anführungszeichen, keine Kommazahl)<br>
-      <code>type(name)</code> gibt dir <code>&lt;class 'str'&gt;</code> zurück – das kannst du in print() packen.
-    </div>
-    <div class="solution-box" id="solution-1">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block"><span class="cm"># Variablen erstellen</span>
-<span class="kw">name</span> = <span class="str">"Max Mustermann"</span>
-<span class="kw">alter</span> = <span class="num">20</span>
-<span class="kw">groesse</span> = <span class="num">1.80</span>
-<span class="kw">mag_python</span> = <span class="kw">True</span>
+    <div class="hint-box" id="hint-1"><div class="hint-title">💡 Hinweis</div>Variablen brauchst du nicht mit Typ zu deklarieren – Python erkennt das automatisch.<br><br><code>name = "Max"</code> → String (Anführungszeichen!)<br><code>alter = 20</code> → Integer<br><code>type(name)</code> gibt <code>&lt;class 'str'&gt;</code> zurück.</div>
+    <div class="solution-box" id="solution-1"><div class="solution-title">✓ Musterlösung</div><div class="code-block"><span class="cm"># Variablen erstellen</span>
+name = <span class="str">"Max Mustermann"</span>
+alter = <span class="num">20</span>
+groesse = <span class="num">1.80</span>
+mag_python = <span class="kw">True</span>
 
 <span class="cm"># Ausgabe der Werte</span>
 <span class="fn">print</span>(name, alter, groesse, mag_python)
@@ -508,202 +154,115 @@
 <span class="fn">print</span>(<span class="fn">type</span>(name))
 <span class="fn">print</span>(<span class="fn">type</span>(alter))
 <span class="fn">print</span>(<span class="fn">type</span>(groesse))
-<span class="fn">print</span>(<span class="fn">type</span>(mag_python))</div>
-    </div>
+<span class="fn">print</span>(<span class="fn">type</span>(mag_python))</div></div>
   </div>
-
-  <!-- Aufgabe 2 -->
   <div class="exercise-card" id="card-2">
     <div class="card-header">
       <span class="card-num">#02</span>
       <span class="card-title">Rechner mit Eingabe</span>
       <span class="done-badge">✓ Erledigt</span>
     </div>
-    <div class="card-body">
-      Schreibe ein Programm das den Benutzer nach <strong>zwei Zahlen</strong> fragt.<br>
-      Berechne danach: <strong>Summe, Differenz, Produkt, Division und Modulo</strong>.<br>
-      Gib alle 5 Ergebnisse aus – jeweils mit einer kleinen Beschriftung.
-    </div>
+    <div class="card-body">Schreibe ein Programm das nach <strong>zwei Zahlen</strong> fragt.<br>Berechne: <strong>Summe, Differenz, Produkt, Division und Modulo</strong>.<br>Gib alle 5 Ergebnisse mit Beschriftung aus.</div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(2)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(2)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(2)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="2">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="2">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="2">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-2">
-      <div class="hint-title">💡 Hinweis</div>
-      <code>input()</code> gibt <strong>immer einen String</strong> zurück! Du musst ihn erst in eine Zahl umwandeln:<br><br>
-      <code>a = int(input("Erste Zahl: "))</code> → für ganze Zahlen<br>
-      <code>a = float(input("Erste Zahl: "))</code> → für Kommazahlen<br><br>
-      Modulo (<code>%</code>) gibt den Rest einer Division zurück. 10 % 3 = 1
-    </div>
-    <div class="solution-box" id="solution-2">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block">a = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Erste Zahl: "</span>))
+    <div class="hint-box" id="hint-2"><div class="hint-title">💡 Hinweis</div><code>input()</code> gibt <strong>immer einen String</strong> zurück! Erst umwandeln:<br><br><code>a = float(input("Erste Zahl: "))</code><br><br>Modulo (<code>%</code>) = Rest der Division. 10 % 3 = 1</div>
+    <div class="solution-box" id="solution-2"><div class="solution-title">✓ Musterlösung</div><div class="code-block">a = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Erste Zahl: "</span>))
 b = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Zweite Zahl: "</span>))
 
 <span class="fn">print</span>(<span class="str">"Summe:"</span>, a + b)
 <span class="fn">print</span>(<span class="str">"Differenz:"</span>, a - b)
 <span class="fn">print</span>(<span class="str">"Produkt:"</span>, a * b)
 <span class="fn">print</span>(<span class="str">"Division:"</span>, a / b)
-<span class="fn">print</span>(<span class="str">"Modulo (Rest):"</span>, a % b)</div>
-    </div>
+<span class="fn">print</span>(<span class="str">"Modulo (Rest):"</span>, a % b)</div></div>
   </div>
-
-  <!-- Aufgabe 3 -->
   <div class="exercise-card" id="card-3">
     <div class="card-header">
       <span class="card-num">#03</span>
-      <span class="card-title">Strings & f-Strings formatieren</span>
+      <span class="card-title">Strings &amp; f-Strings formatieren</span>
       <span class="done-badge">✓ Erledigt</span>
     </div>
-    <div class="card-body">
-      Frage den Benutzer nach <strong>Name, Alter und Lieblingsfarbe</strong>.<br>
-      Gib dann einen schön formatierten Satz aus, z.B.:<br>
-      <code>"Hallo Max! Du bist 20 Jahre alt und magst Blau."</code><br><br>
-      Zusatz: Gib den Namen in <strong>Großbuchstaben</strong> und die Länge des Namens aus.
-    </div>
+    <div class="card-body">Frage nach <strong>Name, Alter und Lieblingsfarbe</strong>.<br>Gib einen Satz aus wie:<br><code>"Hallo Max! Du bist 20 Jahre alt und magst Blau."</code><br><br>Zusatz: Name in <strong>Großbuchstaben</strong> + Länge des Namens.</div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(3)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(3)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(3)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="3">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="3">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="3">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-3">
-      <div class="hint-title">💡 Hinweis</div>
-      f-Strings: Schreibe ein <code>f</code> vor den String, dann kannst du Variablen direkt in <code>{}</code> einsetzen:<br>
-      <code>print(f"Hallo {name}!")</code><br><br>
-      String-Methoden:<br>
-      <code>name.upper()</code> → GROSSBUCHSTABEN<br>
-      <code>len(name)</code> → Anzahl der Zeichen
-    </div>
-    <div class="solution-box" id="solution-3">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block">name = <span class="fn">input</span>(<span class="str">"Dein Name: "</span>)
+    <div class="hint-box" id="hint-3"><div class="hint-title">💡 Hinweis</div>f-Strings: <code>f</code> vor den String, Variablen in <code>{}</code>:<br><code>print(f"Hallo {name}!")</code><br><br><code>name.upper()</code> → GROSS · <code>len(name)</code> → Anzahl Zeichen</div>
+    <div class="solution-box" id="solution-3"><div class="solution-title">✓ Musterlösung</div><div class="code-block">name = <span class="fn">input</span>(<span class="str">"Dein Name: "</span>)
 alter = <span class="fn">input</span>(<span class="str">"Dein Alter: "</span>)
 farbe = <span class="fn">input</span>(<span class="str">"Lieblingsfarbe: "</span>)
 
 <span class="fn">print</span>(<span class="str">f"Hallo {name}! Du bist {alter} Jahre alt und magst {farbe}."</span>)
-<span class="fn">print</span>(<span class="str">f"Dein Name in Großbuchstaben: {name.<span class="fn">upper</span>()}"</span>)
-<span class="fn">print</span>(<span class="str">f"Dein Name hat {<span class="fn">len</span>(name)} Zeichen."</span>)</div>
-    </div>
+<span class="fn">print</span>(<span class="str">f"Name in Großbuchstaben: {name.upper()}"</span>)
+<span class="fn">print</span>(<span class="str">f"Dein Name hat {len(name)} Zeichen."</span>)</div></div>
   </div>
-
-  <!-- Aufgabe 4 -->
   <div class="exercise-card" id="card-4">
     <div class="card-header">
       <span class="card-num">#04</span>
       <span class="card-title">Casting – Typen umwandeln</span>
       <span class="done-badge">✓ Erledigt</span>
     </div>
-    <div class="card-body">
-      Gegeben ist dieser Code – er enthält einen Fehler. Finde ihn und korrigiere ihn:<br>
-      <div class="code-block">preis = <span class="fn">input</span>(<span class="str">"Preis in Euro: "</span>)
+    <div class="card-body">Gegeben ist Code mit einem Fehler. Finde und korrigiere ihn:<div class="code-block">preis = <span class="fn">input</span>(<span class="str">"Preis in Euro: "</span>)
 menge = <span class="fn">input</span>(<span class="str">"Menge: "</span>)
 gesamt = preis * menge
-<span class="fn">print</span>(<span class="str">f"Gesamt: {gesamt} Euro"</span>)</div>
-      Zusatz: Runde das Ergebnis auf 2 Nachkommastellen.
-    </div>
+<span class="fn">print</span>(<span class="str">f"Gesamt: {gesamt} Euro"</span>)</div>Zusatz: Runde das Ergebnis auf 2 Nachkommastellen.</div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(4)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(4)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(4)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="4">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="4">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="4">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-4">
-      <div class="hint-title">💡 Hinweis</div>
-      <code>input()</code> gibt immer einen <strong>String</strong> zurück. Du kannst keine zwei Strings multiplizieren (oder bekommst unerwartete Ergebnisse).<br><br>
-      Wandle beide Variablen mit <code>float()</code> um bevor du rechnest.<br>
-      Runden: <code>round(zahl, 2)</code>
-    </div>
-    <div class="solution-box" id="solution-4">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block">preis = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Preis in Euro: "</span>))
+    <div class="hint-box" id="hint-4"><div class="hint-title">💡 Hinweis</div><code>input()</code> gibt einen <strong>String</strong> zurück. Zwei Strings kann man nicht multiplizieren.<br><br>Mit <code>float()</code> umwandeln. Runden: <code>round(zahl, 2)</code></div>
+    <div class="solution-box" id="solution-4"><div class="solution-title">✓ Musterlösung</div><div class="code-block">preis = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Preis in Euro: "</span>))
 menge = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Menge: "</span>))
 gesamt = preis * menge
-<span class="fn">print</span>(<span class="str">f"Gesamt: {<span class="fn">round</span>(gesamt, 2)} Euro"</span>)</div>
-    </div>
+<span class="fn">print</span>(<span class="str">f"Gesamt: {round(gesamt, 2)} Euro"</span>)</div></div>
   </div>
-
-  <div class="level-title"><span class="dot dot-medium"></span> Level 2 – Logik & Schleifen</div>
-
-  <!-- Aufgabe 5 -->
+  <div class="level-title"><span class="dot dot-medium"></span> Level 2 – Logik &amp; Schleifen</div>
   <div class="exercise-card" id="card-5">
     <div class="card-header">
       <span class="card-num">#05</span>
       <span class="card-title">Notensystem mit if/elif/else</span>
       <span class="done-badge">✓ Erledigt</span>
     </div>
-    <div class="card-body">
-      Schreibe ein Programm das eine <strong>Prozentzahl (0–100)</strong> einliest und die Schulnote ausgibt:<br>
-      • 90–100 → "Sehr gut (1)"<br>
-      • 75–89 → "Gut (2)"<br>
-      • 60–74 → "Befriedigend (3)"<br>
-      • 50–59 → "Ausreichend (4)"<br>
-      • unter 50 → "Nicht bestanden (5)"<br><br>
-      Prüfe außerdem ob die Eingabe überhaupt gültig ist (0–100).
-    </div>
+    <div class="card-body">Lies eine <strong>Prozentzahl (0–100)</strong> und gib die Note aus:<br>• 90–100 → "Sehr gut (1)"<br>• 75–89 → "Gut (2)"<br>• 60–74 → "Befriedigend (3)"<br>• 50–59 → "Ausreichend (4)"<br>• unter 50 → "Nicht bestanden (5)"<br><br>Prüfe auch, ob die Eingabe gültig ist (0–100).</div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(5)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(5)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(5)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="5">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="5">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="5">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-5">
-      <div class="hint-title">💡 Hinweis</div>
-      Struktur von if/elif/else:<br>
-      <code>if punkte >= 90:</code><br>
-      <code>&nbsp;&nbsp;print("Sehr gut")</code><br>
-      <code>elif punkte >= 75:</code><br>
-      <code>&nbsp;&nbsp;print("Gut")</code><br>
-      <code>else:</code><br>
-      <code>&nbsp;&nbsp;print("...")</code><br><br>
-      Python prüft von oben nach unten – sobald eine Bedingung zutrifft, werden die anderen übersprungen!
-    </div>
-    <div class="solution-box" id="solution-5">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block">punkte = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Punkte (0-100): "</span>))
+    <div class="hint-box" id="hint-5"><div class="hint-title">💡 Hinweis</div>Struktur:<br><code>if punkte &gt;= 90:</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;print("Sehr gut")</code><br><code>elif punkte &gt;= 75:</code> …<br><br>Python prüft von oben nach unten – die erste passende Bedingung gewinnt!</div>
+    <div class="solution-box" id="solution-5"><div class="solution-title">✓ Musterlösung</div><div class="code-block">punkte = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Punkte (0-100): "</span>))
 
-<span class="kw">if</span> punkte < <span class="num">0</span> <span class="kw">or</span> punkte > <span class="num">100</span>:
+<span class="kw">if</span> punkte &lt; <span class="num">0</span> <span class="kw">or</span> punkte &gt; <span class="num">100</span>:
     <span class="fn">print</span>(<span class="str">"Ungültige Eingabe!"</span>)
-<span class="kw">elif</span> punkte >= <span class="num">90</span>:
+<span class="kw">elif</span> punkte &gt;= <span class="num">90</span>:
     <span class="fn">print</span>(<span class="str">"Sehr gut (1)"</span>)
-<span class="kw">elif</span> punkte >= <span class="num">75</span>:
+<span class="kw">elif</span> punkte &gt;= <span class="num">75</span>:
     <span class="fn">print</span>(<span class="str">"Gut (2)"</span>)
-<span class="kw">elif</span> punkte >= <span class="num">60</span>:
+<span class="kw">elif</span> punkte &gt;= <span class="num">60</span>:
     <span class="fn">print</span>(<span class="str">"Befriedigend (3)"</span>)
-<span class="kw">elif</span> punkte >= <span class="num">50</span>:
+<span class="kw">elif</span> punkte &gt;= <span class="num">50</span>:
     <span class="fn">print</span>(<span class="str">"Ausreichend (4)"</span>)
 <span class="kw">else</span>:
-    <span class="fn">print</span>(<span class="str">"Nicht bestanden (5)"</span>)</div>
-    </div>
+    <span class="fn">print</span>(<span class="str">"Nicht bestanden (5)"</span>)</div></div>
   </div>
-
-  <!-- Aufgabe 6 -->
   <div class="exercise-card" id="card-6">
     <div class="card-header">
       <span class="card-num">#06</span>
       <span class="card-title">FizzBuzz mit for-Schleife</span>
       <span class="done-badge">✓ Erledigt</span>
     </div>
-    <div class="card-body">
-      Klassische Programmieraufgabe! Gib die Zahlen von <strong>1 bis 50</strong> aus, aber:<br>
-      • Bei Vielfachen von 3 → "Fizz"<br>
-      • Bei Vielfachen von 5 → "Buzz"<br>
-      • Bei Vielfachen von 3 <em>und</em> 5 → "FizzBuzz"<br>
-      • Sonst → die Zahl selbst<br><br>
-      Erwarteter Anfang: <code>1, 2, Fizz, 4, Buzz, Fizz, 7, ...</code>
-    </div>
+    <div class="card-body">Gib die Zahlen von <strong>1 bis 50</strong> aus, aber:<br>• Vielfache von 3 → "Fizz"<br>• Vielfache von 5 → "Buzz"<br>• Vielfache von 3 <em>und</em> 5 → "FizzBuzz"<br>• Sonst → die Zahl selbst<br><br>Anfang: <code>1, 2, Fizz, 4, Buzz, Fizz, 7, ...</code></div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(6)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(6)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(6)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="6">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="6">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="6">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-6">
-      <div class="hint-title">💡 Hinweis</div>
-      <code>for i in range(1, 51):</code> geht von 1 bis 50 (51 ist nicht dabei!).<br><br>
-      Modulo-Trick: <code>i % 3 == 0</code> ist True wenn i durch 3 teilbar ist.<br><br>
-      Wichtig: Der FizzBuzz-Fall (durch 3 UND 5) muss <strong>zuerst</strong> geprüft werden!
-    </div>
-    <div class="solution-box" id="solution-6">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block"><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">51</span>):
+    <div class="hint-box" id="hint-6"><div class="hint-title">💡 Hinweis</div><code>for i in range(1, 51):</code> geht 1 bis 50.<br><br><code>i % 3 == 0</code> ist True wenn i durch 3 teilbar.<br><br>Der FizzBuzz-Fall (3 UND 5) muss <strong>zuerst</strong> geprüft werden!</div>
+    <div class="solution-box" id="solution-6"><div class="solution-title">✓ Musterlösung</div><div class="code-block"><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">51</span>):
     <span class="kw">if</span> i % <span class="num">3</span> == <span class="num">0</span> <span class="kw">and</span> i % <span class="num">5</span> == <span class="num">0</span>:
         <span class="fn">print</span>(<span class="str">"FizzBuzz"</span>)
     <span class="kw">elif</span> i % <span class="num">3</span> == <span class="num">0</span>:
@@ -711,41 +270,22 @@ gesamt = preis * menge
     <span class="kw">elif</span> i % <span class="num">5</span> == <span class="num">0</span>:
         <span class="fn">print</span>(<span class="str">"Buzz"</span>)
     <span class="kw">else</span>:
-        <span class="fn">print</span>(i)</div>
-    </div>
+        <span class="fn">print</span>(i)</div></div>
   </div>
-
-  <!-- Aufgabe 7 -->
   <div class="exercise-card" id="card-7">
     <div class="card-header">
       <span class="card-num">#07</span>
       <span class="card-title">Listen – Einkaufsliste</span>
       <span class="done-badge">✓ Erledigt</span>
     </div>
-    <div class="card-body">
-      Baue ein Programm das eine <strong>Einkaufsliste</strong> verwaltet:<br>
-      1. Benutzer kann Artikel eingeben (solange bis er "fertig" tippt)<br>
-      2. Danach wird die Liste alphabetisch sortiert ausgegeben<br>
-      3. Zeige die Anzahl der Artikel an<br>
-      4. Frage ob ein Artikel entfernt werden soll
-    </div>
+    <div class="card-body">Verwalte eine <strong>Einkaufsliste</strong>:<br>1. Artikel eingeben (bis "fertig" getippt wird)<br>2. Liste alphabetisch sortiert ausgeben<br>3. Anzahl der Artikel anzeigen<br>4. Fragen, ob ein Artikel entfernt werden soll</div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(7)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(7)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(7)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="7">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="7">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="7">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-7">
-      <div class="hint-title">💡 Hinweis</div>
-      Leere Liste erstellen: <code>liste = []</code><br>
-      Element hinzufügen: <code>liste.append(eingabe)</code><br>
-      Sortieren: <code>liste.sort()</code><br>
-      Länge: <code>len(liste)</code><br>
-      Entfernen: <code>liste.remove("Apfel")</code><br><br>
-      For-Schleife durch Liste: <code>for artikel in liste:</code>
-    </div>
-    <div class="solution-box" id="solution-7">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block">einkauf = []
+    <div class="hint-box" id="hint-7"><div class="hint-title">💡 Hinweis</div>Leere Liste: <code>liste = []</code><br>Hinzufügen: <code>liste.append(x)</code><br>Sortieren: <code>liste.sort()</code><br>Länge: <code>len(liste)</code><br>Entfernen: <code>liste.remove("Apfel")</code></div>
+    <div class="solution-box" id="solution-7"><div class="solution-title">✓ Musterlösung</div><div class="code-block">einkauf = []
 
 <span class="kw">while</span> <span class="kw">True</span>:
     artikel = <span class="fn">input</span>(<span class="str">"Artikel (oder 'fertig'): "</span>)
@@ -754,7 +294,7 @@ gesamt = preis * menge
     einkauf.append(artikel)
 
 einkauf.sort()
-<span class="fn">print</span>(<span class="str">f"\nDeine Liste ({<span class="fn">len</span>(einkauf)} Artikel):"</span>)
+<span class="fn">print</span>(<span class="str">f"\nDeine Liste ({len(einkauf)} Artikel):"</span>)
 <span class="kw">for</span> a <span class="kw">in</span> einkauf:
     <span class="fn">print</span>(<span class="str">f"  - {a}"</span>)
 
@@ -763,136 +303,78 @@ entfernen = <span class="fn">input</span>(<span class="str">"\nWelchen Artikel e
     einkauf.remove(entfernen)
     <span class="fn">print</span>(<span class="str">f"'{entfernen}' entfernt. Neue Liste: {einkauf}"</span>)
 <span class="kw">elif</span> entfernen != <span class="str">""</span>:
-    <span class="fn">print</span>(<span class="str">"Artikel nicht gefunden."</span>)</div>
-    </div>
+    <span class="fn">print</span>(<span class="str">"Artikel nicht gefunden."</span>)</div></div>
   </div>
-
-  <!-- Aufgabe 8 -->
   <div class="exercise-card" id="card-8">
     <div class="card-header">
       <span class="card-num">#08</span>
       <span class="card-title">Zahlen raten – while-Schleife</span>
       <span class="done-badge">✓ Erledigt</span>
     </div>
-    <div class="card-body">
-      Schreibe ein <strong>Zahlen-Rate-Spiel</strong>:<br>
-      • Das Programm "denkt" sich eine Zufallszahl von 1–100 aus (<code>import random</code>)<br>
-      • Der Benutzer rät solange bis er richtig liegt<br>
-      • Nach jedem Versuch: "Zu hoch!" oder "Zu niedrig!"<br>
-      • Am Ende: Ausgabe wie viele Versuche gebraucht wurden
-    </div>
+    <div class="card-body">Schreibe ein <strong>Zahlen-Rate-Spiel</strong>:<br>• Zufallszahl 1–100 (<code>import random</code>)<br>• Benutzer rät bis richtig<br>• Nach jedem Versuch "Zu hoch!"/"Zu niedrig!"<br>• Am Ende: Anzahl der Versuche</div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(8)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(8)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(8)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="8">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="8">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="8">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-8">
-      <div class="hint-title">💡 Hinweis</div>
-      <code>import random</code> ganz oben.<br>
-      Zufallszahl: <code>zahl = random.randint(1, 100)</code><br><br>
-      Zähler für Versuche: <code>versuche = 0</code>, dann <code>versuche += 1</code> in der Schleife.<br>
-      Schleife beenden wenn richtig: <code>break</code>
-    </div>
-    <div class="solution-box" id="solution-8">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block"><span class="kw">import</span> random
+    <div class="hint-box" id="hint-8"><div class="hint-title">💡 Hinweis</div><code>import random</code> oben.<br>Zufallszahl: <code>random.randint(1, 100)</code><br>Zähler: <code>versuche = 0</code>, dann <code>versuche += 1</code><br>Beenden: <code>break</code></div>
+    <div class="solution-box" id="solution-8"><div class="solution-title">✓ Musterlösung</div><div class="code-block"><span class="kw">import</span> random
 
 geheim = random.randint(<span class="num">1</span>, <span class="num">100</span>)
 versuche = <span class="num">0</span>
-
 <span class="fn">print</span>(<span class="str">"Ich denke an eine Zahl von 1 bis 100!"</span>)
 
 <span class="kw">while</span> <span class="kw">True</span>:
     tipp = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Dein Tipp: "</span>))
     versuche += <span class="num">1</span>
-    <span class="kw">if</span> tipp < geheim:
+    <span class="kw">if</span> tipp &lt; geheim:
         <span class="fn">print</span>(<span class="str">"Zu niedrig!"</span>)
-    <span class="kw">elif</span> tipp > geheim:
+    <span class="kw">elif</span> tipp &gt; geheim:
         <span class="fn">print</span>(<span class="str">"Zu hoch!"</span>)
     <span class="kw">else</span>:
-        <span class="fn">print</span>(<span class="str">f"Richtig! Du hast {versuche} Versuche gebraucht."</span>)
-        <span class="kw">break</span></div>
-    </div>
+        <span class="fn">print</span>(<span class="str">f"Richtig! {versuche} Versuche gebraucht."</span>)
+        <span class="kw">break</span></div></div>
   </div>
-
-  <!-- Aufgabe 9 – NEU aus Unterricht -->
-  <div class="exercise-card" id="card-13">
+  <div class="exercise-card" id="card-9">
     <div class="card-header">
       <span class="card-num">#09</span>
       <span class="card-title">Schwimmbadkarte – Preisberechnung</span>
       <span class="done-badge">✓ Erledigt</span>
     </div>
-    <div class="card-body">
-      Schreibe ein Programm das den <strong>Eintrittspreis</strong> für ein Schwimmbad berechnet:<br>
-      • Alter &lt; 6 → <strong>kostenlos (0,00 €)</strong><br>
-      • Alter 6–12 → <strong>2,00 €</strong><br>
-      • Alter 13–20 → <strong>4,00 €</strong><br>
-      • Alter &gt; 20 → <strong>6,00 €</strong><br><br>
-      Gib den Preis mit einem <strong>f-String</strong> aus: <code>"Der Preis ist: 4.00 €"</code><br>
-      Tipp: <code>{preis:4.2f}</code> sorgt für immer 2 Nachkommastellen.
-    </div>
+    <div class="card-body">Berechne den <strong>Eintrittspreis</strong>:<br>• Alter &lt; 6 → <strong>0,00 €</strong><br>• 6–12 → <strong>2,00 €</strong><br>• 13–20 → <strong>4,00 €</strong><br>• &gt; 20 → <strong>6,00 €</strong><br><br>Ausgabe per f-String: <code>{preis:4.2f}</code> = immer 2 Nachkommastellen.</div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(13)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(13)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(13)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="9">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="9">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="9">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-13">
-      <div class="hint-title">💡 Hinweis</div>
-      Denke an die Reihenfolge der Bedingungen – prüfe von <strong>klein nach groß</strong>:<br>
-      <code>if a &lt; 6:</code> → zuerst die Kleinsten<br>
-      <code>elif a &lt;= 12:</code> → dann bis 12 (du musst nicht mehr &gt;= 6 schreiben, das ist schon ausgeschlossen!)<br><br>
-      <code>:4.2f</code> im f-String = mindestens 4 Zeichen breit, immer 2 Nachkommastellen
-    </div>
-    <div class="solution-box" id="solution-13">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block">a = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Alter> "</span>))
+    <div class="hint-box" id="hint-9"><div class="hint-title">💡 Hinweis</div>Prüfe von <strong>klein nach groß</strong>:<br><code>if a &lt; 6:</code> zuerst<br><code>elif a &lt;= 12:</code> (&gt;=6 ist schon ausgeschlossen)<br><br><code>:4.2f</code> = 4 Zeichen breit, 2 Nachkommastellen</div>
+    <div class="solution-box" id="solution-9"><div class="solution-title">✓ Musterlösung</div><div class="code-block">a = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Alter&gt; "</span>))
 
-<span class="kw">if</span> a < <span class="num">6</span>:
+<span class="kw">if</span> a &lt; <span class="num">6</span>:
     preis = <span class="num">0.0</span>
-<span class="kw">elif</span> a <= <span class="num">12</span>:
+<span class="kw">elif</span> a &lt;= <span class="num">12</span>:
     preis = <span class="num">2.0</span>
-<span class="kw">elif</span> a <= <span class="num">20</span>:
+<span class="kw">elif</span> a &lt;= <span class="num">20</span>:
     preis = <span class="num">4.0</span>
 <span class="kw">else</span>:
     preis = <span class="num">6.0</span>
 
-<span class="fn">print</span>(<span class="str">f"Der Preis ist: {preis:<span class="num">4.2f</span>} €"</span>)</div>
-    </div>
+<span class="fn">print</span>(<span class="str">f"Der Preis ist: {preis:4.2f} €"</span>)</div></div>
   </div>
-
-  <!-- Aufgabe 10 – NEU aus Unterricht -->
-  <div class="exercise-card" id="card-14">
+  <div class="exercise-card" id="card-10">
     <div class="card-header">
       <span class="card-num">#10</span>
       <span class="card-title">Schaltjahr berechnen</span>
       <span class="done-badge">✓ Erledigt</span>
     </div>
-    <div class="card-body">
-      Schreibe das Programm <strong>schaltjahr.py</strong>. Der Benutzer gibt eine Jahreszahl ein.<br>
-      Ein Jahr ist ein Schaltjahr wenn:<br>
-      • Es durch <strong>4</strong> teilbar ist<br>
-      • <strong>Außer</strong> es ist durch <strong>100</strong> teilbar<br>
-      • <strong>Es sei denn</strong> es ist auch durch <strong>400</strong> teilbar<br><br>
-      Teste mit: 1900 (kein SJ), 2000 (SJ), 2004 (SJ), 2006 (kein SJ)<br><br>
-      Ausgabe: <code>"2000 ist ein Schaltjahr"</code> oder <code>"1900 ist kein Schaltjahr"</code>
-    </div>
+    <div class="card-body">Programm <strong>schaltjahr.py</strong>. Ein Jahr ist Schaltjahr wenn:<br>• durch <strong>4</strong> teilbar<br>• <strong>außer</strong> durch <strong>100</strong> teilbar<br>• <strong>es sei denn</strong> auch durch <strong>400</strong> teilbar<br><br>Teste: 1900 (kein), 2000 (ja), 2004 (ja), 2006 (kein).</div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(14)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(14)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(14)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="10">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="10">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="10">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-14">
-      <div class="hint-title">💡 Hinweis</div>
-      Die <strong>Reihenfolge</strong> der if/elif ist entscheidend – prüfe von speziell nach allgemein:<br>
-      1. Zuerst: durch 400 teilbar? → Schaltjahr<br>
-      2. Dann: durch 100 teilbar? → kein Schaltjahr<br>
-      3. Dann: durch 4 teilbar? → Schaltjahr<br>
-      4. Sonst → kein Schaltjahr<br><br>
-      Verwende eine Boolean-Variable: <code>schaltjahr = True</code> oder <code>False</code>
-    </div>
-    <div class="solution-box" id="solution-14">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block">j = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Jahreszahl> "</span>))
+    <div class="hint-box" id="hint-10"><div class="hint-title">💡 Hinweis</div>Reihenfolge von speziell nach allgemein:<br>1. durch 400? → Schaltjahr<br>2. durch 100? → kein<br>3. durch 4? → Schaltjahr<br>4. sonst → kein</div>
+    <div class="solution-box" id="solution-10"><div class="solution-title">✓ Musterlösung</div><div class="code-block">j = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Jahreszahl&gt; "</span>))
 
 <span class="kw">if</span> j % <span class="num">400</span> == <span class="num">0</span>:
     schaltjahr = <span class="kw">True</span>
@@ -903,45 +385,25 @@ versuche = <span class="num">0</span>
 <span class="kw">else</span>:
     schaltjahr = <span class="kw">False</span>
 
-<span class="fn">print</span>(<span class="str">"Prüfung abgeschlossen."</span>)
 <span class="kw">if</span> schaltjahr:
     <span class="fn">print</span>(<span class="str">f"{j} ist ein Schaltjahr"</span>)
 <span class="kw">else</span>:
-    <span class="fn">print</span>(<span class="str">f"{j} ist kein Schaltjahr"</span>)</div>
-    </div>
+    <span class="fn">print</span>(<span class="str">f"{j} ist kein Schaltjahr"</span>)</div></div>
   </div>
-
-  <!-- Aufgabe 11 – NEU aus Unterricht -->
-  <div class="exercise-card" id="card-15">
+  <div class="exercise-card" id="card-11">
     <div class="card-header">
       <span class="card-num">#11</span>
-      <span class="card-title">Zahlenreihen mit for & range()</span>
+      <span class="card-title">Zahlenreihen mit for &amp; range()</span>
       <span class="done-badge">✓ Erledigt</span>
     </div>
-    <div class="card-body">
-      Schreibe <strong>5 kurze Programme</strong> – jedes gibt eine Zahlenreihe aus (nur eine <code>print()</code> pro Schleife!):<br><br>
-      1. <code>0 1 2 3 … 10</code> (nebeneinander in einer Zeile)<br>
-      2. <code>-10 -8 -6 … 10</code><br>
-      3. <code>0 3 6 9 … 21</code><br>
-      4. <code>0 2 4 6 8 … 20</code><br>
-      5. Von <strong>a</strong> bis <strong>b</strong> mit Schrittweite <strong>s</strong> – alle drei Werte vom Benutzer eingeben lassen<br><br>
-      Bonus: Schreibe Aufgabe 1 als <strong>Einzeiler</strong>!
-    </div>
+    <div class="card-body"><strong>5 kurze Programme</strong> (nur eine <code>print()</code> pro Schleife):<br>1. <code>0 1 2 … 10</code> (in einer Zeile)<br>2. <code>-10 -8 … 10</code><br>3. <code>0 3 6 … 21</code><br>4. <code>0 2 4 … 20</code><br>5. von <strong>a</strong> bis <strong>b</strong> mit Schritt <strong>s</strong> (eingeben)</div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(15)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(15)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(15)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="11">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="11">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="11">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-15">
-      <div class="hint-title">💡 Hinweis</div>
-      <code>range(start, stop, schritt)</code> – stop ist <strong>nicht</strong> dabei!<br><br>
-      Zahlen nebeneinander: <code>print(i, end=" ")</code> – unterdrückt den Zeilenumbruch<br><br>
-      Rückwärts zählen: negativer Schritt z.B. <code>range(10, -1, -1)</code><br>
-      Einzeiler: <code>for i in range(11): print(i, end=" ")</code>
-    </div>
-    <div class="solution-box" id="solution-15">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block"><span class="cm"># 1. – Einzeiler</span>
+    <div class="hint-box" id="hint-11"><div class="hint-title">💡 Hinweis</div><code>range(start, stop, schritt)</code> – stop ist <strong>nicht</strong> dabei!<br>Nebeneinander: <code>print(i, end=" ")</code></div>
+    <div class="solution-box" id="solution-11"><div class="solution-title">✓ Musterlösung</div><div class="code-block"><span class="cm"># 1.</span>
 <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">11</span>): <span class="fn">print</span>(i, end=<span class="str">" "</span>)
 
 <span class="cm"># 2.</span>
@@ -953,87 +415,49 @@ versuche = <span class="num">0</span>
 <span class="cm"># 4.</span>
 <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, <span class="num">21</span>, <span class="num">2</span>): <span class="fn">print</span>(i, end=<span class="str">" "</span>)
 
-<span class="cm"># 5. – Benutzereingabe</span>
+<span class="cm"># 5.</span>
 a = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Start: "</span>))
 b = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Ende: "</span>))
 s = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Schrittweite: "</span>))
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(a, b + <span class="num">1</span>, s): <span class="fn">print</span>(i, end=<span class="str">" "</span>)</div>
-    </div>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(a, b + <span class="num">1</span>, s): <span class="fn">print</span>(i, end=<span class="str">" "</span>)</div></div>
   </div>
-
-  <!-- Aufgabe 12 – NEU aus Unterricht -->
-  <div class="exercise-card" id="card-16">
+  <div class="exercise-card" id="card-12">
     <div class="card-header">
       <span class="card-num">#12</span>
-      <span class="card-title">Summe & Mittelwert berechnen</span>
+      <span class="card-title">Summe &amp; Mittelwert berechnen</span>
       <span class="done-badge">✓ Erledigt</span>
     </div>
-    <div class="card-body">
-      Setze dieses <strong>Struktogramm</strong> in Python um:<br><br>
-      • <code>summe = 0</code><br>
-      • Benutzer gibt Anzahl der Durchläufe ein (<code>anzahl</code>)<br>
-      • for-Schleife von 1 bis anzahl: <code>summe = summe + z</code><br>
-      • Ausgabe: Summe und Mittelwert<br><br>
-      Beispiel: anzahl = 4 → addiert 1+2+3+4 = 10, Mittelwert = 2.5<br>
-      Format: <code>{summe:13}</code> und <code>{mittelwert:8.2f}</code>
-    </div>
+    <div class="card-body">Setze das <strong>Struktogramm</strong> um:<br>• <code>summe = 0</code><br>• Benutzer gibt <code>anzahl</code> ein<br>• Schleife 1..anzahl: <code>summe = summe + z</code><br>• Ausgabe: Summe und Mittelwert<br><br>Beispiel: anzahl=4 → 1+2+3+4=10, Mittelwert=2.5</div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(16)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(16)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(16)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="12">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="12">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="12">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-16">
-      <div class="hint-title">💡 Hinweis</div>
-      Summen-Akkumulator: <code>summe = summe + z</code> oder kürzer <code>summe += z</code><br><br>
-      range(1, anzahl+1) – warum +1? Weil range() den letzten Wert <strong>nicht</strong> mitmacht!<br><br>
-      Mittelwert: <code>summe / anzahl</code>
-    </div>
-    <div class="solution-box" id="solution-16">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block">summe = <span class="num">0</span>
-anzahl = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Anzahl Durchläufe> "</span>))
+    <div class="hint-box" id="hint-12"><div class="hint-title">💡 Hinweis</div>Akkumulator: <code>summe += z</code><br><code>range(1, anzahl+1)</code> – das +1, weil range() den letzten Wert nicht mitnimmt!<br>Mittelwert: <code>summe / anzahl</code></div>
+    <div class="solution-box" id="solution-12"><div class="solution-title">✓ Musterlösung</div><div class="code-block">summe = <span class="num">0</span>
+anzahl = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Anzahl Durchläufe&gt; "</span>))
 
 <span class="kw">for</span> z <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, anzahl + <span class="num">1</span>):
     summe = summe + z
 
-<span class="fn">print</span>(<span class="str">f"Summe:     {summe:<span class="num">13</span>}"</span>)
-<span class="fn">print</span>(<span class="str">f"Mittelwert: {summe/anzahl:<span class="num">8.2f</span>}"</span>)</div>
-    </div>
+<span class="fn">print</span>(<span class="str">f"Summe:      {summe:13}"</span>)
+<span class="fn">print</span>(<span class="str">f"Mittelwert: {summe/anzahl:8.2f}"</span>)</div></div>
   </div>
-
   <div class="level-title"><span class="dot dot-hard"></span> Level 3 – Programme</div>
-
-  <!-- Aufgabe 9 -->
   <div class="exercise-card" id="card-13">
     <div class="card-header">
       <span class="card-num">#13</span>
       <span class="card-title">Funktionen – Taschenrechner</span>
       <span class="done-badge">✓ Erledigt</span>
     </div>
-    <div class="card-body">
-      Schreibe einen Taschenrechner mit <strong>eigenen Funktionen</strong>:<br>
-      • Funktion <code>addieren(a, b)</code> → gibt a + b zurück<br>
-      • Dasselbe für subtrahieren, multiplizieren, dividieren<br>
-      • Ein Hauptmenü wo der Benutzer die Operation wählt<br>
-      • Bei Division durch 0 soll eine sinnvolle Meldung kommen (kein Absturz!)
-    </div>
+    <div class="card-body">Taschenrechner mit <strong>eigenen Funktionen</strong>:<br>• <code>addieren(a, b)</code> → a + b<br>• ebenso subtrahieren, multiplizieren, dividieren<br>• Hauptmenü zur Auswahl<br>• Division durch 0 abfangen (kein Absturz!)</div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(13)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(13)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(13)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="13">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="13">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="13">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-13">
-      <div class="hint-title">💡 Hinweis</div>
-      Funktion mit return:<br>
-      <code>def addieren(a, b):</code><br>
-      <code>&nbsp;&nbsp;return a + b</code><br><br>
-      Aufruf: <code>ergebnis = addieren(5, 3)</code><br><br>
-      Division durch 0 abfangen: <code>if b == 0: return "Fehler!"</code><br>
-      Oder mit try/except: <code>try: return a/b</code> — <code>except ZeroDivisionError: return "Fehler"</code>
-    </div>
-    <div class="solution-box" id="solution-13">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block"><span class="kw">def</span> <span class="fn">addieren</span>(a, b):
+    <div class="hint-box" id="hint-13"><div class="hint-title">💡 Hinweis</div>Funktion: <code>def addieren(a, b):</code> dann <code>return a + b</code><br>Division durch 0: <code>if b == 0: return "Fehler!"</code></div>
+    <div class="solution-box" id="solution-13"><div class="solution-title">✓ Musterlösung</div><div class="code-block"><span class="kw">def</span> <span class="fn">addieren</span>(a, b):
     <span class="kw">return</span> a + b
 
 <span class="kw">def</span> <span class="fn">subtrahieren</span>(a, b):
@@ -1047,7 +471,7 @@ anzahl = <span class="fn">int</span>(<span class="fn">input</span>(<span class="
         <span class="kw">return</span> <span class="str">"Fehler: Division durch 0!"</span>
     <span class="kw">return</span> a / b
 
-<span class="fn">print</span>(<span class="str">"1: Addieren | 2: Subtrahieren | 3: Multiplizieren | 4: Dividieren"</span>)
+<span class="fn">print</span>(<span class="str">"1: + | 2: - | 3: * | 4: /"</span>)
 op = <span class="fn">input</span>(<span class="str">"Operation wählen: "</span>)
 a = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Erste Zahl: "</span>))
 b = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Zweite Zahl: "</span>))
@@ -1055,30 +479,22 @@ b = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str
 <span class="kw">if</span> op == <span class="str">"1"</span>: <span class="fn">print</span>(addieren(a, b))
 <span class="kw">elif</span> op == <span class="str">"2"</span>: <span class="fn">print</span>(subtrahieren(a, b))
 <span class="kw">elif</span> op == <span class="str">"3"</span>: <span class="fn">print</span>(multiplizieren(a, b))
-<span class="kw">elif</span> op == <span class="str">"4"</span>: <span class="fn">print</span>(dividieren(a, b))</div>
-    </div>
+<span class="kw">elif</span> op == <span class="str">"4"</span>: <span class="fn">print</span>(dividieren(a, b))</div></div>
   </div>
-
-  <!-- Aufgaben 10-12 kürzer -->
   <div class="exercise-card" id="card-14">
-    <div class="card-header"><span class="card-num">#14</span><span class="card-title">Fehlerbehandlung mit try/except</span><span class="done-badge">✓ Erledigt</span></div>
-    <div class="card-body">
-      Schreibe ein Programm das den Benutzer nach einer <strong>ganzen Zahl</strong> fragt – aber nicht abstürzt wenn er Buchstaben eingibt. Benutze <code>try/except</code>. Das Programm soll so lange fragen bis eine gültige Zahl eingegeben wurde. Gib danach Quadrat und Kubik der Zahl aus.
+    <div class="card-header">
+      <span class="card-num">#14</span>
+      <span class="card-title">Fehlerbehandlung mit try/except</span>
+      <span class="done-badge">✓ Erledigt</span>
     </div>
+    <div class="card-body">Frage nach einer <strong>ganzen Zahl</strong> – das Programm darf bei Buchstaben nicht abstürzen. Nutze <code>try/except</code>, frage bis eine gültige Zahl kommt, gib dann Quadrat und Kubik aus.</div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(14)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(14)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(14)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="14">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="14">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="14">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-14">
-      <div class="hint-title">💡 Hinweis</div>
-      <code>try:</code> – hier kommt der gefährliche Code<br>
-      <code>except ValueError:</code> – wird ausgeführt wenn int() einen String bekommt<br><br>
-      Kombiniere das mit einer <code>while True:</code> Schleife und <code>break</code> wenn es klappt.
-    </div>
-    <div class="solution-box" id="solution-14">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block"><span class="kw">while</span> <span class="kw">True</span>:
+    <div class="hint-box" id="hint-14"><div class="hint-title">💡 Hinweis</div><code>try:</code> = gefährlicher Code<br><code>except ValueError:</code> = wenn int() einen String bekommt<br>Kombiniere mit <code>while True:</code> und <code>break</code>.</div>
+    <div class="solution-box" id="solution-14"><div class="solution-title">✓ Musterlösung</div><div class="code-block"><span class="kw">while</span> <span class="kw">True</span>:
     <span class="kw">try</span>:
         n = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Ganze Zahl eingeben: "</span>))
         <span class="kw">break</span>
@@ -1086,33 +502,22 @@ b = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str
         <span class="fn">print</span>(<span class="str">"Das war keine gültige Zahl! Nochmal."</span>)
 
 <span class="fn">print</span>(<span class="str">f"Quadrat: {n**2}"</span>)
-<span class="fn">print</span>(<span class="str">f"Kubik: {n**3}"</span>)</div>
-    </div>
+<span class="fn">print</span>(<span class="str">f"Kubik: {n**3}"</span>)</div></div>
   </div>
-
   <div class="exercise-card" id="card-15">
-    <div class="card-header"><span class="card-num">#15</span><span class="card-title">Datei schreiben & lesen</span><span class="done-badge">✓ Erledigt</span></div>
-    <div class="card-body">
-      Schreibe ein Programm das ein <strong>Tagebuch</strong> in einer Textdatei führt:<br>
-      • Benutzer gibt einen Eintrag ein<br>
-      • Eintrag wird mit Datum+Uhrzeit in <code>tagebuch.txt</code> gespeichert (anhängen, nicht überschreiben!)<br>
-      • Danach wird der gesamte Inhalt der Datei ausgegeben<br>
-      Tipp: <code>import datetime</code>
+    <div class="card-header">
+      <span class="card-num">#15</span>
+      <span class="card-title">Datei schreiben &amp; lesen</span>
+      <span class="done-badge">✓ Erledigt</span>
     </div>
+    <div class="card-body"><strong>Tagebuch</strong> in einer Textdatei:<br>• Eintrag eingeben<br>• mit Datum+Uhrzeit in <code>tagebuch.txt</code> <strong>anhängen</strong><br>• gesamten Inhalt ausgeben<br>Tipp: <code>import datetime</code></div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(15)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(15)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(15)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="15">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="15">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="15">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-15">
-      <div class="hint-title">💡 Hinweis</div>
-      Modus <code>"a"</code> = append (anhängen, nicht überschreiben!)<br>
-      <code>datetime.datetime.now().strftime("%d.%m.%Y %H:%M")</code> → aktuelles Datum/Uhrzeit als String<br>
-      Zum Lesen: Modus <code>"r"</code>, dann <code>for zeile in datei:</code>
-    </div>
-    <div class="solution-box" id="solution-15">
-      <div class="solution-title">✓ Musterlösung</div>
-      <div class="code-block"><span class="kw">import</span> datetime
+    <div class="hint-box" id="hint-15"><div class="hint-title">💡 Hinweis</div>Modus <code>"a"</code> = anhängen.<br><code>datetime.datetime.now().strftime("%d.%m.%Y %H:%M")</code><br>Lesen: Modus <code>"r"</code>, <code>for zeile in datei:</code></div>
+    <div class="solution-box" id="solution-15"><div class="solution-title">✓ Musterlösung</div><div class="code-block"><span class="kw">import</span> datetime
 
 eintrag = <span class="fn">input</span>(<span class="str">"Dein Tagebucheintrag: "</span>)
 jetzt = datetime.datetime.now().strftime(<span class="str">"%d.%m.%Y %H:%M"</span>)
@@ -1123,41 +528,26 @@ jetzt = datetime.datetime.now().strftime(<span class="str">"%d.%m.%Y %H:%M"</spa
 <span class="fn">print</span>(<span class="str">"\n--- Alle Einträge ---"</span>)
 <span class="kw">with</span> <span class="fn">open</span>(<span class="str">"tagebuch.txt"</span>, <span class="str">"r"</span>, encoding=<span class="str">"utf-8"</span>) <span class="kw">as</span> f:
     <span class="kw">for</span> zeile <span class="kw">in</span> f:
-        <span class="fn">print</span>(zeile, end=<span class="str">""</span>)</div>
-    </div>
+        <span class="fn">print</span>(zeile, end=<span class="str">""</span>)</div></div>
   </div>
-
   <div class="exercise-card" id="card-16">
-    <div class="card-header"><span class="card-num">#16</span><span class="card-title">Mini-Projekt: Kontaktverwaltung</span><span class="done-badge">✓ Erledigt</span></div>
-    <div class="card-body">
-      Baue eine einfache <strong>Kontaktverwaltung</strong> mit Listen oder einem Dictionary:<br>
-      • Kontakt hinzufügen (Name + Telefon)<br>
-      • Alle Kontakte anzeigen<br>
-      • Nach Name suchen<br>
-      • Kontakt löschen<br>
-      • Menü das so lange läuft bis der Benutzer "Beenden" wählt<br><br>
-      <em>Dies ist dein erstes echtes Mini-Programm – baue es selbst, ohne direkt zur Lösung zu schauen!</em>
+    <div class="card-header">
+      <span class="card-num">#16</span>
+      <span class="card-title">Mini-Projekt: Kontaktverwaltung</span>
+      <span class="done-badge">✓ Erledigt</span>
     </div>
+    <div class="card-body">Einfache <strong>Kontaktverwaltung</strong> mit Dictionary:<br>• hinzufügen (Name + Telefon)<br>• alle anzeigen<br>• nach Name suchen<br>• löschen<br>• Menü bis "Beenden"<br><br><em>Versuch es erst selbst, ohne Lösung!</em></div>
     <div class="card-actions">
-      <button class="btn btn-hint" onclick="toggleHint(16)">💡 Hinweis</button>
-      <button class="btn btn-solution" onclick="toggleSolution(16)">👁 Lösung</button>
-      <button class="btn btn-done" onclick="markDone(16)">✓ Erledigt</button>
+      <button class="btn btn-hint" data-act="hint" data-n="16">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="16">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="16">✓ Erledigt</button>
     </div>
-    <div class="hint-box" id="hint-16">
-      <div class="hint-title">💡 Hinweis</div>
-      Datenstruktur-Vorschlag: Dictionary mit Name als Key:<br>
-      <code>kontakte = {"Max": "0171-123456"}</code><br><br>
-      Oder Liste aus Dictionaries:<br>
-      <code>kontakte = [{"name": "Max", "tel": "0171..."}]</code><br><br>
-      Struktur: <code>while True:</code> → Menü anzeigen → Eingabe lesen → if/elif für jede Option
-    </div>
-    <div class="solution-box" id="solution-16">
-      <div class="solution-title">✓ Musterlösung (Kurzversion)</div>
-      <div class="code-block">kontakte = {}
+    <div class="hint-box" id="hint-16"><div class="hint-title">💡 Hinweis</div>Dictionary: <code>kontakte = {"Max": "0171-123456"}</code><br>Struktur: <code>while True:</code> → Menü → Eingabe → if/elif</div>
+    <div class="solution-box" id="solution-16"><div class="solution-title">✓ Musterlösung</div><div class="code-block">kontakte = {}
 
 <span class="kw">while</span> <span class="kw">True</span>:
     <span class="fn">print</span>(<span class="str">"\n1 Hinzufügen | 2 Anzeigen | 3 Suchen | 4 Löschen | 5 Beenden"</span>)
-    wahl = <span class="fn">input</span>(<span class="str">"> "</span>)
+    wahl = <span class="fn">input</span>(<span class="str">"&gt; "</span>)
 
     <span class="kw">if</span> wahl == <span class="str">"1"</span>:
         name = <span class="fn">input</span>(<span class="str">"Name: "</span>)
@@ -1175,303 +565,312 @@ jetzt = datetime.datetime.now().strftime(<span class="str">"%d.%m.%Y %H:%M"</spa
         <span class="kw">if</span> s <span class="kw">in</span> kontakte:
             <span class="kw">del</span> kontakte[s]
     <span class="kw">elif</span> wahl == <span class="str">"5"</span>:
-        <span class="kw">break</span></div>
-    </div>
+        <span class="kw">break</span></div></div>
   </div>
-</div>
+  <div class="level-title"><span class="dot dot-exam"></span> Level 4 – AP1-Training</div>
+  <div class="exercise-card" id="card-17">
+    <div class="card-header">
+      <span class="card-num">#17</span>
+      <span class="card-title">AP1: Webstatistik-Kennzahlen mit Runden</span>
+      <span class="done-badge">✓ Erledigt</span>
+    </div>
+    <div class="card-body">Wie in AP1: Aus einer Statistik sind bekannt – <code>aufrufe = 33000</code>, <code>besucher = 12000</code>, <code>suchmaschine = 5562</code>, <code>bounces = 7554</code>.<br><br>Berechne und gib <strong>auf 2 Nachkommastellen</strong> aus:<br>a) Seitenaufrufe pro Besucher<br>b) Anteil Suchmaschinen-Besucher in %<br>c) Non-Bounce-Rate in %</div>
+    <div class="card-actions">
+      <button class="btn btn-hint" data-act="hint" data-n="17">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="17">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="17">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-17"><div class="hint-title">💡 Hinweis</div>a) ist eine Division.<br>Prozent = <code>(teil / ganzes) * 100</code>.<br>Non-Bounce = Besucher, die <strong>nicht</strong> gebounct sind = <code>besucher - bounces</code>.<br>Runden: <code>round(wert, 2)</code></div>
+    <div class="solution-box" id="solution-17"><div class="solution-title">✓ Musterlösung</div><div class="code-block">aufrufe = <span class="num">33000</span>
+besucher = <span class="num">12000</span>
+suchmaschine = <span class="num">5562</span>
+bounces = <span class="num">7554</span>
 
-<!-- DEBUGGING -->
+<span class="cm"># a) Seitenaufrufe pro Besucher</span>
+pro_besucher = aufrufe / besucher
+
+<span class="cm"># b) Anteil Suchmaschinen in %</span>
+anteil_sm = (suchmaschine / besucher) * <span class="num">100</span>
+
+<span class="cm"># c) Non-Bounce-Rate: erst Gegenmenge bilden!</span>
+non_bouncer = besucher - bounces
+non_bounce_rate = (non_bouncer / besucher) * <span class="num">100</span>
+
+<span class="fn">print</span>(<span class="str">f"a) {round(pro_besucher, 2)}"</span>)        <span class="cm"># 2.75</span>
+<span class="fn">print</span>(<span class="str">f"b) {round(anteil_sm, 2)} %"</span>)      <span class="cm"># 46.35 %</span>
+<span class="fn">print</span>(<span class="str">f"c) {round(non_bounce_rate, 2)} %"</span>) <span class="cm"># 37.05 %</span></div></div>
+  </div>
+  <div class="exercise-card" id="card-18">
+    <div class="card-header">
+      <span class="card-num">#18</span>
+      <span class="card-title">AP1: Schwellenwert prüfen (&gt; vs. &gt;=)</span>
+      <span class="done-badge">✓ Erledigt</span>
+    </div>
+    <div class="card-body">Typische AP1-Falle. Ein Server gilt als <strong>überlastet</strong>, wenn die Auslastung <strong>über 80 %</strong> liegt – <strong>genau 80 % zählt noch nicht</strong> als überlastet.<br><br>Lies <code>auslastung</code> ein und gib "ÜBERLASTET" oder "OK" aus. Teste mit 80 und 81.</div>
+    <div class="card-actions">
+      <button class="btn btn-hint" data-act="hint" data-n="18">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="18">👁 Lösung</button>
+      <button class="btn btn-done" data-act="done" data-n="18">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-18"><div class="hint-title">💡 Hinweis</div>Achte auf <strong>&gt; vs. &gt;=</strong>:<br>• "über 80" = <code>auslastung &gt; 80</code> (80 selbst ist NICHT dabei)<br>• "ab 80" / "mindestens 80" wäre <code>&gt;= 80</code><br><br>Die obere Grenze gehört bei "bis unter" immer zur besseren/anderen Kategorie.</div>
+    <div class="solution-box" id="solution-18"><div class="solution-title">✓ Musterlösung</div><div class="code-block">auslastung = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Auslastung in %: "</span>))
+
+<span class="kw">if</span> auslastung &gt; <span class="num">80</span>:
+    <span class="fn">print</span>(<span class="str">"ÜBERLASTET"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"OK"</span>)
+
+<span class="cm"># Test:</span>
+<span class="cm"># 80  -&gt; OK         (80 ist NICHT &gt; 80)</span>
+<span class="cm"># 81  -&gt; ÜBERLASTET (81 ist &gt; 80)</span></div></div>
+  </div>
+</div><!-- DEBUGGING -->
 <div id="page-debug" class="page">
   <div class="hero" style="padding-top:24px;text-align:left">
     <div class="badge">Debugging lernen</div>
-    <h1 style="font-size:2rem">Fehler lesen &<br><span>selbst lösen</span></h1>
+    <h1 style="font-size:2rem">Fehler lesen &amp;<br><span>selbst lösen</span></h1>
     <p style="margin-top:8px">Python-Fehlermeldungen sagen dir <em>genau</em> was falsch ist – wenn du weißt wie man sie liest.</p>
   </div>
-
-  <div class="tip">
-    <strong>Die goldene Debugging-Regel:</strong> Lies die letzte Zeile der Fehlermeldung zuerst. Dort steht der Fehlertyp und die Ursache. Dann schau auf die Zeilennummer (line X) um zu wissen wo der Fehler ist.
-  </div>
-
+  <div class="tip"><strong>Goldene Regel:</strong> Lies die letzte Zeile der Fehlermeldung zuerst – dort steht Fehlertyp und Ursache. Dann die Zeilennummer (line X) für den Ort.</div>
   <div class="section-title">Häufige Fehlertypen</div>
 
   <div class="debug-scenario">
     <div class="card-title" style="margin-bottom:8px">🔴 SyntaxError – Tippfehler im Code</div>
-    <div class="card-body">Der Code kann gar nicht erst starten. Häufig: fehlende Doppelpunkte, falsche Klammern, vergessene Anführungszeichen.</div>
-    <div class="code-block">x = 10
-<span class="kw">if</span> x > 5   <span class="cm"># ← Doppelpunkt fehlt!</span>
+    <div class="card-body">Der Code startet gar nicht erst. Häufig: fehlende Doppelpunkte, Klammern, Anführungszeichen.</div>
+    <div class="code-block">x = <span class="num">10</span>
+<span class="kw">if</span> x &gt; <span class="num">5</span>   <span class="cm"># ← Doppelpunkt fehlt!</span>
     <span class="fn">print</span>(<span class="str">"groß"</span>)</div>
     <div class="error-box">  File "test.py", line 2
-    if x > 5
+    if x &gt; 5
             ^
 SyntaxError: expected ':'</div>
-    <button class="btn-reveal" onclick="toggleFix('fix1')">💡 Erklärung & Fix</button>
-    <div class="fix-box" id="fix1">
-      <strong style="color:var(--green)">Fix:</strong> Füge den Doppelpunkt nach der if-Bedingung hinzu: <code>if x > 5:</code><br><br>
-      <strong>Merksatz:</strong> Nach <code>if</code>, <code>for</code>, <code>while</code>, <code>def</code>, <code>else</code>, <code>elif</code> kommt immer ein <code>:</code>
-    </div>
+    <button class="btn-reveal" data-fix="fix1">💡 Erklärung &amp; Fix</button>
+    <div class="fix-box" id="fix1"><strong style="color:var(--green)">Fix:</strong> Doppelpunkt anhängen: <code>if x &gt; 5:</code><br><br><strong>Merksatz:</strong> Nach <code>if</code>, <code>for</code>, <code>while</code>, <code>def</code>, <code>else</code>, <code>elif</code> kommt immer ein <code>:</code></div>
   </div>
 
   <div class="debug-scenario">
     <div class="card-title" style="margin-bottom:8px">🔴 TypeError – Falsche Datentypen</div>
-    <div class="card-body">Du versuchst eine Operation mit inkompatiblen Typen, z.B. String + Integer.</div>
+    <div class="card-body">Operation mit inkompatiblen Typen, z. B. String + Integer.</div>
     <div class="code-block">alter = <span class="fn">input</span>(<span class="str">"Alter: "</span>)
 <span class="fn">print</span>(<span class="str">"In 10 Jahren: "</span> + alter + <span class="num">10</span>)</div>
     <div class="error-box">TypeError: can only concatenate str (not "int") to str</div>
-    <button class="btn-reveal" onclick="toggleFix('fix2')">💡 Erklärung & Fix</button>
-    <div class="fix-box" id="fix2">
-      <strong style="color:var(--green)">Fix:</strong> <code>print("In 10 Jahren:", int(alter) + 10)</code><br><br>
-      <strong>Ursache:</strong> <code>input()</code> gibt immer einen String zurück. Du kannst keinen String und eine Zahl mit <code>+</code> verbinden. Entweder umwandeln mit <code>int()</code> oder <code>str()</code> benutzen.
-    </div>
+    <button class="btn-reveal" data-fix="fix2">💡 Erklärung &amp; Fix</button>
+    <div class="fix-box" id="fix2"><strong style="color:var(--green)">Fix:</strong> <code>print("In 10 Jahren:", int(alter) + 10)</code><br><br><strong>Ursache:</strong> <code>input()</code> gibt einen String zurück. String + Zahl geht nicht – mit <code>int()</code> umwandeln.</div>
   </div>
 
   <div class="debug-scenario">
     <div class="card-title" style="margin-bottom:8px">🔴 NameError – Variable nicht definiert</div>
-    <div class="card-body">Du benutzt eine Variable die es (noch) nicht gibt – oft ein Tippfehler im Namen.</div>
+    <div class="card-body">Du benutzt eine Variable, die es nicht gibt – oft ein Tippfehler.</div>
     <div class="code-block">name = <span class="str">"Max"</span>
 <span class="fn">print</span>(Name)  <span class="cm"># ← Großschreibung!</span></div>
     <div class="error-box">NameError: name 'Name' is not defined</div>
-    <button class="btn-reveal" onclick="toggleFix('fix3')">💡 Erklärung & Fix</button>
-    <div class="fix-box" id="fix3">
-      <strong style="color:var(--green)">Fix:</strong> <code>print(name)</code> – Python unterscheidet Groß- und Kleinschreibung!<br><br>
-      <strong>Merksatz:</strong> Variablennamen in Python immer komplett kleinschreiben (Konvention). <code>name</code> ≠ <code>Name</code> ≠ <code>NAME</code>
-    </div>
+    <button class="btn-reveal" data-fix="fix3">💡 Erklärung &amp; Fix</button>
+    <div class="fix-box" id="fix3"><strong style="color:var(--green)">Fix:</strong> <code>print(name)</code> – Python unterscheidet Groß-/Kleinschreibung! <code>name</code> ≠ <code>Name</code></div>
   </div>
 
   <div class="debug-scenario">
     <div class="card-title" style="margin-bottom:8px">🔴 IndexError – Liste außerhalb der Grenzen</div>
-    <div class="card-body">Du versuchst auf ein Listenelement zuzugreifen das nicht existiert.</div>
+    <div class="card-body">Zugriff auf ein Listenelement, das nicht existiert.</div>
     <div class="code-block">farben = [<span class="str">"rot"</span>, <span class="str">"blau"</span>, <span class="str">"grün"</span>]
-<span class="fn">print</span>(farben[<span class="num">3</span>])  <span class="cm"># ← gibt es nicht! (0, 1, 2)</span></div>
+<span class="fn">print</span>(farben[<span class="num">3</span>])  <span class="cm"># ← gibt es nicht! (0,1,2)</span></div>
     <div class="error-box">IndexError: list index out of range</div>
-    <button class="btn-reveal" onclick="toggleFix('fix4')">💡 Erklärung & Fix</button>
-    <div class="fix-box" id="fix4">
-      <strong style="color:var(--green)">Fix:</strong> Listen starten bei Index 0. Eine Liste mit 3 Elementen hat die Indizes 0, 1, 2.<br>
-      <code>farben[2]</code> → "grün" (letztes Element)<br>
-      <code>farben[-1]</code> → letztes Element (Trick!)<br><br>
-      <strong>Check:</strong> <code>len(farben)</code> gibt die Länge zurück. Gültiger Bereich: 0 bis len-1.
-    </div>
+    <button class="btn-reveal" data-fix="fix4">💡 Erklärung &amp; Fix</button>
+    <div class="fix-box" id="fix4"><strong style="color:var(--green)">Fix:</strong> Index startet bei 0. 3 Elemente → Indizes 0,1,2. <code>farben[2]</code> = "grün", <code>farben[-1]</code> = letztes Element.</div>
   </div>
 
   <div class="debug-scenario">
     <div class="card-title" style="margin-bottom:8px">🔴 IndentationError – Falsche Einrückung</div>
-    <div class="card-body">Python benutzt Einrückung (4 Leerzeichen oder 1 Tab) um Blöcke zu definieren. Fehler hier = Programm startet nicht.</div>
+    <div class="card-body">Python nutzt Einrückung (4 Leerzeichen) für Blöcke.</div>
     <div class="code-block"><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>):
 <span class="fn">print</span>(i)  <span class="cm"># ← muss eingerückt sein!</span></div>
     <div class="error-box">IndentationError: expected an indented block after 'for' statement</div>
-    <button class="btn-reveal" onclick="toggleFix('fix5')">💡 Erklärung & Fix</button>
-    <div class="fix-box" id="fix5">
-      <strong style="color:var(--green)">Fix:</strong> Alles innerhalb einer Schleife/if/Funktion muss eingerückt sein:<br>
-      <code>for i in range(3):</code><br>
-      <code>&nbsp;&nbsp;&nbsp;&nbsp;print(i)</code>  ← 4 Leerzeichen!<br><br>
-      <strong>Tipp:</strong> Benutze immer 4 Leerzeichen (oder Tab, aber nicht mischen!). IDLE und VS Code machen das automatisch.
-    </div>
+    <button class="btn-reveal" data-fix="fix5">💡 Erklärung &amp; Fix</button>
+    <div class="fix-box" id="fix5"><strong style="color:var(--green)">Fix:</strong> Inhalt von Schleife/if/Funktion einrücken – immer 4 Leerzeichen. Nicht Tabs und Leerzeichen mischen!</div>
   </div>
 
   <div class="section-title">Debugging-Strategie</div>
-  <div class="ref-card">
-    <div style="padding:18px;font-size:14px;line-height:1.9;color:var(--muted)">
-      <strong style="color:var(--text)">1. Fehlermeldung lesen</strong> – Letzte Zeile = Fehlertyp + Ursache. Zeilennummer zeigt wo.<br>
-      <strong style="color:var(--text)">2. print() als Detektiv</strong> – Füge <code>print("hier bin ich", variable)</code> ein um zu sehen was passiert.<br>
-      <strong style="color:var(--text)">3. Minimal-Test</strong> – Schreibe den verdächtigen Code separat mit festen Werten.<br>
-      <strong style="color:var(--text)">4. Google den Fehlertyp</strong> – "Python TypeError can only concatenate" liefert sofort die Antwort.<br>
-      <strong style="color:var(--text)">5. Debugger benutzen</strong> – In IDLE: Debug → Debugger. In VS Code: F5 und Breakpoints setzen.
-    </div>
-  </div>
+  <div class="ref-card"><div style="padding:18px;font-size:14px;line-height:1.9;color:var(--muted)">
+    <strong style="color:var(--text)">1. Fehlermeldung lesen</strong> – letzte Zeile = Typ + Ursache.<br>
+    <strong style="color:var(--text)">2. print() als Detektiv</strong> – <code>print("hier", variable)</code> einbauen.<br>
+    <strong style="color:var(--text)">3. Minimal-Test</strong> – verdächtigen Code separat mit festen Werten testen.<br>
+    <strong style="color:var(--text)">4. Fehlertyp googeln</strong> – liefert meist sofort die Antwort.<br>
+    <strong style="color:var(--text)">5. Debugger</strong> – IDLE: Debug → Debugger. VS Code: F5 + Breakpoints.
+  </div></div>
 </div>
-
 <!-- REFERENCE -->
 <div id="page-ref" class="page">
-  <div class="hero" style="padding-top:24px;text-align:left">
-    <div class="badge">Befehlsreferenz</div>
-    <h1 style="font-size:2rem">Python <span>Cheatsheet</span></h1>
-  </div>
-
+  <div class="hero" style="padding-top:24px;text-align:left"><div class="badge">Befehlsreferenz</div><h1 style="font-size:2rem">Python <span>Cheatsheet</span></h1></div>
   <div class="ref-card">
-    <div class="ref-card-header"><span class="ref-icon">📦</span> Datentypen & Variablen</div>
+    <div class="ref-card-header"><span class="ref-icon">📦</span> Datentypen &amp; Variablen</div>
     <table class="ref-table">
       <tr><th>Befehl</th><th>Beschreibung</th></tr>
       <tr><td>x = 42</td><td>Integer (ganze Zahl)</td></tr>
       <tr><td>x = 3.14</td><td>Float (Kommazahl)</td></tr>
       <tr><td>x = "Hallo"</td><td>String (Text)</td></tr>
-      <tr><td>x = True</td><td>Boolean (True / False – Großschreibung!)</td></tr>
+      <tr><td>x = True</td><td>Boolean (True/False – Großschreibung!)</td></tr>
       <tr><td>x = [1,2,3]</td><td>Liste (veränderbar, geordnet)</td></tr>
       <tr><td>x = (1,2,3)</td><td>Tuple (unveränderbar)</td></tr>
-      <tr><td>x = {"k":"v"}</td><td>Dictionary (Key:Value Paare)</td></tr>
-      <tr><td>type(x)</td><td>Gibt den Datentyp zurück</td></tr>
-      <tr><td>int(x)</td><td>Umwandlung in Integer</td></tr>
-      <tr><td>float(x)</td><td>Umwandlung in Float</td></tr>
-      <tr><td>str(x)</td><td>Umwandlung in String</td></tr>
-      <tr><td>bool(x)</td><td>Umwandlung in Boolean</td></tr>
+      <tr><td>x = {"k":"v"}</td><td>Dictionary (Key:Value)</td></tr>
+      <tr><td>type(x)</td><td>Datentyp zurückgeben</td></tr>
+      <tr><td>int(x)</td><td>in Integer umwandeln</td></tr>
+      <tr><td>float(x)</td><td>in Float umwandeln</td></tr>
+      <tr><td>str(x)</td><td>in String umwandeln</td></tr>
+      <tr><td>bool(x)</td><td>in Boolean umwandeln</td></tr>
     </table>
   </div>
-
   <div class="ref-card">
-    <div class="ref-card-header"><span class="ref-icon">🖥️</span> Ein- & Ausgabe</div>
+    <div class="ref-card-header"><span class="ref-icon">🖥️</span> Ein- &amp; Ausgabe</div>
     <table class="ref-table">
       <tr><th>Befehl</th><th>Beschreibung</th></tr>
-      <tr><td>print("Text")</td><td>Ausgabe auf dem Bildschirm</td></tr>
-      <tr><td>print(a, b, c)</td><td>Mehrere Werte mit Leerzeichen getrennt</td></tr>
-      <tr><td>print(f"Hi {name}")</td><td>f-String – Variablen direkt einsetzen</td></tr>
-      <tr><td>print(x, end="")</td><td>Ohne Zeilenumbruch am Ende</td></tr>
-      <tr><td>input("Frage: ")</td><td>Eingabe einlesen – gibt immer String zurück!</td></tr>
-      <tr><td>int(input("..."))</td><td>Eingabe direkt als Zahl einlesen</td></tr>
+      <tr><td>print("Text")</td><td>Ausgabe</td></tr>
+      <tr><td>print(a, b, c)</td><td>mehrere Werte, leerzeichengetrennt</td></tr>
+      <tr><td>print(f"Hi {name}")</td><td>f-String</td></tr>
+      <tr><td>print(x, end="")</td><td>ohne Zeilenumbruch</td></tr>
+      <tr><td>input("Frage: ")</td><td>Eingabe – gibt immer String!</td></tr>
+      <tr><td>int(input("..."))</td><td>Eingabe direkt als Zahl</td></tr>
     </table>
   </div>
-
   <div class="ref-card">
     <div class="ref-card-header"><span class="ref-icon">➕</span> Operatoren</div>
     <table class="ref-table">
-      <tr><th>Operator</th><th>Beschreibung</th></tr>
-      <tr><td>+ - * /</td><td>Addition, Subtraktion, Multiplikation, Division</td></tr>
+      <tr><th>Befehl</th><th>Beschreibung</th></tr>
+      <tr><td>+ - * /</td><td>Grundrechenarten</td></tr>
       <tr><td>**</td><td>Potenz (2**10 = 1024)</td></tr>
-      <tr><td>%</td><td>Modulo – Rest der Division (10%3 = 1)</td></tr>
+      <tr><td>%</td><td>Modulo – Rest (10%3 = 1)</td></tr>
       <tr><td>//</td><td>Ganzzahldivision (10//3 = 3)</td></tr>
-      <tr><td>+= -= *=</td><td>Kurzform: x += 1 ist x = x + 1</td></tr>
-      <tr><td>== != &lt; &gt; &lt;= &gt;=</td><td>Vergleichsoperatoren (geben True/False zurück)</td></tr>
-      <tr><td>and or not</td><td>Logische Operatoren</td></tr>
+      <tr><td>+= -= *=</td><td>Kurzform: x += 1</td></tr>
+      <tr><td>== != &lt; &gt; &lt;= &gt;=</td><td>Vergleiche → True/False</td></tr>
+      <tr><td>and or not</td><td>logische Operatoren</td></tr>
     </table>
   </div>
-
   <div class="ref-card">
     <div class="ref-card-header"><span class="ref-icon">🔤</span> String-Methoden</div>
     <table class="ref-table">
       <tr><th>Befehl</th><th>Beschreibung</th></tr>
       <tr><td>s.upper()</td><td>Großbuchstaben</td></tr>
       <tr><td>s.lower()</td><td>Kleinbuchstaben</td></tr>
-      <tr><td>s.strip()</td><td>Leerzeichen am Anfang/Ende entfernen</td></tr>
-      <tr><td>s.replace("a","b")</td><td>Teilstring ersetzen</td></tr>
-      <tr><td>s.split(",")</td><td>String an Trennzeichen aufteilen → Liste</td></tr>
-      <tr><td>s.find("x")</td><td>Index von "x" im String (oder -1)</td></tr>
-      <tr><td>len(s)</td><td>Anzahl der Zeichen</td></tr>
-      <tr><td>s[0]</td><td>Erstes Zeichen</td></tr>
-      <tr><td>s[0:5]</td><td>Zeichen 1–5 (Slicing)</td></tr>
-      <tr><td>s[-1]</td><td>Letztes Zeichen</td></tr>
-      <tr><td>"x" in s</td><td>Prüft ob "x" im String vorkommt → True/False</td></tr>
+      <tr><td>s.strip()</td><td>Leerzeichen am Rand entfernen</td></tr>
+      <tr><td>s.replace("a","b")</td><td>ersetzen</td></tr>
+      <tr><td>s.split(",")</td><td>aufteilen → Liste</td></tr>
+      <tr><td>s.find("x")</td><td>Index von x (oder -1)</td></tr>
+      <tr><td>len(s)</td><td>Anzahl Zeichen</td></tr>
+      <tr><td>s[0]</td><td>erstes Zeichen</td></tr>
+      <tr><td>s[0:5]</td><td>Slicing</td></tr>
+      <tr><td>s[-1]</td><td>letztes Zeichen</td></tr>
+      <tr><td>"x" in s</td><td>enthält? → True/False</td></tr>
     </table>
   </div>
-
   <div class="ref-card">
     <div class="ref-card-header"><span class="ref-icon">📋</span> Listen</div>
     <table class="ref-table">
       <tr><th>Befehl</th><th>Beschreibung</th></tr>
-      <tr><td>liste = []</td><td>Leere Liste erstellen</td></tr>
-      <tr><td>liste.append(x)</td><td>Element am Ende hinzufügen</td></tr>
-      <tr><td>liste.insert(i, x)</td><td>Element an Position i einfügen</td></tr>
-      <tr><td>liste.remove(x)</td><td>Erstes Element mit Wert x entfernen</td></tr>
-      <tr><td>del liste[i]</td><td>Element an Index i löschen</td></tr>
-      <tr><td>liste.sort()</td><td>Sortieren (verändert die Liste!)</td></tr>
-      <tr><td>sorted(liste)</td><td>Sortiert zurückgeben ohne zu verändern</td></tr>
-      <tr><td>len(liste)</td><td>Anzahl der Elemente</td></tr>
-      <tr><td>x in liste</td><td>Prüfen ob x in der Liste ist</td></tr>
-      <tr><td>liste[0]</td><td>Erstes Element</td></tr>
-      <tr><td>liste[-1]</td><td>Letztes Element</td></tr>
-      <tr><td>liste[1:4]</td><td>Elemente 2–4 (Slicing)</td></tr>
-      <tr><td>min/max/sum(liste)</td><td>Minimum, Maximum, Summe</td></tr>
+      <tr><td>liste = []</td><td>leere Liste</td></tr>
+      <tr><td>liste.append(x)</td><td>ans Ende anhängen</td></tr>
+      <tr><td>liste.insert(i, x)</td><td>an Position einfügen</td></tr>
+      <tr><td>liste.remove(x)</td><td>erstes x entfernen</td></tr>
+      <tr><td>del liste[i]</td><td>Index löschen</td></tr>
+      <tr><td>liste.sort()</td><td>sortieren (verändert!)</td></tr>
+      <tr><td>sorted(liste)</td><td>sortiert zurückgeben</td></tr>
+      <tr><td>len(liste)</td><td>Anzahl</td></tr>
+      <tr><td>x in liste</td><td>enthält?</td></tr>
+      <tr><td>liste[-1]</td><td>letztes Element</td></tr>
+      <tr><td>liste[1:4]</td><td>Slicing</td></tr>
+      <tr><td>min/max/sum(liste)</td><td>Min, Max, Summe</td></tr>
     </table>
   </div>
-
   <div class="ref-card">
-    <div class="ref-card-header"><span class="ref-icon">🔄</span> Schleifen & Verzweigungen</div>
+    <div class="ref-card-header"><span class="ref-icon">🔄</span> Schleifen &amp; Verzweigungen</div>
     <table class="ref-table">
       <tr><th>Befehl</th><th>Beschreibung</th></tr>
       <tr><td>if Bedingung:</td><td>Wenn-Verzweigung</td></tr>
-      <tr><td>elif Bedingung:</td><td>Sonst-wenn (mehrfach möglich)</td></tr>
-      <tr><td>else:</td><td>Sonst (ohne Bedingung)</td></tr>
+      <tr><td>elif Bedingung:</td><td>sonst-wenn</td></tr>
+      <tr><td>else:</td><td>sonst</td></tr>
       <tr><td>for i in range(10):</td><td>10 Durchläufe (0–9)</td></tr>
-      <tr><td>for x in liste:</td><td>Durch alle Listenelemente</td></tr>
-      <tr><td>while Bedingung:</td><td>Schleife solange Bedingung True</td></tr>
-      <tr><td>while True:</td><td>Endlosschleife (mit break beenden)</td></tr>
-      <tr><td>break</td><td>Schleife sofort beenden</td></tr>
-      <tr><td>continue</td><td>Aktuellen Durchlauf überspringen</td></tr>
+      <tr><td>for x in liste:</td><td>durch Liste</td></tr>
+      <tr><td>while Bedingung:</td><td>solange True</td></tr>
+      <tr><td>while True:</td><td>Endlosschleife (+ break)</td></tr>
+      <tr><td>break</td><td>Schleife beenden</td></tr>
+      <tr><td>continue</td><td>Durchlauf überspringen</td></tr>
     </table>
   </div>
-
   <div class="ref-card">
-    <div class="ref-card-header"><span class="ref-icon">⚙️</span> Funktionen & Module</div>
+    <div class="ref-card-header"><span class="ref-icon">⚙️</span> Funktionen &amp; Module</div>
     <table class="ref-table">
       <tr><th>Befehl</th><th>Beschreibung</th></tr>
       <tr><td>def name(a, b):</td><td>Funktion definieren</td></tr>
       <tr><td>return x</td><td>Wert zurückgeben</td></tr>
       <tr><td>import math</td><td>Modul importieren</td></tr>
-      <tr><td>from math import pi</td><td>Nur eine Funktion importieren</td></tr>
-      <tr><td>import random</td><td>Zufallszahlen-Modul</td></tr>
-      <tr><td>random.randint(1,10)</td><td>Zufällige Ganzzahl 1–10</td></tr>
-      <tr><td>math.sqrt(x)</td><td>Quadratwurzel</td></tr>
-      <tr><td>round(x, 2)</td><td>Runden auf 2 Nachkommastellen</td></tr>
-      <tr><td>abs(x)</td><td>Absolutwert (immer positiv)</td></tr>
+      <tr><td>from math import pi</td><td>nur eines importieren</td></tr>
+      <tr><td>import random</td><td>Zufallsmodul</td></tr>
+      <tr><td>random.randint(1,10)</td><td>Zufallszahl 1–10</td></tr>
+      <tr><td>math.sqrt(x)</td><td>Wurzel</td></tr>
+      <tr><td>round(x, 2)</td><td>auf 2 NK runden</td></tr>
+      <tr><td>abs(x)</td><td>Absolutwert</td></tr>
     </table>
   </div>
-
   <div class="ref-card">
-    <div class="ref-card-header"><span class="ref-icon">🛡️</span> Fehlerbehandlung & Dateien</div>
+    <div class="ref-card-header"><span class="ref-icon">🛡️</span> Fehlerbehandlung &amp; Dateien</div>
     <table class="ref-table">
       <tr><th>Befehl</th><th>Beschreibung</th></tr>
       <tr><td>try: … except:</td><td>Fehler abfangen</td></tr>
-      <tr><td>except ValueError:</td><td>Nur ValueError abfangen</td></tr>
-      <tr><td>except Exception as e:</td><td>Fehlermeldung in Variable e speichern</td></tr>
-      <tr><td>open("f.txt","r")</td><td>Datei lesen öffnen</td></tr>
-      <tr><td>open("f.txt","w")</td><td>Datei schreiben (überschreibt!)</td></tr>
-      <tr><td>open("f.txt","a")</td><td>An Datei anhängen</td></tr>
-      <tr><td>with open(…) as f:</td><td>Empfohlen – Datei schließt automatisch</td></tr>
+      <tr><td>except ValueError:</td><td>nur ValueError</td></tr>
+      <tr><td>except Exception as e:</td><td>Fehler in e speichern</td></tr>
+      <tr><td>open("f.txt","r")</td><td>lesen</td></tr>
+      <tr><td>open("f.txt","w")</td><td>schreiben (überschreibt!)</td></tr>
+      <tr><td>open("f.txt","a")</td><td>anhängen</td></tr>
+      <tr><td>with open(…) as f:</td><td>empfohlen – schließt automatisch</td></tr>
       <tr><td>f.write("Text\n")</td><td>Zeile schreiben</td></tr>
-      <tr><td>for zeile in f:</td><td>Datei zeilenweise lesen</td></tr>
+      <tr><td>for zeile in f:</td><td>zeilenweise lesen</td></tr>
     </table>
   </div>
 </div>
-
 <script>
-  function showPage(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('page-' + id).classList.add('active');
-    event.target.classList.add('active');
-  }
-
-  function toggleHint(n) {
-    const el = document.getElementById('hint-' + n);
-    el.classList.toggle('show');
-  }
-
-  function toggleSolution(n) {
-    const el = document.getElementById('solution-' + n);
-    el.classList.toggle('show');
-  }
-
-  function toggleFix(id) {
-    document.getElementById(id).classList.toggle('show');
-  }
-
-  // Fortschritt aus localStorage laden
-  const STORAGE_KEY = 'pythonbyte_done';
-  let done = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
-
-  // Beim Laden: abgehakte Karten sofort markieren
-  done.forEach(n => {
-    const card = document.getElementById('card-' + n);
-    if (card) card.classList.add('done');
+  // Tab-Navigation
+  document.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+      document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+      document.getElementById('page-' + btn.dataset.page).classList.add('active');
+      btn.classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
   });
+
+  var TOTAL = document.querySelectorAll('.exercise-card').length;
+  var STORAGE_KEY = 'pythonbyte_done_v2';
+  var done = new Set();
+  try { done = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')); } catch(e){}
+
+  function updateProgress(){
+    var pct = TOTAL ? Math.round(done.size / TOTAL * 100) : 0;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = done.size + ' / ' + TOTAL;
+  }
+  done.forEach(function(n){ var c=document.getElementById('card-'+n); if(c) c.classList.add('done'); });
   updateProgress();
 
-  function markDone(n) {
-    if (done.has(n)) {
-      // Zweiter Klick = rückgängig machen
-      done.delete(n);
-      document.getElementById('card-' + n).classList.remove('done');
-    } else {
-      done.add(n);
-      document.getElementById('card-' + n).classList.add('done');
-    }
-    // In localStorage speichern
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([...done]));
-    updateProgress();
-  }
+  // Buttons (Hinweis / Lösung / Erledigt)
+  document.querySelectorAll('[data-act]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.dataset.n, act = btn.dataset.act;
+      if(act === 'hint'){ document.getElementById('hint-'+n).classList.toggle('show'); }
+      else if(act === 'sol'){ document.getElementById('solution-'+n).classList.toggle('show'); }
+      else if(act === 'done'){
+        var card = document.getElementById('card-'+n);
+        if(done.has(n)){ done.delete(n); card.classList.remove('done'); }
+        else { done.add(n); card.classList.add('done'); }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify([].concat(Array.from(done))));
+        updateProgress();
+      }
+    });
+  });
 
-  function updateProgress() {
-    const total = 16;
-    const pct = Math.round((done.size / total) * 100);
-    document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('progress-text').textContent = done.size + ' / ' + total;
-  }
+  // Debugging "Fix"-Buttons
+  document.querySelectorAll('[data-fix]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.getElementById(btn.dataset.fix).classList.toggle('show');
+    });
+  });
 </script>
 </body>
 </html>
