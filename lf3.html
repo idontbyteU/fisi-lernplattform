@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernfeld 3 · Karteikarten · FISI Lernplattform</title>
+<style>
+:root{
+  --bg:#f5f5f3;--ink:#1a1a18;--muted:#888;--line:#e0dfd8;
+  --green:#1D9E75;--green-d:#157a5a;--green-soft:#e8f6f0;--card:#fff;
+  --shadow:0 1px 3px rgba(0,0,0,.05),0 8px 22px rgba(0,0,0,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+.hdr{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.hdr-in{max-width:820px;margin:0 auto;padding:.85rem 1.1rem;display:flex;align-items:center;gap:.9rem;flex-wrap:wrap}
+.back{display:inline-flex;align-items:center;gap:.35rem;font-size:13px;color:var(--muted);text-decoration:none;border:1px solid var(--line);padding:5px 11px;border-radius:8px;transition:.15s}
+.back:hover{border-color:var(--green);color:var(--green)}
+.hdr h1{font-size:17px;font-weight:800;letter-spacing:-.3px}
+.hdr h1 .tag{font-size:10px;font-weight:700;color:#fff;background:#3454d1;padding:2px 7px;border-radius:6px;margin-right:7px;letter-spacing:.4px;vertical-align:middle}
+.hdr .sub{font-size:11.5px;color:var(--muted)}
+.sp{flex:1}
+.mode{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:2px}
+.mode button{font-family:inherit;font-size:12.5px;font-weight:600;border:none;background:none;color:#666;padding:5px 12px;border-radius:7px;cursor:pointer}
+.mode button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+.wrap{max-width:820px;margin:0 auto;padding:1rem 1.1rem 4rem}
+
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.8rem}
+.chip{padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:#fff;font-size:12px;color:#555;cursor:pointer;font-family:inherit;transition:.12s;white-space:nowrap}
+.chip:hover{border-color:var(--green);color:var(--green-d)}
+.chip.on{background:var(--green);border-color:var(--green);color:#fff;font-weight:600}
+.chip .ct{opacity:.6;font-weight:600;margin-left:3px}
+
+.bar{display:flex;align-items:center;gap:.9rem;background:#fff;border:1px solid var(--line);border-radius:12px;padding:.65rem .9rem;margin-bottom:1rem;box-shadow:var(--shadow);flex-wrap:wrap}
+.pbar{flex:1;min-width:120px;height:8px;background:#eee;border-radius:99px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),#2bbf8d);transition:width .4s}
+.ptxt{font-size:12px;color:var(--muted);white-space:nowrap}.ptxt b{color:var(--ink)}
+.tools{display:flex;gap:6px}
+.tbtn{font-family:inherit;font-size:12px;font-weight:600;border:1px solid var(--line);background:#fff;color:#555;border-radius:8px;padding:5px 10px;cursor:pointer;transition:.12s}
+.tbtn:hover{border-color:var(--green);color:var(--green-d)}
+.tbtn.on{background:var(--green-soft);border-color:#bfe3d4;color:var(--green-d)}
+
+/* STUDY MODE */
+.study{display:flex;flex-direction:column;align-items:center}
+.counter{font-size:12.5px;color:var(--muted);margin-bottom:.6rem}.counter b{color:var(--ink)}
+.flash{width:100%;max-width:560px;perspective:1600px;cursor:pointer;margin-bottom:1rem}
+.flash-inner{position:relative;width:100%;min-height:300px;transition:transform .55s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
+.flash.flip .flash-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:1.6rem 1.5rem;display:flex;flex-direction:column;overflow:auto}
+.face.b{transform:rotateY(180deg);background:linear-gradient(0deg,#fbfffd,#fff);border-color:#cfe9df}
+.f-cat{font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-bottom:.8rem}
+.f-q{font-size:19px;font-weight:700;line-height:1.35;letter-spacing:-.3px;margin:auto 0}
+.f-lbl{font-size:11px;font-weight:700;color:var(--green-d);letter-spacing:.4px;text-transform:uppercase;margin-bottom:.6rem}
+.f-a{font-size:15.5px;line-height:1.55;margin:auto 0}
+.f-a b{color:var(--green-d)}
+.f-hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:11px;color:#bbb}
+.face.b .f-hint{color:#a9d8c6}
+
+.ans-btns{display:flex;gap:.7rem;width:100%;max-width:560px;margin-bottom:.8rem}
+.ans-btns button{flex:1;font-family:inherit;font-size:14px;font-weight:700;border-radius:11px;padding:13px;cursor:pointer;border:1px solid;transition:.13s}
+.again{background:#fff6f4;border-color:#f1cfc6;color:#c0392b}
+.again:hover{background:#fcebe6}
+.known{background:var(--green-soft);border-color:#bfe3d4;color:var(--green-d)}
+.known:hover{background:#d8efe6}
+.nav{display:flex;gap:.6rem;align-items:center;font-size:13px;color:var(--muted)}
+.nav button{font-family:inherit;font-size:13px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 13px;cursor:pointer;color:#555}
+.nav button:hover{border-color:var(--green);color:var(--green-d)}
+.done-msg{text-align:center;background:#fff;border:1px solid #cfe9df;border-radius:16px;padding:2.4rem 1.5rem;box-shadow:var(--shadow);max-width:560px}
+.done-msg .em{font-size:40px}.done-msg h3{font-size:18px;margin:.6rem 0 .3rem}.done-msg p{font-size:13.5px;color:var(--muted);margin-bottom:1rem}
+
+/* LIST MODE */
+.list .li{background:#fff;border:1px solid var(--line);border-radius:12px;padding:.85rem 1rem;margin-bottom:.6rem;box-shadow:var(--shadow);display:flex;gap:.8rem;align-items:flex-start}
+.list .li.k{border-color:#cfe9df;background:linear-gradient(0deg,#fbfffd,#fff)}
+.li-x{flex:1;min-width:0}
+.li-cat{font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;margin-bottom:.25rem}
+.li-q{font-size:14.5px;font-weight:700;margin-bottom:.3rem;line-height:1.35}
+.li-a{font-size:13.5px;color:#444;line-height:1.5;display:none}
+.li-a b{color:var(--green-d)}
+.li.open .li-a{display:block}
+.li-toggle{font-size:11.5px;color:var(--green-d);font-weight:600;cursor:pointer;user-select:none}
+.li-chk{appearance:none;width:22px;height:22px;border:2px solid var(--line);border-radius:7px;cursor:pointer;position:relative;flex-shrink:0;background:#fff;transition:.15s}
+.li-chk:hover{border-color:var(--green)}
+.li-chk:checked{background:var(--green);border-color:var(--green)}
+.li-chk:checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800}
+
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:2.5rem}
+@media(max-width:560px){.f-q{font-size:17px}.hdr h1{font-size:15px}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="index.html">← Übersicht</a>
+    <div>
+      <h1><span class="tag">LF 3</span>Karteikarten</h1>
+      <div class="sub">Netzwerke · OSI · TCP/IP · Subnetting · Protokolle · RAID · Backup · USV</div>
+    </div>
+    <div class="sp"></div>
+    <div class="mode">
+      <button id="mLern" class="on">Lernen</button>
+      <button id="mList">Übersicht</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="chips" id="chips"></div>
+  <div class="bar">
+    <div class="pbar"><i id="pfill"></i></div>
+    <div class="ptxt"><b id="pnum">0</b> / <span id="ptot">0</span> gewusst</div>
+    <div class="tools">
+      <button class="tbtn" id="tShuffle">🔀 Mischen</button>
+      <button class="tbtn" id="tOpen">Nur offene</button>
+      <button class="tbtn" id="tReset">Zurücksetzen</button>
+    </div>
+  </div>
+
+  <div id="study" class="study"></div>
+  <div id="listView" class="list" style="display:none"></div>
+
+  <footer>FISI Lernplattform · Lernfeld 3 · Fortschritt wird lokal im Browser gespeichert · Leertaste = umdrehen, ← → = blättern</footer>
+</div>
+
+<script>
+/* ===== KATEGORIEN ===== */
+const CATS={
+  grund:{label:"Grundlagen & Geräte",color:"#475569"},
+  topo:{label:"Topologien",color:"#2b6cb0"},
+  osi:{label:"OSI-Modell",color:"#7c4dbd"},
+  tcp:{label:"TCP/IP & UDP",color:"#0e7490"},
+  ip:{label:"IPv4 & Subnetting",color:"#b9892a"},
+  prot:{label:"Protokolle",color:"#157a5a"},
+  raid:{label:"RAID",color:"#c0392b"},
+  bak:{label:"Backup",color:"#9a6b00"},
+  usv:{label:"USV & Verfügbarkeit",color:"#6b4f9e"}
+};
+
+/* ===== KARTEN ===== */
+const CARDS=[
+/* LF3-Karten */
+{c:"grund",q:"Was ist ein Netzwerk?",a:"Ein <b>Zusammenschluss mehrerer Geräte</b> (per Kabel oder Funk), um Daten auszutauschen und Ressourcen gemeinsam zu nutzen."},
+{c:"grund",q:"Unterschied aktive und passive Netzwerkkomponenten?",a:"<b>Aktiv:</b> brauchen Strom, verarbeiten/verstärken Signale (Router, Switch, Modem). <b>Passiv:</b> ohne Stromversorgung (Kabel, Patchpanel, Stecker)."},
+{c:"grund",q:"Was macht ein Switch?",a:"Verteilt Datenpakete im LAN <b>gezielt an den richtigen Empfänger</b> (anhand der MAC-Adresse). Arbeitet auf OSI-Schicht 2."},
+{c:"grund",q:"Unterschied Switch und Hub?",a:"Ein <b>Hub</b> sendet eingehende Pakete an <b>alle</b> Geräte (kein Adressbewusstsein). Ein <b>Switch</b> leitet gezielt an den richtigen Empfänger weiter."},
+{c:"grund",q:"Wozu dient ein Router?",a:"Er <b>verbindet verschiedene Netze</b> (z. B. LAN mit Internet) und leitet Pakete anhand der IP-Adresse weiter (Routing, OSI-Schicht 3)."},
+{c:"grund",q:"Was macht ein Gateway?",a:"Es verbindet Netze mit <b>unterschiedlichen Protokollen/Architekturen</b> und übersetzt Datenformate, damit inkompatible Systeme kommunizieren können."},
+{c:"grund",q:"Wozu dient ein Modem?",a:"Es wandelt das Signal des Internetanbieters in ein <b>digitales Signal</b> um, das die angeschlossenen Geräte verstehen."},
+{c:"grund",q:"Was macht ein Repeater?",a:"Er <b>verstärkt und bereitet eingehende Signale auf</b>, um größere Distanzen zu überbrücken."},
+{c:"grund",q:"Wozu dient ein Access Point?",a:"Er stellt eine <b>kontrollierte WLAN-Abdeckung</b> bereit und verbindet drahtlose Geräte mit dem kabelgebundenen Netz."},
+{c:"grund",q:"Was ist eine Bridge?",a:"Sie <b>verbindet Netzwerksegmente</b> miteinander und kann den Verkehr zwischen ihnen filtern."},
+{c:"topo",q:"Was ist eine Netzwerktopologie?",a:"Die <b>physische oder logische Anordnung</b> von Geräten und Verbindungen. Sie beeinflusst Ausfallsicherheit, Skalierbarkeit, Kosten und Wartbarkeit."},
+{c:"topo",q:"Unterschied physische und logische Topologie?",a:"<b>Physisch:</b> die tatsächliche Verkabelung. <b>Logisch:</b> die Datenflüsse/logischen Verbindungen, unabhängig von der physischen Struktur."},
+{c:"topo",q:"Bus-Topologie – Vor- und Nachteile?",a:"<b>Vorteile:</b> sehr geringe Kabelkosten, einfacher Aufbau. <b>Nachteile:</b> hohe Kollisionsrate, Ausfall des Hauptkabels legt alles lahm, kaum skalierbar."},
+{c:"topo",q:"Ring-Topologie – Eigenschaften?",a:"Geräte ringförmig verbunden, jeder Knoten hat zwei Nachbarn. Definierter Datenfluss, große Distanzen möglich; bei Dual-Ring hohe Ausfallsicherheit. Nachteil: Ausfall eines Knotens kann den Ring stören."},
+{c:"topo",q:"Stern-Topologie – Eigenschaften?",a:"Alle Geräte sind an einen <b>zentralen Knoten</b> (Switch) angeschlossen. Vorteil: Ausfall eines Geräts betrifft nicht die anderen, leicht erweiterbar. Nachteil: fällt der zentrale Knoten aus, steht das ganze Netz."},
+{c:"topo",q:"Maschen-Topologie – Eigenschaften?",a:"Geräte sind (teil-)vermascht mehrfach verbunden. <b>Sehr hohe Ausfallsicherheit</b> durch alternative Wege. Nachteil: hoher Verkabelungs- und Kostenaufwand."},
+{c:"topo",q:"Baum-Topologie – Einsatz?",a:"Hierarchische Verbindung mehrerer Sterne. Gut für <b>Sicherheitszonen/Segmentierung</b> (z. B. DMZ-Strukturen) und planbare Erweiterung."},
+{c:"topo",q:"Warum ist eine Netzwerkdokumentation wichtig?",a:"Schnellere <b>Fehlersuche</b>, planbare Skalierung und Erfüllung von <b>Dokumentationspflichten</b> (ISO 27001, BSI-IT-Grundschutz)."},
+{c:"osi",q:"Wie viele Schichten hat das OSI-Modell und wozu dient es?",a:"<b>7 Schichten.</b> Es beschreibt standardisiert, wie Netzwerkkommunikation in aufeinander aufbauenden Ebenen abläuft."},
+{c:"osi",q:"Nenne die 7 OSI-Schichten (1→7).",a:"1 Bitübertragung, 2 Sicherung, 3 Vermittlung, 4 Transport, 5 Sitzung, 6 Darstellung, 7 Anwendung. (Eselsbrücke: <b>A</b>lle <b>D</b>eutschen <b>S</b>tudenten <b>T</b>rinken <b>V</b>erschiedene <b>S</b>orten <b>B</b>ier – von 7 nach 1)."},
+{c:"osi",q:"Schicht 1 – Bitübertragung?",a:"Überträgt <b>rohe Bits</b> über das Medium (Kabel, Funk). Geräte: Hub, Repeater, Kabel."},
+{c:"osi",q:"Schicht 2 – Sicherung?",a:"Regelt den Zugriff aufs Medium und adressiert per <b>MAC-Adresse</b> im lokalen Netz. Geräte: Switch, Bridge. Einheit: Frame."},
+{c:"osi",q:"Schicht 3 – Vermittlung?",a:"<b>Logische Adressierung (IP) und Routing</b> zwischen Netzen. Gerät: Router. Einheit: Paket."},
+{c:"osi",q:"Schicht 4 – Transport?",a:"<b>Ende-zu-Ende-Übertragung</b> mit TCP/UDP, Portadressierung, Segmentierung. Einheit: Segment/Datagramm."},
+{c:"osi",q:"Welche OSI-Schicht nutzt IP, welche MAC?",a:"<b>IP</b> auf Schicht 3 (Vermittlung), <b>MAC</b> auf Schicht 2 (Sicherung)."},
+{c:"osi",q:"Auf welcher Schicht arbeiten Switch und Router?",a:"<b>Switch:</b> Schicht 2 (MAC). <b>Router:</b> Schicht 3 (IP)."},
+{c:"tcp",q:"Was ist TCP/IP?",a:"Eine <b>Sammlung von Netzwerkprotokollen</b> und Grundlage des Internets – zuständig für Datentransport und Vermittlung in dezentralen Netzen."},
+{c:"tcp",q:"Wofür ist TCP zuständig?",a:"Für die <b>zuverlässige, verbindungsorientierte</b> Übertragung: teilt Daten in nummerierte Segmente, prüft die Zustellung und stellt die richtige Reihenfolge wieder her."},
+{c:"tcp",q:"Wofür ist IP zuständig?",a:"Für <b>Adressierung und Weiterleitung (Routing)</b> von Paketen. IP ist <b>verbindungslos</b>, ohne Quittung."},
+{c:"tcp",q:"Was ist der Three-Way-Handshake?",a:"Der TCP-Verbindungsaufbau: <b>SYN → SYN/ACK → ACK</b>. Erst danach werden Daten übertragen."},
+{c:"tcp",q:"Unterschied TCP und UDP?",a:"<b>TCP:</b> verbindungsorientiert, zuverlässig, Reihenfolge garantiert (Web, Mail). <b>UDP:</b> verbindungslos, schnell, ohne Bestätigung (Streaming, Gaming, VoIP)."},
+{c:"tcp",q:"Wann setzt man UDP ein?",a:"Bei <b>zeitkritischen Anwendungen</b> (Streaming, Online-Gaming, VoIP), wo Geschwindigkeit wichtiger ist als die Garantie jedes Pakets."},
+{c:"tcp",q:"Wozu dienen Portnummern?",a:"Sie <b>adressieren die Anwendung</b> auf einem Host, sodass ankommende Daten dem richtigen Programm zugeordnet werden."},
+{c:"tcp",q:"Nenne wichtige Ports.",a:"HTTP 80 · HTTPS 443 · SSH 22 · DNS 53 · DHCP 67/68 · SMTP 25 · IMAP 143/993 · POP3 110/995 · FTP 21 · RDP 3389."},
+{c:"ip",q:"Wie ist eine IPv4-Adresse aufgebaut?",a:"<b>32 Bit</b>, geschrieben als 4 Oktette à 8 Bit (je 0–255), getrennt durch Punkte. Sie adressiert die <b>Netzwerkschnittstelle</b>, nicht das Gerät selbst."},
+{c:"ip",q:"Was ist der höchste Wert eines Oktetts?",a:"<b>255</b> – wenn alle 8 Bits auf 1 stehen (128+64+32+16+8+4+2+1)."},
+{c:"ip",q:"Wofür ist die Subnetzmaske da?",a:"Sie legt fest, welcher Teil der IP zum <b>Netz</b> (binär 1en) und welcher zu den <b>Hosts</b> (binär 0en) gehört."},
+{c:"ip",q:"Was bedeutet die CIDR-Schreibweise /24?",a:"Die ersten <b>24 Bit sind Netzanteil</b> (8 Hostbits). /24 = Subnetzmaske 255.255.255.0."},
+{c:"ip",q:"Wie berechnet man die Anzahl der Adressen in einem Subnetz?",a:"<b>2^Hostbits.</b> Beispiel /26: 32−26 = 6 Hostbits → 2^6 = 64 Adressen."},
+{c:"ip",q:"Wie viele nutzbare Hosts hat ein /26-Netz?",a:"64 Adressen − 2 (Netz- und Broadcast-Adresse) = <b>62 nutzbare Hosts</b>."},
+{c:"ip",q:"Was sind Netz-ID und Broadcast-Adresse?",a:"<b>Netz-ID:</b> erste Adresse im Block (Hostbits = 0). <b>Broadcast:</b> letzte Adresse (Hostbits = 1). Beide sind nicht für Hosts nutzbar."},
+{c:"ip",q:"Subnetzmaske für /27 und Blockgröße?",a:"/27 = <b>255.255.255.224</b>, Blockgröße <b>32</b> im letzten Oktett (2^5 = 32 Adressen, 30 nutzbare Hosts)."},
+{c:"ip",q:"Was ist die Blockgröße und wozu dient sie?",a:"Die Schrittweite, in der sich Subnetze wiederholen (256 − letztes Maskenoktett). Sie hilft, Netzgrenzen schnell zu finden (z. B. /26 → Blöcke 0, 64, 128, 192)."},
+{c:"ip",q:"Nenne die privaten IPv4-Adressbereiche.",a:"10.0.0.0/8 · 172.16.0.0/12 · 192.168.0.0/16 – sie sind nicht im Internet routbar."},
+{c:"prot",q:"Was macht DNS?",a:"<b>Namensauflösung</b>: übersetzt Domainnamen in IP-Adressen (und umgekehrt) – das „Telefonbuch des Internets“, dezentral auf vielen Nameservern verteilt."},
+{c:"prot",q:"Welcher Port und welches Verfahren gehört zu DNS?",a:"Port <b>53</b>. Kann ein Server eine Anfrage nicht beantworten, fragt er eine Kette weiterer DNS-Server, bis eine IP zurückkommt."},
+{c:"prot",q:"Was macht DHCP?",a:"Vergibt <b>automatisch IP-Konfiguration</b> an Geräte: IP-Adresse, Subnetzmaske, Standard-Gateway und DNS-Server – über einen DHCP-Server/Router."},
+{c:"prot",q:"Wie läuft die DHCP-Adressvergabe ab (DORA)?",a:"<b>Discover → Offer → Request → Acknowledge.</b> Client sucht, Server bietet an, Client fordert an, Server bestätigt."},
+{c:"prot",q:"Was macht ARP?",a:"Löst eine bekannte <b>IP-Adresse in die zugehörige MAC-Adresse</b> im lokalen Netz auf (Address Resolution Protocol)."},
+{c:"prot",q:"Nenne zwei öffentliche DNS-Server.",a:"<b>8.8.8.8</b> (Google) und <b>1.1.1.1</b> (Cloudflare); außerdem 208.67.222.222 (OpenDNS/Cisco)."},
+{c:"prot",q:"Unterschied IMAP und POP3?",a:"<b>IMAP:</b> Mails bleiben auf dem Server, Zugriff von mehreren Geräten. <b>POP3:</b> lädt herunter und löscht oft vom Server (eher ein Gerät)."},
+{c:"raid",q:"Wofür steht RAID und was bewirkt es?",a:"<b>Redundant Array of Independent Disks</b>: mehrere Festplatten erscheinen als ein logisches Laufwerk – für mehr Geschwindigkeit und/oder Ausfallsicherheit durch Redundanz."},
+{c:"raid",q:"Was ist RAID 0?",a:"<b>Striping</b>: Daten werden auf mehrere Platten verteilt → hohe Geschwindigkeit, Kapazitäten addieren sich. <b>Keine</b> Ausfallsicherheit. Min. 2 Platten."},
+{c:"raid",q:"Was ist RAID 1?",a:"<b>Spiegelung (Mirroring)</b>: identische Kopie auf zweiter Platte → maximale Sicherheit, aber kein Kapazitäts-/Geschwindigkeitsgewinn. Min. 2 Platten."},
+{c:"raid",q:"Was ist RAID 5?",a:"<b>Striping mit verteilter Parität</b> über alle Platten. Verkraftet den Ausfall <b>einer</b> Platte. Min. 3 Platten – guter Kompromiss aus Sicherheit, Kapazität und Performance."},
+{c:"raid",q:"Was ist RAID 6?",a:"Wie RAID 5, aber mit <b>doppelter, verteilter Parität</b> → verkraftet den Ausfall von <b>zwei</b> Platten gleichzeitig. Min. 4 Platten."},
+{c:"raid",q:"Was ist RAID 10 (1+0)?",a:"Kombination: <b>zwei gespiegelte Paare (RAID 1) per RAID 0 zusammengeschaltet</b> → hohe Sicherheit und Geschwindigkeit. Min. 4 Platten."},
+{c:"raid",q:"Unterschied RAID 4 und RAID 5?",a:"RAID 4 nutzt eine <b>separate Paritätsplatte</b> (wird beim Schreiben stark beansprucht); RAID 5 <b>verteilt die Parität</b> auf alle Platten → gleichmäßigere Last, bessere Performance."},
+{c:"raid",q:"Hardware- vs. Software-RAID?",a:"<b>Hardware-RAID:</b> eigener Controller (schnell, teuer, controllergebunden). <b>Software-RAID:</b> per Betriebssystem (günstig, belastet die CPU)."},
+{c:"raid",q:"Warum ersetzt ein RAID kein Backup?",a:"RAID schützt nur vor dem <b>physischen Plattenausfall</b>. Gegen Viren, versehentliches Löschen oder Katastrophen schützt nur ein <b>unabhängiges Backup</b>."},
+{c:"raid",q:"Was passiert beim Rebuild und warum ist er kritisch?",a:"Nach Plattentausch werden die Daten neu berechnet/geschrieben – das dauert oft <b>Stunden bis Tage</b>. In dieser Zeit besteht <b>keine Redundanz</b>; ein weiterer Ausfall führt zum Datenverlust."},
+{c:"bak",q:"Wozu dient ein Backup?",a:"Es sichert den Datenbestand gegen Verlust (Hardwareausfall, Löschen, Cyberangriff, Katastrophe). Wichtig: <b>geografisch getrennt</b> aufbewahren und regelmäßig testen."},
+{c:"bak",q:"Was ist ein Voll-Backup?",a:"Eine <b>Komplettsicherung aller Daten</b>. Vorteil: einfache Rücksicherung. Nachteil: viel Speicher und Zeit."},
+{c:"bak",q:"Was ist ein differenzielles Backup?",a:"Sichert alle seit dem <b>letzten Voll-Backup</b> geänderten Daten. Rücksicherung: nur Voll-Backup + letztes differenzielles. Datenmenge wächst stetig."},
+{c:"bak",q:"Was ist ein inkrementelles Backup?",a:"Sichert die seit der <b>letzten Sicherung</b> (egal welcher Art) geänderten Daten. Kurze Backup-Zeit, aber zur Rücksicherung werden <b>alle</b> Teilsicherungen benötigt."},
+{c:"bak",q:"Differenziell vs. inkrementell – der Kern?",a:"<b>Differenziell</b> bezieht sich immer aufs letzte Voll-Backup (schnellere Wiederherstellung). <b>Inkrementell</b> bezieht sich auf die letzte Sicherung (schnelleres Backup, aufwändigere Wiederherstellung)."},
+{c:"bak",q:"Was ist ein Image-Backup?",a:"Ein <b>vollständiges Speicherabbild</b> (Betriebssystem, Programme, Daten) einer Platte/Partition – kann auch auf neuer Hardware eingespielt werden."},
+{c:"bak",q:"Warum zählt ein Snapshot nicht als Backup?",a:"Ein Snapshot ist nur eine <b>Momentaufnahme</b> (oft lokal, nur Änderungen). Er schützt nicht bei physischem Verlust des Speichers und ersetzt kein unabhängiges Backup."},
+{c:"bak",q:"Was besagt die 3-2-1-Regel?",a:"<b>3</b> Kopien der Daten, auf <b>2</b> verschiedenen Medien, davon <b>1</b> Kopie extern/offsite."},
+{c:"usv",q:"Wozu dient eine USV?",a:"Eine <b>unterbrechungsfreie Stromversorgung</b> überbrückt Stromausfälle und gleicht (je nach Klasse) Schwankungen aus, um Datenverlust und Hardwareschäden zu verhindern."},
+{c:"usv",q:"Aus welchen drei Hauptkomponenten besteht eine USV?",a:"<b>Batterie</b> (Energiespeicher), <b>Gleichrichter</b> (Wechsel- → Gleichstrom, lädt Akku) und <b>Wechselrichter</b> (Gleich- → Wechselstrom für die Geräte)."},
+{c:"usv",q:"USV-Klasse 1 (VFI / Online-USV)?",a:"<b>Maximaler Schutz</b>: gleicht Spannungs- UND Frequenzschwankungen aus, keine Umschaltzeit (Dauerwandler). Für Server/Datacenter. Wirkungsgrad ~90 %."},
+{c:"usv",q:"USV-Klasse 2 (VI / Line-Interactive)?",a:"Schützt vor Netzausfall und <b>Spannungsschwankungen</b> über einen Spannungsregler. Wirkungsgrad 95–98 %. Für einzelne Systeme/Netzwerke/TK-Anlagen."},
+{c:"usv",q:"USV-Klasse 3 (VFD / Offline-/Standby-USV)?",a:"<b>Einfachste USV</b>: schützt nur vor <b>totalem Netzausfall</b>, gleicht keine Schwankungen aus. Beim Ausfall übernimmt der Akku (kurze Umschaltzeit). Für unkritische/günstige Geräte."},
+{c:"usv",q:"Welche USV-Klasse für hochsensible Server?",a:"<b>Klasse 1 (VFI / Online)</b> – wegen Dauerwandlerprinzip und fehlender Umschaltzeit der zuverlässigste Schutz."},
+{c:"usv",q:"Was bedeutet Hochverfügbarkeit?",a:"Ein System bleibt mit <b>sehr geringer Ausfallzeit</b> verfügbar – meist als Verfügbarkeit in % angegeben (z. B. 99,9 %), erreicht durch Redundanz (RAID, USV, Cluster)."},
+{c:"usv",q:"Was ist Redundanz im Verfügbarkeitskontext?",a:"Das <b>bewusste Mehrfach-Vorhalten</b> kritischer Komponenten (Netzteile, Platten, Leitungen), damit beim Ausfall einer Komponente der Betrieb weiterläuft."},
+];
+CARDS.forEach((c,i)=>c.id="c"+i);
+
+/* ===== STATE ===== */
+const LS="lf3_cards_v1";
+let store; try{store=JSON.parse(localStorage.getItem(LS))||{}}catch(e){store={}}
+store.known=store.known||{};
+function save(){try{localStorage.setItem(LS,JSON.stringify(store))}catch(e){}}
+
+let activeCat="alle", onlyOpen=false, shuffled=false, mode="lern";
+let deck=[], pos=0, flipped=false;
+
+/* ===== CHIPS ===== */
+const chipsEl=document.getElementById('chips');
+function count(cat){return CARDS.filter(c=>cat==="alle"||c.c===cat).length;}
+function buildChips(){
+  chipsEl.innerHTML="";
+  const all=document.createElement('button');
+  all.className="chip"+(activeCat==="alle"?" on":"");
+  all.innerHTML='Alle<span class="ct">'+CARDS.length+'</span>';
+  all.onclick=()=>{activeCat="alle";buildChips();rebuild();};
+  chipsEl.appendChild(all);
+  Object.keys(CATS).forEach(k=>{
+    const c=document.createElement('button');
+    c.className="chip"+(activeCat===k?" on":"");
+    c.innerHTML=CATS[k].label+'<span class="ct">'+count(k)+'</span>';
+    if(activeCat===k){c.style.background=CATS[k].color;c.style.borderColor=CATS[k].color;}
+    c.onclick=()=>{activeCat=k;buildChips();rebuild();};
+    chipsEl.appendChild(c);
+  });
+}
+
+/* ===== DECK ===== */
+function baseDeck(){
+  let d=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
+  if(onlyOpen) d=d.filter(c=>!store.known[c.id]);
+  return d;
+}
+function rebuild(){
+  deck=baseDeck();
+  if(shuffled){for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}}
+  pos=0;flipped=false;
+  updateProg();
+  if(mode==="lern")renderStudy();else renderList();
+}
+function updateProg(){
+  const scope=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
+  const k=scope.filter(c=>store.known[c.id]).length;
+  document.getElementById('ptot').textContent=scope.length;
+  document.getElementById('pnum').textContent=k;
+  document.getElementById('pfill').style.width=(scope.length?k/scope.length*100:0)+"%";
+}
+
+/* ===== STUDY ===== */
+const studyEl=document.getElementById('study');
+function renderStudy(){
+  if(deck.length===0){
+    studyEl.innerHTML='<div class="done-msg"><div class="em">🎉</div><h3>Alles gewusst!</h3><p>In dieser Auswahl sind keine offenen Karten mehr. Schalte „Nur offene“ aus oder setze zurück.</p><button class="tbtn" onclick="document.getElementById(\'tReset\').click()">Zurücksetzen</button></div>';
+    return;
+  }
+  if(pos>=deck.length)pos=deck.length-1;
+  const card=deck[pos];const cat=CATS[card.c];
+  studyEl.innerHTML=`
+    <div class="counter">Karte <b>${pos+1}</b> / ${deck.length}${store.known[card.id]?' · ✓ gewusst':''}</div>
+    <div class="flash${flipped?' flip':''}" id="flash">
+      <div class="flash-inner">
+        <div class="face">
+          <div class="f-cat" style="color:${cat.color}">${cat.label}</div>
+          <div class="f-q">${card.q}</div>
+          <div class="f-hint">Klick / Leertaste zum Umdrehen</div>
+        </div>
+        <div class="face b">
+          <div class="f-lbl">Antwort</div>
+          <div class="f-a">${card.a}</div>
+          <div class="f-hint">Wusstest du es?</div>
+        </div>
+      </div>
+    </div>
+    <div class="ans-btns">
+      <button class="again" id="bAgain">✗ Nochmal</button>
+      <button class="known" id="bKnown">✓ Gewusst</button>
+    </div>
+    <div class="nav">
+      <button id="bPrev">← Zurück</button>
+      <span>${pos+1} / ${deck.length}</span>
+      <button id="bNext">Weiter →</button>
+    </div>`;
+  document.getElementById('flash').onclick=()=>{flipped=!flipped;document.getElementById('flash').classList.toggle('flip',flipped);};
+  document.getElementById('bAgain').onclick=()=>{delete store.known[card.id];save();next();};
+  document.getElementById('bKnown').onclick=()=>{store.known[card.id]=true;save();next();};
+  document.getElementById('bPrev').onclick=()=>{if(pos>0){pos--;flipped=false;renderStudy();}};
+  document.getElementById('bNext').onclick=()=>next();
+}
+function next(){updateProg();if(pos<deck.length-1){pos++;flipped=false;renderStudy();}else{if(onlyOpen){rebuild();}else{pos=deck.length;renderStudy2done();}}}
+function renderStudy2done(){
+  studyEl.innerHTML='<div class="done-msg"><div class="em">✅</div><h3>Durch den Stapel!</h3><p>Du hast alle Karten dieser Auswahl einmal gesehen.</p><button class="tbtn" onclick="(function(){flippedReset()})()" id="bRestart">Nochmal von vorn</button></div>';
+  document.getElementById('bRestart').onclick=()=>{pos=0;flipped=false;renderStudy();};
+}
+function flippedReset(){pos=0;flipped=false;renderStudy();}
+
+/* ===== LIST ===== */
+const listEl=document.getElementById('listView');
+function renderList(){
+  const d=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
+  listEl.innerHTML="";
+  d.forEach(card=>{
+    const cat=CATS[card.c];const k=!!store.known[card.id];
+    const row=document.createElement('div');
+    row.className="li"+(k?" k":"");
+    row.innerHTML=`
+      <input type="checkbox" class="li-chk" ${k?"checked":""} title="gewusst">
+      <div class="li-x">
+        <div class="li-cat" style="color:${cat.color}">${cat.label}</div>
+        <div class="li-q">${card.q}</div>
+        <div class="li-a">${card.a}</div>
+        <span class="li-toggle">Antwort zeigen ▾</span>
+      </div>`;
+    const tog=row.querySelector('.li-toggle');
+    tog.onclick=()=>{row.classList.toggle('open');tog.textContent=row.classList.contains('open')?"Antwort verbergen ▴":"Antwort zeigen ▾";};
+    const chk=row.querySelector('.li-chk');
+    chk.onchange=()=>{if(chk.checked)store.known[card.id]=true;else delete store.known[card.id];save();row.classList.toggle('k',chk.checked);updateProg();};
+    listEl.appendChild(row);
+  });
+}
+
+/* ===== CONTROLS ===== */
+document.getElementById('tShuffle').onclick=function(){shuffled=!shuffled;this.classList.toggle('on',shuffled);rebuild();};
+document.getElementById('tOpen').onclick=function(){onlyOpen=!onlyOpen;this.classList.toggle('on',onlyOpen);rebuild();};
+document.getElementById('tReset').onclick=function(){
+  const scope=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
+  scope.forEach(c=>delete store.known[c.id]);save();rebuild();
+};
+document.getElementById('mLern').onclick=()=>{mode="lern";document.getElementById('mLern').classList.add('on');document.getElementById('mList').classList.remove('on');studyEl.style.display="";listEl.style.display="none";rebuild();};
+document.getElementById('mList').onclick=()=>{mode="list";document.getElementById('mList').classList.add('on');document.getElementById('mLern').classList.remove('on');studyEl.style.display="none";listEl.style.display="";rebuild();};
+
+/* keyboard */
+document.addEventListener('keydown',e=>{
+  if(mode!=="lern"||deck.length===0)return;
+  if(e.code==="Space"){e.preventDefault();flipped=!flipped;const f=document.getElementById('flash');if(f)f.classList.toggle('flip',flipped);}
+  else if(e.code==="ArrowRight")next();
+  else if(e.code==="ArrowLeft"){if(pos>0){pos--;flipped=false;renderStudy();}}
+});
+
+/* INIT */
+buildChips();rebuild();
+</script>
+</body>
+</html>
