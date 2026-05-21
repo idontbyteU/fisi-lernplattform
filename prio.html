@@ -55,6 +55,11 @@ body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--
 /* CARD */
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden;transition:.2s}
 .card.done{border-color:#cfe9df;background:linear-gradient(0deg,#fbfffd,#fff)}
+.grp-head{display:flex;align-items:center;gap:.6rem;margin:1.6rem 0 .7rem;padding:0 .2rem}
+.grp-head:first-child{margin-top:.2rem}
+.grp-title{font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.6px}
+.grp-count{font-size:11px;font-weight:600;color:var(--muted);background:var(--green-soft);border:1px solid #cfe9df;padding:2px 9px;border-radius:99px}
+.grp-head::after{content:"";flex:1;height:1px;background:var(--line)}
 .card.hide{display:none}
 .c-top{display:flex;align-items:flex-start;gap:.7rem;padding:1rem 1.1rem .4rem}
 .badge{font-size:10.5px;font-weight:700;letter-spacing:.3px;padding:3px 9px;border-radius:99px;white-space:nowrap}
@@ -413,29 +418,166 @@ Summe: 3.600 € + 5.400 € + 1.800 € = 10.800 €</div>
   ]
 },
 {
-  id:"noten", topic:"Prüfung", badge:"b-pr", diff:1,
-  title:"IHK-Notenschlüssel anwenden",
-  prompt:`Eine Prüfung hat <b>100 Gesamtpunkte</b>. Ein Prüfling erreicht <b>78 Punkte</b>.
-  <div class="data">Welche Note ergibt das nach dem IHK-Schlüssel?</div>`,
+  id:"leastpriv", topic:"IT-Sicherheit", badge:"b-sec", diff:2,
+  title:"Adminrechte für alle Benutzer – Risiko bewerten",
+  prompt:`In einer Kanzlei sollen aus Bequemlichkeit <b>alle Benutzerkonten Administratorrechte</b> erhalten.
+  <div class="data">a) Welches Sicherheitsrisiko entsteht dadurch? · b) Welche Empfehlung gibst du? · c) Wie nennt man das zugrunde liegende Prinzip?</div>`,
   hints:[
-    "Der IHK-Schlüssel hat feste Punktgrenzen für sechs Noten.",
-    "78 liegt zwischen den Grenzen für „gut“ und „befriedigend“.",
-    "Achte auf „bis unter“: 81 gehört schon zur nächstbesseren Note."
+    "Überlege, was passiert, wenn ein Schadprogramm unter einem Konto mit Adminrechten läuft.",
+    "Ein Programm erbt die Rechte des Benutzers, der es startet.",
+    "Das Prinzip heißt sinngemäß: so wenig Rechte wie nötig."
   ],
-  partial:`78 Punkte liegen unter 81 und ab 67 → das ist der Bereich <b>befriedigend</b>.
-  Den kompletten Schlüssel siehst du im vollen Lösungsweg – den lohnt es sich zu merken.`,
-  full:`<b>IHK-Notenschlüssel (bei 100 Punkten):</b>
-  <div class="calc">sehr gut     : 92 – 100
-gut          : 81 – unter 92
-befriedigend : 67 – unter 81
-ausreichend  : 50 – unter 67
-mangelhaft   : 30 – unter 50
-ungenügend   :  0 – unter 30</div>
-  <div class="res"><b>78 Punkte → Note „befriedigend“.</b></div>`,
+  partial:`<b>a) Risiko:</b> Läuft unter einem Admin-Konto ein Schadprogramm, kann es mit <b>denselben weitreichenden Rechten</b> agieren – Systemdateien ändern, Software installieren, das ganze System kompromittieren.
+  Wie lautet die Empfehlung und das Prinzip dahinter? → kompletter Weg.`,
+  full:`<b>a) Risiko:</b> Malware erbt die Adminrechte und kann ungehindert Systemänderungen vornehmen oder das gesamte System schädigen.
+  <b>b) Empfehlung:</b> Benutzer erhalten nur <b>eingeschränkte Standardrechte</b>; Adminrechte nur bei Bedarf temporär (z. B. über ein separates Admin-Konto / Rechteerhöhung).
+  <div class="res"><b>c) Prinzip:</b> „Least Privilege“ (Prinzip der minimalen Rechtevergabe) – jeder bekommt genau die Rechte, die er für seine Aufgabe braucht, nicht mehr.</div>`,
   expl:[
-    ["Verständnis","Den Schlüssel solltest du auswendig kennen – er hilft dir einzuschätzen, wie viele Punkte du in der echten Prüfung für eine angepeilte Note brauchst."],
-    ["Merksatz","<div class='merk'>Bestanden ab <b>50 Punkten</b> (ausreichend). Untere Grenzen grob: 92 / 81 / 67 / 50 / 30.</div>",1],
-    ["Typischer Fehler","„bis unter“ falsch lesen: Genau 81 ist schon „gut“, nicht mehr „befriedigend“. Die obere Grenze gehört immer zur besseren Note.","warn"]
+    ["Verständnis","Rechte begrenzen den Schaden. Ein eingeschränktes Konto kann auch ein eingeschleustes Schadprogramm nur eingeschränkt anrichten lassen – der „Explosionsradius“ ist kleiner."],
+    ["Merksatz","<div class='merk'>So viele Rechte wie nötig, so wenige wie möglich. Adminrechte sind die Ausnahme, nicht der Normalzustand.</div>",1],
+    ["Typischer Fehler","Bequemlichkeit gegen Sicherheit eintauschen. In der Prüfung immer das Prinzip benennen: <b>Least Privilege</b>.","warn"]
+  ]
+},
+{
+  id:"dsgvo", topic:"IT-Sicherheit", badge:"b-sec", diff:1,
+  title:"Schutz personenbezogener Daten – welche Rechtsgrundlage?",
+  prompt:`Eine Kanzlei verarbeitet <b>personenbezogene Daten</b> ihrer Mandanten.
+  <div class="data">a) Welche Verordnung ist hier maßgeblich? · b) Was ist ihr Ziel? · c) Nenne zwei technische/organisatorische Maßnahmen zum Schutz.</div>`,
+  hints:[
+    "Die Abkürzung hat vier Buchstaben und gilt EU-weit seit 2018.",
+    "Es geht um den Schutz vor unbefugtem Zugriff, Veränderung und Weitergabe.",
+    "TOMs: z. B. Verschlüsselung, Zugriffsbeschränkung, Backups."
+  ],
+  partial:`<b>a)</b> Die <b>Datenschutz-Grundverordnung (DSGVO)</b>.
+  Ziel und konkrete Maßnahmen → kompletter Weg.`,
+  full:`<b>b) Ziel:</b> Die DSGVO schützt personenbezogene Daten vor <b>unbefugtem Zugriff, Veränderung und Weitergabe</b> und stärkt die Rechte der Betroffenen.
+  <div class="res"><b>c) Beispiele für Maßnahmen:</b><br>• Verschlüsselung von Daten (z. B. Festplatten, E-Mails)<br>• Zugriffsbeschränkung / Rollen- und Rechtekonzept<br>• regelmäßige Backups und Protokollierung von Zugriffen</div>`,
+  expl:[
+    ["Verständnis","„Personenbezogene Daten“ sind alle Angaben zu einer identifizierbaren Person (Name, Adresse, E-Mail, Aktenzeichen mit Bezug). Die DSGVO verlangt geeignete <b>technische und organisatorische Maßnahmen (TOM)</b>."],
+    ["Merksatz","<div class='merk'>DSGVO = Schutzziele Vertraulichkeit, Integrität, Verfügbarkeit für personenbezogene Daten + Betroffenenrechte (Auskunft, Löschung).</div>",1],
+    ["Typischer Fehler","Nur „Datenschutz“ schreiben ohne die Verordnung zu benennen. In der Prüfung explizit <b>DSGVO</b> nennen.","warn"]
+  ]
+},
+{
+  id:"hash", topic:"IT-Sicherheit", badge:"b-sec", diff:2,
+  title:"Wozu dient der Hashwert eines Downloads?",
+  prompt:`Auf einer Download-Seite steht neben der Datei ein <b>Hashwert</b> (z. B. SHA-256).
+  <div class="data">a) Wozu dient dieser Hashwert? · b) Wie prüfst du damit die Datei? · c) Welches Schutzziel wird erreicht?</div>`,
+  hints:[
+    "Ein Hashwert ist ein eindeutiger „Fingerabdruck“ der Datei.",
+    "Du berechnest den Hash der heruntergeladenen Datei selbst und vergleichst.",
+    "Es geht nicht um Geheimhaltung, sondern darum, ob die Datei unverändert ist."
+  ],
+  partial:`<b>a)</b> Der Hashwert dient der <b>Integritätsprüfung</b> – er zeigt, ob die Datei unverändert/unmanipuliert ist.
+  Ablauf und Schutzziel → kompletter Weg.`,
+  full:`<b>b) Prüfung:</b> Du berechnest nach dem Download selbst den Hashwert der Datei und <b>vergleichst</b> ihn mit dem vom Anbieter veröffentlichten. Stimmen beide überein, wurde die Datei nicht verändert.
+  <div class="res"><b>c) Schutzziel: Integrität.</b> Schon ein einziges geändertes Bit führt zu einem völlig anderen Hashwert – Manipulation oder Übertragungsfehler fallen sofort auf.</div>`,
+  expl:[
+    ["Verständnis","Ein Hash ist eine Einwegfunktion: aus der Datei lässt sich leicht der Hash berechnen, aber aus dem Hash nicht die Datei. Kleine Änderung an der Datei → komplett anderer Hash (Lawineneffekt)."],
+    ["Merksatz","<div class='merk'>Hash = Fingerabdruck → prüft <b>Integrität</b>, nicht Vertraulichkeit. Verschlüsselung schützt Inhalt, Hash schützt Unverändertheit.</div>",1],
+    ["Typischer Fehler","Hash mit Verschlüsselung verwechseln. Ein Hash verschlüsselt nichts – er weist nur nach, dass nichts geändert wurde.","warn"]
+  ]
+},
+{
+  id:"imap", topic:"Netzwerke", badge:"b-net", diff:1,
+  title:"IMAP oder POP3 für mehrere Geräte?",
+  prompt:`Ein Mandant ruft seine E-Mails von <b>Laptop, Smartphone und Tablet</b> ab.
+  <div class="data">a) Welches Abruf-Protokoll ist geeignet – IMAP oder POP3? · b) Begründe mit zwei Vorteilen.</div>`,
+  hints:[
+    "Überlege, wo die E-Mails bei den beiden Protokollen gespeichert werden.",
+    "POP3 lädt herunter und löscht oft vom Server; IMAP lässt sie auf dem Server.",
+    "Welches Verhalten passt zu mehreren Geräten?"
+  ],
+  partial:`<b>a)</b> <b>IMAP</b> ist hier geeignet.
+  Die zwei Vorteile → kompletter Weg.`,
+  full:`<b>a) IMAP.</b>
+  <div class="res"><b>b) Vorteile:</b><br>• IMAP speichert die E-Mails <b>auf dem Server</b> → Zugriff von mehreren Geräten, überall derselbe Stand.<br>• Die E-Mails bleiben erhalten, auch wenn ein lokales Gerät defekt ist oder verloren geht.</div>`,
+  expl:[
+    ["Verständnis","POP3 ist auf <b>ein</b> Gerät ausgelegt (herunterladen, oft vom Server löschen). IMAP synchronisiert mit dem Server – ideal für mehrere Geräte. Ports: IMAP 143 / 993 (TLS), POP3 110 / 995 (TLS)."],
+    ["Merksatz","<div class='merk'>Mehrere Geräte → IMAP (bleibt auf dem Server). Nur ein Gerät / offline → POP3 möglich.</div>",1],
+    ["Abgrenzung","SMTP (Port 25/587) ist nur fürs <b>Senden</b> zuständig – IMAP/POP3 fürs <b>Abrufen</b>. Nicht verwechseln.","warn"]
+  ]
+},
+{
+  id:"oss", topic:"Software & Lizenzen", badge:"b-wi", diff:1,
+  title:"Open Source vs. proprietäre Software",
+  prompt:`Eine Kanzlei überlegt, ob sie <b>Open-Source-Software</b> oder <b>proprietäre (kommerzielle) Software</b> einsetzt.
+  <div class="data">Nenne je <b>zwei Vorteile</b> beider Modelle.</div>`,
+  hints:[
+    "Open Source: Quellcode offen einsehbar, meist kostenlos.",
+    "Proprietär: Hersteller verdient Geld – was bietet er dafür?",
+    "Denk an Kosten, Anpassbarkeit, Support und Bedienkomfort."
+  ],
+  partial:`<b>Open Source – Vorteile (Anfang):</b> kostenlos nutzbar (keine Lizenzkosten), Quellcode transparent und anpassbar.
+  Die Vorteile der proprietären Seite → kompletter Weg.`,
+  full:`<b>Open Source – Vorteile:</b>
+  <ul><li>Kostenfrei nutzbar – keine Lizenzkosten.</li><li>Transparenter Quellcode – prüfbar und bei Bedarf anpassbar.</li></ul>
+  <div class="res"><b>Proprietäre Software – Vorteile:</b><br>• Hersteller-Support – professioneller Kundendienst, regelmäßige Updates/Wartung.<br>• Oft benutzerfreundlicher und besser ins System integriert.</div>`,
+  expl:[
+    ["Verständnis","Es gibt kein „besser“ – es kommt auf den Bedarf an. Geringe Kosten + Anpassbarkeit sprechen für Open Source; verlässlicher Support + Komfort für proprietäre Lösungen."],
+    ["Merksatz","<div class='merk'>Open Source: frei + transparent, aber Support oft Community. Proprietär: kostet, dafür Support + Komfort.</div>",1],
+    ["Typischer Fehler","„Open Source = unsicher“ ist ein Mythos. Offener Code kann sogar leichter auf Sicherheitslücken geprüft werden.","warn"]
+  ]
+},
+{
+  id:"webdyn", topic:"Software & Lizenzen", badge:"b-code", diff:1,
+  title:"Statische vs. dynamische Website",
+  prompt:`Eine Kanzlei plant eine neue Website mit <b>Mandanten-Login und Terminbuchung</b>.
+  <div class="data">a) Unterschied statische vs. dynamische Website? · b) Welche Variante wird hier benötigt? · c) Nenne zwei Sprachen/Technologien für die dynamische Variante.</div>`,
+  hints:[
+    "Statisch = der Inhalt ändert sich nicht je nach Nutzer.",
+    "Login und Buchung hängen von Benutzereingaben/Datenbank ab.",
+    "Serverseitige Sprachen: z. B. PHP, Python; clientseitig JavaScript."
+  ],
+  partial:`<b>a)</b> Eine <b>statische</b> Website zeigt immer denselben Inhalt; Änderungen erfordern manuelles Anpassen des Quellcodes.
+  Den Rest (dynamisch, Auswahl, Sprachen) → kompletter Weg.`,
+  full:`<b>a) Unterschied:</b> Eine <b>dynamische</b> Website erzeugt Inhalte in Echtzeit – abhängig von Benutzereingaben, Datenbankabfragen o. Ä.; sie ist interaktiv und aktualisiert sich selbst.
+  <b>b)</b> Für Login und Terminbuchung wird eine <b>dynamische</b> Website benötigt.
+  <div class="res"><b>c) Beispiele:</b> JavaScript, PHP, Python, C# (weitere möglich).</div>`,
+  expl:[
+    ["Verständnis","Login/Buchung brauchen Logik und Datenspeicherung → Serverseite (z. B. PHP/Python) plus Datenbank. Eine reine HTML/CSS-Seite (statisch) kann das nicht leisten."],
+    ["Merksatz","<div class='merk'>Statisch = immer gleich (HTML/CSS). Dynamisch = reagiert auf Eingaben (Server + DB, z. B. PHP/Python + SQL).</div>",1],
+    ["Typischer Fehler","JavaScript allein macht eine Seite noch nicht „dynamisch“ im Prüfungssinn – gemeint ist meist die serverseitige Erzeugung mit Datenbank.","warn"]
+  ]
+},
+{
+  id:"ki-einsatz", topic:"KI & Automatisierung", badge:"b-pm", diff:2,
+  title:"KI im Kanzlei-Workflow sinnvoll einsetzen",
+  prompt:`Eine Kanzlei möchte <b>KI zur Unterstützung</b> einsetzen.
+  <div class="data">a) Nenne zwei Aufgaben, bei denen KI sinnvoll unterstützen kann. · b) Ein Vorteil für die Mitarbeitenden?</div>`,
+  hints:[
+    "Denk an wiederkehrende, zeitaufwändige Tätigkeiten.",
+    "Recherche, Terminplanung, Vorstrukturierung von Fällen.",
+    "Was gewinnen Mitarbeitende, wenn Routine wegfällt?"
+  ],
+  partial:`<b>a) Beispiele (Anfang):</b> automatische <b>Vorabrecherche</b> ähnlicher Fälle/Urteile, <b>Terminvorschläge</b> und Kalenderabgleich.
+  Weitere Beispiele und der Vorteil → kompletter Weg.`,
+  full:`<b>a) Sinnvolle KI-Unterstützung, z. B.:</b>
+  <ul><li>Erfassen/Aktualisieren von Mandantendaten (automatische Recherche).</li><li>Vorstrukturierung/Kategorisierung des Rechtsfalls aus den Eingaben.</li><li>Terminsuche und -vereinbarung, Vorabrecherche von Urteilen/Gesetzen.</li></ul>
+  <div class="res"><b>b) Vorteil für Mitarbeitende:</b> Entlastung von wiederkehrenden Routineaufgaben → mehr Zeit für anspruchsvolle, wertschöpfende Tätigkeiten.</div>`,
+  expl:[
+    ["Verständnis","KI eignet sich für strukturierbare, wiederkehrende Aufgaben (Recherche, Sortierung, Terminorganisation). Die fachliche Letztverantwortung bleibt beim Menschen."],
+    ["Merksatz","<div class='merk'>KI als <b>Assistenz</b>: beschleunigt Routine, ersetzt aber nicht die fachliche Prüfung/Entscheidung.</div>",1],
+    ["Typischer Fehler","KI als „Ersatz“ für den Fachmann darstellen. In der Prüfung als <b>Unterstützung</b> formulieren – mit Kontrolle durch Fachpersonal.","warn"]
+  ]
+},
+{
+  id:"chatbot", topic:"KI & Automatisierung", badge:"b-pm", diff:1,
+  title:"Chatbot auf der Kanzlei-Website – Vor- und Nachteil",
+  prompt:`Die Kanzlei erwägt einen <b>KI-Chatbot</b> auf ihrer Website.
+  <div class="data">Nenne je einen <b>Vorteil</b> und einen <b>Nachteil</b>.</div>`,
+  hints:[
+    "Vorteil: Erreichbarkeit und Entlastung.",
+    "Nachteil: Was, wenn der Bot etwas Falsches sagt?",
+    "Denk an das Vertrauen der Mandanten."
+  ],
+  partial:`<b>Vorteil (Anfang):</b> Der Chatbot kann rund um die Uhr erste Fragen beantworten und potenzielle Mandanten ansprechen → Entlastung der Kanzlei.
+  Der Nachteil → kompletter Weg.`,
+  full:`<div class="res"><b>Vorteil:</b> Der Chatbot spricht potenzielle Mandanten an, beantwortet erste Fragen und gewinnt ggf. neue Kunden – das entlastet die Mitarbeitenden.<br><b>Nachteil:</b> Falsche oder missverständliche Auskünfte des Bots können das <b>Vertrauen</b> in die Kanzlei beeinträchtigen.</div>`,
+  expl:[
+    ["Verständnis","Chatbots sind gut für häufige Standardfragen (FAQ, Erreichbarkeit). Bei rechtlich heiklen Auskünften ist das Fehlerrisiko aber sensibel – hier braucht es klare Grenzen."],
+    ["Merksatz","<div class='merk'>Chatbot: + ständig erreichbar / entlastet, − Risiko falscher Auskünfte / Vertrauensverlust.</div>",1],
+    ["Typischer Fehler","Nur Vorteile nennen. Die Prüfung will fast immer eine <b>abwägende</b> Antwort (Vor- UND Nachteil).","warn"]
   ]
 }
 ];
@@ -470,7 +612,22 @@ function diffDots(n){let s="";for(let i=0;i<3;i++)s+=`<span class="${i<n?'on':''
 function render(){
   list.innerHTML="";
   const q=query.toLowerCase();
-  EX.forEach(e=>{
+  // Reihenfolge der Themenbereiche
+  const order=["Netzwerke","IT-Sicherheit","Wirtschaftlichkeit","Projektmanagement","Programmierung","Software & Lizenzen","KI & Automatisierung","Datenbanken"];
+  const groups={};
+  EX.forEach(e=>{(groups[e.topic]=groups[e.topic]||[]).push(e);});
+  const topicsInOrder=[...order.filter(t=>groups[t]), ...Object.keys(groups).filter(t=>!order.includes(t))];
+  topicsInOrder.forEach(topic=>{
+    const items=groups[topic];
+    const visible=items.filter(e=>(activeTopic==="Alle"||e.topic===activeTopic)&&
+      (q===""||(e.title+e.prompt+e.topic).toLowerCase().includes(q)));
+    if(visible.length===0) return;
+    const head=document.createElement('div');
+    head.className="grp-head";
+    const solvedInGrp=items.filter(e=>store.solved[e.id]).length;
+    head.innerHTML=`<span class="grp-title">${topic}</span><span class="grp-count">${solvedInGrp}/${items.length}</span>`;
+    list.appendChild(head);
+    items.forEach(e=>{
     const match=(activeTopic==="Alle"||e.topic===activeTopic) &&
       (q===""|| (e.title+e.prompt+e.topic).toLowerCase().includes(q));
     const done=!!store.solved[e.id];
@@ -536,6 +693,7 @@ function render(){
     // explanation rail
     card.querySelector('.btn.expl').onclick=()=>openRail(e);
     list.appendChild(card);
+  });
   });
 }
 
