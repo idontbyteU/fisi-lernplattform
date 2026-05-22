@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aktuelle LZK – Weiterleitung</title>
+
+<!-- ===================================================================== -->
+<!--  AKTUELLE LERNZIELKONTROLLE  –  WEICHE / WEITERLEITUNG                 -->
+<!--                                                                       -->
+<!--  Diese Seite leitet automatisch zur aktuell relevanten LZK weiter.    -->
+<!--  Für die NÄCHSTE LZK einfach NUR die folgende Zeile ändern:           -->
+<!--  z. B. von "lf4.html" auf "lf3.html#subnetting".                      -->
+<!-- ===================================================================== -->
+<script>
+  const ZIEL = "lf4.html";   // <-- HIER das aktuelle LZK-Ziel eintragen
+  window.location.replace(ZIEL);
+</script>
+
+<style>
+  body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f5f5f3;color:#1a1a18;
+    display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;text-align:center}
+  .box{background:#fff;border:1px solid #e0dfd8;border-radius:14px;padding:2rem 2.4rem;box-shadow:0 8px 22px rgba(0,0,0,.05)}
+  h1{font-size:18px;font-weight:700;margin:0 0 .4rem}
+  p{font-size:13.5px;color:#666;margin:0 0 1rem}
+  a{display:inline-block;font-size:14px;font-weight:600;color:#fff;background:#1D9E75;
+    text-decoration:none;padding:.6rem 1.2rem;border-radius:9px}
+</style>
+</head>
+<body>
+  <!-- Fallback, falls JavaScript deaktiviert ist -->
+  <div class="box">
+    <h1>Aktuelle Lernzielkontrolle</h1>
+    <p>Du wirst zur aktuellen LZK weitergeleitet …</p>
+    <a href="lf4.html">Weiter zur LZK →</a>
+  </div>
+</body>
+</html>
