@@ -5,7 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FISI Lernplattform</title>
 <style>
-:root{--bg:#f5f5f3;--ink:#1a1a18;--muted:#888;--line:#e0dfd8;--green:#1D9E75;--green-d:#157a5a;--green-soft:#e8f6f0;--card:#fff;--shadow:0 1px 3px rgba(0,0,0,.05),0 8px 22px rgba(0,0,0,.05)}
+:root{--bg:#f5f5f3;--ink:#1a1a18;--muted:#888;--line:#e0dfd8;--green:#1D9E75;--green-d:#157a5a;--green-soft:#e8f6f0;--card:#fff;--shadow:0 1px 3px rgba(0,0,0,.05),0 8px 22px rgba(0,0,0,.05);
+/* Lernfeld-Akzentfarben */
+--lf1:#2f6fb0;--lf1-soft:#e9f1fa;
+--lf2:#1D9E75;--lf2-soft:#e8f6f0;
+--lf3:#c98a1e;--lf3-soft:#fbf2e0;
+--lf4:#c0455b;--lf4-soft:#fbeaee;
+--lf5:#6a5cc4;--lf5-soft:#eeebfa}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased}
 
@@ -34,13 +40,24 @@ body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--
 
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.85rem}
 .tile{display:flex;flex-direction:column;gap:.4rem;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.05rem;text-decoration:none;color:inherit;box-shadow:var(--shadow);transition:.16s;position:relative;overflow:hidden}
-.tile:hover{transform:translateY(-2px);border-color:#cfe9df;box-shadow:0 4px 10px rgba(0,0,0,.06),0 14px 30px rgba(0,0,0,.07)}
+.tile:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.06),0 14px 30px rgba(0,0,0,.07)}
 .tile .ic{font-size:22px;line-height:1}
 .tile h3{font-size:15px;font-weight:700;letter-spacing:-.2px}
 .tile p{font-size:12px;color:var(--muted);line-height:1.4}
 .tile .meta{margin-top:auto;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:5px}
 .st-ok{color:var(--green-d)} .st-soon{color:#b9892a}
 .dot{width:6px;height:6px;border-radius:99px;background:currentColor;display:inline-block}
+
+/* Lernfeld-Akzent: farbiger linker Streifen + farbiger Titel-Hover */
+.tile[data-lf]{border-left-width:4px}
+.tile[data-lf="1"]{border-left-color:var(--lf1)} .tile[data-lf="1"]:hover{border-color:var(--lf1)}
+.tile[data-lf="2"]{border-left-color:var(--lf2)} .tile[data-lf="2"]:hover{border-color:var(--lf2)}
+.tile[data-lf="3"]{border-left-color:var(--lf3)} .tile[data-lf="3"]:hover{border-color:var(--lf3)}
+.tile[data-lf="4"]{border-left-color:var(--lf4)} .tile[data-lf="4"]:hover{border-color:var(--lf4)}
+.tile[data-lf="5"]{border-left-color:var(--lf5)} .tile[data-lf="5"]:hover{border-color:var(--lf5)}
+.tile[data-lf="1"] h3{color:var(--lf1)} .tile[data-lf="2"] h3{color:var(--lf2)}
+.tile[data-lf="3"] h3{color:var(--lf3)} .tile[data-lf="4"] h3{color:var(--lf4)}
+.tile[data-lf="5"] h3{color:var(--lf5)}
 
 /* PRIO – Hero-Kachel */
 .prio{grid-column:1/-1;background:linear-gradient(120deg,#157a5a,#1D9E75 60%,#2bbf8d);color:#fff;border:none;padding:1.3rem 1.4rem}
@@ -50,8 +67,11 @@ body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--
 .prio .meta{color:#fff;opacity:.95}
 .prio .ic{font-size:26px}
 
-.note{grid-column:1/-1;font-size:11.5px;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:10px;padding:.7rem .9rem;margin-top:.3rem}
-.note b{color:var(--ink)}
+/* LZK – aktuelles Thema, dezent rot umrahmt (Sicherheit) */
+.lzk{grid-column:1/-1;border-left:4px solid var(--lf4)}
+.lzk h3{color:var(--lf4)}
+.lzk:hover{border-color:var(--lf4)}
+
 .hide{display:none}
 footer{text-align:center;font-size:11px;color:var(--muted);margin-top:2.5rem}
 @media(max-width:560px){.grid{grid-template-columns:1fr}.prio h3{font-size:18px}}
@@ -89,7 +109,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:2.5rem}
 
   <div class="sek"><h2>Aktuelle Lernzielkontrolle</h2><div class="sl"></div></div>
   <div class="grid">
-    <a class="tile" href="lf_bedrohungen.html" data-tags="lzk bedrohungen angriffe modellierung it-grundschutz social engineering phishing malware ki sicherheit" style="grid-column:1/-1;border-color:#e9c4c4">
+    <a class="tile lzk" href="lf_bedrohungen.html" data-tags="lzk bedrohungen angriffe modellierung it-grundschutz social engineering phishing malware ki sicherheit lf4 referenz">
       <span class="ic">⚔️</span>
       <h3>Bedrohungen &amp; IT-Grundschutz-Modellierung</h3>
       <p>Zusammenfassung, Karteikarten und Begriffsliste zu Angriffsmethoden &amp; Modellierung – für die LZK am 02.06.2026.</p>
@@ -97,9 +117,9 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:2.5rem}
     </a>
   </div>
 
-  <div class="sek"><h2>Programmierung</h2><div class="sl"></div></div>
+  <div class="sek"><h2>Lernfeld 5 · Programmierung</h2><div class="sl"></div></div>
   <div class="grid">
-    <a class="tile" href="python_byte.html" data-tags="python byte code programmierung pseudocode verzweigung schleifen debugging cheatsheet">
+    <a class="tile" data-lf="5" href="python_byte.html" data-tags="python byte code programmierung pseudocode verzweigung schleifen debugging cheatsheet lf5">
       <span class="ic">🐍</span><h3>Python Byte</h3>
       <p>16 Aufgaben in 3 Levels (Basics → Logik &amp; Schleifen → Programme), Debugging-Hilfe und Befehlsreferenz.</p>
       <span class="meta st-ok"><span class="dot"></span>Vorhanden · 16 Aufgaben</span>
@@ -108,49 +128,45 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:2.5rem}
 
   <div class="sek"><h2>Lernfelder · Karteikarten</h2><div class="sl"></div></div>
   <div class="grid">
-    <a class="tile" href="lf1.html" data-tags="lf1 kaufvertrag handelskalkulation inventur rechtsform gmbh kg streik risiko wirtschaft">
+    <a class="tile" data-lf="1" href="lf1.html" data-tags="lf1 kaufvertrag handelskalkulation inventur rechtsform gmbh kg streik risiko wirtschaft">
       <span class="ic">📘</span><h3>Lernfeld 1</h3>
       <p>Kaufverträge, Handelskalkulation, Inventurarten, Rechtsformen &amp; Kapital, Streik, Risiken.</p>
       <span class="meta st-ok"><span class="dot"></span>95 Karteikarten</span>
     </a>
-    <a class="tile" href="lf2.html" data-tags="lf2 beschaffung nutzwertanalyse leasing kalkulation netzplan projektmanagement usv arbeitssicherheit">
+    <a class="tile" data-lf="2" href="lf2.html" data-tags="lf2 beschaffung nutzwertanalyse leasing kalkulation netzplan projektmanagement usv arbeitssicherheit">
       <span class="ic">📗</span><h3>Lernfeld 2</h3>
       <p>Beschaffung, Nutzwertanalyse, Wirtschaftlichkeit, Finanzierung, Projektmanagement, Netzplan.</p>
       <span class="meta st-ok"><span class="dot"></span>64 Karteikarten</span>
     </a>
-    <a class="tile" href="lf3.html" data-tags="lf3 netzwerke osi tcp ip subnetting raid backup topologie protokolle">
+    <a class="tile" data-lf="3" href="lf3.html" data-tags="lf3 netzwerke osi tcp ip subnetting raid backup topologie protokolle">
       <span class="ic">📙</span><h3>Lernfeld 3</h3>
       <p>Netzwerke, OSI-Modell, TCP/IP &amp; Subnetting, RAID, Backup, Topologien, Protokolle.</p>
       <span class="meta st-ok"><span class="dot"></span>77 Karteikarten</span>
     </a>
-    <a class="tile" href="lf4.html" data-tags="lf4 it-sicherheit datenschutz dsgvo verschlüsselung firewall server">
+    <a class="tile" data-lf="4" href="lf4.html" data-tags="lf4 it-sicherheit datenschutz dsgvo verschlüsselung firewall server karteikarten">
       <span class="ic">📕</span><h3>Lernfeld 4</h3>
       <p>IT-Sicherheit, Datenschutz/DSGVO, Verschlüsselung, Firewall, Serverdienste.</p>
       <span class="meta st-soon"><span class="dot"></span>Karteikarten in Arbeit</span>
     </a>
   </div>
 
-  <div class="sek"><h2>Referenz &amp; Sicherheit</h2><div class="sl"></div></div>
+  <div class="sek"><h2>Lernfeld 4 · IT-Sicherheit</h2><div class="sl"></div></div>
   <div class="grid">
-    <a class="tile" href="lf4_it_sicherheit.html" data-tags="it-sicherheit lf4 referenz">
+    <a class="tile" data-lf="4" href="lf4_it_sicherheit.html" data-tags="it-sicherheit lf4 referenz schutzziele bedrohungen maßnahmen">
       <span class="ic">🔒</span><h3>IT-Sicherheit</h3>
       <p>Lernmodul zu Schutzzielen, Bedrohungen und Maßnahmen.</p>
       <span class="meta st-ok"><span class="dot"></span>Vorhanden</span>
     </a>
-    <a class="tile" href="lf_isms_grundschutz.html" data-tags="isms bsi grundschutz">
+    <a class="tile" data-lf="4" href="lf_isms_grundschutz.html" data-tags="isms bsi grundschutz lf4 referenz schutzbedarf strukturanalyse modellierung">
       <span class="ic">🛡️</span><h3>IT-Grundschutz &amp; ISMS</h3>
       <p>BSI-Standards, Schutzbedarf, Strukturanalyse &amp; Modellierung.</p>
       <span class="meta st-ok"><span class="dot"></span>Vorhanden</span>
     </a>
-    <a class="tile" href="bsi_anforderungsindex.html" data-tags="bsi anforderungen index referenz nachschlagen">
+    <a class="tile" data-lf="4" href="bsi_anforderungsindex.html" data-tags="bsi anforderungen index referenz nachschlagen lf4">
       <span class="ic">📖</span><h3>BSI-Anforderungsindex</h3>
       <p>Durchsuchbares Nachschlagewerk aller Bausteine &amp; Anforderungen.</p>
       <span class="meta st-ok"><span class="dot"></span>Vorhanden</span>
     </a>
-
-    <div class="note">
-      <b>Hinweis zu den Dateinamen:</b> Die Lernfeld-Kacheln verlinken auf <code>lf1.html</code>–<code>lf4.html</code> (folgen als Nächstes). Die unteren drei verweisen auf <code>lf4_it_sicherheit.html</code>, <code>lf_isms_grundschutz.html</code> und <code>bsi_anforderungsindex.html</code>. Heißen sie im Repo anders, sag mir die echten Namen – dann passe ich die Links an.
-    </div>
   </div>
 
   <footer>FISI Lernplattform · idontbyteU/fisi-lernplattform</footer>
@@ -170,8 +186,7 @@ const chipDefs=[["Alle",""],["Prio","prio"],["Python","python"],["LF 1","lf1"],[
 const chips=document.getElementById('chips');let active="";
 chipDefs.forEach(([label,tag],i)=>{const c=document.createElement('button');c.className="chip"+(i===0?" on":"");c.textContent=label;c.onclick=()=>{active=tag;[...chips.children].forEach(x=>x.classList.remove('on'));c.classList.add('on');apply();};chips.appendChild(c);});
 const search=document.getElementById('search');
-function apply(){const q=search.value.toLowerCase();tiles.forEach(t=>{const tags=(t.dataset.tags||"")+" "+t.textContent.toLowerCase();const ok=(active===""||tags.includes(active))&&(q===""||tags.includes(q));t.classList.toggle('hide',!ok);});
-  document.querySelectorAll('.note').forEach(n=>n.classList.toggle('hide',active!==""&&active!=="referenz"));}
+function apply(){const q=search.value.toLowerCase();tiles.forEach(t=>{const tags=(t.dataset.tags||"")+" "+t.textContent.toLowerCase();const ok=(active===""||tags.includes(active))&&(q===""||tags.includes(q));t.classList.toggle('hide',!ok);});}
 search.oninput=apply;
 </script>
 </body>
