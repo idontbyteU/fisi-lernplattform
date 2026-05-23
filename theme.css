@@ -296,3 +296,35 @@ footer span{color:var(--cyan)}
 /* ---------- RESPONSIVE ---------- */
 @media(max-width:880px){.shell{grid-template-columns:1fr}.rail{position:relative;top:0;max-height:none}}
 @media(max-width:560px){.grid,.plan-grid{grid-template-columns:1fr}.sum dl.deflist dt{min-width:auto;flex-basis:100%}.sum dl.deflist > div{flex-direction:column;gap:.2rem}}
+
+/* ---------- KARTEIKARTEN / STUDY (LF1–LF4) ---------- */
+.bar{display:flex;align-items:center;gap:.9rem;background:var(--glass);border:1px solid var(--line);border-radius:8px;padding:.65rem .9rem;margin-bottom:1rem;flex-wrap:wrap;backdrop-filter:blur(6px)}
+.pbar{flex:1;min-width:120px;height:8px;background:rgba(120,180,220,.1);border-radius:99px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--magenta));box-shadow:0 0 12px var(--cyan);transition:width .4s}
+.ptxt{font-family:var(--fmono);font-size:12px;color:var(--muted);white-space:nowrap}.ptxt b{color:var(--cyan)}
+.tbtn{font-family:var(--fmono);font-size:11.5px;border:1px solid var(--line);background:var(--glass);color:var(--muted);border-radius:4px;padding:6px 11px;cursor:pointer;transition:.12s}
+.tbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+.tbtn.on{background:var(--cyan);border-color:var(--cyan);color:#04121a;font-weight:700;box-shadow:0 0 12px rgba(45,226,230,.4)}
+.study{display:flex;flex-direction:column;align-items:center}
+.counter{font-family:var(--fmono);font-size:12px;color:var(--muted);margin-bottom:.6rem}.counter b{color:var(--cyan)}
+.flash{width:100%;max-width:580px;perspective:1600px;cursor:pointer;margin-bottom:1rem}
+.flash-inner{position:relative;width:100%;min-height:300px;transition:transform .55s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
+.flash.flip .flash-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--glass2);border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 40px rgba(0,0,0,.45);padding:1.6rem 1.5rem;display:flex;flex-direction:column;overflow:auto;backdrop-filter:blur(8px)}
+.face::before{content:"";position:absolute;left:0;top:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.face.b{transform:rotateY(180deg);border-color:rgba(45,226,230,.35)}
+.face.b::before{background:linear-gradient(90deg,transparent,var(--magenta),transparent)}
+.f-cat{font-family:var(--fmono);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;margin-bottom:.8rem;color:var(--cyan)}
+.f-q{font-family:var(--fdisp);font-size:18px;font-weight:700;line-height:1.4;letter-spacing:.2px;margin:auto 0;color:var(--ink)}
+.f-lbl{font-family:var(--fmono);font-size:10.5px;color:var(--magenta);letter-spacing:1px;text-transform:uppercase;margin-bottom:.6rem}
+.f-a{font-size:15px;line-height:1.6;margin:auto 0;color:#c7d4e6}.f-a b{color:var(--cyan)}
+.f-hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-family:var(--fmono);font-size:10.5px;color:var(--dim)}
+.face.b .f-hint{color:var(--dim)}
+.ans-btns{display:flex;gap:.7rem;width:100%;max-width:580px;margin-bottom:.8rem}
+.ans-btns button{flex:1;font-family:var(--fmono);font-size:13px;letter-spacing:.5px;border-radius:6px;padding:13px;cursor:pointer;border:1px solid;transition:.13s;background:var(--glass)}
+.again{border-color:rgba(255,42,109,.4);color:var(--magenta)}.again:hover{box-shadow:0 0 14px rgba(255,42,109,.25)}
+.known{border-color:rgba(39,245,154,.45);color:var(--ok)}.known:hover{box-shadow:0 0 14px rgba(39,245,154,.25)}
+.done-msg{text-align:center;background:var(--glass);border:1px solid rgba(39,245,154,.4);border-radius:10px;padding:2.4rem 1.5rem;box-shadow:0 0 24px -8px var(--ok);max-width:580px}
+.done-msg .em{font-size:40px}.done-msg h3{font-family:var(--fdisp);font-size:18px;margin:.6rem 0 .3rem;color:var(--ok)}.done-msg p{font-size:13.5px;color:var(--muted);margin-bottom:1rem}
+.term-ex{font-size:12.5px;color:var(--muted);margin-top:.35rem;background:rgba(45,226,230,.05);border:1px solid var(--line);border-radius:5px;padding:.4rem .6rem}
+.ex-lbl{font-family:var(--fmono);font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--cyan);margin-right:5px}
