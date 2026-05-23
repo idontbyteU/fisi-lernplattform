@@ -48,6 +48,16 @@ body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--
 .st-ok{color:var(--green-d)} .st-soon{color:#b9892a}
 .dot{width:6px;height:6px;border-radius:99px;background:currentColor;display:inline-block}
 
+/* Prüfungsvorbereitung – AP-Kacheln (grüner Akzent) */
+.tile.ap{border-left:4px solid var(--green)}
+.tile.ap:hover{border-color:var(--green)}
+.tile.ap h3{color:var(--green-d)}
+.tile .tag{font-size:10px;font-weight:800;letter-spacing:.8px;background:var(--green-soft);color:var(--green-d);padding:3px 9px;border-radius:6px;align-self:flex-start}
+/* "Projekt folgt" – dezente, nicht klickbare Platzhalter-Kachel */
+.tile.ghost{background:#fafaf8;border-style:dashed;box-shadow:none;cursor:default;color:var(--muted)}
+.tile.ghost:hover{transform:none;box-shadow:none;border-color:var(--line)}
+.tile.ghost h3{color:#9a9a93}
+
 /* Lernfeld-Akzent: farbiger linker Streifen + farbiger Titel-Hover */
 .tile[data-lf]{border-left-width:4px}
 .tile[data-lf="1"]{border-left-color:var(--lf1)} .tile[data-lf="1"]:hover{border-color:var(--lf1)}
@@ -59,22 +69,9 @@ body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--
 .tile[data-lf="3"] h3{color:var(--lf3)} .tile[data-lf="4"] h3{color:var(--lf4)}
 .tile[data-lf="5"] h3{color:var(--lf5)}
 
-/* PRIO – Hero-Kachel */
-.prio{grid-column:1/-1;background:linear-gradient(120deg,#157a5a,#1D9E75 60%,#2bbf8d);color:#fff;border:none;padding:1.3rem 1.4rem}
-.prio:hover{box-shadow:0 6px 14px rgba(29,158,117,.3),0 18px 40px rgba(29,158,117,.25)}
-.prio .tag{font-size:10px;font-weight:800;letter-spacing:1px;background:rgba(255,255,255,.22);padding:3px 9px;border-radius:6px;align-self:flex-start}
-.prio h3{font-size:20px;color:#fff} .prio p{color:rgba(255,255,255,.9);font-size:13px}
-.prio .meta{color:#fff;opacity:.95}
-.prio .ic{font-size:26px}
-
-/* LZK – aktuelles Thema, dezent rot umrahmt (Sicherheit) */
-.lzk{grid-column:1/-1;border-left:4px solid var(--lf4)}
-.lzk h3{color:var(--lf4)}
-.lzk:hover{border-color:var(--lf4)}
-
 .hide{display:none}
 footer{text-align:center;font-size:11px;color:var(--muted);margin-top:2.5rem}
-@media(max-width:560px){.grid{grid-template-columns:1fr}.prio h3{font-size:18px}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -96,34 +93,36 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:2.5rem}
   </div>
   <div class="chips" id="chips"></div>
 
-  <div class="sek"><h2>Prüfungstraining</h2><div class="sl"></div></div>
+  <!-- ===================================================================== -->
+  <!--  PRÜFUNGSVORBEREITUNG · AP1 / AP2 (+ später Projekt)                   -->
+  <!--  Eine spätere Projekt-Kachel: die .ghost-Kachel unten durch eine      -->
+  <!--  normale <a class="tile ap" href="projekt.html"> ersetzen.            -->
+  <!-- ===================================================================== -->
+  <div class="sek"><h2>Prüfungsvorbereitung</h2><div class="sl"></div></div>
   <div class="grid">
-    <a class="tile prio" href="prio.html" data-tags="prio prüfung ap1 aufgaben lösung training">
-      <span class="tag">PRIO</span>
+    <a class="tile ap" href="prio.html" data-tags="ap1 prüfung aufgaben lösung training netzwerke subnetting wirtschaft">
+      <span class="tag">AP1</span>
       <span class="ic">🎯</span>
-      <h3>Prüfungen &amp; Aufgaben mit Lösungsweg</h3>
+      <h3>AP1 · Aufgaben &amp; Lösungswege</h3>
       <p>Übungen im AP1-Stil mit abrufbaren Tipps, Teil- und Komplettlösung sowie aufklappbarer Erklär-Leiste.</p>
-      <span class="meta"><span class="dot"></span>16 Aufgaben · nach Themen gruppiert</span>
+      <span class="meta st-ok"><span class="dot"></span>16 Aufgaben · nach Themen gruppiert</span>
     </a>
+    <a class="tile ap" href="ap2.html" data-tags="ap2 prüfung aufgaben projekt training">
+      <span class="tag">AP2</span>
+      <span class="ic">📐</span>
+      <h3>AP2 · Aufgaben &amp; Projekt</h3>
+      <p>Vorbereitung auf die gestreckte Abschlussprüfung Teil 2 – Aufgaben und FISI-Projektpräsentation.</p>
+      <span class="meta st-soon"><span class="dot"></span>In Vorbereitung</span>
+    </a>
+    <div class="tile ghost" data-tags="projekt ap2 präsentation">
+      <span class="ic">🗂️</span>
+      <h3>Projekt</h3>
+      <p>Eigenes FISI-Abschlussprojekt &amp; Präsentation – folgt später.</p>
+      <span class="meta"><span class="dot"></span>Geplant</span>
+    </div>
   </div>
 
-  <!-- ===================================================================== -->
-  <!--  LZK-KACHEL (temporär) – zum Entfernen einfach diesen ganzen Block    -->
-  <!--  von <div class="sek"> bis </div></div> löschen.                      -->
-  <!--  Ziel der Kachel wird in lzk.html gesteuert (eine Zeile dort ändern). -->
-  <!-- ===================================================================== -->
-  <div class="sek"><h2>Aktuelle Lernzielkontrolle</h2><div class="sl"></div></div>
-  <div class="grid">
-    <a class="tile lzk" href="lzk.html" data-tags="lzk lernzielkontrolle bedrohungen angriffe modellierung it-grundschutz social engineering phishing malware ki sicherheit lf4">
-      <span class="ic">⚔️</span>
-      <h3>LZK · Bedrohungen &amp; IT-Grundschutz</h3>
-      <p>Aktuelle Lernzielkontrolle am 02.06.2026 – führt direkt zum vollständigen LF4-Modul mit Schwerpunkt Bedrohungen &amp; Modellierung.</p>
-      <span class="meta st-ok"><span class="dot"></span>Zur aktuellen LZK →</span>
-    </a>
-  </div>
-  <!-- ===== ENDE LZK-KACHEL ===== -->
-
-  <div class="sek"><h2>Lernfeld 5 · Programmierung</h2><div class="sl"></div></div>
+  <div class="sek"><h2>Programmierung</h2><div class="sl"></div></div>
   <div class="grid">
     <a class="tile" data-lf="5" href="python_byte.html" data-tags="python byte code programmierung pseudocode verzweigung schleifen debugging cheatsheet lf5">
       <span class="ic">🐍</span><h3>Python Byte</h3>
@@ -149,29 +148,10 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:2.5rem}
       <p>Netzwerke, OSI-Modell, TCP/IP &amp; Subnetting, RAID, Backup, Topologien, Protokolle.</p>
       <span class="meta st-ok"><span class="dot"></span>77 Karteikarten</span>
     </a>
-    <a class="tile" data-lf="4" href="lf4.html" data-tags="lf4 it-sicherheit datenschutz dsgvo verschlüsselung firewall server karteikarten bedrohungen isms cia backup krypto lizenzen grundschutz">
+    <a class="tile" data-lf="4" href="lf4.html" data-tags="lf4 it-sicherheit datenschutz dsgvo verschlüsselung firewall server karteikarten bedrohungen isms cia backup krypto lizenzen grundschutz lzk angriffe social engineering phishing malware ki bsi modellierung">
       <span class="ic">📕</span><h3>Lernfeld 4</h3>
-      <p>IT-Sicherheit, Schutzziele, ISMS, DSGVO, Bedrohungen, Firewall, Verschlüsselung, Backup, Grundschutz.</p>
+      <p>IT-Sicherheit, Schutzziele, ISMS &amp; Grundschutz, DSGVO, Bedrohungen, Firewall, Verschlüsselung, Backup. Enthält IT-Sicherheit, ISMS, BSI-Index &amp; aktuelle LZK.</p>
       <span class="meta st-ok"><span class="dot"></span>88 Karteikarten · 109 Begriffe</span>
-    </a>
-  </div>
-
-  <div class="sek"><h2>Lernfeld 4 · IT-Sicherheit</h2><div class="sl"></div></div>
-  <div class="grid">
-    <a class="tile" data-lf="4" href="lf4_it_sicherheit.html" data-tags="it-sicherheit lf4 referenz schutzziele bedrohungen maßnahmen">
-      <span class="ic">🔒</span><h3>IT-Sicherheit</h3>
-      <p>Lernmodul zu Schutzzielen, Bedrohungen und Maßnahmen.</p>
-      <span class="meta st-ok"><span class="dot"></span>Vorhanden</span>
-    </a>
-    <a class="tile" data-lf="4" href="lf_isms_grundschutz.html" data-tags="isms bsi grundschutz lf4 referenz schutzbedarf strukturanalyse modellierung">
-      <span class="ic">🛡️</span><h3>IT-Grundschutz &amp; ISMS</h3>
-      <p>BSI-Standards, Schutzbedarf, Strukturanalyse &amp; Modellierung.</p>
-      <span class="meta st-ok"><span class="dot"></span>Vorhanden</span>
-    </a>
-    <a class="tile" data-lf="4" href="bsi_anforderungsindex.html" data-tags="bsi anforderungen index referenz nachschlagen lf4">
-      <span class="ic">📖</span><h3>BSI-Anforderungsindex</h3>
-      <p>Durchsuchbares Nachschlagewerk aller Bausteine &amp; Anforderungen.</p>
-      <span class="meta st-ok"><span class="dot"></span>Vorhanden</span>
     </a>
   </div>
 
@@ -188,7 +168,7 @@ document.getElementById('cdAP2').textContent=daysTo(AP2);
 
 /* ===== SUCHE + FILTER ===== */
 const tiles=[...document.querySelectorAll('.tile')];
-const chipDefs=[["Alle",""],["Prio","prio"],["Python","python"],["LF 1","lf1"],["LF 2","lf2"],["LF 3","lf3"],["LF 4","lf4"],["Referenz","referenz"]];
+const chipDefs=[["Alle",""],["AP1","ap1"],["AP2","ap2"],["Python","python"],["LF 1","lf1"],["LF 2","lf2"],["LF 3","lf3"],["LF 4","lf4"]];
 const chips=document.getElementById('chips');let active="";
 chipDefs.forEach(([label,tag],i)=>{const c=document.createElement('button');c.className="chip"+(i===0?" on":"");c.textContent=label;c.onclick=()=>{active=tag;[...chips.children].forEach(x=>x.classList.remove('on'));c.classList.add('on');apply();};chips.appendChild(c);});
 const search=document.getElementById('search');
