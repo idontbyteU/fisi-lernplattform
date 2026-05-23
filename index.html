@@ -3,118 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FISI Lernplattform</title>
-<style>
-:root{--bg:#f5f5f3;--ink:#1a1a18;--muted:#888;--line:#e0dfd8;--green:#1D9E75;--green-d:#157a5a;--green-soft:#e8f6f0;--card:#fff;--shadow:0 1px 3px rgba(0,0,0,.05),0 8px 22px rgba(0,0,0,.05);
-/* Lernfeld-Akzentfarben */
---lf1:#2f6fb0;--lf1-soft:#e9f1fa;
---lf2:#1D9E75;--lf2-soft:#e8f6f0;
---lf3:#c98a1e;--lf3-soft:#fbf2e0;
---lf4:#c0455b;--lf4-soft:#fbeaee;
---lf5:#6a5cc4;--lf5-soft:#eeebfa}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased}
-
-.hdr{background:#fff;border-bottom:1px solid var(--line);padding:1.1rem 1.5rem;position:sticky;top:0;z-index:50}
-.hdr-in{max-width:780px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem}
-.hdr h1{font-size:19px;font-weight:800;letter-spacing:-.4px}
-.hdr p{font-size:11.5px;color:var(--muted);margin-top:1px}
-.cds{display:flex;gap:8px;flex-wrap:wrap}
-.cd{font-size:11px;color:#555;background:var(--bg);padding:5px 12px;border-radius:99px;border:1px solid var(--line);white-space:nowrap}
-.cd b{color:var(--green-d);font-size:14px;font-weight:800}
-.cd small{display:block;font-size:9.5px;color:var(--muted);letter-spacing:.3px;text-transform:uppercase}
-
-.wrap{max-width:780px;margin:0 auto;padding:1.3rem 1rem 4rem}
-.search{position:relative;margin-bottom:1rem}
-.search input{width:100%;background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 16px 11px 40px;font-size:14px;font-family:inherit;outline:none}
-.search input:focus{border-color:var(--green)}
-.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.4}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.4rem}
-.chip{padding:5px 13px;border-radius:99px;border:1px solid var(--line);background:#fff;font-size:12px;color:#555;cursor:pointer;font-family:inherit;transition:.12s}
-.chip:hover{border-color:var(--green);color:var(--green-d)}
-.chip.on{background:var(--green);border-color:var(--green);color:#fff;font-weight:600}
-
-.sek{display:flex;align-items:center;gap:.75rem;margin:1.7rem 0 .85rem}
-.sek h2{font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;white-space:nowrap}
-.sek .sl{flex:1;height:1px;background:var(--line)}
-
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.85rem}
-.tile{display:flex;flex-direction:column;gap:.4rem;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1rem 1.05rem;text-decoration:none;color:inherit;box-shadow:var(--shadow);transition:.16s;position:relative;overflow:hidden}
-.tile:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.06),0 14px 30px rgba(0,0,0,.07)}
-.tile .ic{font-size:22px;line-height:1}
-.tile h3{font-size:15px;font-weight:700;letter-spacing:-.2px}
-.tile p{font-size:12px;color:var(--muted);line-height:1.4}
-.tile .meta{margin-top:auto;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:5px}
-.st-ok{color:var(--green-d)} .st-soon{color:#b9892a}
-.dot{width:6px;height:6px;border-radius:99px;background:currentColor;display:inline-block}
-
-/* Prüfungsvorbereitung – AP-Kacheln (grüner Akzent) */
-.tile.ap{border-left:4px solid var(--green)}
-.tile.ap:hover{border-color:var(--green)}
-.tile.ap h3{color:var(--green-d)}
-.tile .tag{font-size:10px;font-weight:800;letter-spacing:.8px;background:var(--green-soft);color:var(--green-d);padding:3px 9px;border-radius:6px;align-self:flex-start}
-/* "Projekt folgt" – dezente, nicht klickbare Platzhalter-Kachel */
-.tile.ghost{background:#fafaf8;border-style:dashed;box-shadow:none;cursor:default;color:var(--muted)}
-.tile.ghost:hover{transform:none;box-shadow:none;border-color:var(--line)}
-.tile.ghost h3{color:#9a9a93}
-
-/* Lernfeld-Akzent: farbiger linker Streifen + farbiger Titel-Hover */
-.tile[data-lf]{border-left-width:4px}
-.tile[data-lf="1"]{border-left-color:var(--lf1)} .tile[data-lf="1"]:hover{border-color:var(--lf1)}
-.tile[data-lf="2"]{border-left-color:var(--lf2)} .tile[data-lf="2"]:hover{border-color:var(--lf2)}
-.tile[data-lf="3"]{border-left-color:var(--lf3)} .tile[data-lf="3"]:hover{border-color:var(--lf3)}
-.tile[data-lf="4"]{border-left-color:var(--lf4)} .tile[data-lf="4"]:hover{border-color:var(--lf4)}
-.tile[data-lf="5"]{border-left-color:var(--lf5)} .tile[data-lf="5"]:hover{border-color:var(--lf5)}
-.tile[data-lf="1"] h3{color:var(--lf1)} .tile[data-lf="2"] h3{color:var(--lf2)}
-.tile[data-lf="3"] h3{color:var(--lf3)} .tile[data-lf="4"] h3{color:var(--lf4)}
-.tile[data-lf="5"] h3{color:var(--lf5)}
-
-.hide{display:none}
-footer{text-align:center;font-size:11px;color:var(--muted);margin-top:2.5rem}
-@media(max-width:560px){.grid{grid-template-columns:1fr}}
-</style>
+<title>FISI//OS · Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
 </head>
 <body>
+<div class="scan"></div>
 
 <header class="hdr">
   <div class="hdr-in">
-    <div><h1>FISI Lernplattform</h1><p>Prüfungsvorbereitung · Fachinformatiker Systemintegration</p></div>
+    <div class="brand">
+      <span class="led"></span>
+      <div>
+        <h1>FISI<span>//</span>OS</h1>
+        <p>Systemintegration · Prüfungsvorbereitung</p>
+      </div>
+    </div>
     <div class="cds">
-      <div class="cd"><small>AP1 · Herbst 26</small><b id="cdAP1">–</b> Tage</div>
-      <div class="cd"><small>AP2 · Winter 27</small><b id="cdAP2">–</b> Tage</div>
+      <div class="cd"><small>AP1 · HERBST 26</small><b id="cdAP1">–</b> Tage</div>
+      <div class="cd"><small>AP2 · WINTER 27</small><b id="cdAP2">–</b> Tage</div>
     </div>
   </div>
 </header>
 
 <div class="wrap">
   <div class="search">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <span class="pre">&gt;</span>
     <input id="search" type="text" placeholder="Modul oder Thema suchen … (z. B. Subnetting, Kalkulation, RAID)">
   </div>
   <div class="chips" id="chips"></div>
 
   <!-- ===================================================================== -->
   <!--  PRÜFUNGSVORBEREITUNG · AP1 / AP2 (+ später Projekt)                   -->
-  <!--  Eine spätere Projekt-Kachel: die .ghost-Kachel unten durch eine      -->
-  <!--  normale <a class="tile ap" href="projekt.html"> ersetzen.            -->
+  <!--  Projekt-Kachel: die .ghost-Kachel durch <a class="tile ap"           -->
+  <!--  href="projekt.html"> ersetzen, sobald Inhalte da sind.               -->
   <!-- ===================================================================== -->
   <div class="sek"><h2>Prüfungsvorbereitung</h2><div class="sl"></div></div>
   <div class="grid">
-    <a class="tile ap" href="prio.html" data-tags="ap1 prüfung aufgaben lösung training netzwerke subnetting wirtschaft">
+    <a class="tile ap" style="--i:0" href="prio.html" data-tags="ap1 prüfung aufgaben lösung training netzwerke subnetting wirtschaft">
       <span class="tag">AP1</span>
       <span class="ic">🎯</span>
       <h3>AP1 · Aufgaben &amp; Lösungswege</h3>
       <p>Übungen im AP1-Stil mit abrufbaren Tipps, Teil- und Komplettlösung sowie aufklappbarer Erklär-Leiste.</p>
-      <span class="meta st-ok"><span class="dot"></span>16 Aufgaben · nach Themen gruppiert</span>
+      <span class="meta"><span class="dot"></span>16 Aufgaben · nach Themen gruppiert</span>
     </a>
-    <a class="tile ap" href="ap2.html" data-tags="ap2 prüfung aufgaben projekt training">
+    <a class="tile ap" style="--i:1" href="ap2.html" data-tags="ap2 prüfung aufgaben projekt training">
       <span class="tag">AP2</span>
       <span class="ic">📐</span>
       <h3>AP2 · Aufgaben &amp; Projekt</h3>
       <p>Vorbereitung auf die gestreckte Abschlussprüfung Teil 2 – Aufgaben und FISI-Projektpräsentation.</p>
-      <span class="meta st-soon"><span class="dot"></span>In Vorbereitung</span>
+      <span class="meta st-soon"><span class="dot pulse"></span>In Vorbereitung</span>
     </a>
-    <div class="tile ghost" data-tags="projekt ap2 präsentation">
+    <div class="tile ghost" style="--i:2" data-tags="projekt ap2 präsentation">
       <span class="ic">🗂️</span>
       <h3>Projekt</h3>
       <p>Eigenes FISI-Abschlussprojekt &amp; Präsentation – folgt später.</p>
@@ -124,7 +63,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:2.5rem}
 
   <div class="sek"><h2>Programmierung</h2><div class="sl"></div></div>
   <div class="grid">
-    <a class="tile" data-lf="5" href="python_byte.html" data-tags="python byte code programmierung pseudocode verzweigung schleifen debugging cheatsheet lf5">
+    <a class="tile" data-lf="5" style="--i:0" href="python_byte.html" data-tags="python byte code programmierung pseudocode verzweigung schleifen debugging cheatsheet lf5">
       <span class="ic">🐍</span><h3>Python Byte</h3>
       <p>16 Aufgaben in 3 Levels (Basics → Logik &amp; Schleifen → Programme), Debugging-Hilfe und Befehlsreferenz.</p>
       <span class="meta st-ok"><span class="dot"></span>Vorhanden · 16 Aufgaben</span>
@@ -133,36 +72,35 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:2.5rem}
 
   <div class="sek"><h2>Lernfelder · Karteikarten</h2><div class="sl"></div></div>
   <div class="grid">
-    <a class="tile" data-lf="1" href="lf1.html" data-tags="lf1 kaufvertrag handelskalkulation inventur rechtsform gmbh kg streik risiko wirtschaft">
+    <a class="tile" data-lf="1" style="--i:0" href="lf1.html" data-tags="lf1 kaufvertrag handelskalkulation inventur rechtsform gmbh kg streik risiko wirtschaft">
       <span class="ic">📘</span><h3>Lernfeld 1</h3>
       <p>Kaufverträge, Handelskalkulation, Inventurarten, Rechtsformen &amp; Kapital, Streik, Risiken.</p>
       <span class="meta st-ok"><span class="dot"></span>95 Karteikarten</span>
     </a>
-    <a class="tile" data-lf="2" href="lf2.html" data-tags="lf2 beschaffung nutzwertanalyse leasing kalkulation netzplan projektmanagement usv arbeitssicherheit">
+    <a class="tile" data-lf="2" style="--i:1" href="lf2.html" data-tags="lf2 beschaffung nutzwertanalyse leasing kalkulation netzplan projektmanagement usv arbeitssicherheit">
       <span class="ic">📗</span><h3>Lernfeld 2</h3>
       <p>Beschaffung, Nutzwertanalyse, Wirtschaftlichkeit, Finanzierung, Projektmanagement, Netzplan.</p>
       <span class="meta st-ok"><span class="dot"></span>64 Karteikarten</span>
     </a>
-    <a class="tile" data-lf="3" href="lf3.html" data-tags="lf3 netzwerke osi tcp ip subnetting raid backup topologie protokolle">
+    <a class="tile" data-lf="3" style="--i:2" href="lf3.html" data-tags="lf3 netzwerke osi tcp ip subnetting raid backup topologie protokolle">
       <span class="ic">📙</span><h3>Lernfeld 3</h3>
       <p>Netzwerke, OSI-Modell, TCP/IP &amp; Subnetting, RAID, Backup, Topologien, Protokolle.</p>
       <span class="meta st-ok"><span class="dot"></span>77 Karteikarten</span>
     </a>
-    <a class="tile" data-lf="4" href="lf4.html" data-tags="lf4 it-sicherheit datenschutz dsgvo verschlüsselung firewall server karteikarten bedrohungen isms cia backup krypto lizenzen grundschutz lzk angriffe social engineering phishing malware ki bsi modellierung">
+    <a class="tile" data-lf="4" style="--i:3" href="lf4.html" data-tags="lf4 it-sicherheit datenschutz dsgvo verschlüsselung firewall server karteikarten bedrohungen isms cia backup krypto lizenzen grundschutz lzk angriffe social engineering phishing malware ki bsi modellierung">
       <span class="ic">📕</span><h3>Lernfeld 4</h3>
-      <p>IT-Sicherheit, Schutzziele, ISMS &amp; Grundschutz, DSGVO, Bedrohungen, Firewall, Verschlüsselung, Backup. Enthält IT-Sicherheit, ISMS, BSI-Index &amp; aktuelle LZK.</p>
+      <p>IT-Sicherheit, Schutzziele, ISMS &amp; Grundschutz, DSGVO, Bedrohungen, Firewall, Krypto, Backup. Enthält IT-Sicherheit, ISMS, BSI-Index &amp; aktuelle LZK.</p>
       <span class="meta st-ok"><span class="dot"></span>88 Karteikarten · 109 Begriffe</span>
     </a>
   </div>
 
-  <footer>FISI Lernplattform · idontbyteU/fisi-lernplattform</footer>
+  <footer>FISI//OS · <span>idontbyteU/fisi-lernplattform</span></footer>
 </div>
 
 <script>
-/* ===== COUNTDOWN – Daten hier anpassen, falls Termine feststehen ===== */
-const AP1 = "2026-09-22";  // AP1 Herbst 2026 (vorläufig – exaktes Datum hier eintragen)
-const AP2 = "2027-01-20";  // AP2 Winter 2026/27 (vorläufig)
-function daysTo(d){const t=new Date(d)-new Date();return Math.max(0,Math.ceil(t/86400000));}
+/* ===== COUNTDOWN ===== */
+const AP1="2026-09-22", AP2="2027-01-20";
+const daysTo=d=>Math.max(0,Math.ceil((new Date(d)-new Date())/864e5));
 document.getElementById('cdAP1').textContent=daysTo(AP1);
 document.getElementById('cdAP2').textContent=daysTo(AP2);
 
