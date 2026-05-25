@@ -464,3 +464,7 @@ button,.chip,.tbtn,.btn,.mode button,.tabs button{touch-action:manipulation}
   border:none;border-radius:4px;padding:9px 15px;cursor:pointer;white-space:nowrap;min-height:42px}
 .install .no{background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;line-height:1;padding:4px 8px}
 @media(max-width:560px){.install .tx p{display:none}}
+
+/* ---------- prio: Merk-Kasten ---------- */
+.merk{background:rgba(45,226,230,.07);border-left:3px solid var(--cyan);padding:.55rem .75rem;border-radius:0 6px 6px 0;font-size:13px;color:#c7d4e6;margin:.5rem 0}
+.merk b{color:var(--cyan)}
