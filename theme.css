@@ -350,3 +350,31 @@ footer span{color:var(--cyan)}
 .li-chk:hover{border-color:var(--cyan)}
 .li-chk:checked{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 12px rgba(45,226,230,.5)}
 .li-chk:checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#04121a;font-size:14px;font-weight:800}
+
+/* ---------- KARTEIKARTEN v2: 3-STUFEN + %-BEHERRSCHUNG ---------- */
+/* Dritter Antwort-Knopf (Wackelt) + neue Beschriftung */
+.ans-btns{display:flex;gap:.6rem;width:100%;max-width:580px;margin-bottom:.8rem}
+.ans-btns .mid{border-color:rgba(255,180,59,.45);color:var(--amber);background:var(--glass)}
+.ans-btns .mid:hover{box-shadow:0 0 14px rgba(255,180,59,.25)}
+/* %-Beherrschung – Badge auf der Karte */
+.mbadge{display:inline-flex;align-items:center;gap:5px;font-family:var(--fmono);font-size:11px;letter-spacing:.3px;padding:3px 9px;border-radius:99px;border:1px solid var(--line);background:var(--glass)}
+.mbadge .md{width:7px;height:7px;border-radius:50%}
+.m-lo{color:var(--magenta)}.m-lo .md{background:var(--magenta);box-shadow:0 0 6px var(--magenta)}
+.m-mid{color:var(--amber)}.m-mid .md{background:var(--amber);box-shadow:0 0 6px var(--amber)}
+.m-hi{color:var(--ok)}.m-hi .md{background:var(--ok);box-shadow:0 0 6px var(--ok)}
+.m-new{color:var(--muted)}.m-new .md{background:var(--muted)}
+/* Karten-Beherrschung als kleine Zeile über der Karte */
+.cardmeta{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:580px;margin:0 auto .55rem;gap:.6rem}
+/* Chip-Suffix: kleines % je Thema */
+.chip .pct{font-family:var(--fmono);margin-left:6px;font-size:10px;padding:1px 6px;border-radius:99px;border:1px solid currentColor;opacity:.85}
+/* Mastery-Mini-Bar im Thema-Kopf der Studienleiste */
+.mwrap{display:flex;align-items:center;gap:.5rem;flex:1;min-width:120px}
+.mwrap .mb{flex:1;height:8px;background:rgba(120,180,220,.1);border-radius:99px;overflow:hidden}
+.mwrap .mb i{display:block;height:100%;width:0;transition:width .5s}
+.mb.lo i{background:linear-gradient(90deg,var(--magenta),#ff6b9a)}
+.mb.mid i{background:linear-gradient(90deg,var(--amber),#ffd07a)}
+.mb.hi i{background:linear-gradient(90deg,var(--ok),#7affc4)}
+.ptxt .sec{color:var(--ok)} .ptxt .big{font-size:15px}
+/* sanftes Aufleuchten, wenn eine Karte auf grün springt */
+@keyframes levelup{0%{box-shadow:0 0 0 0 rgba(39,245,154,0)}30%{box-shadow:0 0 28px 4px rgba(39,245,154,.5)}100%{box-shadow:0 0 0 0 rgba(39,245,154,0)}}
+.flash.levelup .face{animation:levelup 1s ease-out}

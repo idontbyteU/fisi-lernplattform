@@ -251,7 +251,7 @@
   <div class="chips" id="cardChips"></div>
   <div class="bar">
     <div class="pbar"><i id="pfill"></i></div>
-    <div class="ptxt"><b id="pnum">0</b> / <span id="ptot">0</span> gewusst</div>
+    <div class="ptxt">0% beherrscht</div>
     <button class="tbtn" id="tShuffle">🔀 Mischen</button>
     <button class="tbtn" id="tOpen">Nur offene</button>
     <button class="tbtn" id="tReset">Zurücksetzen</button>
@@ -742,6 +742,7 @@
 <footer>FISI Lernplattform · Lernfeld 4 – IT-Sicherheit &amp; Datenschutz · Inhalte aus den Kursunterlagen · Fortschritt lokal gespeichert</footer>
 </div>
 
+<script src="study.js"></script>
 <script>
 const CATS={
   grund:{label:"Grundlagen & Angriffskette",color:"var(--muted)"},
@@ -862,83 +863,13 @@ function showTab(t){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 document.getElementById('tSum').onclick=()=>showTab('Sum');
-document.getElementById('tCards').onclick=()=>{showTab('Cards');rebuild();};
+document.getElementById('tCards').onclick=()=>{showTab('Cards');Study._rebuild();};
 document.getElementById('tTerms').onclick=()=>showTab('Terms');
 document.getElementById('tLaws').onclick=()=>showTab('Laws');
 document.getElementById('tDsgvo').onclick=()=>showTab('Dsgvo');
 
-/* ===== STATE (Karteikarten) ===== */
-const LS="bedroh_cards_v1";
-let store; try{store=JSON.parse(localStorage.getItem(LS))||{}}catch(e){store={}}
-store.known=store.known||{};
-function save(){try{localStorage.setItem(LS,JSON.stringify(store))}catch(e){}}
-let activeCat="alle",onlyOpen=false,shuffled=false,deck=[],pos=0,flipped=false;
-
-/* ===== CHIPS Karteikarten ===== */
-const cardChips=document.getElementById('cardChips');
-function buildCardChips(){
-  cardChips.innerHTML="";
-  const all=document.createElement('button');
-  all.className="chip"+(activeCat==="alle"?" on":"");
-  all.textContent="Alle ("+CARDS.length+")";
-  all.onclick=()=>{activeCat="alle";buildCardChips();rebuild();};
-  cardChips.appendChild(all);
-  Object.keys(CATS).forEach(k=>{
-    const n=CARDS.filter(c=>c.c===k).length; if(!n)return;
-    const c=document.createElement('button');
-    c.className="chip"+(activeCat===k?" on":"");
-    c.textContent=CATS[k].label+" ("+n+")";
-    if(activeCat===k){c.style.background=CATS[k].color;c.style.borderColor=CATS[k].color;}
-    c.onclick=()=>{activeCat=k;buildCardChips();rebuild();};
-    cardChips.appendChild(c);
-  });
-}
-function baseDeck(){
-  let d=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
-  if(onlyOpen)d=d.filter(c=>!store.known[c.id]);
-  return d;
-}
-function rebuild(){
-  deck=baseDeck();
-  if(shuffled){for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}}
-  pos=0;flipped=false;updateProg();renderStudy();
-}
-function updateProg(){
-  const scope=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
-  const k=scope.filter(c=>store.known[c.id]).length;
-  document.getElementById('ptot').textContent=scope.length;
-  document.getElementById('pnum').textContent=k;
-  document.getElementById('pfill').style.width=(scope.length?k/scope.length*100:0)+"%";
-}
-const studyEl=document.getElementById('study');
-function renderStudy(){
-  if(deck.length===0){studyEl.innerHTML='<div class="done-msg"><div class="em">🎉</div><h3>Alles gewusst!</h3><p>Keine offenen Karten in dieser Auswahl.</p><button class="tbtn" id="rs">Zurücksetzen</button></div>';document.getElementById('rs').onclick=()=>document.getElementById('tReset').click();return;}
-  if(pos>=deck.length)pos=deck.length-1;
-  const card=deck[pos],cat=CATS[card.c];
-  studyEl.innerHTML=`
-    <div class="counter">Karte <b>${pos+1}</b> / ${deck.length}${store.known[card.id]?' · ✓ gewusst':''}</div>
-    <div class="flash${flipped?' flip':''}" id="flash"><div class="flash-inner">
-      <div class="face"><div class="f-cat" style="color:${cat.color}">${cat.label}</div><div class="f-q">${card.q}</div><div class="f-hint">Klick / Leertaste zum Umdrehen</div></div>
-      <div class="face b"><div class="f-lbl">Antwort</div><div class="f-a">${card.a}</div><div class="f-hint">Wusstest du es?</div></div>
-    </div></div>
-    <div class="ans-btns"><button class="again" id="bA">✗ Nochmal</button><button class="known" id="bK">✓ Gewusst</button></div>
-    <div class="nav"><button id="bP">← Zurück</button><span>${pos+1} / ${deck.length}</span><button id="bN">Weiter →</button></div>`;
-  document.getElementById('flash').onclick=()=>{flipped=!flipped;document.getElementById('flash').classList.toggle('flip',flipped);};
-  document.getElementById('bA').onclick=()=>{delete store.known[card.id];save();next();};
-  document.getElementById('bK').onclick=()=>{store.known[card.id]=true;save();next();};
-  document.getElementById('bP').onclick=()=>{if(pos>0){pos--;flipped=false;renderStudy();}};
-  document.getElementById('bN').onclick=()=>next();
-}
-function next(){updateProg();if(pos<deck.length-1){pos++;flipped=false;renderStudy();}else{if(onlyOpen){rebuild();}else{studyEl.innerHTML='<div class="done-msg"><div class="em">✅</div><h3>Durch den Stapel!</h3><p>Alle Karten dieser Auswahl gesehen.</p><button class="tbtn" id="rr">Nochmal von vorn</button></div>';document.getElementById('rr').onclick=()=>{pos=0;flipped=false;renderStudy();};}}}
-document.getElementById('tShuffle').onclick=function(){shuffled=!shuffled;this.classList.toggle('on',shuffled);rebuild();};
-document.getElementById('tOpen').onclick=function(){onlyOpen=!onlyOpen;this.classList.toggle('on',onlyOpen);rebuild();};
-document.getElementById('tReset').onclick=function(){const scope=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);scope.forEach(c=>delete store.known[c.id]);save();rebuild();};
-document.addEventListener('keydown',e=>{
-  if(!document.getElementById('vCards').classList.contains('on')||deck.length===0)return;
-  if(e.code==="Space"){e.preventDefault();flipped=!flipped;const f=document.getElementById('flash');if(f)f.classList.toggle('flip',flipped);}
-  else if(e.code==="ArrowRight")next();
-  else if(e.code==="ArrowLeft"){if(pos>0){pos--;flipped=false;renderStudy();}}
-});
+/* ===== KARTEIKARTEN (study.js) ===== */
+Study.init({ cards: CARDS, cats: CATS, key: "fisi_lf4_study_v2" });
 
 /* ===== BEGRIFFE Filter ===== */
 const termChips=document.getElementById('termChips');
@@ -985,7 +916,7 @@ document.querySelectorAll('.gloss').forEach(g=>{
 document.addEventListener('click',()=>{document.querySelectorAll('.gloss.open').forEach(o=>o.classList.remove('open'));});
 
 /* INIT */
-buildCardChips();buildTermChips();
+buildTermChips();
 </script>
 </body>
 </html>
