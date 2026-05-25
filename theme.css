@@ -378,3 +378,89 @@ footer span{color:var(--cyan)}
 /* sanftes Aufleuchten, wenn eine Karte auf grün springt */
 @keyframes levelup{0%{box-shadow:0 0 0 0 rgba(39,245,154,0)}30%{box-shadow:0 0 28px 4px rgba(39,245,154,.5)}100%{box-shadow:0 0 0 0 rgba(39,245,154,0)}}
 .flash.levelup .face{animation:levelup 1s ease-out}
+
+/* ===================================================================== */
+/*  MOBILE / TOUCH-OPTIMIERUNG                                           */
+/* ===================================================================== */
+/* Touch-Verhalten global: kein Doppeltipp-Zoom-Delay, sauberes Tap-Highlight */
+*{-webkit-tap-highlight-color:transparent}
+button,.chip,.tbtn,.btn,.mode button,.tabs button{touch-action:manipulation}
+
+@media(max-width:640px){
+  /* Layout enger fassen */
+  .wrap,.prog-wrap,.shell{padding-left:.9rem;padding-right:.9rem}
+  .hdr-in{padding:.8rem .9rem;gap:.6rem}
+  .brand h1{font-size:19px}
+  /* Countdown-Chips: volle Zeile, nebeneinander, kleiner */
+  .cds{width:100%;gap:7px}
+  .cd{flex:1;text-align:center;padding:6px 8px}
+
+  /* Tabs & Filter-Chips horizontal scrollbar statt umbrechen */
+  .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .chips{flex-wrap:wrap}
+  /* Touch-Mindestgrößen */
+  .chip,.tbtn,.mode button,.tabs button{min-height:40px;display:inline-flex;align-items:center}
+  .nav button,.btn{min-height:42px}
+
+  /* Karteikarten: Antwort-Knöpfe größer & klarer, Touch-tauglich */
+  .ans-btns{gap:.5rem}
+  .ans-btns button{padding:15px 8px;font-size:13px;min-height:50px;border-width:1.5px}
+  /* Flip-Karte: feste Höhe weg, dem Inhalt folgen (verhindert Abschneiden) */
+  .flash-inner{min-height:340px}
+  .face{padding:1.3rem 1.15rem}
+  .f-q{font-size:18px}
+  .f-a{font-size:16px}
+  .nav{width:100%;max-width:580px;justify-content:space-between}
+  .nav button{flex:0 0 auto}
+
+  /* Erklär-Leiste sitzt unter dem Inhalt (kein sticky auf klein) */
+  .rail{position:relative;top:0;max-height:none}
+
+  /* Glossar-Popup: randsicher, breiter, mittig im Viewport statt überm Wort */
+  .gloss .pop{position:fixed;left:50%;right:auto;top:auto;bottom:16px;transform:translateX(-50%);
+    width:calc(100vw - 32px);max-width:380px}
+  .gloss .pop::after{display:none}
+
+  /* Zusammenfassung: Definitionslisten gestapelt, mehr Luft */
+  .sum dl.deflist dt{min-width:auto;flex-basis:100%}
+  .sum dl.deflist > div{flex-direction:column;gap:.25rem}
+  .sum .h-sec{font-size:16px}
+
+  /* Aufgaben-Karten (prio) */
+  .acts{gap:6px}
+  .acts .btn{flex:1;justify-content:center}
+}
+
+/* sehr schmale Geräte (<380px): Knöpfe stapeln */
+@media(max-width:380px){
+  .ans-btns{flex-direction:column}
+  .ans-btns button{width:100%}
+  .cardmeta{flex-direction:column;align-items:flex-start;gap:.35rem}
+}
+
+/* Geräte ohne echten Hover (Touch): Hover-Transforms aus, damit nichts "klebt" */
+@media(hover:none){
+  .tile:hover{transform:none}
+  .tile:active{transform:scale(.985)}
+  .term:hover,.card:hover{border-color:var(--line)}
+}
+
+/* Respektiere "Reduzierte Bewegung" (Barrierefreiheit) */
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+  .flash-inner{transition:none}
+}
+
+/* ---------- PWA-INSTALL-BANNER (nur Startseite) ---------- */
+.install{display:none;align-items:center;gap:.8rem;background:linear-gradient(100deg,rgba(45,226,230,.1),rgba(255,42,109,.08));
+  border:1px solid var(--line);border-left:3px solid var(--cyan);border-radius:6px;padding:.8rem 1rem;margin-bottom:1.2rem;backdrop-filter:blur(6px)}
+.install.show{display:flex}
+.install .ic{font-size:22px;filter:drop-shadow(0 0 8px var(--cyan))}
+.install .tx{flex:1;min-width:0}
+.install .tx b{font-family:var(--fdisp);font-size:13.5px;letter-spacing:.3px;color:var(--ink)}
+.install .tx p{font-size:12px;color:var(--muted);margin-top:1px}
+.install .go{font-family:var(--fmono);font-size:12px;letter-spacing:.5px;color:#04121a;background:linear-gradient(92deg,var(--cyan),var(--magenta));
+  border:none;border-radius:4px;padding:9px 15px;cursor:pointer;white-space:nowrap;min-height:42px}
+.install .no{background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer;line-height:1;padding:4px 8px}
+@media(max-width:560px){.install .tx p{display:none}}

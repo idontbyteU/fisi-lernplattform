@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bedrohungen & Modellierung · LZK · FISI Lernplattform</title>
 <link rel="stylesheet" href="theme.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
 <div class="scan"></div>
@@ -917,6 +922,12 @@ document.addEventListener('click',()=>{document.querySelectorAll('.gloss.open').
 
 /* INIT */
 buildTermChips();
+</script>
+<script>
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});
+}
 </script>
 </body>
 </html>
