@@ -4,105 +4,116 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LF4 – IT-Sicherheit & Datenschutz</title>
+<link rel="stylesheet" href="theme.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;font-size:15px;background:#f5f5f3;color:#1a1a18;padding:0 0 5rem}
-.hdr{background:white;border-bottom:1px solid #e0dfd8;padding:.875rem 1.25rem;position:sticky;top:0;z-index:10}
-.hdr h1{font-size:17px;font-weight:500}
-.hdr p{font-size:12px;color:#666;margin-top:2px}
-.tabs{display:flex;border-bottom:1px solid #e0dfd8;background:white;overflow-x:auto}
-.tab{padding:10px 16px;font-size:13px;cursor:pointer;border:none;background:none;color:#666;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0}
-.tab.on{color:#0F6E56;border-bottom-color:#1D9E75;font-weight:500}
+body{padding:0 0 5rem}
+
+
+
+
+
+
 .wrap{max-width:700px;margin:0 auto;padding:1rem}
 .sec{display:none}.sec.on{display:block}
 
 /* THEMEN */
 .tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:1rem}
-.tc{background:white;border:1px solid #e0dfd8;border-radius:12px;padding:10px 12px;cursor:pointer}
-.tc.on{border-color:#1D9E75;background:#E1F5EE}
-.tc .num{font-size:10px;font-weight:600;color:#1D9E75;text-transform:uppercase;margin-bottom:3px}
+.tc{background:rgba(16,20,36,.62);border:1px solid rgba(120,180,220,.14);border-radius:12px;padding:10px 12px;cursor:pointer}
+.tc.on{border-color:#27f59a;background:rgba(45,226,230,.12)}
+.tc .num{font-size:10px;font-weight:600;color:#27f59a;text-transform:uppercase;margin-bottom:3px}
 .tc h3{font-size:13px;font-weight:500;margin-bottom:2px}
-.tc p{font-size:11px;color:#666;line-height:1.4}
-.tdetail{border:1px solid #e0dfd8;border-radius:12px;overflow:hidden;background:white}
-.trow{padding:10px 14px;border-bottom:1px solid #e0dfd8;font-size:13px;line-height:1.5}
+.tc p{font-size:11px;color:#9fb0cc;line-height:1.4}
+.tdetail{border:1px solid rgba(120,180,220,.14);border-radius:12px;overflow:hidden;background:rgba(16,20,36,.62)}
+.trow{padding:13px 16px;border-bottom:1px solid rgba(120,180,220,.14);font-size:14px;line-height:1.65}
 .trow:last-child{border-bottom:none}
-.trow b{color:#1a1a18;display:block;margin-bottom:2px;font-weight:500}
-.trow span{color:#555}
+.trow b{color:#f3fbff;display:block;margin-bottom:2px;font-weight:500}
+.trow span{color:var(--read)}
 
 /* KARTEIKARTEN */
 .fbar{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:.875rem}
-.fbtn{padding:5px 11px;font-size:12px;border-radius:20px;cursor:pointer;border:1px solid #ccc;background:none;color:#666}
-.fbtn.on{background:#E1F5EE;color:#04342C;border-color:#1D9E75}
+.fbtn{padding:5px 11px;font-size:12px;border-radius:20px;cursor:pointer;border:1px solid rgba(120,180,220,.2);background:none;color:#9fb0cc}
+.fbtn.on{background:rgba(45,226,230,.12);color:#27f59a;border-color:#27f59a}
 
 /* Fortschritt */
 .prow{display:flex;align-items:center;gap:10px;margin-bottom:.5rem}
-.pbar{flex:1;height:6px;background:#e0dfd8;border-radius:3px;overflow:hidden;display:flex}
-.pfill-r{height:100%;background:#1D9E75;transition:width .3s}
-.pfill-f{height:100%;background:#E8504A;transition:width .3s}
-.pmeta{font-size:12px;color:#888;white-space:nowrap}
+.pbar{flex:1;height:6px;background:rgba(120,180,220,.14);border-radius:3px;overflow:hidden;display:flex}
+.pfill-r{height:100%;background:#27f59a;transition:width .3s}
+.pfill-f{height:100%;background:#ff2a6d;transition:width .3s}
+.pmeta{font-size:12px;color:#9fb0cc;rgba(16,20,36,.62)-space:nowrap}
 .status-row{display:flex;gap:14px;margin-bottom:.875rem;font-size:12px}
-.s-item{display:flex;align-items:center;gap:5px;color:#666}
+.s-item{display:flex;align-items:center;gap:5px;color:#9fb0cc}
 .s-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.s-dot.r{background:#1D9E75}.s-dot.f{background:#E8504A}.s-dot.o{background:#ccc}
+.s-dot.r{background:#27f59a}.s-dot.f{background:#ff2a6d}.s-dot.o{background:rgba(120,180,220,.2)}
 
 /* KARTE */
-.card{background:white;border:2px solid #e0dfd8;border-radius:14px;padding:1.5rem 1.25rem;min-height:175px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;margin-bottom:.75rem;transition:border-color .2s}
-.card.flipped{border-color:#1D9E75}
-.card.war-r{border-color:#1D9E75}
-.card.war-f{border-color:#E8504A}
-.side{position:absolute;top:11px;left:13px;font-size:10px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:.5px}
-.side.ans{color:#1D9E75}
-.cbadge{position:absolute;top:11px;right:13px;font-size:10px;padding:2px 8px;background:#f1efe8;color:#666;border-radius:20px}
-.cnum{position:absolute;bottom:11px;right:13px;font-size:10px;color:#bbb}
-.cq{font-size:15px;font-weight:500;text-align:center;line-height:1.5;padding:0 .25rem}
-.ca{display:none;font-size:13px;color:#444;text-align:left;line-height:1.65;margin-top:12px;background:#f5f5f3;padding:12px 14px;border-radius:9px;width:100%;white-space:pre-line}
+.card{background:rgba(16,20,36,.62);border:2px solid rgba(120,180,220,.14);border-radius:14px;padding:1.5rem 1.25rem;min-height:175px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;margin-bottom:.75rem;transition:border-color .2s}
+.card.flipped{border-color:#27f59a}
+.card.war-r{border-color:#27f59a}
+.card.war-f{border-color:#ff2a6d}
+.side{position:absolute;top:11px;left:13px;font-size:10px;font-weight:600;color:#7c8aa6;text-transform:uppercase;letter-spacing:.5px}
+.side.ans{color:#27f59a}
+.cbadge{position:absolute;top:11px;right:13px;font-size:10px;padding:2px 8px;background:rgba(120,180,220,.1);color:#9fb0cc;border-radius:20px}
+.cnum{position:absolute;bottom:11px;right:13px;font-size:10px;color:#7c8aa6}
+.cq{font-size:16px;font-weight:600;text-align:center;line-height:1.6;padding:0 .25rem}
+.ca{display:none;font-size:14px;color:var(--read);text-align:left;line-height:1.75;margin-top:14px;background:rgba(0,0,0,.18);padding:14px 16px;border-radius:9px;width:100%;white-space:pre-line}
 .card.flipped .ca{display:block}
 
 /* BEWERTUNG */
-.flip-hint{text-align:center;font-size:13px;color:#aaa;margin-bottom:.75rem}
+.flip-hint{text-align:center;font-size:13px;color:#7c8aa6;margin-bottom:.75rem}
 .bewertung{display:none;gap:10px;margin-bottom:.75rem}
 .bewertung.show{display:flex}
-.btn-f{flex:1;padding:12px;font-size:14px;font-weight:500;border:none;border-radius:10px;cursor:pointer;background:#FCEBEB;color:#791F1F}
-.btn-r{flex:1;padding:12px;font-size:14px;font-weight:500;border:none;border-radius:10px;cursor:pointer;background:#E1F5EE;color:#085041}
+.btn-f{flex:1;padding:12px;font-size:14px;font-weight:500;border:none;border-radius:10px;cursor:pointer;background:rgba(255,42,109,.12);color:#ff2a6d}
+.btn-r{flex:1;padding:12px;font-size:14px;font-weight:500;border:none;border-radius:10px;cursor:pointer;background:rgba(45,226,230,.12);color:#27f59a}
 
 /* NAV */
 .nav-row{display:flex;gap:8px;justify-content:center}
-.nav-row button{padding:8px 18px;font-size:13px;border:1px solid #ccc;border-radius:8px;background:white;cursor:pointer}
+.nav-row button{padding:8px 18px;font-size:13px;border:1px solid rgba(120,180,220,.2);border-radius:8px;background:rgba(16,20,36,.62);cursor:pointer}
 
 /* ERGEBNIS */
-.result{background:white;border:1px solid #e0dfd8;border-radius:14px;padding:2rem 1.25rem;text-align:center;display:none}
+.result{background:rgba(16,20,36,.62);border:1px solid rgba(120,180,220,.14);border-radius:14px;padding:2rem 1.25rem;text-align:center;display:none}
 .result .big{font-size:40px;font-weight:500;margin-bottom:.5rem}
-.result .big.gut{color:#1D9E75}.result .big.ok{color:#E8A020}.result .big.schlecht{color:#E8504A}
-.result .msg{font-size:14px;color:#666;margin-bottom:1.5rem;line-height:1.5}
+.result .big.gut{color:#27f59a}.result .big.ok{color:#ffb43b}.result .big.schlecht{color:#ff2a6d}
+.result .msg{font-size:14px;color:#9fb0cc;margin-bottom:1.5rem;line-height:1.5}
 .score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.5rem}
-.score-cell{background:#f5f5f3;border-radius:10px;padding:10px 8px}
+.score-cell{background:rgba(16,20,36,.62);border-radius:10px;padding:10px 8px}
 .score-cell .n{font-size:22px;font-weight:500}
-.score-cell .l{font-size:11px;color:#666;margin-top:2px}
+.score-cell .l{font-size:11px;color:#9fb0cc;margin-top:2px}
 .result-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.result-btns button{padding:10px 20px;font-size:13px;border:1px solid #ccc;border-radius:9px;background:white;cursor:pointer}
-.btn-wdh{background:#1D9E75 !important;color:white !important;border-color:#1D9E75 !important}
+.result-btns button{padding:10px 20px;font-size:13px;border:1px solid rgba(120,180,220,.2);border-radius:9px;background:rgba(16,20,36,.62);cursor:pointer}
+.btn-wdh{background:#27f59a !important;color:rgba(16,20,36,.62) !important;border-color:#27f59a !important}
 
 /* TABELLEN */
-table{width:100%;font-size:13px;border-collapse:collapse;background:white;border-radius:12px;overflow:hidden;border:1px solid #e0dfd8}
-th{text-align:left;padding:8px 10px;background:#f5f5f3;font-weight:500;font-size:11px;color:#666}
-td{padding:9px 10px;border-bottom:1px solid #e0dfd8;vertical-align:top;line-height:1.5}
+table{width:100%;font-size:13px;border-collapse:collapse;background:rgba(16,20,36,.62);border-radius:12px;overflow:hidden;border:1px solid rgba(120,180,220,.14)}
+th{text-align:left;padding:8px 10px;background:rgba(16,20,36,.62);font-weight:500;font-size:11px;color:#9fb0cc}
+td{padding:9px 10px;border-bottom:1px solid rgba(120,180,220,.14);vertical-align:top;line-height:1.5}
 tr:last-child td{border-bottom:none}
-.g{font-weight:500;color:#1a1a18;white-space:nowrap}
-.frage{font-size:12px;color:#0F6E56;font-style:italic}
-.ib{background:#E1F5EE;border-left:3px solid #1D9E75;border-radius:0 8px 8px 0;padding:9px 14px;font-size:13px;color:#085041;margin-bottom:1rem}
+.g{font-weight:500;color:#f3fbff;rgba(16,20,36,.62)-space:nowrap}
+.frage{font-size:12px;color:#27f59a;font-style:italic}
+.ib{background:rgba(45,226,230,.12);border-left:3px solid #27f59a;border-radius:0 8px 8px 0;padding:9px 14px;font-size:13px;color:#27f59a;margin-bottom:1rem}
 </style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
-<div class="hdr">
-  <h1>LF4 – IT-Sicherheit & Datenschutz</h1>
-  <p>Schutzziele · ISMS · DSGVO · Firewall · Malware · Lizenzen</p>
-</div>
-<div class="tabs">
-  <button class="tab on" onclick="st('themen',this)">Themen</button>
-  <button class="tab" onclick="st('karten',this)">Karteikarten</button>
-  <button class="tab" onclick="st('gesetze',this)">Gesetze</button>
-  <button class="tab" onclick="st('dsgvo',this)">DSGVO</button>
-</div>
+<div class="scan"></div>
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="lf4.html">← LF4</a>
+    <div><h1><span class="tag" style="background:var(--magenta)">LF4</span>IT-Sicherheit (Detailmodul)</h1>
+    <div class="sub">Schutzziele · ISMS · DSGVO · Firewall · Malware · Lizenzen</div></div>
+    <div class="sp"></div>
+    <div class="tabs">
+      <button class="tab on" onclick="st('themen',this)">Themen</button>
+      <button class="tab" onclick="st('karten',this)">Karteikarten</button>
+      <button class="tab" onclick="st('gesetze',this)">Gesetze</button>
+      <button class="tab" onclick="st('dsgvo',this)">DSGVO</button>
+    </div>
+  </div>
+</header>
 <div class="wrap">
 
 <!-- THEMEN -->
@@ -171,8 +182,8 @@ tr:last-child td{border-bottom:none}
     <div class="big" id="res-pct"></div>
     <div class="msg" id="res-msg"></div>
     <div class="score-grid">
-      <div class="score-cell"><div class="n" id="res-r" style="color:#1D9E75"></div><div class="l">Richtig</div></div>
-      <div class="score-cell"><div class="n" id="res-f" style="color:#E8504A"></div><div class="l">Falsch</div></div>
+      <div class="score-cell"><div class="n" id="res-r" style="color:#27f59a"></div><div class="l">Richtig</div></div>
+      <div class="score-cell"><div class="n" id="res-f" style="color:#ff2a6d"></div><div class="l">Falsch</div></div>
       <div class="score-cell"><div class="n" id="res-t"></div><div class="l">Gesamt</div></div>
     </div>
     <div class="result-btns">
@@ -406,6 +417,9 @@ function st(id,btn){
 }
 
 pool=[...KARTEN];showC();
+</script>
+<script>
+if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("service-worker.js").catch(()=>{});});}
 </script>
 </body>
 </html>
