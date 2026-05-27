@@ -19,6 +19,7 @@ const ASSETS = [
   "./lf2.html",
   "./lf3.html",
   "./lf4.html",
+  "./lf4_zusammenfassung.pdf",
   "./prio.html",
   "./python_byte.html",
   "./lf4_it_sicherheit.html",
