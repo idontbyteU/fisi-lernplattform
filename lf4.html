@@ -5,6 +5,88 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bedrohungen & Modellierung · LZK · FISI Lernplattform</title>
 <link rel="stylesheet" href="theme.css">
+<style>
+/* ===== Aufdeck-Modus (reveal) – ohne Speichern, rein sichtbar ===== */
+/* Werkzeugleiste über Zusammenfassung & Begriffen */
+.rvtools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.2rem 0 1.1rem}
+.rvtools .tbtn{font-family:var(--fmono);font-size:13px;border:1px solid var(--line);background:var(--glass);color:var(--muted);border-radius:4px;padding:6px 12px;cursor:pointer;transition:.12s}
+.rvtools .tbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+.rvtools .tbtn.on{background:var(--cyan);border-color:var(--cyan);color:#04121a}
+.rvtools .hint{font-family:var(--fmono);font-size:12px;color:var(--dim)}
+
+/* Verdeckte Erklärung: dt/dd in deflist */
+.reveal-on .deflist dd{
+  position:relative;color:transparent;user-select:none;border-radius:4px;cursor:pointer;
+  background:repeating-linear-gradient(45deg,rgba(120,180,220,.05),rgba(120,180,220,.05) 7px,rgba(120,180,220,.10) 7px,rgba(120,180,220,.10) 14px);
+  transition:.15s}
+.reveal-on .deflist dd *{color:transparent !important}
+.reveal-on .deflist dd::after{
+  content:"? aufdecken";position:absolute;inset:0;display:flex;align-items:center;
+  font-family:var(--fmono);font-size:12.5px;color:var(--cyan);padding-left:10px;letter-spacing:.5px}
+.reveal-on .deflist dt{cursor:pointer}
+.reveal-on .deflist dt::before{content:"▸ ";color:var(--cyan)}
+.reveal-on .deflist dd.shown{color:var(--read);background:none;cursor:default;user-select:text}
+.reveal-on .deflist dd.shown *{color:revert !important}
+.reveal-on .deflist dd.shown::after{display:none}
+
+/* Verdeckte Erklärung: Begriffe-Tab */
+.reveal-on .term .term-def,
+.reveal-on .term .term-ex{
+  position:relative;color:transparent;user-select:none;border-radius:4px;cursor:pointer;min-height:1.2em;
+  background:repeating-linear-gradient(45deg,rgba(120,180,220,.05),rgba(120,180,220,.05) 7px,rgba(120,180,220,.10) 7px,rgba(120,180,220,.10) 14px);
+  margin-top:4px}
+.reveal-on .term .term-def *,
+.reveal-on .term .term-ex *{color:transparent !important}
+.reveal-on .term .term-ex .ex-lbl{color:transparent !important}
+.reveal-on .term .term-name{cursor:pointer}
+.reveal-on .term .term-name::before{content:"▸ ";color:var(--cyan)}
+.reveal-on .term.shown .term-def,
+.reveal-on .term.shown .term-ex{color:var(--read);background:none;cursor:default;user-select:text}
+.reveal-on .term.shown .term-def *,
+.reveal-on .term.shown .term-ex *{color:revert !important}
+.reveal-on .term.shown .term-ex .ex-lbl{color:#04121a !important}
+
+/* Ausklappbare Kapitel: details/summary nutzen den vorhandenen theme.css-Stil.
+   h-sec-Optik in die summary übertragen. */
+details.chap{margin:0 0 1.1rem}
+details.chap>summary{font-size:1.18rem;font-weight:800;letter-spacing:.3px;padding:.6rem .8rem}
+details.chap>summary .ico{margin-right:.1rem}
+details.chap>summary .ar{font-size:15px}
+details.chap .chap-body{padding:.3rem .2rem 0}
+
+/* ============================================================ */
+/*  LICHT-THEME (PDF-Stil) – aktiv bei <html data-theme="light"> */
+/*  Überschreibt nur Variablen + wenige feste Dunkelwerte;       */
+/*  theme.css bleibt unangetastet, Dunkel-Modus voll erhalten.   */
+/* ============================================================ */
+html[data-theme="light"]{
+  --bg:#ffffff; --bg2:#f4f7fa; --ink:#16202b; --muted:#5a6675; --dim:#7c8896; --read:#222e3a;
+  --cyan:#0892a5; --magenta:#c81e5a; --purple:#7a3ec8; --amber:#b8801f; --ok:#138a5e;
+  --line:#d4dde6; --glass:#f4f7fa; --glass2:#eef3f8;
+  --warn:#b8801f; --danger:#c81e5a;
+  --green:var(--cyan); --green-soft:rgba(8,146,165,.10); --blue:var(--cyan); --blue-soft:rgba(8,146,165,.10);
+  --card:#ffffff; --shadow:0 6px 20px rgba(30,50,80,.10);
+}
+html[data-theme="light"] body{background:#ffffff;color:var(--ink)}
+html[data-theme="light"] .scan{display:none}                 /* Scanline-Glow aus */
+html[data-theme="light"] .hdr{background:#ffffff;border-bottom:1px solid var(--line)}
+html[data-theme="light"] .sum .callout{background:#fff8ec;border-color:#f0d9a8;color:#6b5320}
+html[data-theme="light"] .sum .callout b{color:#9a6f12}
+html[data-theme="light"] table.ltbl th{background:#e6f4f6}
+html[data-theme="light"] .term-ex{background:#eef6f7}
+html[data-theme="light"] .term:hover{border-color:var(--cyan)}
+html[data-theme="light"] .reveal-on .deflist dd,
+html[data-theme="light"] .reveal-on .term .term-def,
+html[data-theme="light"] .reveal-on .term .term-ex{
+  background:repeating-linear-gradient(45deg,#eef3f8,#eef3f8 7px,#e2eaf2 7px,#e2eaf2 14px)}
+html[data-theme="light"] details.chap[open]>summary{background:#e6f4f6;color:var(--cyan)}
+html[data-theme="light"] details.chap>summary{background:#f4f7fa}
+
+/* Theme-Umschalter-Button oben */
+.theme-tg{font-family:var(--fmono);font-size:12.5px;border:1px solid var(--line);background:var(--glass);
+  color:var(--muted);border-radius:4px;padding:6px 11px;cursor:pointer;transition:.14s;white-space:nowrap}
+.theme-tg:hover{border-color:var(--cyan);color:var(--cyan)}
+</style>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#070710">
 <link rel="apple-touch-icon" href="icon.svg">
@@ -27,6 +109,7 @@
       <button id="tLaws">Gesetze</button>
       <button id="tDsgvo">DSGVO</button>
     </div>
+    <button class="theme-tg" id="themeTg" title="Hell/Dunkel umschalten">☀ Hell</button>
   </div>
 </header>
 
@@ -1137,6 +1220,25 @@ document.addEventListener('click',()=>{document.querySelectorAll('.gloss.open').
 
 /* INIT */
 buildTermChips();
+
+/* ===== THEME-UMSCHALTER (Hell wie PDF / Dunkel) ===== */
+(function(){
+  const KEY="fisi_lf4_theme";
+  const btn=document.getElementById('themeTg');
+  const root=document.documentElement;
+  function apply(t){
+    if(t==="light"){root.setAttribute('data-theme','light');btn.textContent="🌙 Dunkel";}
+    else{root.removeAttribute('data-theme');btn.textContent="☀ Hell";}
+  }
+  let saved="dark";
+  try{saved=localStorage.getItem(KEY)||"dark";}catch(e){}
+  apply(saved);
+  btn.onclick=()=>{
+    const now=root.getAttribute('data-theme')==="light"?"dark":"light";
+    apply(now);
+    try{localStorage.setItem(KEY,now);}catch(e){}
+  };
+})();
 </script>
 <script>
 /* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
