@@ -1221,6 +1221,126 @@ document.addEventListener('click',()=>{document.querySelectorAll('.gloss.open').
 /* INIT */
 buildTermChips();
 
+/* ===================================================================== */
+/*  AUFKLAPPEN & AUFDECKEN  (rein sichtbar, kein Speichern)              */
+/* ===================================================================== */
+(function(){
+  /* ---- 1) Zusammenfassungs-Kapitel in <details class="chap"> wrappen ---- */
+  function wrapChapters(){
+    const sum=document.getElementById('vSum');
+    if(!sum||sum.dataset.chapDone)return;
+    const kids=[...sum.children];
+    let i=0;
+    while(i<kids.length){
+      const node=kids[i];
+      if(node.classList&&node.classList.contains('h-sec')){
+        // Sammle alle Folge-Elemente bis zum nächsten h-sec oder detail-links
+        const group=[];
+        let j=i+1;
+        while(j<kids.length){
+          const n=kids[j];
+          if(n.classList&&(n.classList.contains('h-sec')||n.classList.contains('detail-links')))break;
+          group.push(n); j++;
+        }
+        // <details> bauen
+        const det=document.createElement('details');
+        det.className='chap'; det.open=true;
+        const sum2=document.createElement('summary');
+        // h-sec-Inhalt (Icon + Titel) in summary übernehmen
+        sum2.innerHTML=node.innerHTML+'<span class="ar">▸</span>';
+        det.appendChild(sum2);
+        const body=document.createElement('div');
+        body.className='chap-body';
+        group.forEach(g=>body.appendChild(g));
+        det.appendChild(body);
+        sum.insertBefore(det,node);
+        node.remove();
+        kids.splice(i,1+group.length,det);
+      }
+      i++;
+    }
+    sum.dataset.chapDone="1";
+  }
+
+  /* ---- 2) Aufdecken: deflist (Zusammenfassung) ---- */
+  function bindDeflists(){
+    document.querySelectorAll('#vSum .deflist > div').forEach(row=>{
+      const dt=row.querySelector('dt'), dd=row.querySelector('dd');
+      if(!dt||!dd||dt.dataset.rv)return;
+      dt.dataset.rv="1";
+      const toggle=()=>{ if(document.getElementById('vSum').classList.contains('reveal-on')) dd.classList.toggle('shown'); };
+      dt.addEventListener('click',e=>{e.stopPropagation();toggle();});
+      dd.addEventListener('click',e=>{e.stopPropagation(); if(!dd.classList.contains('shown'))toggle();});
+    });
+  }
+
+  /* ---- 3) Aufdecken: Begriffe-Tab ---- */
+  function bindTerms(){
+    document.querySelectorAll('#vTerms .term').forEach(t=>{
+      const name=t.querySelector('.term-name');
+      if(!name||name.dataset.rv)return;
+      name.dataset.rv="1";
+      const toggle=()=>{ if(document.getElementById('vTerms').classList.contains('reveal-on')) t.classList.toggle('shown'); };
+      name.addEventListener('click',e=>{e.stopPropagation();toggle();});
+      t.addEventListener('click',e=>{ if(!t.classList.contains('shown'))toggle(); });
+    });
+  }
+
+  /* ---- 4) Werkzeugleisten (Aufdeck-Modus an/aus, alles auf/zu) ---- */
+  function makeTools(viewId, isTerms){
+    const view=document.getElementById(viewId);
+    if(!view||view.querySelector('.rvtools'))return;
+    const bar=document.createElement('div'); bar.className='rvtools';
+    const bReveal=document.createElement('button'); bReveal.className='tbtn';
+    bReveal.textContent='🙈 Erklärungen verdecken';
+    const bAll=document.createElement('button'); bAll.className='tbtn'; bAll.textContent='⬇ Alle aufdecken';
+    const hint=document.createElement('span'); hint.className='hint';
+    hint.textContent=isTerms?'Tippe einen Begriff an, um die Erklärung aufzudecken.'
+                             :'Tippe einen Begriff (▸) an, um die Erklärung aufzudecken.';
+    bReveal.onclick=()=>{
+      const on=view.classList.toggle('reveal-on');
+      bReveal.classList.toggle('on',on);
+      bReveal.textContent=on?'👁 Erklärungen zeigen':'🙈 Erklärungen verdecken';
+      bAll.style.display=on?'':'none';
+      if(!on){ // beim Ausschalten alles wieder normal
+        view.querySelectorAll('.shown').forEach(x=>x.classList.remove('shown'));
+      }
+    };
+    bAll.style.display='none';
+    bAll.onclick=()=>{
+      if(isTerms) view.querySelectorAll('.term').forEach(t=>t.classList.add('shown'));
+      else view.querySelectorAll('.deflist dd').forEach(d=>d.classList.add('shown'));
+    };
+    bar.appendChild(bReveal); bar.appendChild(bAll); bar.appendChild(hint);
+    // Einfügen: Zusammenfassung ganz oben; Begriffe nach der Suchleiste/Chips
+    if(isTerms){
+      const chips=view.querySelector('#termChips');
+      chips.parentNode.insertBefore(bar, chips.nextSibling);
+    } else {
+      view.insertBefore(bar, view.firstChild);
+    }
+  }
+
+  /* ---- 5) Kapitel-Steuerung (alle auf/zu) in die Sum-Toolbar ---- */
+  function addChapControls(){
+    const bar=document.querySelector('#vSum .rvtools');
+    if(!bar||bar.dataset.chap)return; bar.dataset.chap="1";
+    const sep=document.createElement('span'); sep.className='hint'; sep.textContent='·';
+    const bOpen=document.createElement('button'); bOpen.className='tbtn'; bOpen.textContent='▾ Kapitel auf';
+    const bClose=document.createElement('button'); bClose.className='tbtn'; bClose.textContent='▸ Kapitel zu';
+    bOpen.onclick=()=>document.querySelectorAll('#vSum details.chap').forEach(d=>d.open=true);
+    bClose.onclick=()=>document.querySelectorAll('#vSum details.chap').forEach(d=>d.open=false);
+    bar.appendChild(sep); bar.appendChild(bOpen); bar.appendChild(bClose);
+  }
+
+  wrapChapters();
+  makeTools('vSum',false);
+  addChapControls();
+  bindDeflists();
+  makeTools('vTerms',true);
+  bindTerms();
+})();
+
 /* ===== THEME-UMSCHALTER (Hell wie PDF / Dunkel) ===== */
 (function(){
   const KEY="fisi_lf4_theme";
