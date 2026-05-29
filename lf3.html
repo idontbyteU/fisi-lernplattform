@@ -20,6 +20,7 @@
     <div>
       <h1><span class="tag">LF 3</span>Karteikarten</h1>
       <div class="sub">Netzwerke · OSI · TCP/IP · Subnetting · Protokolle · RAID · Backup · USV</div>
+      <div style="margin-top:.5rem"><a href="lf3_ipv6.html" style="font-family:var(--fmono);font-size:13px;color:var(--cyan);border:1px solid var(--cyan);border-radius:5px;padding:5px 11px;text-decoration:none">🌐 IPv6-Lernmodul (Theorie · Übungen) →</a></div>
     </div>
     <div class="sp"></div>
     <div class="mode">
@@ -55,6 +56,7 @@ const CATS={
   osi:{label:"OSI-Modell",color:"#b66bff"},
   tcp:{label:"TCP/IP & UDP",color:"#2de2e6"},
   ip:{label:"IPv4 & Subnetting",color:"#ffb43b"},
+  ipv6:{label:"IPv6",color:"#2de2e6"},
   prot:{label:"Protokolle",color:"#27f59a"},
   raid:{label:"RAID",color:"#ff2a6d"},
   bak:{label:"Backup",color:"#ffb43b"},
@@ -108,6 +110,18 @@ const CARDS=[
 {c:"ip",q:"Subnetzmaske für /27 und Blockgröße?",a:"/27 = <b>255.255.255.224</b>, Blockgröße <b>32</b> im letzten Oktett (2^5 = 32 Adressen, 30 nutzbare Hosts)."},
 {c:"ip",q:"Was ist die Blockgröße und wozu dient sie?",a:"Die Schrittweite, in der sich Subnetze wiederholen (256 − letztes Maskenoktett). Sie hilft, Netzgrenzen schnell zu finden (z. B. /26 → Blöcke 0, 64, 128, 192)."},
 {c:"ip",q:"Nenne die privaten IPv4-Adressbereiche.",a:"10.0.0.0/8 · 172.16.0.0/12 · 192.168.0.0/16 – sie sind nicht im Internet routbar."},
+{c:"ipv6",q:"Wie viele Bit hat eine IPv6-Adresse?",a:"<b>128 Bit</b> – 8 Blöcke à 16 Bit in Hexadezimal, getrennt durch Doppelpunkte. (IPv4: 32 Bit)"},
+{c:"ipv6",q:"Aus welchen zwei Teilen besteht eine IPv6-Adresse?",a:"<b>Netzwerk-Präfix</b> (Netz) + <b>Interface Identifier</b> (Schnittstelle). Netzanteil in CIDR, keine Netzmaske."},
+{c:"ipv6",q:"Welche Kürzungsregeln gelten bei IPv6?",a:"Führende Nullen weg; ein Nullblock → <b>0</b>; mehrere zusammenhängende Nullblöcke <b>einmal</b> durch <b>::</b> (max. Kürzung, sonst erster Bereich); Kleinschreibung."},
+{c:"ipv6",q:"Wie oft darf :: vorkommen und wie lautet die Loopback-Adresse?",a:":: nur <b>einmal</b>. Loopback = <b>::1</b> (entspricht 127.0.0.1)."},
+{c:"ipv6",q:"Wofür steht SLAAC und wie läuft es ab?",a:"<b>Stateless Address Autoconfiguration</b>: Router sendet Router Advertisement (Präfix) → Client bildet Interface Identifier → Prüfung per Neighbor Solicitation (DAD) → Nutzung."},
+{c:"ipv6",q:"Was ist EUI-64 und woran erkennt man es?",a:"Bildung des 64-Bit Interface Identifiers aus der 48-Bit-MAC durch Einfügen von <b>ff:fe</b> in die Mitte. Erkennbar am ff:fe."},
+{c:"ipv6",q:"Wozu dienen Privacy Extensions?",a:"Zufälliger statt MAC-basierter Interface Identifier + temporäre Adressen → kein Wiedererkennen des Geräts (Datenschutz). Kein ff:fe."},
+{c:"ipv6",q:"Wie löst man IPv6-Subnetting (IHK-Methode)?",a:"Über die <b>Differenz</b>: 64 − Präfix = Subnetz-Bits → 2<sup>Bits</sup> Subnetze. Beispiel /56: 64−56=8 → 2<sup>8</sup>=256. Keine Adressen abziehen (kein Netz-ID/Broadcast)."},
+{c:"ipv6",q:"Welche drei Übertragungsarten kennt IPv6?",a:"<b>Unicast</b> (ein Ziel), <b>Multicast</b> (Gruppe, ersetzt Broadcast), <b>Anycast</b> (nächstgelegenes Gruppenmitglied)."},
+{c:"ipv6",q:"Nenne die wichtigen IPv6-Adressbereiche.",a:"<b>::1/128</b> Loopback · <b>fe80::/10</b> Link-Local · <b>fc00::/7</b> Unique Local (fc/fd) · <b>ff00::/8</b> Multicast · <b>2000::/3</b> Global Unicast."},
+{c:"ipv6",q:"Was ist NDP und was ersetzt es?",a:"<b>Neighbor Discovery Protocol</b>: ermittelt MAC zu IPv6, erkennt Router/Präfixe, unterstützt SLAAC, prüft doppelte Adressen – ersetzt <b>ARP</b>."},
+{c:"ipv6",q:"Wichtigste Unterschiede IPv4 ↔ IPv6?",a:"IPv6: 128 statt 32 Bit, hex statt dezimal, <b>Multicast statt Broadcast</b>, <b>NDP statt ARP</b>, NAT meist unnötig, SLAAC/DHCPv6 statt DHCP, effizienterer Header."},
 {c:"prot",q:"Was macht DNS?",a:"<b>Namensauflösung</b>: übersetzt Domainnamen in IP-Adressen (und umgekehrt) – das „Telefonbuch des Internets“, dezentral auf vielen Nameservern verteilt."},
 {c:"prot",q:"Welcher Port und welches Verfahren gehört zu DNS?",a:"Port <b>53</b>. Kann ein Server eine Anfrage nicht beantworten, fragt er eine Kette weiterer DNS-Server, bis eine IP zurückkommt."},
 {c:"prot",q:"Was macht DHCP?",a:"Vergibt <b>automatisch IP-Konfiguration</b> an Geräte: IP-Adresse, Subnetzmaske, Standard-Gateway und DNS-Server – über einen DHCP-Server/Router."},

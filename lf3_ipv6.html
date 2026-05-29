@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPv6 · LF3 · FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+/* ===== Aufdeck-Modus (reveal) – ohne Speichern, rein sichtbar ===== */
+.rvtools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.2rem 0 1.1rem}
+.rvtools .tbtn{font-family:var(--fmono);font-size:13px;border:1px solid var(--line);background:var(--glass);color:var(--muted);border-radius:4px;padding:6px 12px;cursor:pointer;transition:.12s}
+.rvtools .tbtn:hover{border-color:var(--cyan);color:var(--cyan)}
+.rvtools .tbtn.on{background:var(--cyan);border-color:var(--cyan);color:#04121a}
+.rvtools .hint{font-family:var(--fmono);font-size:12px;color:var(--dim)}
+
+.reveal-on .deflist dd{position:relative;color:transparent;user-select:none;border-radius:4px;cursor:pointer;
+  background:repeating-linear-gradient(45deg,rgba(120,180,220,.05),rgba(120,180,220,.05) 7px,rgba(120,180,220,.10) 7px,rgba(120,180,220,.10) 14px);transition:.15s}
+.reveal-on .deflist dd *{color:transparent !important}
+.reveal-on .deflist dd::after{content:"? aufdecken";position:absolute;inset:0;display:flex;align-items:center;
+  font-family:var(--fmono);font-size:12.5px;color:var(--cyan);padding-left:10px;letter-spacing:.5px}
+.reveal-on .deflist dt{cursor:pointer}
+.reveal-on .deflist dt::before{content:"▸ ";color:var(--cyan)}
+.reveal-on .deflist dd.shown{color:var(--read);background:none;cursor:default;user-select:text}
+.reveal-on .deflist dd.shown *{color:revert !important}
+.reveal-on .deflist dd.shown::after{display:none}
+
+.reveal-on .term .term-def,.reveal-on .term .term-ex{position:relative;color:transparent;user-select:none;border-radius:4px;cursor:pointer;min-height:1.2em;
+  background:repeating-linear-gradient(45deg,rgba(120,180,220,.05),rgba(120,180,220,.05) 7px,rgba(120,180,220,.10) 7px,rgba(120,180,220,.10) 14px);margin-top:4px}
+.reveal-on .term .term-def *,.reveal-on .term .term-ex *{color:transparent !important}
+.reveal-on .term .term-ex .ex-lbl{color:transparent !important}
+.reveal-on .term .term-name{cursor:pointer}
+.reveal-on .term .term-name::before{content:"▸ ";color:var(--cyan)}
+.reveal-on .term.shown .term-def,.reveal-on .term.shown .term-ex{color:var(--read);background:none;cursor:default;user-select:text}
+.reveal-on .term.shown .term-def *,.reveal-on .term.shown .term-ex *{color:revert !important}
+.reveal-on .term.shown .term-ex .ex-lbl{color:#04121a !important}
+
+/* Ausklappbare Kapitel */
+details.chap{margin:0 0 1.1rem}
+details.chap>summary{font-size:1.18rem;font-weight:800;letter-spacing:.3px;padding:.6rem .8rem;cursor:pointer;list-style:none;
+  border:1px solid var(--line);border-radius:8px;background:var(--glass);display:flex;align-items:center;gap:.4rem}
+details.chap>summary::-webkit-details-marker{display:none}
+details.chap[open]>summary{border-color:rgba(45,226,230,.4);color:var(--cyan)}
+details.chap>summary .ar{margin-left:auto;transition:.2s;font-size:15px}
+details.chap[open]>summary .ar{transform:rotate(90deg)}
+details.chap .chap-body{padding:.6rem .2rem 0}
+
+/* ===== Übungen ===== */
+.exq{border:1px solid var(--line);border-radius:10px;background:var(--glass);padding:1rem 1.1rem;margin:0 0 1rem}
+.exq .qh{font-family:var(--fmono);font-size:12.5px;color:var(--cyan);letter-spacing:.5px;margin-bottom:.5rem}
+.exq .qtext{font-size:1.02rem;line-height:1.5;margin-bottom:.7rem}
+.exq .qtext b{color:var(--amber)}
+.exq .mono{font-family:var(--fmono);font-size:1.05rem;color:var(--ink);background:rgba(120,180,220,.08);padding:.5rem .7rem;border-radius:6px;display:inline-block;margin:.2rem 0;word-break:break-all}
+.exq ul.qlist{list-style:none;padding:0;margin:.4rem 0}
+.exq ul.qlist li{padding:.35rem .6rem;margin:.25rem 0;border:1px solid var(--line);border-radius:6px;font-family:var(--fmono);font-size:.95rem;word-break:break-all}
+.exq .sol{margin-top:.7rem;border-top:1px dashed var(--line);padding-top:.7rem;display:none}
+.exq.open .sol{display:block}
+.exq .solbtn{font-family:var(--fmono);font-size:13px;border:1px solid var(--cyan);background:transparent;color:var(--cyan);border-radius:6px;padding:7px 14px;cursor:pointer;transition:.12s}
+.exq .solbtn:hover{background:var(--cyan);color:#04121a}
+.exq .sol-lbl{font-family:var(--fmono);font-size:12px;color:var(--ok);letter-spacing:.5px;margin-bottom:.4rem;text-transform:uppercase}
+.exq .sol .ans{font-size:1rem;line-height:1.55}
+.exq .sol .ans .ok{color:var(--ok);font-weight:700}
+.exq .sol .ans .no{color:var(--magenta);font-weight:700}
+.exq .sol .why{margin-top:.5rem;font-size:.92rem;color:var(--muted);line-height:1.5}
+.exq .sol .mono{background:rgba(39,245,154,.08)}
+
+/* Theme-Umschalter */
+.theme-tg{font-family:var(--fmono);font-size:12.5px;border:1px solid var(--line);background:var(--glass);color:var(--muted);border-radius:4px;padding:6px 11px;cursor:pointer;transition:.14s;white-space:nowrap}
+.theme-tg:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* ===== LICHT-THEME (PDF-Stil) ===== */
+html[data-theme="light"]{
+  --bg:#ffffff;--bg2:#f4f7fa;--ink:#16202b;--muted:#5a6675;--dim:#7c8896;--read:#222e3a;
+  --cyan:#0892a5;--magenta:#c81e5a;--purple:#7a3ec8;--amber:#b8801f;--ok:#138a5e;
+  --line:#d4dde6;--glass:#f4f7fa;--glass2:#eef3f8;--warn:#b8801f;--danger:#c81e5a;
+  --green:var(--cyan);--green-soft:rgba(8,146,165,.10);--blue:var(--cyan);--blue-soft:rgba(8,146,165,.10);
+  --card:#ffffff;--shadow:0 6px 20px rgba(30,50,80,.10);
+}
+html[data-theme="light"] body{background:#ffffff;color:var(--ink)}
+html[data-theme="light"] .scan{display:none}
+html[data-theme="light"] .hdr{background:#ffffff;border-bottom:1px solid var(--line)}
+html[data-theme="light"] .sum .callout{background:#fff8ec;border-color:#f0d9a8;color:#6b5320}
+html[data-theme="light"] .sum .callout b{color:#9a6f12}
+html[data-theme="light"] table.ltbl th{background:#e6f4f6}
+html[data-theme="light"] .term-ex{background:#eef6f7}
+html[data-theme="light"] .exq .mono{background:#eef3f8}
+html[data-theme="light"] .exq .sol .mono{background:#e7f7ee}
+html[data-theme="light"] .reveal-on .deflist dd,
+html[data-theme="light"] .reveal-on .term .term-def,
+html[data-theme="light"] .reveal-on .term .term-ex{background:repeating-linear-gradient(45deg,#eef3f8,#eef3f8 7px,#e2eaf2 7px,#e2eaf2 14px)}
+html[data-theme="light"] details.chap[open]>summary{background:#e6f4f6;color:var(--cyan)}
+html[data-theme="light"] details.chap>summary{background:#f4f7fa}
+</style>
+</head>
+<body>
+<div class="scan"></div>
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="lf3.html">← Lernfeld 3</a>
+    <div><h1><span class="tag" style="background:var(--amber)">LF3</span>IPv6 – Internet Protocol Version 6</h1>
+    <div class="sub">Aufbau · Kürzen · SLAAC · Adresstypen · Subnetting · NDP · IPv4-Vergleich</div></div>
+    <div class="sp"></div>
+    <div class="tabs">
+      <button id="tSum" class="on">Zusammenfassung</button>
+      <button id="tCards">Karteikarten</button>
+      <button id="tTerms">Begriffe</button>
+      <button id="tEx">Übungen</button>
+    </div>
+    <button class="theme-tg" id="themeTg" title="Hell/Dunkel umschalten">☀ Hell</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ ZUSAMMENFASSUNG ============ -->
+<div id="vSum" class="view on sum">
+
+  <div class="h-sec"><span class="ico">🌐</span> Grundlagen &amp; Aufbau</div>
+  <p class="lead"><b>IPv6</b> ist der Nachfolger von IPv4. Der zentrale Unterschied ist die <b>Adresslänge</b>: IPv4 nutzt 32 Bit (ca. 4,3 Mrd. Adressen), IPv6 nutzt <b>128 Bit</b> – das sind ca. 340 Sextillionen (2<sup>128</sup>) Adressen.</p>
+  <div class="h-sub">Schreibweise</div>
+  <ul class="clean">
+    <li><b>128 Bit</b> → 8 Blöcke (Quartette) à 16 Bit in <b>Hexadezimal</b></li>
+    <li>4 Hex-Zeichen pro Block = 16 Bit · 1 Hex-Zeichen = 4 Bit</li>
+    <li>Blöcke werden durch <b>Doppelpunkte</b> getrennt</li>
+  </ul>
+  <div class="callout"><span class="ci">🔗</span><div><b>Zwei Teile:</b> <b>Netzwerk-Präfix</b> (beschreibt das Netz) + <b>Interface Identifier</b> (die konkrete Schnittstelle). Das Präfix wird in <b>CIDR</b>-Schreibweise angegeben – eine Netzmaske wie bei IPv4 gibt es nicht.</div></div>
+  <p class="lead">Beispiel: <span class="gloss">2001:4b2f:500:: /56<span class="pop">Die ersten 56 Bit sind der Netzwerk-Präfix. Der Rest steht für Subnetze und Interface Identifier zur Verfügung.</span></span></p>
+
+  <div class="h-sec"><span class="ico">✂️</span> Kürzungsregeln</div>
+  <p class="lead">IPv6-Adressen dürfen und sollen gekürzt geschrieben werden:</p>
+  <ul class="clean">
+    <li>Alphabetische Zeichen <b>klein</b> schreiben</li>
+    <li><b>Führende Nullen</b> eines Blocks dürfen entfernt werden</li>
+    <li>Ein Block aus 4 Nullen wird zu einer <b>0</b></li>
+    <li>Mehrere aufeinanderfolgende Null-Blöcke dürfen <b>einmal</b> durch <b>::</b> ersetzt werden</li>
+    <li>Es wird der Bereich mit <b>maximaler Kürzung</b> gewählt; bei gleich großen Bereichen der <b>erste</b></li>
+  </ul>
+  <div class="callout"><span class="ci">📝</span><div><b>Beispiel:</b> 2a01:0b84:0000:0000:002f:0000:0000:0000 → <b>2a01:b84:0:0:2f::</b><br>Loopback: 0000:…:0001 → <b>::1</b></div></div>
+  <div class="callout"><span class="ci">⚠️</span><div><b>:: nur bei mind. zwei zusammenhängenden Null-Blöcken sinnvoll.</b> Ein einzelner Nullblock wird nur zu <b>0</b> verkürzt, nicht zu <b>::</b>.</div></div>
+
+  <div class="h-sec"><span class="ico">⚙️</span> SLAAC &amp; Adresskonfiguration</div>
+  <p class="lead"><b>SLAAC</b> (Stateless Address Autoconfiguration) = zustandslose automatische Adresskonfiguration. Ein DHCP-Server muss <b>nicht</b> zwingend Adressen vergeben – der Client bildet seine Adresse selbst.</p>
+  <div class="h-sub">Ablauf</div>
+  <div class="chain steps"><span>Router Advertisement (Präfix)</span><span>Client bildet Interface Identifier</span><span>Neighbor Solicitation (DAD)</span><span>Adresse wird genutzt</span></div>
+  <div class="callout"><span class="ci">🧩</span><div><b>Beispiel:</b> Präfix 2001:db8:abcd:1::/64 + Interface Identifier a1b2:c3d4:e5f6:1234 → <b>2001:db8:abcd:1:a1b2:c3d4:e5f6:1234</b></div></div>
+  <div class="h-sub"><span class="gloss">EUI-64<span class="pop">Verfahren, das aus der 48-Bit-MAC-Adresse einen 64-Bit Interface Identifier bildet, indem ff:fe in die Mitte eingefügt wird.</span></span> – Interface Identifier aus MAC</div>
+  <p class="lead">Eine MAC ist 48 Bit, der Interface Identifier 64 Bit. Daher werden mittig die Füllbits <b>ff:fe</b> eingefügt.</p>
+  <div class="callout"><span class="ci">🔧</span><div>MAC 00:0C:F1:8E:C1:D8 → fe80::<b>020c:f1<u>ff:fe</u>8e:c1d8</b> (Erkennungsmerkmal EUI-64: das <b>ff:fe</b> in der Mitte)</div></div>
+  <div class="h-sub">Privacy Extensions</div>
+  <p class="lead">Ein fester, aus der MAC gebildeter Interface Identifier macht ein Gerät über Netze hinweg <b>wiedererkennbar</b> (Datenschutzproblem). <b>Privacy Extensions</b> erzeugen den Interface Identifier daher <b>zufällig</b> und bilden zusätzlich <b>temporäre</b> Adressen. Erkennungsmerkmal: <b>kein</b> ff:fe in der Mitte.</p>
+  <div class="callout"><span class="ci">📇</span><div>Eine Schnittstelle hat oft mehrere Adressen gleichzeitig: <b>Link-Local</b>, stabile globale, temporäre globale (Privacy).</div></div>
+
+  <div class="h-sec"><span class="ico">🧮</span> Subnetting</div>
+  <p class="lead">Standard-Subnetzgröße für Endgerätenetze ist <b>/64</b>. Ein Provider weist z. B. ein <b>/56</b> oder <b>/48</b> zu; daraus bildet der Router mehrere /64-Subnetze. Der Bereich zwischen zugewiesenem Präfix und /64 ist der <b>Subnet-Präfix</b>.</p>
+  <div class="callout"><span class="ci">🎯</span><div><b>IHK-Merksatz:</b> Subnetting-Aufgaben werden <b>immer über die Differenz</b> zwischen Präfix und Subnet-Präfix gelöst!</div></div>
+  <div class="h-sub">Berechnung (Beispiel /56)</div>
+  <ul class="clean">
+    <li>64 − 56 = <b>8 Bit</b> für Subnetze</li>
+    <li>2<sup>8</sup> = <b>256</b> mögliche /64-Subnetze</li>
+    <li>Jedes /64 hat 2<sup>64</sup> Interface Identifier</li>
+  </ul>
+  <div class="callout"><span class="ci">➖</span><div>Anders als IPv4 werden <b>keine 2 Adressen</b> (Netz-ID/Broadcast) abgezogen – die gibt es bei IPv6 nicht.</div></div>
+
+  <div class="h-sec"><span class="ico">🏷️</span> Adresstypen &amp; Bereiche</div>
+  <div class="h-sub">Drei Übertragungsarten</div>
+  <dl class="deflist">
+    <div><dt>Unicast</dt><dd>Eine einzelne Schnittstelle – Paket geht an genau einen Zielhost.</dd></div>
+    <div><dt>Multicast</dt><dd>Eine Gruppe von Schnittstellen – Paket geht an alle Mitglieder. <b>Ersetzt den IPv4-Broadcast.</b></dd></div>
+    <div><dt>Anycast</dt><dd>Gruppe mit gemeinsamer Adresse – Paket geht an das <b>nächstgelegene</b> Mitglied.</dd></div>
+  </dl>
+  <div class="h-sub">Wichtige Adressbereiche</div>
+  <dl class="deflist">
+    <div><dt>::1/128</dt><dd>Loopback (entspricht 127.0.0.1) – nur eine Adresse, kein Bereich. Gerät spricht sich selbst an (ping ::1).</dd></div>
+    <div><dt>fe80::/10</dt><dd>Link-Local Unicast. Automatisch je Schnittstelle, nur im lokalen Segment gültig. <b>Pflicht</b> für jede IPv6-Schnittstelle; nötig für SLAAC und NDP.</dd></div>
+    <div><dt>fc00::/7 (fc00/fd00)</dt><dd>Unique Local Addresses (ULA) – wie private IPv4-Adressen, nicht im Internet geroutet. <b>fd00::/8</b> = selbst definierte private Netze; <b>fc00::/8</b> = vom Provider vergeben.</dd></div>
+    <div><dt>ff00::/8</dt><dd>Multicast. Ersetzt Broadcast. Z. B. <b>ff02::1</b> = alle Hosts im Segment, <b>ff02::2</b> = alle Router im Segment.</dd></div>
+    <div><dt>2000::/3</dt><dd>Global Unicast (GUA) – öffentliche, im Internet routbare Adressen.</dd></div>
+  </dl>
+
+  <div class="h-sec"><span class="ico">🛰️</span> NDP &amp; Header</div>
+  <div class="h-sub"><span class="gloss">NDP<span class="pop">Neighbor Discovery Protocol – tauscht link-lokale Nachrichten aus und ersetzt u. a. ARP.</span></span> (Neighbor Discovery Protocol)</div>
+  <p class="lead">Protokoll für link-lokale Nachrichten; ersetzt unter anderem <b>ARP</b>. Aufgaben:</p>
+  <ul class="clean">
+    <li>MAC-Adresse zu einer IPv6-Adresse ermitteln</li>
+    <li>Router und Netzwerk-Präfixe erkennen</li>
+    <li>SLAAC unterstützen</li>
+    <li>auf doppelte Adressen prüfen (DAD)</li>
+    <li>nicht erreichbare Nachbarn erkennen, nächsten Hop bestimmen</li>
+  </ul>
+  <div class="h-sub">IPv6-Header</div>
+  <p class="lead">IPv6 nutzt einen <b>vereinfachten Basisheader</b>; Zusatzinfos kommen bei Bedarf in <b>Erweiterungsheader</b>. Das beschleunigt die Verarbeitung in Routern.</p>
+
+  <div class="h-sec"><span class="ico">⚖️</span> Vergleich IPv4 / IPv6</div>
+  <table class="ltbl">
+    <tr><th>Merkmal</th><th>IPv4</th><th>IPv6</th></tr>
+    <tr><td class="lg">Adresslänge</td><td>32 Bit</td><td>128 Bit</td></tr>
+    <tr><td class="lg">Anzahl</td><td>~4,3 Mrd. (2³²)</td><td>~340 Sextillionen (2¹²⁸)</td></tr>
+    <tr><td class="lg">Schreibweise</td><td>Dezimal</td><td>Hexadezimal</td></tr>
+    <tr><td class="lg">Localhost</td><td>127.0.0.1</td><td>::1</td></tr>
+    <tr><td class="lg">Broadcast</td><td>Ja</td><td>Nein – Multicast</td></tr>
+    <tr><td class="lg">NAT</td><td>Ja</td><td>Im Normalfall nicht nötig (NAT66 möglich)</td></tr>
+    <tr><td class="lg">ARP</td><td>Ja</td><td>Ersetzt durch NDP</td></tr>
+    <tr><td class="lg">DHCP</td><td>Ja</td><td>Optional (SLAAC oder DHCPv6)</td></tr>
+    <tr><td class="lg">Routing</td><td>Komplexer (NAT)</td><td>Effizienter (optimierter Header)</td></tr>
+  </table>
+</div>
+
+<!-- ============ KARTEIKARTEN ============ -->
+<div id="vCards" class="view">
+  <div class="chips" id="cardChips"></div>
+  <div class="bar">
+    <div class="pbar"><i id="pfill"></i></div>
+    <div class="ptxt">0% beherrscht</div>
+    <button class="tbtn" id="tShuffle">🔀 Mischen</button>
+    <button class="tbtn" id="tOpen">Nur offene</button>
+    <button class="tbtn" id="tReset">Zurücksetzen</button>
+  </div>
+  <div id="study" class="study"></div>
+</div>
+
+<!-- ============ BEGRIFFE ============ -->
+<div id="vTerms" class="view">
+  <div class="search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="termSearch" type="text" placeholder="Begriff suchen … (z. B. SLAAC, Link-Local, NDP)">
+  </div>
+  <div id="termList">
+    <div class="term-group">
+      <h3 class="tg-title" style="color:var(--amber)">IPv6 – Begriffe</h3>
+      <div class="term"><div class="term-name">IPv6</div><div class="term-def">Nachfolger von IPv4 mit 128 Bit langen Adressen in hexadezimaler Schreibweise.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> 2001:db8:85a3::8a2e:370:7334</div></div>
+      <div class="term"><div class="term-name">Netzwerk-Präfix</div><div class="term-def">Vorderer Teil der Adresse, der das Netz beschreibt; in CIDR-Schreibweise angegeben (z. B. /64).</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> 2001:4b2f:500::/56 – die ersten 56 Bit.</div></div>
+      <div class="term"><div class="term-name">Interface Identifier</div><div class="term-def">Hinterer Teil der Adresse, der die konkrete Schnittstelle im Netz identifiziert (meist 64 Bit).</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> a1b2:c3d4:e5f6:1234</div></div>
+      <div class="term"><div class="term-name">:: (Doppel-Doppelpunkt)</div><div class="term-def">Kürzt einmalig mehrere aufeinanderfolgende Null-Blöcke. Nur einmal pro Adresse erlaubt.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> 2001:0:0:0:0:0:0:1 → 2001::1</div></div>
+      <div class="term"><div class="term-name">SLAAC</div><div class="term-def">Stateless Address Autoconfiguration: Client bildet seine Adresse selbst aus dem per Router Advertisement empfangenen Präfix.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> Router sendet Präfix, Client ergänzt Interface Identifier.</div></div>
+      <div class="term"><div class="term-name">Router Advertisement (RA)</div><div class="term-def">Nachricht des Routers ins lokale Netz, die u. a. den gültigen Netzwerk-Präfix bekannt gibt.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> Basis von SLAAC.</div></div>
+      <div class="term"><div class="term-name">Neighbor Solicitation / DAD</div><div class="term-def">Multicast-Anfrage, mit der ein Client prüft, ob eine Adresse bereits belegt ist (Duplicate Address Detection).</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> Vor Nutzung der selbst gebildeten Adresse.</div></div>
+      <div class="term"><div class="term-name">EUI-64</div><div class="term-def">Bildet aus der 48-Bit-MAC einen 64-Bit Interface Identifier, indem ff:fe in die Mitte eingefügt wird.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> Erkennbar am ff:fe in der Adressmitte.</div></div>
+      <div class="term"><div class="term-name">Privacy Extensions</div><div class="term-def">Erzeugen den Interface Identifier zufällig statt aus der MAC; zusätzlich temporäre Adressen – schützt die Privatsphäre.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> Kein ff:fe in der Mitte erkennbar.</div></div>
+      <div class="term"><div class="term-name">Unicast</div><div class="term-def">Adresse genau einer Schnittstelle; Paket geht an einen einzelnen Zielhost.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> Eine globale Adresse eines Servers.</div></div>
+      <div class="term"><div class="term-name">Multicast</div><div class="term-def">Adresse einer Gruppe; Paket geht an alle Mitglieder. Ersetzt den IPv4-Broadcast.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> ff02::1 = alle Hosts im Segment.</div></div>
+      <div class="term"><div class="term-name">Anycast</div><div class="term-def">Mehrere Schnittstellen teilen eine Adresse; Paket geht an das nächstgelegene Mitglied.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> Verteilte DNS-Rootserver.</div></div>
+      <div class="term"><div class="term-name">Loopback ::1</div><div class="term-def">Adresse, mit der ein Gerät sich selbst anspricht (wie 127.0.0.1 bei IPv4).</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> ping ::1</div></div>
+      <div class="term"><div class="term-name">Link-Local (fe80::/10)</div><div class="term-def">Automatisch je Schnittstelle, nur im lokalen Segment gültig; Pflicht für jede IPv6-Schnittstelle.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> fe80::1 – Basis für NDP/SLAAC.</div></div>
+      <div class="term"><div class="term-name">Unique Local (fc00::/7)</div><div class="term-def">Private, nicht im Internet geroutete Adressen. fd00::/8 = selbst definiert, fc00::/8 = providervergeben.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> fd00:1234:5678::1</div></div>
+      <div class="term"><div class="term-name">Global Unicast (2000::/3)</div><div class="term-def">Öffentliche, weltweit eindeutige, im Internet routbare Adressen.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> 2001:db8::1</div></div>
+      <div class="term"><div class="term-name">NDP</div><div class="term-def">Neighbor Discovery Protocol: ermittelt MAC-Adressen, erkennt Router/Präfixe, unterstützt SLAAC – ersetzt ARP.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> Statt ARP-Request bei IPv4.</div></div>
+      <div class="term"><div class="term-name">NAT66</div><div class="term-def">Network Address Translation von IPv6 zu IPv6; nötig, um ULA ins öffentliche Netz zu bringen.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> ULA fd00:: → globale Adresse.</div></div>
+      <div class="term"><div class="term-name">DHCPv6</div><div class="term-def">Ergänzend/alternativ zu SLAAC; verteilt zustandsbehaftet z. B. DNS-Server-Adressen.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> Präfix per SLAAC, DNS per DHCPv6.</div></div>
+      <div class="term"><div class="term-name">Erweiterungsheader</div><div class="term-def">Hängen Zusatzinfos flexibel an den schlanken IPv6-Basisheader an und beschleunigen so das Routing.</div><div class="term-ex"><span class="ex-lbl">Beispiel</span> Routing- oder Fragmentierungs-Header.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ÜBUNGEN ============ -->
+<div id="vEx" class="view">
+  <div class="ib-box">7 IPv6-Übungsaufgaben im IHK-Stil. Erst selbst lösen, dann „Lösung anzeigen“. Lösungen vollständig ausgearbeitet.</div>
+
+  <div class="exq">
+    <div class="qh">Aufgabe 1 · Kürzen</div>
+    <div class="qtext">Kürzen Sie folgende IPv6-Adressen so weit wie möglich:</div>
+    <ul class="qlist">
+      <li>a) 2340:0000:0010:0100:1000:abcd:0101:1010</li>
+      <li>b) 2222:3333:4444:5555:0000:0000:6060:0707</li>
+      <li>c) 210f:0000:0000:0000:cccc:0000:0000:000d</li>
+      <li>d) 2001:003d:ad3f:3257:001f:0d72:07b1:c2ff</li>
+    </ul>
+    <button class="solbtn">Lösung anzeigen</button>
+    <div class="sol"><div class="sol-lbl">Lösung</div><div class="ans">
+      a) <span class="mono">2340:0:10:100:1000:abcd:101:1010</span><br>
+      b) <span class="mono">2222:3333:4444:5555::6060:707</span><br>
+      c) <span class="mono">210f::cccc:0:0:d</span><br>
+      d) <span class="mono">2001:3d:ad3f:3257:1f:d72:7b1:c2ff</span>
+      <div class="why">Führende Nullen entfallen. <b>::</b> nur bei mind. zwei zusammenhängenden Null-Blöcken: bei a) liegt nur ein einzelner Nullblock vor → nur zu <b>0</b> kürzen, kein ::. Bei c) gibt es zwei getrennte Doppel-Null-Bereiche; gekürzt wird der <b>erste, längere</b> mit ::, der zweite bleibt als 0:0.</div>
+    </div></div>
+  </div>
+
+  <div class="exq">
+    <div class="qh">Aufgabe 2 · Ausschreiben</div>
+    <div class="qtext">Schreiben Sie die gekürzte IPv6-Adresse vollständig aus:</div>
+    <span class="mono">2001::321:5600:0:0:1</span>
+    <button class="solbtn">Lösung anzeigen</button>
+    <div class="sol"><div class="sol-lbl">Lösung</div><div class="ans">
+      <span class="mono">2001:0000:0000:0321:5600:0000:0000:0001</span>
+      <div class="why">Das :: wird mit so vielen Null-Blöcken gefüllt, dass wieder 8 Blöcke entstehen. Jeder Block wird auf 4 Hex-Zeichen mit führenden Nullen aufgefüllt.</div>
+    </div></div>
+  </div>
+
+  <div class="exq">
+    <div class="qh">Aufgabe 3 · Subnetting</div>
+    <div class="qtext">Wie viele Bits stehen für das Subnetting zur Verfügung beim Netz <span class="mono">2003:ABCD:EFFE:DC::/58</span>? Wie viele Netze lassen sich bilden?</div>
+    <button class="solbtn">Lösung anzeigen</button>
+    <div class="sol"><div class="sol-lbl">Lösung</div><div class="ans">
+      <b>64 − 58 = 6 Bit</b> → <b>2<sup>6</sup> = 64</b> Subnetze (jeweils /64).
+      <div class="why">IHK-Methode: immer die Differenz zwischen Ziel-/64 und gegebenem Präfix bilden. Es werden keine Adressen abgezogen (kein Netz-ID/Broadcast bei IPv6).</div>
+    </div></div>
+  </div>
+
+  <div class="exq">
+    <div class="qh">Aufgabe 4 · Gültige Adressen erkennen</div>
+    <div class="qtext">Welche der folgenden Adressen sind <b>gültige</b> IPv6-Adressen?</div>
+    <ul class="qlist">
+      <li>a) ::1</li>
+      <li>b) 2005:12:1:14::192.168.1.1</li>
+      <li>c) 2003:ed:701:3fd7:a28d::b</li>
+      <li>d) 2003:edgh:d701:8000:4c34:500f:c45f:2e11</li>
+      <li>e) 192.168.1.2:ed:d701:3fd7:a28d::f82b</li>
+      <li>f) 0A-00-27-00-00-03</li>
+      <li>g) 2000:3000::1:abba:baab::fc01</li>
+    </ul>
+    <button class="solbtn">Lösung anzeigen</button>
+    <div class="sol"><div class="sol-lbl">Lösung</div><div class="ans">
+      a) <span class="ok">gültig</span> – Loopback.<br>
+      b) <span class="no">ungültig</span> – unzulässige Mischform mit eingebetteter IPv4 in dieser Schreibweise.<br>
+      c) <span class="ok">gültig</span> – ein :: erlaubt, nur Hex-Zeichen.<br>
+      d) <span class="no">ungültig</span> – „g“ und „h“ sind keine Hexadezimalzeichen (erlaubt: 0–9, a–f).<br>
+      e) <span class="no">ungültig</span> – beginnt mit einer IPv4-Adresse; unzulässige Mischform.<br>
+      f) <span class="no">ungültig</span> – das ist eine <b>MAC-Adresse</b> (48 Bit), keine IPv6-Adresse.<br>
+      g) <span class="no">ungültig</span> – <b>zwei ::</b> in einer Adresse sind nicht erlaubt.
+      <div class="why">Regeln: nur Hex-Zeichen 0–f, höchstens ein ::, max. 8 Blöcke à 16 Bit. Eingebettete IPv4-Notation gibt es nur in einer speziellen Form (z. B. ::ffff:192.168.1.1), nicht beliebig gemischt.</div>
+    </div></div>
+  </div>
+
+  <div class="exq">
+    <div class="qh">Aufgabe 5 · Loopback</div>
+    <div class="qtext">Wie lautet die Loopback-Adresse bei IPv4 – und bei IPv6?</div>
+    <button class="solbtn">Lösung anzeigen</button>
+    <div class="sol"><div class="sol-lbl">Lösung</div><div class="ans">
+      IPv4: <span class="mono">127.0.0.1</span> · IPv6: <span class="mono">::1</span>
+      <div class="why">Bei IPv6 ist ::1 nur eine einzelne Adresse (/128), kein ganzer Bereich wie 127.0.0.0/8 bei IPv4.</div>
+    </div></div>
+  </div>
+
+  <div class="exq">
+    <div class="qh">Aufgabe 6 · Adressgröße</div>
+    <div class="qtext">Wie groß ist eine IPv6-Adresse?</div>
+    <button class="solbtn">Lösung anzeigen</button>
+    <div class="sol"><div class="sol-lbl">Lösung</div><div class="ans">
+      <b>128 Bit</b> (= 16 Byte = 8 Blöcke à 16 Bit).
+    </div></div>
+  </div>
+
+  <div class="exq">
+    <div class="qh">Aufgabe 7 · Adresstyp zuordnen</div>
+    <div class="qtext">Ordnen Sie zu: <b>Global Unicast, Link-Local, Unique Local, Loopback</b>.</div>
+    <ul class="qlist">
+      <li>a) 2001:0db8:85a3:0000:0000:8a2e:0370:7334</li>
+      <li>b) fe80::1</li>
+      <li>c) fd00:1234:5678::1</li>
+      <li>d) ::1</li>
+      <li>e) fe80:ffcc:cba1:0030::ffff</li>
+    </ul>
+    <button class="solbtn">Lösung anzeigen</button>
+    <div class="sol"><div class="sol-lbl">Lösung</div><div class="ans">
+      a) <span class="ok">Global Unicast</span> (2000::/3 – beginnt mit 2xxx).<br>
+      b) <span class="ok">Link-Local</span> (fe80::/10).<br>
+      c) <span class="ok">Unique Local</span> (fc00::/7, hier fd00 – selbst definiert).<br>
+      d) <span class="ok">Loopback</span> (::1/128).<br>
+      e) <span class="ok">Link-Local</span> (fe80::/10 – beginnt mit fe80).
+      <div class="why">Erkennungsmerkmal ist immer der Adressanfang: 2/3xxx → Global, fe80 → Link-Local, fc/fd → Unique Local, ::1 → Loopback.</div>
+    </div></div>
+  </div>
+
+</div>
+
+<footer>FISI Lernplattform · Lernfeld 3 – IPv6 · Inhalte aus den Kursunterlagen · Fortschritt lokal gespeichert</footer>
+</div>
+
+<script src="study.js"></script>
+<script>
+const CATS={
+  grund:{label:"Grundlagen & Aufbau",color:"var(--amber)"},
+  kurz:{label:"Kürzen & Schreibweise",color:"var(--cyan)"},
+  slaac:{label:"SLAAC & Konfiguration",color:"var(--purple)"},
+  sub:{label:"Subnetting",color:"var(--ok)"},
+  adr:{label:"Adresstypen & Bereiche",color:"var(--magenta)"},
+  ndp:{label:"NDP, Header & Vergleich",color:"var(--cyan)"}
+};
+const CARDS=[
+{c:"grund",q:"Wie viele Bit hat eine IPv6-Adresse und wie wird sie geschrieben?",a:"<b>128 Bit</b>, als <b>8 Blöcke à 16 Bit in Hexadezimal</b>, getrennt durch Doppelpunkte."},
+{c:"grund",q:"Wie viele Adressen sind mit IPv6 möglich?",a:"<b>2<sup>128</sup></b> ≈ 340 Sextillionen – gegenüber 2<sup>32</sup> ≈ 4,3 Mrd. bei IPv4."},
+{c:"grund",q:"Aus welchen zwei Teilen besteht eine IPv6-Adresse?",a:"<b>Netzwerk-Präfix</b> (beschreibt das Netz) + <b>Interface Identifier</b> (die Schnittstelle)."},
+{c:"grund",q:"Wie wird der Netzanteil bei IPv6 angegeben?",a:"In <b>CIDR-Schreibweise</b> (z. B. /64). Eine Netzmaske wie bei IPv4 gibt es nicht."},
+{c:"grund",q:"Wie viele Bit ist ein Hex-Zeichen bzw. ein Block?",a:"1 Hex-Zeichen = <b>4 Bit</b>, ein Block (4 Hex-Zeichen) = <b>16 Bit</b>."},
+{c:"kurz",q:"Welche Kürzungsregeln gelten bei IPv6?",a:"Kleinschreibung; <b>führende Nullen</b> weg; ein Nullblock → <b>0</b>; mehrere zusammenhängende Nullblöcke <b>einmal</b> durch <b>::</b>; maximale Kürzung, bei Gleichstand der erste Bereich."},
+{c:"kurz",q:"Wie oft darf :: in einer Adresse vorkommen?",a:"<b>Genau einmal</b> – sonst ist die Adresse nicht mehr eindeutig auflösbar."},
+{c:"kurz",q:"Kürze 0000:0000:0000:0000:0000:0000:0000:0001",a:"<b>::1</b> – die Loopback-Adresse."},
+{c:"kurz",q:"Wann darf man :: NICHT verwenden?",a:"Bei nur <b>einem</b> einzelnen Nullblock – der wird nur zu <b>0</b> verkürzt, nicht zu ::."},
+{c:"slaac",q:"Wofür steht SLAAC?",a:"<b>Stateless Address Autoconfiguration</b> – der Client bildet seine IPv6-Adresse selbst aus dem vom Router gesendeten Präfix."},
+{c:"slaac",q:"Wie läuft SLAAC ab?",a:"Router sendet <b>Router Advertisement</b> (Präfix) → Client bildet <b>Interface Identifier</b> → Prüfung per <b>Neighbor Solicitation (DAD)</b> → Adresse wird genutzt."},
+{c:"slaac",q:"Was ist EUI-64?",a:"Bildung eines 64-Bit Interface Identifiers aus der 48-Bit-MAC, indem mittig <b>ff:fe</b> eingefügt wird."},
+{c:"slaac",q:"Woran erkennt man einen aus der MAC gebildeten Identifier?",a:"Am <b>ff:fe</b> in der Mitte des Interface Identifiers."},
+{c:"slaac",q:"Wozu dienen Privacy Extensions?",a:"Sie erzeugen den Interface Identifier <b>zufällig</b> (statt aus der MAC) und bilden temporäre Adressen → kein Wiedererkennen des Geräts. Kein ff:fe erkennbar."},
+{c:"sub",q:"Was ist die Standard-Subnetzgröße bei IPv6?",a:"<b>/64</b> für Endgerätenetze. Jedes /64 hat 2<sup>64</sup> Interface Identifier."},
+{c:"sub",q:"Wie löst man IPv6-Subnetting (IHK-Methode)?",a:"Über die <b>Differenz</b> zwischen Ziel-/64 und gegebenem Präfix: 64 − Präfix = Subnetz-Bits, dann 2<sup>Bits</sup>."},
+{c:"sub",q:"Wie viele /64 ergibt ein /56-Präfix?",a:"64 − 56 = 8 Bit → <b>2<sup>8</sup> = 256</b> Subnetze."},
+{c:"sub",q:"Warum zieht man bei IPv6 keine 2 Adressen ab?",a:"Weil es <b>keine Netz-ID und keinen Broadcast</b> gibt (Broadcast ersetzt durch Multicast)."},
+{c:"adr",q:"Welche drei Übertragungsarten kennt IPv6?",a:"<b>Unicast</b> (ein Ziel), <b>Multicast</b> (eine Gruppe, ersetzt Broadcast), <b>Anycast</b> (nächstgelegenes Gruppenmitglied)."},
+{c:"adr",q:"Was ersetzt den IPv4-Broadcast bei IPv6?",a:"<b>Multicast</b> – z. B. ff02::1 (alle Hosts) oder ff02::2 (alle Router)."},
+{c:"adr",q:"Wozu dient fe80::/10?",a:"<b>Link-Local</b>: automatisch je Schnittstelle, nur im lokalen Segment gültig, Pflicht für jede IPv6-Schnittstelle (Basis für NDP/SLAAC)."},
+{c:"adr",q:"Was sind Unique Local Addresses (fc00::/7)?",a:"Private, nicht im Internet geroutete Adressen. <b>fd00::/8</b> = selbst definiert, <b>fc00::/8</b> = providervergeben."},
+{c:"adr",q:"Welcher Bereich sind öffentliche IPv6-Adressen?",a:"<b>2000::/3</b> – Global Unicast, im Internet routbar."},
+{c:"adr",q:"Was bedeutet ::1/128?",a:"Die <b>Loopback-Adresse</b> (wie 127.0.0.1) – nur eine Adresse, kein Bereich."},
+{c:"ndp",q:"Was ist NDP und was ersetzt es?",a:"<b>Neighbor Discovery Protocol</b> – tauscht link-lokale Nachrichten aus und ersetzt u. a. <b>ARP</b>."},
+{c:"ndp",q:"Nenne Funktionen von NDP.",a:"MAC zu IPv6 ermitteln, Router/Präfixe erkennen, SLAAC unterstützen, doppelte Adressen prüfen (DAD), nächsten Hop bestimmen."},
+{c:"ndp",q:"Warum ist der IPv6-Header effizienter?",a:"Er ist ein <b>vereinfachter Basisheader</b>; Zusatzinfos kommen in <b>Erweiterungsheader</b> → schnellere Verarbeitung in Routern."},
+{c:"ndp",q:"Braucht IPv6 noch ARP und NAT?",a:"<b>ARP nein</b> (ersetzt durch NDP). <b>NAT</b> im Normalfall nicht (NAT66 nur in Sonderfällen)."},
+{c:"ndp",q:"Wie lautet die Loopback-Adresse bei IPv4 und IPv6?",a:"IPv4: <b>127.0.0.1</b> · IPv6: <b>::1</b>"}
+];
+CARDS.forEach((c,i)=>c.id="ipv6_"+i);
+
+/* ===== TABS ===== */
+const views={Sum:"vSum",Cards:"vCards",Terms:"vTerms",Ex:"vEx"};
+function showTab(t){
+  Object.keys(views).forEach(k=>{
+    document.getElementById(views[k]).classList.toggle('on',k===t);
+    document.getElementById('t'+k).classList.toggle('on',k===t);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('tSum').onclick=()=>showTab('Sum');
+document.getElementById('tCards').onclick=()=>{showTab('Cards');Study._rebuild();};
+document.getElementById('tTerms').onclick=()=>showTab('Terms');
+document.getElementById('tEx').onclick=()=>showTab('Ex');
+
+/* ===== KARTEIKARTEN ===== */
+Study.init({ cards: CARDS, cats: CATS, key: "fisi_lf3_ipv6_v1" });
+
+/* ===== BEGRIFFE Suche ===== */
+function filterTerms(){
+  const q=document.getElementById('termSearch').value.toLowerCase();
+  document.querySelectorAll('.term').forEach(t=>{
+    t.style.display=(q===""||t.textContent.toLowerCase().includes(q))?"":"none";
+  });
+}
+document.getElementById('termSearch').oninput=filterTerms;
+
+/* ===== ÜBUNGEN: Lösung aufklappen ===== */
+document.querySelectorAll('.exq .solbtn').forEach(btn=>{
+  btn.onclick=()=>{
+    const q=btn.closest('.exq');
+    const open=q.classList.toggle('open');
+    btn.textContent=open?"Lösung verbergen":"Lösung anzeigen";
+  };
+});
+
+/* ===== GLOSSAR ===== */
+document.querySelectorAll('.gloss').forEach(g=>{
+  g.addEventListener('click',e=>{
+    e.stopPropagation();
+    const wasOpen=g.classList.contains('open');
+    document.querySelectorAll('.gloss.open').forEach(o=>o.classList.remove('open'));
+    if(!wasOpen)g.classList.add('open');
+  });
+});
+document.addEventListener('click',()=>{document.querySelectorAll('.gloss.open').forEach(o=>o.classList.remove('open'));});
+
+/* ===== AUFKLAPPEN & AUFDECKEN ===== */
+(function(){
+  function wrapChapters(){
+    const sum=document.getElementById('vSum');
+    if(!sum||sum.dataset.chapDone)return;
+    const kids=[...sum.children]; let i=0;
+    while(i<kids.length){
+      const node=kids[i];
+      if(node.classList&&node.classList.contains('h-sec')){
+        const group=[]; let j=i+1;
+        while(j<kids.length){
+          const n=kids[j];
+          if(n.classList&&n.classList.contains('h-sec'))break;
+          group.push(n); j++;
+        }
+        const det=document.createElement('details'); det.className='chap'; det.open=true;
+        const sm=document.createElement('summary'); sm.innerHTML=node.innerHTML+'<span class="ar">▸</span>';
+        det.appendChild(sm);
+        const body=document.createElement('div'); body.className='chap-body';
+        group.forEach(g=>body.appendChild(g)); det.appendChild(body);
+        sum.insertBefore(det,node); node.remove();
+        kids.splice(i,1+group.length,det);
+      }
+      i++;
+    }
+    sum.dataset.chapDone="1";
+  }
+  function bindDeflists(){
+    document.querySelectorAll('#vSum .deflist > div').forEach(row=>{
+      const dt=row.querySelector('dt'), dd=row.querySelector('dd');
+      if(!dt||!dd||dt.dataset.rv)return; dt.dataset.rv="1";
+      const tg=()=>{ if(document.getElementById('vSum').classList.contains('reveal-on')) dd.classList.toggle('shown'); };
+      dt.addEventListener('click',e=>{e.stopPropagation();tg();});
+      dd.addEventListener('click',e=>{e.stopPropagation(); if(!dd.classList.contains('shown'))tg();});
+    });
+  }
+  function bindTerms(){
+    document.querySelectorAll('#vTerms .term').forEach(t=>{
+      const name=t.querySelector('.term-name');
+      if(!name||name.dataset.rv)return; name.dataset.rv="1";
+      const tg=()=>{ if(document.getElementById('vTerms').classList.contains('reveal-on')) t.classList.toggle('shown'); };
+      name.addEventListener('click',e=>{e.stopPropagation();tg();});
+      t.addEventListener('click',()=>{ if(!t.classList.contains('shown'))tg(); });
+    });
+  }
+  function makeTools(viewId,isTerms){
+    const view=document.getElementById(viewId);
+    if(!view||view.querySelector('.rvtools'))return;
+    const bar=document.createElement('div'); bar.className='rvtools';
+    const bR=document.createElement('button'); bR.className='tbtn'; bR.textContent='🙈 Erklärungen verdecken';
+    const bA=document.createElement('button'); bA.className='tbtn'; bA.textContent='⬇ Alle aufdecken'; bA.style.display='none';
+    const hint=document.createElement('span'); hint.className='hint';
+    hint.textContent='Tippe einen Begriff (▸) an, um die Erklärung aufzudecken.';
+    bR.onclick=()=>{
+      const on=view.classList.toggle('reveal-on'); bR.classList.toggle('on',on);
+      bR.textContent=on?'👁 Erklärungen zeigen':'🙈 Erklärungen verdecken';
+      bA.style.display=on?'':'none';
+      if(!on)view.querySelectorAll('.shown').forEach(x=>x.classList.remove('shown'));
+    };
+    bA.onclick=()=>{
+      if(isTerms)view.querySelectorAll('.term').forEach(t=>t.classList.add('shown'));
+      else view.querySelectorAll('.deflist dd').forEach(d=>d.classList.add('shown'));
+    };
+    bar.appendChild(bR); bar.appendChild(bA); bar.appendChild(hint);
+    if(isTerms){const c=view.querySelector('#termList'); c.parentNode.insertBefore(bar,c);}
+    else view.insertBefore(bar,view.firstChild);
+    return bar;
+  }
+  function addChapControls(){
+    const bar=document.querySelector('#vSum .rvtools'); if(!bar)return;
+    const sep=document.createElement('span'); sep.className='hint'; sep.textContent='·';
+    const bO=document.createElement('button'); bO.className='tbtn'; bO.textContent='▾ Kapitel auf';
+    const bC=document.createElement('button'); bC.className='tbtn'; bC.textContent='▸ Kapitel zu';
+    bO.onclick=()=>document.querySelectorAll('#vSum details.chap').forEach(d=>d.open=true);
+    bC.onclick=()=>document.querySelectorAll('#vSum details.chap').forEach(d=>d.open=false);
+    bar.appendChild(sep); bar.appendChild(bO); bar.appendChild(bC);
+  }
+  wrapChapters(); makeTools('vSum',false); addChapControls(); bindDeflists();
+  makeTools('vTerms',true); bindTerms();
+})();
+
+/* ===== THEME-UMSCHALTER ===== */
+(function(){
+  const KEY="fisi_lf3ipv6_theme";
+  const btn=document.getElementById('themeTg'), root=document.documentElement;
+  function apply(t){
+    if(t==="light"){root.setAttribute('data-theme','light');btn.textContent="🌙 Dunkel";}
+    else{root.removeAttribute('data-theme');btn.textContent="☀ Hell";}
+  }
+  let saved="dark"; try{saved=localStorage.getItem(KEY)||"dark";}catch(e){}
+  apply(saved);
+  btn.onclick=()=>{const now=root.getAttribute('data-theme')==="light"?"dark":"light";apply(now);try{localStorage.setItem(KEY,now);}catch(e){}};
+})();
+</script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});}
+</script>
+</body>
+</html>
