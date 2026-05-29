@@ -335,7 +335,8 @@ footer span{color:var(--cyan)}
 .mode button:hover{color:var(--cyan)}
 .mode button.on{background:var(--cyan);color:#04121a;font-weight:700;box-shadow:0 0 12px rgba(45,226,230,.4)}
 .tools{display:flex;gap:6px;flex-wrap:wrap}
-.chip .ct{opacity:.6;font-weight:600;margin-left:3px}
+.chip .ct{font-family:var(--fmono);margin-left:7px;font-size:11.5px;font-weight:600;padding:1px 6px;border-radius:99px;background:rgba(120,180,220,.12);opacity:.85}
+.chip.on .ct{background:rgba(0,0,0,.18);opacity:1}
 .list .li{background:var(--glass);border:1px solid var(--line);border-radius:6px;padding:.85rem 1rem;margin-bottom:.6rem;display:flex;gap:.8rem;align-items:flex-start;transition:.14s;backdrop-filter:blur(6px)}
 .list .li:hover{border-color:rgba(45,226,230,.3)}
 .list .li.k{border-color:rgba(39,245,154,.4);background:linear-gradient(0deg,rgba(39,245,154,.05),var(--glass))}
@@ -390,6 +391,14 @@ button,.chip,.tbtn,.btn,.mode button,.tabs button{touch-action:manipulation}
   /* Layout enger fassen */
   .wrap,.prog-wrap,.shell{padding-left:.9rem;padding-right:.9rem}
   .hdr-in{padding:.8rem .9rem;gap:.6rem}
+  /* Header sauber stapeln: Titelblock + Tabs je volle Zeile, kein flex-Spacer dazwischen */
+  .hdr-in{flex-wrap:wrap}
+  .hdr-in > .sp,.hdr-in > .hdr-sp{display:none}
+  .hdr-in > .back{order:1}
+  .hdr-in > .theme-tg{order:2;margin-left:auto}
+  .hdr-in > div:not(.tabs):not(.mode):not(.cds):not(.brand){order:3;flex-basis:100%}
+  .hdr-in > .tabs,.hdr-in > .mode{order:4;flex-basis:100%;width:100%}
+  .hdr .sub{white-space:normal;line-height:1.45}
   .brand h1{font-size:22.5px}
   /* Countdown-Chips: volle Zeile, nebeneinander, kleiner */
   .cds{width:100%;gap:7px}
