@@ -14,37 +14,34 @@
 .rvtools .tbtn.on{background:var(--cyan);border-color:var(--cyan);color:#04121a}
 .rvtools .hint{font-family:var(--fmono);font-size:12px;color:var(--dim)}
 
-/* Verdeckte Erklärung: dt/dd in deflist */
-.reveal-on .deflist dd{
-  position:relative;color:transparent;user-select:none;border-radius:4px;cursor:pointer;
-  background:repeating-linear-gradient(45deg,rgba(120,180,220,.05),rgba(120,180,220,.05) 7px,rgba(120,180,220,.10) 7px,rgba(120,180,220,.10) 14px);
-  transition:.15s}
-.reveal-on .deflist dd *{color:transparent !important}
-.reveal-on .deflist dd::after{
-  content:"? aufdecken";position:absolute;inset:0;display:flex;align-items:center;
-  font-family:var(--fmono);font-size:12.5px;color:var(--cyan);padding-left:10px;letter-spacing:.5px}
+/* Verdeckte Erklärung: dt/dd in deflist – deckendes Overlay, nichts scheint durch */
+.reveal-on .deflist dd{position:relative;cursor:pointer;border-radius:4px}
+.reveal-on .deflist dd::before{content:"";position:absolute;inset:-2px;border-radius:4px;z-index:2;
+  background:var(--bg2);
+  background-image:repeating-linear-gradient(45deg,rgba(120,180,220,.10),rgba(120,180,220,.10) 7px,rgba(120,180,220,.22) 7px,rgba(120,180,220,.22) 14px)}
+.reveal-on .deflist dd::after{content:"? aufdecken";position:absolute;inset:0;z-index:3;display:flex;align-items:center;
+  font-family:var(--fmono);font-size:12.5px;color:var(--cyan);padding-left:10px;letter-spacing:.5px;pointer-events:none}
 .reveal-on .deflist dt{cursor:pointer}
 .reveal-on .deflist dt::before{content:"▸ ";color:var(--cyan)}
-.reveal-on .deflist dd.shown{color:var(--read);background:none;cursor:default;user-select:text}
-.reveal-on .deflist dd.shown *{color:revert !important}
-.reveal-on .deflist dd.shown::after{display:none}
+.reveal-on .deflist dd.shown{cursor:default}
+.reveal-on .deflist dd.shown::before,.reveal-on .deflist dd.shown::after{display:none}
 
-/* Verdeckte Erklärung: Begriffe-Tab */
+/* Verdeckte Erklärung: Begriffe-Tab – deckendes Overlay */
 .reveal-on .term .term-def,
-.reveal-on .term .term-ex{
-  position:relative;color:transparent;user-select:none;border-radius:4px;cursor:pointer;min-height:1.2em;
-  background:repeating-linear-gradient(45deg,rgba(120,180,220,.05),rgba(120,180,220,.05) 7px,rgba(120,180,220,.10) 7px,rgba(120,180,220,.10) 14px);
-  margin-top:4px}
-.reveal-on .term .term-def *,
-.reveal-on .term .term-ex *{color:transparent !important}
-.reveal-on .term .term-ex .ex-lbl{color:transparent !important}
+.reveal-on .term .term-ex{position:relative;cursor:pointer;min-height:1.3em;border-radius:4px;margin-top:4px}
+.reveal-on .term .term-def::before,
+.reveal-on .term .term-ex::before{content:"";position:absolute;inset:-2px;border-radius:4px;z-index:2;
+  background:var(--bg2);
+  background-image:repeating-linear-gradient(45deg,rgba(120,180,220,.10),rgba(120,180,220,.10) 7px,rgba(120,180,220,.22) 7px,rgba(120,180,220,.22) 14px)}
+.reveal-on .term .term-def::after{content:"? aufdecken";position:absolute;inset:0;z-index:3;display:flex;align-items:center;
+  font-family:var(--fmono);font-size:12px;color:var(--cyan);padding-left:6px;letter-spacing:.4px;pointer-events:none}
 .reveal-on .term .term-name{cursor:pointer}
 .reveal-on .term .term-name::before{content:"▸ ";color:var(--cyan)}
 .reveal-on .term.shown .term-def,
-.reveal-on .term.shown .term-ex{color:var(--read);background:none;cursor:default;user-select:text}
-.reveal-on .term.shown .term-def *,
-.reveal-on .term.shown .term-ex *{color:revert !important}
-.reveal-on .term.shown .term-ex .ex-lbl{color:#04121a !important}
+.reveal-on .term.shown .term-ex{cursor:default}
+.reveal-on .term.shown .term-def::before,
+.reveal-on .term.shown .term-def::after,
+.reveal-on .term.shown .term-ex::before{display:none}
 
 /* Ausklappbare Kapitel: details/summary nutzen den vorhandenen theme.css-Stil.
    h-sec-Optik in die summary übertragen. */
@@ -95,10 +92,11 @@ html[data-theme="light"] .sum .callout b{color:#9a6f12}
 html[data-theme="light"] table.ltbl th{background:#e6f4f6}
 html[data-theme="light"] .term-ex{background:#eef6f7}
 html[data-theme="light"] .term:hover{border-color:var(--cyan)}
-html[data-theme="light"] .reveal-on .deflist dd,
-html[data-theme="light"] .reveal-on .term .term-def,
-html[data-theme="light"] .reveal-on .term .term-ex{
-  background:repeating-linear-gradient(45deg,#eef3f8,#eef3f8 7px,#e2eaf2 7px,#e2eaf2 14px)}
+html[data-theme="light"] .reveal-on .deflist dd::before,
+html[data-theme="light"] .reveal-on .term .term-def::before,
+html[data-theme="light"] .reveal-on .term .term-ex::before{
+  background:#eef3f8;
+  background-image:repeating-linear-gradient(45deg,#dde6f0,#dde6f0 7px,#c8d6e6 7px,#c8d6e6 14px)}
 html[data-theme="light"] details.chap[open]>summary{background:#e6f4f6;color:var(--cyan)}
 html[data-theme="light"] details.chap>summary{background:#f4f7fa}
 
