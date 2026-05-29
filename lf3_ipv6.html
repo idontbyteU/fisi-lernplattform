@@ -139,7 +139,7 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
     <li>Es wird der Bereich mit <b>maximaler Kürzung</b> gewählt; bei gleich großen Bereichen der <b>erste</b></li>
   </ul>
   <div class="callout"><span class="ci">📝</span><div><b>Beispiel:</b> 2a01:0b84:0000:0000:002f:0000:0000:0000 → <b>2a01:b84:0:0:2f::</b><br>Loopback: 0000:…:0001 → <b>::1</b></div></div>
-  <div class="callout"><span class="ci">⚠️</span><div><b>:: nur bei mind. zwei zusammenhängenden Null-Blöcken sinnvoll.</b> Ein einzelner Nullblock wird nur zu <b>0</b> verkürzt, nicht zu <b>::</b>.</div></div>
+  <div class="callout warn"><span class="ci">⚠️</span><div><b>:: nur bei mind. zwei zusammenhängenden Null-Blöcken sinnvoll.</b> Ein einzelner Nullblock wird nur zu <b>0</b> verkürzt, nicht zu <b>::</b>.</div></div>
 
   <div class="h-sec"><span class="ico">⚙️</span> SLAAC &amp; Adresskonfiguration</div>
   <p class="lead"><b>SLAAC</b> (Stateless Address Autoconfiguration) = zustandslose automatische Adresskonfiguration. Ein DHCP-Server muss <b>nicht</b> zwingend Adressen vergeben – der Client bildet seine Adresse selbst.</p>
@@ -155,7 +155,7 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
 
   <div class="h-sec"><span class="ico">🧮</span> Subnetting</div>
   <p class="lead">Standard-Subnetzgröße für Endgerätenetze ist <b>/64</b>. Ein Provider weist z. B. ein <b>/56</b> oder <b>/48</b> zu; daraus bildet der Router mehrere /64-Subnetze. Der Bereich zwischen zugewiesenem Präfix und /64 ist der <b>Subnet-Präfix</b>.</p>
-  <div class="callout"><span class="ci">🎯</span><div><b>IHK-Merksatz:</b> Subnetting-Aufgaben werden <b>immer über die Differenz</b> zwischen Präfix und Subnet-Präfix gelöst!</div></div>
+  <div class="callout merk"><span class="ci">🎯</span><div><b>IHK-Merksatz:</b> Subnetting-Aufgaben werden <b>immer über die Differenz</b> zwischen Präfix und Subnet-Präfix gelöst!</div></div>
   <div class="h-sub">Berechnung (Beispiel /56)</div>
   <ul class="clean">
     <li>64 − 56 = <b>8 Bit</b> für Subnetze</li>
@@ -166,11 +166,11 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
 
   <div class="h-sec"><span class="ico">🏷️</span> Adresstypen &amp; Bereiche</div>
   <div class="h-sub">Drei Übertragungsarten</div>
-  <dl class="deflist">
-    <div><dt>Unicast</dt><dd>Eine einzelne Schnittstelle – Paket geht an genau einen Zielhost.</dd></div>
-    <div><dt>Multicast</dt><dd>Eine Gruppe von Schnittstellen – Paket geht an alle Mitglieder. <b>Ersetzt den IPv4-Broadcast.</b></dd></div>
-    <div><dt>Anycast</dt><dd>Gruppe mit gemeinsamer Adresse – Paket geht an das <b>nächstgelegene</b> Mitglied.</dd></div>
-  </dl>
+  <div class="cardgrid c3">
+    <div class="ic"><h4>Unicast</h4><p>Eine einzelne Schnittstelle – Paket geht an genau einen Zielhost.</p></div>
+    <div class="ic"><h4>Multicast</h4><p>Eine Gruppe von Schnittstellen – Paket geht an alle Mitglieder. Ersetzt den IPv4-Broadcast.</p></div>
+    <div class="ic"><h4>Anycast</h4><p>Gruppe mit gemeinsamer Adresse – Paket geht an das nächstgelegene Mitglied.</p></div>
+  </div>
   <div class="h-sub">Wichtige Adressbereiche</div>
   <dl class="deflist">
     <div><dt>::1/128</dt><dd>Loopback (entspricht 127.0.0.1) – nur eine Adresse, kein Bereich. Gerät spricht sich selbst an (ping ::1).</dd></div>
@@ -536,6 +536,53 @@ document.addEventListener('click',()=>{document.querySelectorAll('.gloss.open').
   }
   wrapChapters(); makeTools('vSum',false); addChapControls(); bindDeflists();
   makeTools('vTerms',true); bindTerms();
+})();
+
+/* ===== INHALTSVERZEICHNIS (TOC) ===== */
+(function(){
+  const sum=document.getElementById('vSum');
+  if(!sum)return;
+  const chaps=[...sum.querySelectorAll('details.chap')];
+  if(!chaps.length)return;
+  const items=chaps.map((d,i)=>{
+    if(!d.id)d.id="kap"+i;
+    const sm=d.querySelector('summary');
+    let label=sm?sm.textContent.replace(/▸/g,'').trim():("Kapitel "+(i+1));
+    return {id:d.id,label,el:d};
+  });
+  const wrap=document.createElement('div'); wrap.className='toc-wrap';
+  const toc=document.createElement('nav'); toc.className='toc';
+  toc.innerHTML='<div class="toc-h">Inhalt</div>';
+  items.forEach(it=>{
+    const a=document.createElement('a'); a.href="#"+it.id; a.textContent=it.label; a.dataset.t=it.id;
+    a.onclick=e=>{e.preventDefault();it.el.open=true;it.el.scrollIntoView({behavior:'smooth',block:'start'});wrap.classList.remove('open');};
+    toc.appendChild(a);
+  });
+  const toggle=document.createElement('button'); toggle.className='toc-toggle'; toggle.innerHTML='☰'; toggle.title="Inhaltsverzeichnis";
+  toggle.onclick=()=>wrap.classList.toggle('open');
+  wrap.appendChild(toc); wrap.appendChild(toggle);
+  sum.insertBefore(wrap,sum.firstChild);
+  const links=[...toc.querySelectorAll('a')];
+  function spy(){
+    let act=items[0].id, top=-Infinity;
+    const y=window.scrollY+120;
+    items.forEach(it=>{
+      const off=it.el.getBoundingClientRect().top+window.scrollY;
+      if(off<=y&&off>top){top=off;act=it.id;}
+    });
+    links.forEach(l=>l.classList.toggle('active',l.dataset.t===act));
+  }
+  let ticking=false;
+  window.addEventListener('scroll',()=>{
+    if(!sum.classList.contains('on'))return;
+    if(!ticking){requestAnimationFrame(()=>{spy();ticking=false;});ticking=true;}
+  },{passive:true});
+  function syncVis(){ wrap.style.display=sum.classList.contains('on')?'':'none'; }
+  syncVis();
+  ['tSum','tCards','tTerms','tEx'].forEach(id=>{
+    const b=document.getElementById(id); if(b)b.addEventListener('click',()=>setTimeout(syncVis,0));
+  });
+  spy();
 })();
 
 /* ===== THEME-UMSCHALTER ===== */

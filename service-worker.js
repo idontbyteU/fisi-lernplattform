@@ -21,6 +21,7 @@ const ASSETS = [
   "./lf1.html",
   "./lf2.html",
   "./lf3.html",
+  "./lf3_ipv6.html",
   "./lf4.html",
   "./lf4_zusammenfassung.pdf",
   "./lf4_grundschutz_check_umsetzung.pdf",
