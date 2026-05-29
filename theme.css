@@ -237,6 +237,40 @@ details[open] summary{background:rgba(45,226,230,.1);color:var(--cyan)}
 .sum .grp .row .lbl{display:inline-block;font-family:var(--fmono);font-weight:400;font-size:12.5px;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:3px;margin-right:.5rem;color:#04121a}
 .sum .callout{display:flex;gap:.6rem;background:rgba(255,180,59,.07);border:1px solid rgba(255,180,59,.3);border-radius:6px;padding:.7rem .85rem;margin:.7rem 0;font-size:15.5px;line-height:1.55;color:#f0d49a}
 .sum .callout .ci{flex:0 0 auto;font-size:17.5px}.sum .callout b{color:var(--amber)}
+
+/* ===== Info-Box-Varianten (abgestuft nach Typ) ===== */
+.sum .callout.warn{background:rgba(255,42,109,.08);border-color:rgba(255,42,109,.35);color:#f6b8cb}
+.sum .callout.warn b{color:var(--magenta)}
+.sum .callout.tip{background:rgba(45,226,230,.07);border-color:rgba(45,226,230,.32);color:#bfeef0}
+.sum .callout.tip b{color:var(--cyan)}
+.sum .callout.merk{background:rgba(157,255,82,.07);border-color:rgba(157,255,82,.3);color:#dcf3bf}
+.sum .callout.merk b{color:var(--lime)}
+
+/* ===== Card-Grid (Informations-Häppchen statt Textwüste) ===== */
+.sum .cardgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin:.6rem 0 .9rem}
+.sum .cardgrid .ic{background:var(--glass);border:1px solid var(--line);border-top:3px solid var(--cyan);
+  border-radius:8px;padding:.75rem .85rem;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.sum .cardgrid .ic h4{font-family:var(--fmono);font-size:14.5px;font-weight:400;color:var(--cyan);
+  letter-spacing:.4px;margin:0 0 .35rem}
+.sum .cardgrid .ic p{font-size:15px;line-height:1.5;color:var(--read);margin:0}
+.sum .cardgrid.c3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:560px){.sum .cardgrid,.sum .cardgrid.c3{grid-template-columns:1fr}}
+
+/* ===== Inhaltsverzeichnis (TOC) – Desktop seitlich, Mobil einklappbar ===== */
+.toc-wrap{position:sticky;top:84px;float:right;width:208px;margin:0 0 1rem 1.4rem;z-index:20}
+.toc{background:var(--glass);border:1px solid var(--line);border-radius:10px;padding:.7rem .55rem;backdrop-filter:blur(8px)}
+.toc .toc-h{font-family:var(--fmono);font-size:11px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;padding:0 .5rem .5rem;border-bottom:1px solid var(--line);margin-bottom:.4rem}
+.toc a{display:block;font-family:var(--fui);font-size:13.5px;color:var(--muted);text-decoration:none;padding:.4rem .55rem;border-radius:5px;border-left:2px solid transparent;transition:.12s;line-height:1.3}
+.toc a:hover{color:var(--cyan);background:rgba(45,226,230,.06)}
+.toc a.active{color:var(--cyan);border-left-color:var(--cyan);background:rgba(45,226,230,.08);font-weight:600}
+.toc-toggle{display:none}
+@media(max-width:880px){
+  .toc-wrap{position:fixed;top:auto;bottom:18px;right:14px;float:none;width:auto;margin:0;z-index:60}
+  .toc{display:none;position:absolute;bottom:54px;right:0;width:230px;max-height:60vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+  .toc-wrap.open .toc{display:block}
+  .toc-toggle{display:flex;align-items:center;justify-content:center;width:50px;height:50px;border-radius:50%;
+    background:var(--cyan);color:#04121a;border:none;font-size:20px;cursor:pointer;box-shadow:0 6px 20px rgba(45,226,230,.4)}
+}
 .sum .stufen{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0 .8rem}
 .sum .stufen .st{display:flex;align-items:center;gap:.45rem;background:var(--glass);border:1px solid var(--line);border-radius:5px;padding:.45rem .7rem;font-size:15px;color:var(--read)}
 .sum .stufen .st .tagp{font-family:var(--fmono);font-size:12px;letter-spacing:.4px;padding:2px 8px;border-radius:3px;color:#04121a}

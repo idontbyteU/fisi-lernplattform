@@ -147,12 +147,12 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
 
   <div class="h-sub">Vererbung des Schutzbedarfs</div>
   <p class="lead">Der Schutzbedarf entsteht zuerst bei <b>Geschäftsprozessen und Informationen</b> und vererbt sich auf die unterstützenden Systeme, Räume und Verbindungen – nie mechanisch, sondern <b>fachlich begründet</b>.</p>
-  <dl class="deflist">
-    <div><dt>Maximalprinzip</dt><dd>Objekt übernimmt den höchsten Schutzbedarf von allem, was es trägt.</dd></div>
-    <div><dt>Abhängigkeiten</dt><dd>Hängt ein Objekt von einem anderen ab, muss dieses mitbetrachtet werden.</dd></div>
-    <div><dt>Kumulationseffekt</dt><dd>Viele kleine Objekte ergeben zusammen einen höheren Bedarf (z.&nbsp;B. <span class="gloss">VM<span class="pop">Virtuelle Maschine – ein per Software nachgebildeter Computer, der auf einem physischen Host läuft.</span></span>-Host).</dd></div>
-    <div><dt>Verteilungseffekt</dt><dd>Bedarf kann niedriger sein, wenn eine kritische Aufgabe verteilt ist (begründet reduzieren).</dd></div>
-  </dl>
+  <div class="cardgrid">
+    <div class="ic"><h4>Maximalprinzip</h4><p>Objekt übernimmt den höchsten Schutzbedarf von allem, was es trägt.</p></div>
+    <div class="ic"><h4>Abhängigkeiten</h4><p>Hängt ein Objekt von einem anderen ab, muss dieses mitbetrachtet werden.</p></div>
+    <div class="ic"><h4>Kumulationseffekt</h4><p>Viele kleine Objekte ergeben zusammen einen höheren Bedarf (z.&nbsp;B. <span class="gloss">VM<span class="pop">Virtuelle Maschine – ein per Software nachgebildeter Computer, der auf einem physischen Host läuft.</span></span>-Host).</p></div>
+    <div class="ic"><h4>Verteilungseffekt</h4><p>Bedarf kann niedriger sein, wenn eine kritische Aufgabe verteilt ist (begründet reduzieren).</p></div>
+  </div>
 
   <div class="h-sub">Aufbau eines Bausteins</div>
   <ul class="clean">
@@ -352,7 +352,7 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
     <div class="row"><span class="lbl" style="background:var(--ok)">Datenbank</span> SQL Injection, Exfiltration über legitime Schnittstellen, Fehlkonfiguration</div>
     <div class="row"><span class="lbl" style="background:var(--purple)">KI</span> Data Poisoning, Adversarial Examples, Prompt Injection, Datenlecks; KI als Angriffsverstärker (Deepfakes, Massen-Phishing)</div>
   </div>
-  <div class="callout"><span class="ci">⚠️</span><div><b>Warnsignal Social Engineering:</b> künstlicher Druck – „sofort“, „vertraulich“, „Chef-Anweisung“, „Konto wird gesperrt“.</div></div>
+  <div class="callout warn"><span class="ci">⚠️</span><div><b>Warnsignal Social Engineering:</b> künstlicher Druck – „sofort“, „vertraulich“, „Chef-Anweisung“, „Konto wird gesperrt“.</div></div>
 
 
   <div class="h-sec"><span class="ico">🎯</span> Schutzziele &amp; Grundbegriffe</div>
@@ -477,7 +477,7 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
     <div><dt>Inkrementell</dt><dd>Nur Änderungen seit letzter Sicherung. Wenig Speicher, komplexe Wiederherstellung.</dd></div>
     <div><dt>Differenziell</dt><dd>Alle Änderungen seit letzter Vollsicherung. Mittelweg.</dd></div>
   </dl>
-  <div class="callout"><span class="ci">💾</span><div><b>3-2-1-Regel:</b> 3 Kopien · 2 verschiedene Medien · 1 Kopie extern/offsite. Schutz vor Ransomware, Brand, Diebstahl.</div></div>
+  <div class="callout merk"><span class="ci">💾</span><div><b>3-2-1-Regel:</b> 3 Kopien · 2 verschiedene Medien · 1 Kopie extern/offsite. Schutz vor Ransomware, Brand, Diebstahl.</div></div>
 
 </div>
 
@@ -1355,6 +1355,68 @@ buildTermChips();
   bindDeflists();
   makeTools('vTerms',true);
   bindTerms();
+})();
+
+/* ===== INHALTSVERZEICHNIS (TOC) ===== */
+(function(){
+  const sum=document.getElementById('vSum');
+  if(!sum)return;
+  const chaps=[...sum.querySelectorAll('details.chap')];
+  if(!chaps.length)return;
+
+  // IDs vergeben + Linktexte aus den summaries ziehen
+  const items=chaps.map((d,i)=>{
+    if(!d.id)d.id="kap"+i;
+    const sm=d.querySelector('summary');
+    // Text ohne den Pfeil (.ar) und ohne Emoji-Icon sauber holen
+    let label=sm?sm.textContent.replace(/▸/g,'').trim():("Kapitel "+(i+1));
+    return {id:d.id,label,el:d};
+  });
+
+  // TOC-DOM bauen
+  const wrap=document.createElement('div'); wrap.className='toc-wrap';
+  const toc=document.createElement('nav'); toc.className='toc';
+  toc.innerHTML='<div class="toc-h">Inhalt</div>';
+  items.forEach(it=>{
+    const a=document.createElement('a'); a.href="#"+it.id; a.textContent=it.label; a.dataset.t=it.id;
+    a.onclick=e=>{
+      e.preventDefault();
+      it.el.open=true;
+      it.el.scrollIntoView({behavior:'smooth',block:'start'});
+      wrap.classList.remove('open'); // mobil nach Klick schließen
+    };
+    toc.appendChild(a);
+  });
+  const toggle=document.createElement('button'); toggle.className='toc-toggle'; toggle.innerHTML='☰'; toggle.title="Inhaltsverzeichnis";
+  toggle.onclick=()=>wrap.classList.toggle('open');
+  wrap.appendChild(toc); wrap.appendChild(toggle);
+  // ins Sum-View ganz vorne einhängen (float right)
+  sum.insertBefore(wrap,sum.firstChild);
+
+  // Scroll-Spy: aktives Kapitel markieren
+  const links=[...toc.querySelectorAll('a')];
+  function spy(){
+    let act=items[0].id, top=-Infinity;
+    const y=window.scrollY+120;
+    items.forEach(it=>{
+      const off=it.el.getBoundingClientRect().top+window.scrollY;
+      if(off<=y&&off>top){top=off;act=it.id;}
+    });
+    links.forEach(l=>l.classList.toggle('active',l.dataset.t===act));
+  }
+  // Nur lauschen, solange Sum-Tab aktiv ist
+  let ticking=false;
+  window.addEventListener('scroll',()=>{
+    if(!sum.classList.contains('on'))return;
+    if(!ticking){requestAnimationFrame(()=>{spy();ticking=false;});ticking=true;}
+  },{passive:true});
+  // TOC nur im Zusammenfassungs-Tab zeigen
+  function syncVis(){ wrap.style.display=sum.classList.contains('on')?'':'none'; }
+  syncVis();
+  ['tSum','tCards','tTerms','tLaws','tDsgvo'].forEach(id=>{
+    const b=document.getElementById(id); if(b)b.addEventListener('click',()=>setTimeout(syncVis,0));
+  });
+  spy();
 })();
 
 /* ===== THEME-UMSCHALTER (Hell wie PDF / Dunkel) ===== */
