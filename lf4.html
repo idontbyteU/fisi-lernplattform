@@ -58,10 +58,18 @@
 /* eingeklappte Karten etwas kompakter */
 #vTerms:not(.reveal-on) .term:not(.open){padding-top:.55rem;padding-bottom:.55rem}
 
-/* ===== BSI/deflist: kein horizontales Abschneiden (body hat overflow-x:hidden) ===== */
-/* dd ist ein Flex-Item und muss schrumpfen dürfen, damit der Text umbricht statt abgeschnitten zu werden. */
+/* ===== deflist-Fix: Überlappen (mobil) + Abschneiden (breitere Screens) verhindern ===== */
+/* Breitere Screens (Row-Layout): dd ist Flex-Item und muss schrumpfen dürfen -> Text bricht um statt abzuschneiden. */
 .sum dl.deflist > div{min-width:0}
 .sum dl.deflist dd{min-width:0;overflow-wrap:anywhere}
+/* Schmale Screens (Spalten-Layout): theme.css setzt dt auf flex-basis:100% – in einer Spalten-Flexbox
+   füllt das die BOXHÖHE, wodurch dd herausgedrückt wird und die nächste Karte überlappt.
+   dt + dd auf natürliche Höhe (flex:0 0 auto) zwingen und voll breit stapeln. */
+@media(max-width:560px){
+  .sum dl.deflist > div{flex-direction:column;align-items:stretch;gap:.2rem}
+  .sum dl.deflist dt{flex:0 0 auto;width:100%;min-width:0}
+  .sum dl.deflist dd{flex:0 0 auto;width:100%;min-width:0}
+}
 
 /* Ausklappbare Kapitel: details/summary nutzen den vorhandenen theme.css-Stil.
    h-sec-Optik in die summary übertragen. */
