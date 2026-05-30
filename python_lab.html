@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Lab – FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  /* ===================================================================== */
+  /*  PYTHON LAB · ruhiger Lern-Look auf FISI//OS-Basis                     */
+  /*  Grundtöne von der Plattform, aber kontrastreicher & ruhiger fürs     */
+  /*  lange Lernen: größere Schrift, mehr Abstand, weniger Neon-Glühen.    */
+  /* ===================================================================== */
+  :root{
+    --lab-bg:#0d1018; --lab-panel:#141926; --lab-panel2:#1a2030;
+    --lab-line:rgba(140,180,220,.16); --lab-line2:rgba(140,180,220,.28);
+    --lab-ink:#eaf2fb; --lab-read:#d4deeb; --lab-muted:#9aa8bf; --lab-dim:#6f7d94;
+    --lab-accent:#46d4e6; --lab-accent2:#8b9bff; --lab-green:#4ed99a;
+    --lab-amber:#f5b945; --lab-red:#ff6b8a; --lab-purple:#b88cff;
+    /* Syntax */
+    --sx-kw:#c79bff; --sx-fn:#7fb0ff; --sx-str:#8fd98a; --sx-num:#46d4e6;
+    --sx-cm:#6f7d94; --sx-op:#d4deeb;
+    --fmono:"Share Tech Mono",monospace; --fui:"Chakra Petch",sans-serif; --fdisp:"Orbitron",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--lab-bg);color:var(--lab-ink);font-family:var(--fui);
+    min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+  /* ---- Top-Bar ---- */
+  .labbar{display:flex;align-items:center;gap:4px;background:rgba(13,16,24,.92);
+    border-bottom:1px solid var(--lab-line);position:sticky;top:0;z-index:100;
+    overflow-x:auto;backdrop-filter:blur(10px)}
+  .labbar .home{flex:0 0 auto;padding:14px 16px;color:var(--lab-muted);text-decoration:none;
+    font-family:var(--fmono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+    display:flex;align-items:center;gap:6px;border-bottom:3px solid transparent}
+  .labbar .home:hover{color:var(--lab-accent)}
+  .tab-btn{flex:0 0 auto;padding:14px 18px;background:none;border:none;color:var(--lab-muted);
+    font-family:var(--fui);font-size:13.5px;font-weight:600;letter-spacing:.03em;cursor:pointer;
+    border-bottom:3px solid transparent;transition:.16s;white-space:nowrap}
+  .tab-btn:hover{color:var(--lab-ink)}
+  .tab-btn.active{color:var(--lab-accent);border-bottom-color:var(--lab-accent)}
+
+  /* ---- Seiten ---- */
+  .page{display:none;max-width:880px;margin:0 auto;padding:28px 20px 80px}
+  .page.active{display:block}
+
+  /* ---- Hero ---- */
+  .hero{padding:36px 0 20px}
+  .hero .badge{display:inline-block;background:var(--lab-panel);border:1px solid var(--lab-line2);
+    border-radius:999px;padding:5px 15px;font-family:var(--fmono);font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--lab-accent2);margin-bottom:14px}
+  .hero h1{font-family:var(--fdisp);font-size:clamp(1.7rem,5vw,2.7rem);font-weight:800;
+    line-height:1.12;letter-spacing:-.01em}
+  .hero h1 span{color:var(--lab-accent)}
+  .hero p{margin-top:12px;color:var(--lab-muted);font-size:15.5px;line-height:1.7;max-width:640px}
+
+  /* ---- Karten / Lesebereich ---- */
+  .lab-card{background:var(--lab-panel);border:1px solid var(--lab-line);border-radius:14px;
+    padding:22px 22px;margin-bottom:18px}
+  .lab-card h2{font-family:var(--fdisp);font-size:18px;font-weight:700;margin-bottom:6px;
+    color:var(--lab-ink);letter-spacing:.2px}
+  .lab-card h3{font-size:16px;font-weight:700;margin:16px 0 6px;color:var(--lab-accent)}
+  .lab-card p{color:var(--lab-read);font-size:15.5px;line-height:1.75;margin-bottom:10px}
+  .lab-card p strong{color:var(--lab-ink)}
+  .lab-card ul{margin:8px 0 12px;padding-left:22px;color:var(--lab-read);font-size:15.5px;line-height:1.8}
+  .lab-card li{margin-bottom:4px}
+  .lab-card li strong{color:var(--lab-ink)}
+
+  /* Inline-Code + Codeblock */
+  code{font-family:var(--fmono);background:rgba(140,180,220,.09);border-radius:5px;
+    padding:2px 7px;font-size:13.5px;color:var(--lab-accent2)}
+  .codeblock{display:block;font-family:var(--fmono);background:#0a0d14;border:1px solid var(--lab-line);
+    border-radius:10px;padding:16px 18px;margin:12px 0;font-size:14px;line-height:1.8;
+    color:var(--lab-read);white-space:pre;overflow-x:auto;tab-size:4}
+  .codeblock .kw{color:var(--sx-kw)}.codeblock .fn{color:var(--sx-fn)}
+  .codeblock .str{color:var(--sx-str)}.codeblock .num{color:var(--sx-num)}
+  .codeblock .cm{color:var(--sx-cm);font-style:italic}
+
+  /* Hinweis-/Merk-Boxen */
+  .note{border-left:3px solid var(--lab-accent2);background:rgba(139,155,255,.08);
+    border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0;font-size:14.5px;
+    color:var(--lab-read);line-height:1.7}
+  .note strong{color:var(--lab-ink)}
+  .note.merk{border-left-color:var(--lab-green);background:rgba(78,217,154,.08)}
+  .note.warn{border-left-color:var(--lab-amber);background:rgba(245,185,69,.08)}
+
+  /* ---- Buttons ---- */
+  .btn{font-family:var(--fui);font-size:14px;font-weight:700;border:none;border-radius:9px;
+    padding:11px 20px;cursor:pointer;transition:.15s;letter-spacing:.02em;display:inline-flex;
+    align-items:center;gap:8px}
+  .btn-run{background:var(--lab-green);color:#06140d}
+  .btn-run:hover{filter:brightness(1.08)}
+  .btn-run:disabled{opacity:.5;cursor:not-allowed}
+  .btn-ghost{background:rgba(140,180,220,.08);color:var(--lab-read);border:1px solid var(--lab-line2)}
+  .btn-ghost:hover{border-color:var(--lab-accent);color:var(--lab-accent)}
+  .btn-sm{padding:8px 14px;font-size:13px}
+
+  /* ===== EDITOR ===== */
+  .editor-wrap{background:var(--lab-panel);border:1px solid var(--lab-line);border-radius:14px;
+    overflow:hidden;margin-bottom:16px}
+  .editor-head{display:flex;align-items:center;gap:10px;padding:10px 14px;
+    background:var(--lab-panel2);border-bottom:1px solid var(--lab-line);flex-wrap:wrap}
+  .editor-head .dot3{display:flex;gap:6px}
+  .editor-head .dot3 i{width:11px;height:11px;border-radius:50%;display:block}
+  .editor-head .dot3 i:nth-child(1){background:#ff6b6b}
+  .editor-head .dot3 i:nth-child(2){background:#ffcf4d}
+  .editor-head .dot3 i:nth-child(3){background:#4ed99a}
+  .editor-head .ttl{font-family:var(--fmono);font-size:12.5px;color:var(--lab-muted);
+    letter-spacing:.04em}
+  .editor-head .sp{flex:1}
+  .code-area{position:relative}
+  .code-area textarea{width:100%;min-height:220px;background:#0a0d14;color:var(--lab-read);
+    font-family:var(--fmono);font-size:14px;line-height:1.75;border:none;padding:16px 18px;
+    resize:vertical;outline:none;tab-size:4;white-space:pre;overflow-wrap:normal}
+  .editor-actions{display:flex;gap:10px;padding:12px 14px;background:var(--lab-panel2);
+    border-top:1px solid var(--lab-line);flex-wrap:wrap;align-items:center}
+  .editor-actions .status{font-family:var(--fmono);font-size:12px;color:var(--lab-dim);margin-left:auto}
+
+  .output{background:#0a0d14;border:1px solid var(--lab-line);border-radius:12px;
+    margin-bottom:16px;overflow:hidden}
+  .output-head{display:flex;align-items:center;gap:8px;padding:9px 14px;
+    background:var(--lab-panel2);border-bottom:1px solid var(--lab-line);
+    font-family:var(--fmono);font-size:12px;color:var(--lab-muted);letter-spacing:.05em}
+  .output pre{padding:14px 18px;font-family:var(--fmono);font-size:13.5px;line-height:1.7;
+    color:var(--lab-read);white-space:pre-wrap;word-break:break-word;min-height:46px;margin:0;
+    max-height:340px;overflow:auto}
+  .output pre .err{color:var(--lab-red)}
+  .output pre .ok{color:var(--lab-green)}
+
+  /* ===== VISUALIZER ===== */
+  .viz{background:var(--lab-panel);border:1px solid var(--lab-line);border-radius:14px;
+    padding:18px;margin-bottom:18px}
+  .viz-title{font-family:var(--fdisp);font-size:16px;font-weight:700;margin-bottom:4px}
+  .viz-sub{color:var(--lab-muted);font-size:14px;margin-bottom:14px;line-height:1.6}
+  .viz-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .viz-controls label{font-size:13.5px;color:var(--lab-muted);display:flex;align-items:center;gap:7px}
+  .viz-controls input[type=number],.viz-controls input[type=text]{background:#0a0d14;
+    border:1px solid var(--lab-line2);border-radius:8px;color:var(--lab-ink);
+    font-family:var(--fmono);font-size:14px;padding:8px 10px;width:74px;outline:none}
+  .viz-controls input[type=text]{width:auto;min-width:150px}
+  .viz-controls input:focus{border-color:var(--lab-accent)}
+  .viz-stage{min-height:90px;display:flex;align-items:flex-end;gap:6px;flex-wrap:wrap;
+    padding:10px 0}
+  .viz-status{font-family:var(--fmono);font-size:13px;color:var(--lab-accent);
+    background:rgba(70,212,230,.07);border:1px solid var(--lab-line);border-radius:8px;
+    padding:10px 14px;margin-top:8px;line-height:1.6;min-height:42px}
+  .viz-status .hl{color:var(--lab-amber);font-weight:700}
+
+  /* Schleifen-Zahlenband */
+  .numline{display:flex;flex-wrap:wrap;gap:7px;padding:6px 0}
+  .numcell{min-width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+    background:var(--lab-panel2);border:1px solid var(--lab-line2);border-radius:9px;
+    font-family:var(--fmono);font-size:15px;color:var(--lab-muted);transition:.18s;padding:0 6px}
+  .numcell.cur{background:var(--lab-accent);color:#06151a;border-color:var(--lab-accent);
+    transform:translateY(-4px);box-shadow:0 6px 16px rgba(70,212,230,.35);font-weight:700}
+  .numcell.done{background:rgba(78,217,154,.14);border-color:rgba(78,217,154,.4);color:var(--lab-green)}
+  .numcell.skip{opacity:.4}
+
+  /* Listen-Zellen */
+  .listrow{display:flex;flex-wrap:wrap;gap:8px;padding:6px 0}
+  .listitem{display:flex;flex-direction:column;align-items:center;gap:4px}
+  .listitem .box{min-width:48px;height:48px;display:flex;align-items:center;justify-content:center;
+    background:var(--lab-panel2);border:1px solid var(--lab-line2);border-radius:10px;
+    font-family:var(--fmono);font-size:15px;color:var(--lab-ink);transition:.2s;padding:0 8px}
+  .listitem .idx{font-family:var(--fmono);font-size:11px;color:var(--lab-dim)}
+  .listitem.flash .box{background:var(--lab-accent);color:#06151a;border-color:var(--lab-accent);
+    transform:translateY(-4px)}
+  .listitem.rm .box{background:rgba(255,107,138,.2);border-color:var(--lab-red);color:var(--lab-red)}
+  .listitem.add .box{background:rgba(78,217,154,.2);border-color:var(--lab-green);color:var(--lab-green)}
+
+  /* Bubblesort-Balken */
+  .bars{display:flex;align-items:flex-end;gap:6px;height:200px;padding:6px 0}
+  .bar{flex:1;min-width:14px;background:linear-gradient(180deg,var(--lab-accent2),var(--lab-accent));
+    border-radius:6px 6px 0 0;display:flex;align-items:flex-start;justify-content:center;
+    font-family:var(--fmono);font-size:11px;color:#06151a;font-weight:700;padding-top:4px;
+    transition:height .25s,background .15s,transform .15s}
+  .bar.cmp{background:linear-gradient(180deg,var(--lab-amber),#ffce6b)}
+  .bar.swap{background:linear-gradient(180deg,var(--lab-red),#ff9bb0);transform:scaleY(1.02)}
+  .bar.sorted{background:linear-gradient(180deg,var(--lab-green),#7fe9b4)}
+
+  /* Variablen-Inspektor */
+  .vars{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  .varbox{background:var(--lab-panel2);border:1px solid var(--lab-line2);border-radius:10px;
+    padding:10px 12px}
+  .varbox .vn{font-family:var(--fmono);font-size:14px;color:var(--lab-accent2);font-weight:700}
+  .varbox .vv{font-family:var(--fmono);font-size:15px;color:var(--lab-ink);
+    word-break:break-word;margin-top:2px}
+  .varbox .vt{font-family:var(--fmono);font-size:11px;color:var(--lab-dim);
+    text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+  .vars-empty{color:var(--lab-dim);font-size:14px;font-family:var(--fmono)}
+
+  /* Pfad-Schritte (Lernpfad) */
+  .pathstep{display:flex;gap:14px;margin-bottom:8px}
+  .pathstep .num{flex:0 0 auto;width:34px;height:34px;border-radius:50%;
+    background:var(--lab-panel2);border:1px solid var(--lab-line2);display:flex;
+    align-items:center;justify-content:center;font-family:var(--fmono);font-weight:700;
+    color:var(--lab-accent);font-size:15px}
+  .pathstep .body{flex:1}
+  .pathstep .body b{color:var(--lab-ink);font-size:15.5px}
+  .pathstep .body span{display:block;color:var(--lab-muted);font-size:14px;margin-top:2px;line-height:1.6}
+
+  /* kleine Beispiel-Knöpfe (Code in Editor laden) */
+  .examples{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  .ex-chip{font-family:var(--fmono);font-size:12.5px;background:rgba(140,180,220,.07);
+    border:1px solid var(--lab-line2);border-radius:8px;padding:7px 12px;color:var(--lab-read);
+    cursor:pointer;transition:.15s}
+  .ex-chip:hover{border-color:var(--lab-accent);color:var(--lab-accent)}
+
+  .loader{display:inline-block;width:14px;height:14px;border:2px solid var(--lab-line2);
+    border-top-color:var(--lab-accent);border-radius:50%;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  @media(max-width:560px){
+    .page{padding:20px 14px 70px}
+    .hero{padding:24px 0 14px}
+    .viz-controls{gap:8px}
+    .bars{height:160px}
+  }
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d1018">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+
+<div class="labbar">
+  <a href="index.html" class="home">&larr; FISI</a>
+  <button class="tab-btn active" data-page="lab">🧪 Code-Labor</button>
+  <button class="tab-btn" data-page="loops">🔁 Schleifen</button>
+  <button class="tab-btn" data-page="lists">📋 Listen</button>
+  <button class="tab-btn" data-page="sort">📊 Sortieren</button>
+  <button class="tab-btn" data-page="path">🧭 Lernpfad</button>
+</div>
+
+<!-- ===================== CODE-LABOR ===================== -->
+<div id="page-lab" class="page active">
+  <div class="hero">
+    <div class="badge">Echtes Python im Browser</div>
+    <h1>Python <span>Lab</span></h1>
+    <p>Schreibe Code und führe ihn direkt aus – kein Setup, läuft auch offline.
+       Nebenbei zeigt der Variablen-Inspektor, welche Werte deine Variablen gerade haben.
+       Aufbauend auf „Python Byte“, aber zum echten Ausprobieren.</p>
+  </div>
+
+  <div class="note" id="pyodide-note">
+    <strong>Python-Motor wird geladen …</strong> <span class="loader"></span>
+    Beim ersten Mal dauert das ein paar Sekunden (wird dann gecacht).
+  </div>
+
+  <div class="lab-card" style="padding:16px 18px">
+    <div style="font-size:13.5px;color:var(--lab-muted);margin-bottom:8px">Beispiel laden:</div>
+    <div class="examples" id="examples"></div>
+  </div>
+
+  <div class="editor-wrap">
+    <div class="editor-head">
+      <span class="dot3"><i></i><i></i><i></i></span>
+      <span class="ttl">main.py</span>
+      <span class="sp"></span>
+      <button class="btn btn-ghost btn-sm" id="btn-clear">Leeren</button>
+    </div>
+    <div class="code-area">
+      <textarea id="code" spellcheck="false"># Willkommen im Python Lab!
+# Schreibe hier Code und druecke "Ausfuehren".
+
+name = "Welt"
+print("Hallo,", name + "!")
+
+# Eine kleine Rechnung
+summe = 0
+for i in range(1, 11):
+    summe = summe + i
+print("Summe 1 bis 10:", summe)
+</textarea>
+    </div>
+    <div class="editor-actions">
+      <button class="btn btn-run" id="btn-run" disabled>▶ Ausführen</button>
+      <button class="btn btn-ghost" id="btn-reset">↺ Beispiel zurück</button>
+      <span class="status" id="run-status">lädt …</span>
+    </div>
+  </div>
+
+  <div class="output">
+    <div class="output-head">▶ AUSGABE</div>
+    <pre id="out">Drücke „Ausführen“, um dein Programm laufen zu lassen.</pre>
+  </div>
+
+  <div class="viz">
+    <div class="viz-title">🔎 Variablen-Inspektor</div>
+    <div class="viz-sub">Nach dem Ausführen siehst du hier alle Variablen mit Wert und Typ –
+      so wird sichtbar, was Python sich „gemerkt“ hat.</div>
+    <div class="vars" id="vars"><span class="vars-empty">Noch keine Variablen – führe zuerst Code aus.</span></div>
+  </div>
+
+  <div class="note merk">
+    <strong>Eingaben mit <code>input()</code>:</strong> Funktioniert hier auch – es erscheint ein
+    kleines Eingabefenster. In der Schule (VS Code/IDLE) läuft derselbe Code genauso.
+  </div>
+</div>
+
+<!-- ===================== SCHLEIFEN ===================== -->
+<div id="page-loops" class="page">
+  <div class="hero">
+    <div class="badge">Sichtbar gemacht</div>
+    <h1>Schleifen <span>verstehen</span></h1>
+    <p>Eine Schleife wiederholt etwas. Hier siehst du Schritt für Schritt, welche Zahl gerade
+       „dran“ ist und wie ein Zähler mitläuft – statt es dir nur vorzustellen.</p>
+  </div>
+
+  <div class="viz">
+    <div class="viz-title">🔁 for-Schleife mit range()</div>
+    <div class="viz-sub"><code>for i in range(start, stop, schritt)</code> – der Marker wandert durch die Zahlen.
+      Wichtig: <strong>stop</strong> ist nicht mehr dabei!</div>
+    <div class="viz-controls">
+      <label>start <input type="number" id="r-start" value="0"></label>
+      <label>stop <input type="number" id="r-stop" value="10"></label>
+      <label>schritt <input type="number" id="r-step" value="1"></label>
+      <button class="btn btn-run btn-sm" id="r-play">▶ Abspielen</button>
+      <button class="btn btn-ghost btn-sm" id="r-step-btn">Schritt</button>
+      <button class="btn btn-ghost btn-sm" id="r-reset">↺</button>
+    </div>
+    <div class="codeblock" id="r-code"></div>
+    <div class="viz-stage"><div class="numline" id="r-line"></div></div>
+    <div class="viz-status" id="r-status">Drücke „Abspielen“ oder geh „Schritt“ für Schritt.</div>
+  </div>
+
+  <div class="viz">
+    <div class="viz-title">🔂 while-Schleife: Summe bilden</div>
+    <div class="viz-sub">Ein Akkumulator (<code>summe</code>) sammelt Werte, solange die Bedingung
+      <code>i &lt;= n</code> wahr ist. Du siehst, wie sich <code>summe</code> und <code>i</code> verändern.</div>
+    <div class="viz-controls">
+      <label>n <input type="number" id="w-n" value="5"></label>
+      <button class="btn btn-run btn-sm" id="w-play">▶ Abspielen</button>
+      <button class="btn btn-ghost btn-sm" id="w-step">Schritt</button>
+      <button class="btn btn-ghost btn-sm" id="w-reset">↺</button>
+    </div>
+    <div class="codeblock" id="w-code"></div>
+    <div class="vars" id="w-vars"></div>
+    <div class="viz-status" id="w-status">summe startet bei 0, i bei 1.</div>
+  </div>
+
+  <div class="note">
+    <strong>Selbst ausprobieren:</strong> Kopiere den Code ins Code-Labor und ändere die Werte –
+    so verbindest du das Bild mit echtem Code.
+  </div>
+</div>
+
+<!-- ===================== LISTEN ===================== -->
+<div id="page-lists" class="page">
+  <div class="hero">
+    <div class="badge">Aus deinem Unterricht</div>
+    <h1>Listen <span>bewegen</span></h1>
+    <p>Listen sind geordnete Sammlungen. Jede Operation – anhängen, einfügen, löschen, sortieren –
+       verschiebt die Kästchen sichtbar. Genau die Methoden aus deinen Schul-Dateien.</p>
+  </div>
+
+  <div class="viz">
+    <div class="viz-title">📋 Listen-Operationen live</div>
+    <div class="viz-sub">Die Zahl unter jedem Kästchen ist der <strong>Index</strong> (Position) –
+      er beginnt bei <strong>0</strong>.</div>
+    <div class="viz-controls">
+      <button class="btn btn-ghost btn-sm" data-op="append">append(x)</button>
+      <button class="btn btn-ghost btn-sm" data-op="insert">insert(0, x)</button>
+      <button class="btn btn-ghost btn-sm" data-op="pop">pop()</button>
+      <button class="btn btn-ghost btn-sm" data-op="del0">del [0]</button>
+      <button class="btn btn-ghost btn-sm" data-op="sort">sort()</button>
+      <button class="btn btn-ghost btn-sm" data-op="reverse">sort(reverse=True)</button>
+      <button class="btn btn-ghost btn-sm" data-op="reset">↺ Neu</button>
+    </div>
+    <div class="viz-stage" style="min-height:80px"><div class="listrow" id="l-row"></div></div>
+    <div class="viz-status" id="l-status">Liste bereit. Probiere die Operationen aus.</div>
+    <div class="codeblock" id="l-code" style="margin-top:14px"></div>
+  </div>
+
+  <div class="note merk">
+    <strong>Merke:</strong> <code>sort()</code> und <code>append()</code> verändern die Liste
+    <em>direkt</em>. <code>sorted(liste)</code> dagegen gibt eine <em>neue</em> sortierte Liste zurück
+    und lässt das Original in Ruhe.
+  </div>
+</div>
+
+<!-- ===================== SORTIEREN ===================== -->
+<div id="page-sort" class="page">
+  <div class="hero">
+    <div class="badge">Algorithmus zum Zusehen</div>
+    <h1>Bubblesort <span>animiert</span></h1>
+    <p>Bubblesort vergleicht immer zwei Nachbarn und tauscht sie, wenn sie falsch herum stehen.
+       Große Werte „blubbern“ nach rechts. Gelb = wird verglichen, Rot = wird getauscht,
+       Grün = fertig sortiert.</p>
+  </div>
+
+  <div class="viz">
+    <div class="viz-title">📊 Sortier-Visualizer</div>
+    <div class="viz-controls">
+      <button class="btn btn-run btn-sm" id="s-play">▶ Sortieren</button>
+      <button class="btn btn-ghost btn-sm" id="s-step">Schritt</button>
+      <button class="btn btn-ghost btn-sm" id="s-shuffle">🎲 Neu mischen</button>
+      <label>Tempo <input type="number" id="s-speed" value="350" min="60" max="1200" step="50" style="width:84px"></label>
+    </div>
+    <div class="bars" id="s-bars"></div>
+    <div class="viz-status" id="s-status">Drücke „Sortieren“ – oder geh „Schritt“ für Schritt durch.</div>
+    <div class="codeblock" id="s-code" style="margin-top:14px"><span class="kw">def</span> <span class="fn">bubblesort</span>(liste):
+    n = <span class="fn">len</span>(liste)
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n - <span class="num">1</span>):
+        <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(n - <span class="num">1</span> - i):
+            <span class="kw">if</span> liste[j] &gt; liste[j + <span class="num">1</span>]:
+                liste[j], liste[j + <span class="num">1</span>] = liste[j + <span class="num">1</span>], liste[j]
+    <span class="kw">return</span> liste</div>
+  </div>
+
+  <div class="note">
+    <strong>Warum lernen?</strong> Bubblesort ist langsam, aber perfekt zum Verstehen, wie ein
+    Algorithmus überhaupt arbeitet. Im Alltag nimmt man <code>liste.sort()</code> – das ist hochoptimiert.
+  </div>
+</div>
+
+<!-- ===================== LERNPFAD ===================== -->
+<div id="page-path" class="page">
+  <div class="hero">
+    <div class="badge">In sinnvoller Reihenfolge</div>
+    <h1>Dein <span>Lernpfad</span></h1>
+    <p>Python von null an, jeder Schritt baut auf dem vorherigen auf. Lies die Idee, lade das
+       Beispiel ins Code-Labor und probiere es aus. Kein Schritt setzt etwas voraus, das du
+       noch nicht kennst.</p>
+  </div>
+
+  <div class="lab-card">
+    <h2>1 · Variablen &amp; Datentypen</h2>
+    <p>Eine Variable ist ein benannter Behälter für einen Wert. Python merkt sich den Typ automatisch.</p>
+    <ul>
+      <li><strong>int</strong> – ganze Zahl: <code>alter = 20</code></li>
+      <li><strong>float</strong> – Kommazahl: <code>groesse = 1.80</code></li>
+      <li><strong>str</strong> – Text (in Anführungszeichen): <code>name = "Max"</code></li>
+      <li><strong>bool</strong> – Wahrheitswert: <code>aktiv = True</code></li>
+    </ul>
+    <div class="note">Im Code-Labor zeigt der <strong>Variablen-Inspektor</strong> jeden dieser Werte mit Typ an.</div>
+  </div>
+
+  <div class="lab-card">
+    <h2>2 · Rechnen &amp; Operatoren</h2>
+    <p>Die Grundrechenarten plus drei, die oft in Prüfungen vorkommen:</p>
+    <ul>
+      <li><code>**</code> Potenz · <code>%</code> Modulo (Rest) · <code>//</code> Ganzzahldivision</li>
+      <li>Beispiel: <code>10 % 3</code> ergibt <code>1</code> (Rest), <code>10 // 3</code> ergibt <code>3</code></li>
+    </ul>
+  </div>
+
+  <div class="lab-card">
+    <h2>3 · Ein- und Ausgabe</h2>
+    <p><code>print(...)</code> gibt aus, <code>input(...)</code> fragt ab. Wichtig: <code>input()</code>
+       liefert <strong>immer Text</strong> – zum Rechnen erst mit <code>int()</code> oder <code>float()</code> umwandeln.</p>
+  </div>
+
+  <div class="lab-card">
+    <h2>4 · Entscheidungen (if / elif / else)</h2>
+    <p>Das Programm wählt einen Weg je nach Bedingung. Python prüft von oben nach unten – die
+       erste passende Bedingung gewinnt.</p>
+  </div>
+
+  <div class="lab-card">
+    <h2>5 · Schleifen (for &amp; while)</h2>
+    <p>Wiederholungen. <code>for</code> läuft über einen festen Bereich, <code>while</code> solange
+       eine Bedingung wahr ist. → Sieh dir das im Tab <strong>Schleifen</strong> an.</p>
+  </div>
+
+  <div class="lab-card">
+    <h2>6 · Listen</h2>
+    <p>Mehrere Werte in einer geordneten Sammlung. → Tab <strong>Listen</strong> zeigt jede
+       Operation als Bewegung.</p>
+  </div>
+
+  <div class="lab-card">
+    <h2>7 · Zufall &amp; Statistik (dein Unterrichtsstoff)</h2>
+    <p>Mit <code>random</code> Zufallszahlen erzeugen, mit Listen sammeln und auswerten – genau die
+       Würfel-Aufgabe aus der Schule. Lade sie im Code-Labor unter „Würfel-Statistik“.</p>
+  </div>
+
+  <div class="lab-card">
+    <h2>8 · Eigene Funktionen (def)</h2>
+    <p>Code, den du benennst und wiederverwendest. <code>def name(parameter):</code> … <code>return wert</code>.
+       Damit baust du größere Programme aus kleinen Bausteinen.</p>
+  </div>
+</div>
+
+<!-- Pyodide -->
+<script src="https://cdn.jsdelivr.net/pyodide/v0.29.4/full/pyodide.js"></script>
+<script>
+/* ===================================================================== */
+/*  TAB-NAVIGATION                                                        */
+/* ===================================================================== */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('page-'+btn.dataset.page).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+
+/* ===================================================================== */
+/*  BEISPIELE (laden Code ins Editor-Feld)                               */
+/* ===================================================================== */
+const EXAMPLES = {
+  "Hallo Welt":
+`name = "Welt"
+print("Hallo,", name + "!")
+print("Mein Name hat", len(name), "Zeichen.")`,
+
+  "Rechnen":
+`a = 17
+b = 5
+print("Summe:", a + b)
+print("Differenz:", a - b)
+print("Produkt:", a * b)
+print("Division:", a / b)
+print("Ganzzahl-Division:", a // b)
+print("Rest (Modulo):", a % b)
+print("Potenz:", a ** 2)`,
+
+  "for-Schleife":
+`# Summe der Zahlen 1 bis 10
+summe = 0
+for i in range(1, 11):
+    summe = summe + i
+    print("i =", i, "-> summe =", summe)
+print("Endsumme:", summe)`,
+
+  "while-Schleife":
+`# Countdown
+i = 5
+while i > 0:
+    print(i, "...")
+    i = i - 1
+print("Start!")`,
+
+  "Listen":
+`zahlen = [77, 32, 1, 98, 55, 3, 8]
+print("Original:", zahlen)
+zahlen.sort()
+print("Sortiert:", zahlen)
+zahlen.append(100)
+print("Mit 100:", zahlen)
+print("Summe:", sum(zahlen))
+print("Groesste:", max(zahlen))
+print("Mittelwert:", sum(zahlen) / len(zahlen))`,
+
+  "Würfel-Statistik":
+`from random import randint
+
+# 10000 mal wuerfeln und auswerten
+w = []
+for i in range(10000):
+    z = randint(1, 6)
+    w.append(z)
+
+print("Mittelwert:", sum(w) / len(w))
+print()
+for i in range(1, 7):
+    anzahl = w.count(i)
+    print("Die", i, "kam", anzahl, "mal")`,
+
+  "Zufallsmodul":
+`import random
+random.seed(100)   # gleicher Startwert = gleiche Zahlen
+
+print("randint(0,100):", random.randint(0, 100))
+print("random():", random.random())
+print("uniform(0,100):", random.uniform(0, 100))
+
+farben = ["rot", "blau", "gruen"]
+print("choice:", random.choice(farben))`,
+
+  "Funktion":
+`def begruessen(name):
+    return "Hallo " + name + "!"
+
+def quadrat(x):
+    return x * x
+
+print(begruessen("Anna"))
+print(begruessen("Tom"))
+print("5 zum Quadrat ist", quadrat(5))`
+};
+
+const DEFAULT_CODE = document.getElementById('code').value;
+const exBox = document.getElementById('examples');
+Object.keys(EXAMPLES).forEach(name=>{
+  const c=document.createElement('button');
+  c.className='ex-chip'; c.textContent=name;
+  c.onclick=()=>{ document.getElementById('code').value=EXAMPLES[name]; };
+  exBox.appendChild(c);
+});
+
+/* ===================================================================== */
+/*  PYODIDE: echtes Python im Browser                                    */
+/* ===================================================================== */
+let pyodide=null, pyReady=false;
+const outEl=document.getElementById('out');
+const runBtn=document.getElementById('btn-run');
+const runStatus=document.getElementById('run-status');
+const pyNote=document.getElementById('pyodide-note');
+
+async function initPyodide(){
+  try{
+    pyodide = await loadPyodide();
+    // print() in einen Puffer umleiten
+    pyodide.runPython(`
+import sys, io
+class _Catch(io.StringIO):
+    pass
+`);
+    pyReady=true;
+    runBtn.disabled=false;
+    runStatus.textContent='bereit';
+    pyNote.innerHTML='<strong style="color:var(--lab-green)">✓ Python ist bereit.</strong> Du kannst jetzt Code ausführen.';
+    pyNote.className='note merk';
+  }catch(e){
+    runStatus.textContent='Fehler beim Laden';
+    pyNote.innerHTML='<strong style="color:var(--lab-red)">Python konnte nicht geladen werden.</strong> '+
+      'Prüfe deine Internetverbindung und lade die Seite neu. (Beim allerersten Mal ist eine Verbindung nötig.)';
+    pyNote.className='note warn';
+  }
+}
+
+/* input() im Browser: über window.prompt */
+function setupInput(){
+  pyodide.globals.set('_js_prompt', (msg)=> window.prompt(msg||'') ?? '');
+  pyodide.runPython(`
+import builtins
+def input(prompt=""):
+    return _js_prompt(str(prompt))
+builtins.input = input
+`);
+}
+
+const TYPE_DE = {int:'Ganzzahl',float:'Kommazahl',str:'Text',bool:'Wahrheitswert',
+  list:'Liste',dict:'Dictionary',tuple:'Tuple',set:'Menge',NoneType:'kein Wert'};
+
+async function runCode(){
+  if(!pyReady) return;
+  const code=document.getElementById('code').value;
+  outEl.innerHTML=''; runBtn.disabled=true; runStatus.textContent='läuft …';
+  try{
+    setupInput();
+    // stdout/stderr abfangen
+    pyodide.runPython(`
+import sys, io
+sys.stdout = io.StringIO()
+sys.stderr = sys.stdout
+`);
+    let userError=null;
+    try{
+      await pyodide.runPythonAsync(code);
+    }catch(err){ userError=err; }
+
+    const printed = pyodide.runPython("sys.stdout.getvalue()");
+    pyodide.runPython("sys.stdout = sys.__stdout__; sys.stderr = sys.__stderr__");
+
+    if(printed) outEl.textContent = printed;
+    if(userError){
+      const msg=String(userError.message||userError);
+      // nur den relevanten Teil (ab letztem 'Error') zeigen
+      const lines=msg.trim().split('\n');
+      const short=lines.slice(-4).join('\n');
+      const span=document.createElement('span');
+      span.className='err'; span.textContent=(printed?'\n':'')+short;
+      outEl.appendChild(span);
+    }
+    if(!printed && !userError){
+      outEl.innerHTML='<span class="ok">✓ Ausgeführt (keine Ausgabe – nutze print(), um etwas anzuzeigen).</span>';
+    }
+    updateVars();
+    runStatus.textContent='fertig';
+  }catch(e){
+    outEl.innerHTML='<span class="err">Unerwarteter Fehler: '+String(e)+'</span>';
+    runStatus.textContent='Fehler';
+  }finally{
+    runBtn.disabled=false;
+  }
+}
+
+/* Variablen-Inspektor: globale User-Variablen auslesen */
+function updateVars(){
+  const box=document.getElementById('vars');
+  let data=[];
+  try{
+    const json = pyodide.runPython(`
+import json as _json
+def _inspect():
+    out=[]
+    for k,v in list(globals().items()):
+        if k.startswith('_'): continue
+        if k in ('sys','io','builtins','input','json','annotations'): continue
+        t=type(v).__name__
+        if t in ('module','function','type','builtin_function_or_method','method'): continue
+        try:
+            r=repr(v)
+        except Exception:
+            r='<nicht darstellbar>'
+        if len(r)>80: r=r[:77]+'...'
+        out.append({'n':k,'v':r,'t':t})
+    return _json.dumps(out)
+_inspect()
+`);
+    data=JSON.parse(json);
+  }catch(e){ data=[]; }
+
+  if(!data.length){
+    box.innerHTML='<span class="vars-empty">Keine eigenen Variablen gefunden.</span>';
+    return;
+  }
+  box.innerHTML='';
+  data.forEach(d=>{
+    const el=document.createElement('div'); el.className='varbox';
+    const tDe=TYPE_DE[d.t]||d.t;
+    el.innerHTML=`<div class="vn">${d.n}</div><div class="vv">${escapeHtml(d.v)}</div>`+
+      `<div class="vt">${tDe}</div>`;
+    box.appendChild(el);
+  });
+}
+function escapeHtml(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+
+runBtn.addEventListener('click',runCode);
+document.getElementById('btn-clear').addEventListener('click',()=>{document.getElementById('code').value='';});
+document.getElementById('btn-reset').addEventListener('click',()=>{document.getElementById('code').value=DEFAULT_CODE;});
+/* Tab-Taste im Editor = 4 Leerzeichen statt Fokuswechsel */
+document.getElementById('code').addEventListener('keydown',function(e){
+  if(e.key==='Tab'){e.preventDefault();const s=this.selectionStart,en=this.selectionEnd;
+    this.value=this.value.slice(0,s)+'    '+this.value.slice(en);
+    this.selectionStart=this.selectionEnd=s+4;}
+});
+
+initPyodide();
+
+/* ===================================================================== */
+/*  VISUALIZER 1: for-Schleife mit range()                               */
+/* ===================================================================== */
+(function(){
+  const lineEl=document.getElementById('r-line');
+  const statusEl=document.getElementById('r-status');
+  const codeEl=document.getElementById('r-code');
+  let seq=[], idx=-1, timer=null;
+
+  function readParams(){
+    let s=parseInt(document.getElementById('r-start').value)||0;
+    let e=parseInt(document.getElementById('r-stop').value)||0;
+    let st=parseInt(document.getElementById('r-step').value)||1;
+    if(st===0) st=1;
+    return {s,e,st};
+  }
+  function build(){
+    const {s,e,st}=readParams();
+    seq=[]; let guard=0;
+    if(st>0){ for(let i=s;i<e && guard<500;i+=st){seq.push(i);guard++;} }
+    else { for(let i=s;i>e && guard<500;i+=st){seq.push(i);guard++;} }
+    idx=-1;
+    codeEl.innerHTML=`<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(`+
+      `<span class="num">${s}</span>, <span class="num">${e}</span>, <span class="num">${st}</span>):\n`+
+      `    <span class="fn">print</span>(i)`;
+    render();
+    statusEl.innerHTML=`range erzeugt <span class="hl">${seq.length}</span> Werte: `+
+      (seq.length?`${seq.join(', ')}`:'(leer – start/stop/schritt passen nicht zusammen)');
+  }
+  function render(){
+    lineEl.innerHTML='';
+    seq.forEach((val,i)=>{
+      const c=document.createElement('div'); c.className='numcell';
+      if(i<idx) c.classList.add('done');
+      if(i===idx) c.classList.add('cur');
+      c.textContent=val; lineEl.appendChild(c);
+    });
+  }
+  function step(){
+    if(idx>=seq.length-1){ statusEl.innerHTML='✓ Schleife fertig – alle Werte durchlaufen.'; return false; }
+    idx++; render();
+    statusEl.innerHTML=`Durchlauf ${idx+1}/${seq.length}: <span class="hl">i = ${seq[idx]}</span> → print(${seq[idx]})`;
+    return true;
+  }
+  function play(){
+    stop(); build();
+    timer=setInterval(()=>{ if(!step()) stop(); },650);
+  }
+  function stop(){ if(timer){clearInterval(timer);timer=null;} }
+
+  document.getElementById('r-play').onclick=play;
+  document.getElementById('r-step-btn').onclick=()=>{ if(idx<0)build(); step(); };
+  document.getElementById('r-reset').onclick=()=>{ stop(); build(); };
+  ['r-start','r-stop','r-step'].forEach(id=>document.getElementById(id).addEventListener('change',()=>{stop();build();}));
+  build();
+})();
+
+/* ===================================================================== */
+/*  VISUALIZER 2: while-Schleife (Summe)                                 */
+/* ===================================================================== */
+(function(){
+  const varsEl=document.getElementById('w-vars');
+  const statusEl=document.getElementById('w-status');
+  const codeEl=document.getElementById('w-code');
+  let n=5, i=1, summe=0, timer=null, running=false;
+
+  function reset(){
+    stop(); n=parseInt(document.getElementById('w-n').value)||5;
+    i=1; summe=0; running=false;
+    codeEl.innerHTML=`summe = <span class="num">0</span>\n`+
+      `i = <span class="num">1</span>\n`+
+      `<span class="kw">while</span> i &lt;= <span class="num">${n}</span>:\n`+
+      `    summe = summe + i\n    i = i + <span class="num">1</span>\n`+
+      `<span class="fn">print</span>(summe)`;
+    renderVars();
+    statusEl.innerHTML=`Start: summe = 0, i = 1. Bedingung: i &lt;= ${n}`;
+  }
+  function renderVars(){
+    varsEl.innerHTML=
+      `<div class="varbox"><div class="vn">i</div><div class="vv">${i}</div><div class="vt">Ganzzahl</div></div>`+
+      `<div class="varbox"><div class="vn">summe</div><div class="vv">${summe}</div><div class="vt">Ganzzahl</div></div>`;
+  }
+  function step(){
+    if(i>n){ statusEl.innerHTML=`✓ Bedingung i &lt;= ${n} ist falsch (i=${i}). Schleife endet. <span class="hl">summe = ${summe}</span>`; return false; }
+    summe+=i;
+    statusEl.innerHTML=`i=${i} ist &lt;= ${n} → summe = summe + ${i} = <span class="hl">${summe}</span>, dann i = ${i+1}`;
+    i++; renderVars(); return true;
+  }
+  function play(){ reset(); running=true; timer=setInterval(()=>{ if(!step())stop(); },750); }
+  function stop(){ if(timer){clearInterval(timer);timer=null;} }
+
+  document.getElementById('w-play').onclick=play;
+  document.getElementById('w-step').onclick=()=>{ if(i>n&&summe>0){reset();} step(); };
+  document.getElementById('w-reset').onclick=reset;
+  document.getElementById('w-n').addEventListener('change',reset);
+  reset();
+})();
+
+/* ===================================================================== */
+/*  VISUALIZER 3: Listen-Operationen                                     */
+/* ===================================================================== */
+(function(){
+  const rowEl=document.getElementById('l-row');
+  const statusEl=document.getElementById('l-status');
+  const codeEl=document.getElementById('l-code');
+  const START=[5,2,8,1];
+  let list=[...START], counter=9;
+
+  function render(flash){
+    rowEl.innerHTML='';
+    list.forEach((val,i)=>{
+      const it=document.createElement('div'); it.className='listitem';
+      if(flash && flash.i===i) it.classList.add(flash.cls);
+      it.innerHTML=`<div class="box">${val}</div><div class="idx">[${i}]</div>`;
+      rowEl.appendChild(it);
+    });
+  }
+  function setCode(txt){ codeEl.textContent='liste = '+JSON.stringify(list).replace(/"/g,''); codeEl.innerHTML+='\n'+txt; }
+
+  const ops={
+    append(){ const v=counter++; list.push(v); render({i:list.length-1,cls:'add'});
+      statusEl.innerHTML=`<span class="hl">liste.append(${v})</span> – hängt ${v} ans Ende (Index ${list.length-1}).`;
+      setCode('<span class="fn">liste.append</span>('+v+')'); },
+    insert(){ const v=counter++; list.unshift(v); render({i:0,cls:'add'});
+      statusEl.innerHTML=`<span class="hl">liste.insert(0, ${v})</span> – fügt ${v} vorne ein, alles rückt nach rechts.`;
+      setCode('<span class="fn">liste.insert</span>(0, '+v+')'); },
+    pop(){ if(!list.length){statusEl.textContent='Liste ist leer.';return;}
+      const v=list[list.length-1]; render({i:list.length-1,cls:'rm'});
+      setTimeout(()=>{list.pop();render();},350);
+      statusEl.innerHTML=`<span class="hl">liste.pop()</span> – entfernt das letzte Element (${v}) und gibt es zurück.`;
+      setCode('merk = <span class="fn">liste.pop</span>()  <span class="cm"># '+v+'</span>'); },
+    del0(){ if(!list.length){statusEl.textContent='Liste ist leer.';return;}
+      const v=list[0]; render({i:0,cls:'rm'});
+      setTimeout(()=>{list.shift();render();},350);
+      statusEl.innerHTML=`<span class="hl">del liste[0]</span> – löscht das erste Element (${v}), alles rückt nach links.`;
+      setCode('<span class="kw">del</span> liste[<span class="num">0</span>]'); },
+    sort(){ list.sort((a,b)=>a-b); render();
+      statusEl.innerHTML=`<span class="hl">liste.sort()</span> – sortiert aufsteigend (verändert die Liste direkt).`;
+      setCode('<span class="fn">liste.sort</span>()'); },
+    reverse(){ list.sort((a,b)=>b-a); render();
+      statusEl.innerHTML=`<span class="hl">liste.sort(reverse=True)</span> – sortiert absteigend.`;
+      setCode('<span class="fn">liste.sort</span>(reverse=<span class="kw">True</span>)'); },
+    reset(){ list=[...START]; counter=9; render();
+      statusEl.textContent='Liste zurückgesetzt.'; setCode('<span class="cm"># bereit</span>'); }
+  };
+  document.querySelectorAll('#page-lists [data-op]').forEach(b=>{
+    b.onclick=()=>ops[b.dataset.op]();
+  });
+  render(); setCode('<span class="cm"># waehle eine Operation</span>');
+})();
+
+/* ===================================================================== */
+/*  VISUALIZER 4: Bubblesort                                             */
+/* ===================================================================== */
+(function(){
+  const barsEl=document.getElementById('s-bars');
+  const statusEl=document.getElementById('s-status');
+  let arr=[], steps=[], sp=-1, timer=null, sortedSet=new Set();
+
+  function shuffle(){
+    stop(); arr=[]; for(let k=0;k<8;k++) arr.push(Math.floor(Math.random()*90)+10);
+    buildSteps(); sp=-1; sortedSet=new Set(); render();
+    statusEl.textContent='Neue Zufallswerte. Drücke „Sortieren“ oder geh „Schritt“.';
+  }
+  function buildSteps(){
+    steps=[]; const a=[...arr]; const n=a.length;
+    for(let i=0;i<n-1;i++){
+      for(let j=0;j<n-1-i;j++){
+        steps.push({type:'cmp',j,arr:[...a],sorted:i});
+        if(a[j]>a[j+1]){ [a[j],a[j+1]]=[a[j+1],a[j]];
+          steps.push({type:'swap',j,arr:[...a],sorted:i}); }
+      }
+      steps.push({type:'mark',idx:n-1-i,arr:[...a],sorted:i+1});
+    }
+    steps.push({type:'done',arr:[...a],sorted:n});
+  }
+  function render(state){
+    const data=state?state.arr:arr;
+    const max=Math.max(...data,1);
+    barsEl.innerHTML='';
+    data.forEach((v,i)=>{
+      const bar=document.createElement('div'); bar.className='bar';
+      bar.style.height=(v/max*100)+'%'; bar.textContent=v;
+      if(state){
+        const sortedFrom=data.length-(state.sorted||0);
+        if(i>=sortedFrom) bar.classList.add('sorted');
+        if(state.type==='cmp' && (i===state.j||i===state.j+1)) bar.classList.add('cmp');
+        if(state.type==='swap' && (i===state.j||i===state.j+1)) bar.classList.add('swap');
+        if(state.type==='done') bar.classList.add('sorted');
+      }
+      barsEl.appendChild(bar);
+    });
+  }
+  function step(){
+    if(sp>=steps.length-1){ statusEl.innerHTML='✓ Fertig sortiert!'; return false; }
+    sp++; const s=steps[sp]; render(s);
+    if(s.type==='cmp') statusEl.innerHTML=`Vergleiche Position ${s.j} und ${s.j+1}: ${s.arr[s.j]} und ${s.arr[s.j+1]}`;
+    else if(s.type==='swap') statusEl.innerHTML=`<span class="hl">Tausch!</span> ${s.arr[s.j]} und ${s.arr[s.j+1]} standen falsch herum.`;
+    else if(s.type==='mark') statusEl.innerHTML=`Größter Rest „blubberte“ nach rechts – Position ${s.idx} ist fertig.`;
+    else if(s.type==='done') statusEl.innerHTML='✓ Fertig sortiert!';
+    return true;
+  }
+  function play(){
+    if(sp>=steps.length-1){ buildSteps(); sp=-1; }
+    stop(); const speed=parseInt(document.getElementById('s-speed').value)||350;
+    timer=setInterval(()=>{ if(!step())stop(); },speed);
+  }
+  function stop(){ if(timer){clearInterval(timer);timer=null;} }
+
+  document.getElementById('s-play').onclick=play;
+  document.getElementById('s-step').onclick=()=>{ if(sp>=steps.length-1){buildSteps();sp=-1;} step(); };
+  document.getElementById('s-shuffle').onclick=shuffle;
+  shuffle();
+})();
+
+/* Service Worker (nur live aktiv) */
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{navigator.serviceWorker.register("service-worker.js").catch(()=>{});});
+}
+</script>
+</body>
+</html>
