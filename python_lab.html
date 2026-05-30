@@ -210,6 +210,87 @@
     border-top-color:var(--lab-accent);border-radius:50%;animation:spin .7s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
 
+  /* "Wozu?"-Erklärbox */
+  .wozu{background:rgba(70,212,230,.06);border:1px solid var(--lab-line);border-radius:10px;
+    padding:12px 15px;margin:12px 0;font-size:14px;line-height:1.65;color:var(--lab-read)}
+  .wozu b{color:var(--lab-accent);font-family:var(--fmono);font-size:12px;letter-spacing:.06em;
+    text-transform:uppercase;display:block;margin-bottom:4px}
+  .wozu .real{color:var(--lab-muted);display:block;margin-top:6px}
+  .wozu .real em{color:var(--lab-ink);font-style:normal;font-weight:600}
+
+  /* "Im Code-Labor öffnen"-Button */
+  .to-lab{margin-top:12px}
+
+  /* if/else Weggabelung */
+  .fork-cond{font-family:var(--fmono);font-size:15px;background:#0a0d14;border:1px solid var(--lab-line2);
+    border-radius:9px;padding:12px 14px;margin-bottom:12px;color:var(--lab-read)}
+  .fork-branches{display:flex;flex-direction:column;gap:8px}
+  .branch{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;
+    border:1px solid var(--lab-line2);background:var(--lab-panel2);transition:.2s;opacity:.45}
+  .branch.active{opacity:1;border-color:var(--lab-accent);background:rgba(70,212,230,.1);
+    box-shadow:0 4px 14px rgba(70,212,230,.18)}
+  .branch .lbl{font-family:var(--fmono);font-size:13px;color:var(--lab-accent2);min-width:90px}
+  .branch .res{font-size:14.5px;color:var(--lab-ink)}
+  .branch.active .arrow{color:var(--lab-accent)}
+  .branch .arrow{color:var(--lab-dim);font-weight:700}
+
+  /* Dictionary */
+  .dictgrid{display:flex;flex-direction:column;gap:8px}
+  .dictrow{display:flex;align-items:stretch;gap:0;border-radius:10px;overflow:hidden;
+    border:1px solid var(--lab-line2);transition:.2s}
+  .dictrow.flash{border-color:var(--lab-accent);box-shadow:0 4px 14px rgba(70,212,230,.2)}
+  .dictrow .key{flex:0 0 42%;background:rgba(139,155,255,.12);padding:11px 14px;
+    font-family:var(--fmono);font-size:14px;color:var(--lab-accent2);display:flex;align-items:center}
+  .dictrow .arrowmid{flex:0 0 auto;display:flex;align-items:center;padding:0 8px;color:var(--lab-dim)}
+  .dictrow .val{flex:1;background:var(--lab-panel2);padding:11px 14px;font-family:var(--fmono);
+    font-size:14px;color:var(--lab-ink);display:flex;align-items:center}
+  .dictrow.flash .key{background:rgba(70,212,230,.2);color:var(--lab-accent)}
+
+  /* Funktion: rein -> raus */
+  .funcflow{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;
+    padding:10px 0}
+  .funcflow .pill{font-family:var(--fmono);font-size:14px;padding:12px 16px;border-radius:10px;
+    border:1px solid var(--lab-line2);background:var(--lab-panel2);color:var(--lab-ink);transition:.2s}
+  .funcflow .pill.in{border-color:var(--lab-accent2)}
+  .funcflow .pill.box{border-color:var(--lab-accent);background:rgba(70,212,230,.1);
+    color:var(--lab-accent);font-weight:700}
+  .funcflow .pill.out{border-color:var(--lab-green);background:rgba(78,217,154,.1);color:var(--lab-green)}
+  .funcflow .pill.lit{box-shadow:0 4px 14px rgba(70,212,230,.25);transform:translateY(-3px)}
+  .funcflow .ar{color:var(--lab-dim);font-size:20px}
+
+  /* String-Slicing */
+  .slicerow{display:flex;gap:4px;flex-wrap:wrap;padding:8px 0}
+  .slicechar{display:flex;flex-direction:column;align-items:center;gap:3px}
+  .slicechar .ch{width:34px;height:42px;display:flex;align-items:center;justify-content:center;
+    background:var(--lab-panel2);border:1px solid var(--lab-line2);border-radius:8px;
+    font-family:var(--fmono);font-size:17px;color:var(--lab-ink);transition:.15s}
+  .slicechar .ix{font-family:var(--fmono);font-size:11px;color:var(--lab-dim)}
+  .slicechar.sel .ch{background:var(--lab-accent);color:#06151a;border-color:var(--lab-accent);
+    transform:translateY(-3px)}
+
+  /* Quiz / Auto-Check */
+  .quiz-card{background:var(--lab-panel);border:1px solid var(--lab-line);border-radius:14px;
+    padding:20px;margin-bottom:18px}
+  .quiz-card .q-num{font-family:var(--fmono);font-size:11px;color:var(--lab-accent);
+    background:rgba(70,212,230,.1);border-radius:6px;padding:3px 9px;display:inline-block;margin-bottom:8px}
+  .quiz-card h3{font-size:16px;font-weight:700;margin-bottom:6px;color:var(--lab-ink)}
+  .quiz-card .q-task{color:var(--lab-read);font-size:14.5px;line-height:1.7;margin-bottom:12px}
+  .quiz-card textarea{width:100%;min-height:120px;background:#0a0d14;color:var(--lab-read);
+    font-family:var(--fmono);font-size:13.5px;line-height:1.7;border:1px solid var(--lab-line2);
+    border-radius:9px;padding:12px 14px;resize:vertical;outline:none;tab-size:4;white-space:pre}
+  .quiz-card textarea:focus{border-color:var(--lab-accent)}
+  .q-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .q-feedback{margin-top:12px;border-radius:10px;padding:0;font-size:14px;line-height:1.7;
+    overflow:hidden;max-height:0;transition:max-height .25s}
+  .q-feedback.show{max-height:600px;padding:12px 15px}
+  .q-feedback.pass{background:rgba(78,217,154,.1);border:1px solid rgba(78,217,154,.35);color:var(--lab-read)}
+  .q-feedback.fail{background:rgba(245,185,69,.08);border:1px solid rgba(245,185,69,.3);color:var(--lab-read)}
+  .q-feedback b{color:var(--lab-ink)}
+  .q-hint,.q-sol{margin-top:10px;font-size:14px;line-height:1.7;color:var(--lab-read);
+    background:rgba(139,155,255,.07);border-left:3px solid var(--lab-accent2);
+    border-radius:0 9px 9px 0;padding:10px 14px;display:none}
+  .q-hint.show,.q-sol.show{display:block}
+
   @media(max-width:560px){
     .page{padding:20px 14px 70px}
     .hero{padding:24px 0 14px}
@@ -229,8 +310,13 @@
   <a href="index.html" class="home">&larr; FISI</a>
   <button class="tab-btn active" data-page="lab">🧪 Code-Labor</button>
   <button class="tab-btn" data-page="loops">🔁 Schleifen</button>
+  <button class="tab-btn" data-page="logic">🔀 Logik</button>
   <button class="tab-btn" data-page="lists">📋 Listen</button>
+  <button class="tab-btn" data-page="dict">📒 Dictionary</button>
+  <button class="tab-btn" data-page="func">⚙️ Funktionen</button>
+  <button class="tab-btn" data-page="strings">✂️ Strings</button>
   <button class="tab-btn" data-page="sort">📊 Sortieren</button>
+  <button class="tab-btn" data-page="quiz">✅ Übungen</button>
   <button class="tab-btn" data-page="path">🧭 Lernpfad</button>
 </div>
 
@@ -313,6 +399,10 @@ print("Summe 1 bis 10:", summe)
     <div class="viz-title">🔁 for-Schleife mit range()</div>
     <div class="viz-sub"><code>for i in range(start, stop, schritt)</code> – der Marker wandert durch die Zahlen.
       Wichtig: <strong>stop</strong> ist nicht mehr dabei!</div>
+    <div class="wozu"><b>Wozu?</b> Eine <code>for</code>-Schleife wiederholt etwas für eine bekannte Anzahl
+      an Durchläufen. <code>range()</code> erzeugt dafür die Zahlenfolge.
+      <span class="real">In echt: <em>jede Zeile einer Datei durchgehen</em>, <em>alle Nutzer einer Liste abarbeiten</em>
+      oder <em>10 Würfe simulieren</em>.</span></div>
     <div class="viz-controls">
       <label>start <input type="number" id="r-start" value="0"></label>
       <label>stop <input type="number" id="r-stop" value="10"></label>
@@ -324,12 +414,17 @@ print("Summe 1 bis 10:", summe)
     <div class="codeblock" id="r-code"></div>
     <div class="viz-stage"><div class="numline" id="r-line"></div></div>
     <div class="viz-status" id="r-status">Drücke „Abspielen“ oder geh „Schritt“ für Schritt.</div>
+    <button class="btn btn-ghost btn-sm to-lab" data-lab="for-Schleife">▶ Im Code-Labor öffnen</button>
   </div>
 
   <div class="viz">
     <div class="viz-title">🔂 while-Schleife: Summe bilden</div>
     <div class="viz-sub">Ein Akkumulator (<code>summe</code>) sammelt Werte, solange die Bedingung
       <code>i &lt;= n</code> wahr ist. Du siehst, wie sich <code>summe</code> und <code>i</code> verändern.</div>
+    <div class="wozu"><b>Wozu?</b> <code>while</code> wiederholt, solange eine Bedingung wahr ist – ideal, wenn
+      du <em>nicht</em> vorher weißt, wie oft.
+      <span class="real">In echt: <em>auf gültige Eingabe warten</em>, <em>lesen bis Dateiende</em>
+      oder <em>ein Spiel laufen lassen, bis der Spieler verliert</em>.</span></div>
     <div class="viz-controls">
       <label>n <input type="number" id="w-n" value="5"></label>
       <button class="btn btn-run btn-sm" id="w-play">▶ Abspielen</button>
@@ -339,6 +434,7 @@ print("Summe 1 bis 10:", summe)
     <div class="codeblock" id="w-code"></div>
     <div class="vars" id="w-vars"></div>
     <div class="viz-status" id="w-status">summe startet bei 0, i bei 1.</div>
+    <button class="btn btn-ghost btn-sm to-lab" data-lab="while-Summe">▶ Im Code-Labor öffnen</button>
   </div>
 
   <div class="note">
@@ -360,6 +456,10 @@ print("Summe 1 bis 10:", summe)
     <div class="viz-title">📋 Listen-Operationen live</div>
     <div class="viz-sub">Die Zahl unter jedem Kästchen ist der <strong>Index</strong> (Position) –
       er beginnt bei <strong>0</strong>.</div>
+    <div class="wozu"><b>Wozu?</b> Eine Liste hält viele Werte in fester Reihenfolge zusammen, die du
+      jederzeit ändern kannst.
+      <span class="real">In echt: <em>Warenkorb</em>, <em>Highscore-Tabelle</em>, <em>Messwerte einer Stunde</em>
+      oder die <em>Würfelergebnisse</em> aus deinem Unterricht.</span></div>
     <div class="viz-controls">
       <button class="btn btn-ghost btn-sm" data-op="append">append(x)</button>
       <button class="btn btn-ghost btn-sm" data-op="insert">insert(0, x)</button>
@@ -372,6 +472,7 @@ print("Summe 1 bis 10:", summe)
     <div class="viz-stage" style="min-height:80px"><div class="listrow" id="l-row"></div></div>
     <div class="viz-status" id="l-status">Liste bereit. Probiere die Operationen aus.</div>
     <div class="codeblock" id="l-code" style="margin-top:14px"></div>
+    <button class="btn btn-ghost btn-sm to-lab" data-lab="Listen">▶ Im Code-Labor öffnen</button>
   </div>
 
   <div class="note merk">
@@ -393,6 +494,10 @@ print("Summe 1 bis 10:", summe)
 
   <div class="viz">
     <div class="viz-title">📊 Sortier-Visualizer</div>
+    <div class="wozu"><b>Wozu?</b> Sortieren bringt Daten in Reihenfolge – Grundlage für Ranglisten, Suche
+      und übersichtliche Ausgaben. Bubblesort zeigt das Prinzip Schritt für Schritt.
+      <span class="real">In echt: <em>Bestenliste nach Punkten</em>, <em>Namen alphabetisch</em>,
+      <em>Produkte nach Preis</em> – wobei man dafür <code>liste.sort()</code> nimmt.</span></div>
     <div class="viz-controls">
       <button class="btn btn-run btn-sm" id="s-play">▶ Sortieren</button>
       <button class="btn btn-ghost btn-sm" id="s-step">Schritt</button>
@@ -408,12 +513,142 @@ print("Summe 1 bis 10:", summe)
             <span class="kw">if</span> liste[j] &gt; liste[j + <span class="num">1</span>]:
                 liste[j], liste[j + <span class="num">1</span>] = liste[j + <span class="num">1</span>], liste[j]
     <span class="kw">return</span> liste</div>
+    <button class="btn btn-ghost btn-sm to-lab" data-lab="Bubblesort">▶ Im Code-Labor öffnen</button>
   </div>
 
   <div class="note">
     <strong>Warum lernen?</strong> Bubblesort ist langsam, aber perfekt zum Verstehen, wie ein
     Algorithmus überhaupt arbeitet. Im Alltag nimmt man <code>liste.sort()</code> – das ist hochoptimiert.
   </div>
+</div>
+
+<!-- ===================== LOGIK (if/elif/else) ===================== -->
+<div id="page-logic" class="page">
+  <div class="hero">
+    <div class="badge">Entscheidungen</div>
+    <h1>if · elif · <span>else</span></h1>
+    <p>Das Programm wählt einen Weg, je nachdem ob eine Bedingung wahr ist. Verschiebe den Wert
+       und sieh, welcher Zweig „anspringt“.</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">🔀 Notenrechner als Weggabelung</div>
+    <div class="viz-sub">Python prüft von oben nach unten – der <strong>erste</strong> passende Zweig gewinnt,
+      der Rest wird übersprungen.</div>
+    <div class="wozu"><b>Wozu?</b> Mit <code>if/elif/else</code> reagiert ein Programm auf unterschiedliche
+      Situationen. <span class="real">In echt: <em>Login erlauben oder ablehnen</em>,
+      <em>Versandkosten je nach Bestellwert</em>, <em>Ampel: rot/gelb/grün</em>.</span></div>
+    <div class="viz-controls">
+      <label>Punkte <input type="number" id="if-val" value="82" min="0" max="100"></label>
+      <button class="btn btn-run btn-sm" id="if-eval">▶ Prüfen</button>
+    </div>
+    <div class="fork-cond" id="if-cond">punkte = 82</div>
+    <div class="fork-branches" id="if-branches"></div>
+    <div class="viz-status" id="if-status">Gib Punkte ein und drücke „Prüfen“.</div>
+    <div class="codeblock" id="if-code" style="margin-top:14px"></div>
+    <button class="btn btn-ghost btn-sm to-lab" data-lab="if-else">▶ Im Code-Labor öffnen</button>
+  </div>
+  <div class="note merk"><strong>Reihenfolge zählt:</strong> Stünde <code>&gt;= 50</code> ganz oben, würde
+    auch eine 95 schon dort „hängenbleiben“. Darum von der schärfsten zur lockersten Bedingung ordnen.</div>
+</div>
+
+<!-- ===================== DICTIONARY ===================== -->
+<div id="page-dict" class="page">
+  <div class="hero">
+    <div class="badge">Nachschlagen statt suchen</div>
+    <h1>Dictionary <span>(Schlüssel→Wert)</span></h1>
+    <p>Ein Dictionary speichert Paare: zu jedem <strong>Schlüssel</strong> gehört ein <strong>Wert</strong>.
+       Statt eine Liste zu durchsuchen, schlägst du direkt nach.</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">📒 Telefonbuch</div>
+    <div class="wozu"><b>Wozu?</b> Ein Dictionary findet Werte sofort über ihren Schlüssel – kein
+      Durchzählen nötig. <span class="real">In echt: <em>Telefonbuch (Name→Nummer)</em>,
+      <em>Konfiguration (Einstellung→Wert)</em>, <em>Lagerbestand (Artikel→Anzahl)</em>.</span></div>
+    <div class="viz-controls">
+      <input type="text" id="d-key" placeholder="Schlüssel (z.B. Anna)">
+      <input type="text" id="d-val" placeholder="Wert (z.B. 0171…)" style="min-width:120px">
+      <button class="btn btn-ghost btn-sm" id="d-set">setzen</button>
+      <button class="btn btn-ghost btn-sm" id="d-get">nachschlagen</button>
+      <button class="btn btn-ghost btn-sm" id="d-del">löschen</button>
+      <button class="btn btn-ghost btn-sm" id="d-reset">↺</button>
+    </div>
+    <div class="dictgrid" id="d-grid"></div>
+    <div class="viz-status" id="d-status">Trage Schlüssel + Wert ein und drücke „setzen“.</div>
+    <div class="codeblock" id="d-code" style="margin-top:14px"></div>
+    <button class="btn btn-ghost btn-sm to-lab" data-lab="Dictionary">▶ Im Code-Labor öffnen</button>
+  </div>
+  <div class="note"><strong>Liste vs. Dictionary:</strong> Liste = Reihenfolge per Zahl-Index (0,1,2…).
+    Dictionary = Zugriff per sinnvollem Namen. Gleicher Schlüssel zweimal gesetzt → der alte Wert wird überschrieben.</div>
+</div>
+
+<!-- ===================== FUNKTIONEN ===================== -->
+<div id="page-func" class="page">
+  <div class="hero">
+    <div class="badge">Eigene Bausteine</div>
+    <h1>Funktionen <span>(def)</span></h1>
+    <p>Eine Funktion ist eine kleine Maschine: Werte gehen rein (Parameter), drinnen passiert etwas,
+       ein Ergebnis kommt raus (<code>return</code>).</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">⚙️ Wert rein → Verarbeitung → Wert raus</div>
+    <div class="wozu"><b>Wozu?</b> Funktionen bündeln Code, den du benennst und immer wieder aufrufst –
+      einmal schreiben, oft nutzen. <span class="real">In echt: <em>Preis inkl. MwSt berechnen</em>,
+      <em>E-Mail-Adresse prüfen</em>, <em>Wert formatieren</em> – überall, wo sich Logik wiederholt.</span></div>
+    <div class="viz-controls">
+      <label>a <input type="number" id="f-a" value="3"></label>
+      <label>b <input type="number" id="f-b" value="4"></label>
+      <button class="btn btn-run btn-sm" id="f-call">▶ Aufrufen</button>
+    </div>
+    <div class="funcflow" id="f-flow"></div>
+    <div class="viz-status" id="f-status">Drücke „Aufrufen“, um die Funktion durchlaufen zu sehen.</div>
+    <div class="codeblock" id="f-code" style="margin-top:14px"></div>
+    <button class="btn btn-ghost btn-sm to-lab" data-lab="Funktion">▶ Im Code-Labor öffnen</button>
+  </div>
+  <div class="note merk"><strong><code>return</code> vs. <code>print</code>:</strong> <code>print</code> zeigt nur etwas an.
+    <code>return</code> gibt einen Wert zurück, mit dem du <em>weiterrechnen</em> kannst.</div>
+</div>
+
+<!-- ===================== STRINGS / SLICING ===================== -->
+<div id="page-strings" class="page">
+  <div class="hero">
+    <div class="badge">Text zerlegen</div>
+    <h1>String-<span>Slicing</span></h1>
+    <p>Mit <code>text[start:stop]</code> schneidest du einen Ausschnitt heraus. Jeder Buchstabe hat
+       einen Index ab <strong>0</strong> – <strong>stop</strong> ist nicht mehr dabei.</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">✂️ Ausschnitt markieren</div>
+    <div class="wozu"><b>Wozu?</b> Slicing holt gezielt Teile aus Text. <span class="real">In echt:
+      <em>Vorwahl aus einer Nummer</em>, <em>Dateiendung von einem Namen</em>,
+      <em>Jahr aus einem Datum „2026-05-30“</em>.</span></div>
+    <div class="viz-controls">
+      <label>Text <input type="text" id="sl-text" value="Python" style="min-width:140px"></label>
+      <label>start <input type="number" id="sl-start" value="0"></label>
+      <label>stop <input type="number" id="sl-stop" value="3"></label>
+      <button class="btn btn-run btn-sm" id="sl-go">▶ Schneiden</button>
+    </div>
+    <div class="slicerow" id="sl-row"></div>
+    <div class="viz-status" id="sl-status">Ergebnis erscheint hier.</div>
+    <div class="codeblock" id="sl-code" style="margin-top:14px"></div>
+    <button class="btn btn-ghost btn-sm to-lab" data-lab="Slicing">▶ Im Code-Labor öffnen</button>
+  </div>
+  <div class="note"><strong>Tricks:</strong> <code>text[:3]</code> = von Anfang, <code>text[3:]</code> = bis Ende,
+    <code>text[-1]</code> = letztes Zeichen.</div>
+</div>
+
+<!-- ===================== ÜBUNGEN (Auto-Check) ===================== -->
+<div id="page-quiz" class="page">
+  <div class="hero">
+    <div class="badge">Selbst lösen</div>
+    <h1>Übungen mit <span>Auto-Check</span></h1>
+    <p>Schreib deine Lösung in das Feld und drücke „Prüfen“ – dein Code wird wirklich ausgeführt und
+       das Ergebnis automatisch kontrolliert. Mit Tipp und Musterlösung, wenn du nicht weiterkommst.</p>
+  </div>
+  <div class="note" id="quiz-note">
+    <strong>Python wird geladen …</strong> <span class="loader"></span> Der Auto-Check braucht den
+    Python-Motor (lädt einmalig).
+  </div>
+  <div id="quiz-list"></div>
 </div>
 
 <!-- ===================== LERNPFAD ===================== -->
@@ -948,6 +1183,337 @@ initPyodide();
   document.getElementById('s-step').onclick=()=>{ if(sp>=steps.length-1){buildSteps();sp=-1;} step(); };
   document.getElementById('s-shuffle').onclick=shuffle;
   shuffle();
+})();
+
+/* ===================================================================== */
+/*  "IM CODE-LABOR ÖFFNEN" – lädt passenden Code in den Editor           */
+/* ===================================================================== */
+const LAB_SNIPPETS = {
+  "for-Schleife": EXAMPLES["for-Schleife"],
+  "while-Summe": EXAMPLES["while-Schleife"],
+  "Listen": EXAMPLES["Listen"],
+  "Bubblesort":
+`def bubblesort(liste):
+    n = len(liste)
+    for i in range(n - 1):
+        for j in range(n - 1 - i):
+            if liste[j] > liste[j + 1]:
+                liste[j], liste[j + 1] = liste[j + 1], liste[j]
+    return liste
+
+zahlen = [5, 2, 8, 1, 9, 3]
+print("Vorher: ", zahlen)
+print("Nachher:", bubblesort(zahlen))`,
+  "if-else":
+`punkte = 82
+
+if punkte >= 90:
+    print("Sehr gut (1)")
+elif punkte >= 75:
+    print("Gut (2)")
+elif punkte >= 60:
+    print("Befriedigend (3)")
+elif punkte >= 50:
+    print("Ausreichend (4)")
+else:
+    print("Nicht bestanden (5)")`,
+  "Dictionary":
+`telefonbuch = {}
+telefonbuch["Anna"] = "0171-1234"
+telefonbuch["Tom"]  = "0160-5678"
+
+print(telefonbuch)
+print("Annas Nummer:", telefonbuch["Anna"])
+
+# sicher nachschlagen (kein Fehler, falls nicht da):
+print(telefonbuch.get("Lisa", "nicht gefunden"))`,
+  "Funktion":
+`def addiere(a, b):
+    ergebnis = a + b
+    return ergebnis
+
+x = addiere(3, 4)
+print("3 + 4 =", x)
+print("Und nochmal:", addiere(10, 5))`,
+  "Slicing":
+`text = "Python"
+print("text[0:3] =", text[0:3])
+print("text[:3]  =", text[:3])
+print("text[3:]  =", text[3:])
+print("text[-1]  =", text[-1])`
+};
+function openInLab(key){
+  const code = LAB_SNIPPETS[key];
+  if(!code) return;
+  document.getElementById('code').value = code;
+  // zum Code-Labor-Tab wechseln
+  [...document.querySelectorAll('.tab-btn')].find(b=>b.dataset.page==='lab').click();
+}
+document.querySelectorAll('[data-lab]').forEach(btn=>{
+  btn.addEventListener('click',()=>openInLab(btn.dataset.lab));
+});
+
+/* ===================================================================== */
+/*  VISUALIZER: if / elif / else                                         */
+/* ===================================================================== */
+(function(){
+  const branchesEl=document.getElementById('if-branches');
+  const statusEl=document.getElementById('if-status');
+  const condEl=document.getElementById('if-cond');
+  const codeEl=document.getElementById('if-code');
+  const rules=[
+    {test:p=>p>=90,lbl:"punkte >= 90",res:"Sehr gut (1)"},
+    {test:p=>p>=75,lbl:"punkte >= 75",res:"Gut (2)"},
+    {test:p=>p>=60,lbl:"punkte >= 60",res:"Befriedigend (3)"},
+    {test:p=>p>=50,lbl:"punkte >= 50",res:"Ausreichend (4)"},
+    {test:p=>true, lbl:"else",        res:"Nicht bestanden (5)"}
+  ];
+  function code(){
+    codeEl.innerHTML=
+`punkte = <span class="num">${getVal()}</span>
+<span class="kw">if</span> punkte &gt;= <span class="num">90</span>:    <span class="fn">print</span>(<span class="str">"Sehr gut (1)"</span>)
+<span class="kw">elif</span> punkte &gt;= <span class="num">75</span>:  <span class="fn">print</span>(<span class="str">"Gut (2)"</span>)
+<span class="kw">elif</span> punkte &gt;= <span class="num">60</span>:  <span class="fn">print</span>(<span class="str">"Befriedigend (3)"</span>)
+<span class="kw">elif</span> punkte &gt;= <span class="num">50</span>:  <span class="fn">print</span>(<span class="str">"Ausreichend (4)"</span>)
+<span class="kw">else</span>:             <span class="fn">print</span>(<span class="str">"Nicht bestanden (5)"</span>)`;
+  }
+  function getVal(){ let v=parseInt(document.getElementById('if-val').value); return isNaN(v)?0:v; }
+  function render(active){
+    branchesEl.innerHTML='';
+    rules.forEach((r,i)=>{
+      const d=document.createElement('div'); d.className='branch'+(i===active?' active':'');
+      d.innerHTML=`<span class="lbl">${r.lbl}</span><span class="arrow">→</span><span class="res">${r.res}</span>`;
+      branchesEl.appendChild(d);
+    });
+  }
+  function evalIf(){
+    const p=getVal(); condEl.textContent='punkte = '+p; code();
+    let active=rules.findIndex(r=>r.test(p));
+    render(active);
+    statusEl.innerHTML=`punkte = <span class="hl">${p}</span> → erste wahre Bedingung: `+
+      `<span class="hl">${rules[active].lbl}</span> → „${rules[active].res}“`;
+  }
+  document.getElementById('if-eval').onclick=evalIf;
+  document.getElementById('if-val').addEventListener('change',evalIf);
+  evalIf();
+})();
+
+/* ===================================================================== */
+/*  VISUALIZER: Dictionary                                               */
+/* ===================================================================== */
+(function(){
+  const gridEl=document.getElementById('d-grid');
+  const statusEl=document.getElementById('d-status');
+  const codeEl=document.getElementById('d-code');
+  let dict={}; const START={Anna:"0171-1234",Tom:"0160-5678"};
+  function reset(){ dict={...START}; render(); codeEl.innerHTML='telefonbuch = {<span class="str">"Anna"</span>: <span class="str">"0171-1234"</span>, <span class="str">"Tom"</span>: <span class="str">"0160-5678"</span>}'; statusEl.textContent='Dictionary zurückgesetzt.'; }
+  function render(flashKey){
+    gridEl.innerHTML='';
+    const keys=Object.keys(dict);
+    if(!keys.length){ gridEl.innerHTML='<div class="vars-empty" style="padding:10px">leeres Dictionary {}</div>'; return; }
+    keys.forEach(k=>{
+      const r=document.createElement('div'); r.className='dictrow'+(k===flashKey?' flash':'');
+      r.innerHTML=`<div class="key">"${escapeHtml(k)}"</div><div class="arrowmid">→</div>`+
+        `<div class="val">"${escapeHtml(String(dict[k]))}"</div>`;
+      gridEl.appendChild(r);
+    });
+  }
+  document.getElementById('d-set').onclick=()=>{
+    const k=document.getElementById('d-key').value.trim();
+    const v=document.getElementById('d-val').value.trim();
+    if(!k){statusEl.textContent='Bitte einen Schlüssel eingeben.';return;}
+    const existed=k in dict; dict[k]=v||"—"; render(k);
+    codeEl.innerHTML=`telefonbuch[<span class="str">"${escapeHtml(k)}"</span>] = <span class="str">"${escapeHtml(v)}"</span>`;
+    statusEl.innerHTML=existed?`Schlüssel <span class="hl">"${escapeHtml(k)}"</span> existierte – Wert wurde überschrieben.`
+      :`Neues Paar <span class="hl">"${escapeHtml(k)}" → "${escapeHtml(v)}"</span> hinzugefügt.`;
+  };
+  document.getElementById('d-get').onclick=()=>{
+    const k=document.getElementById('d-key').value.trim();
+    codeEl.innerHTML=`<span class="fn">print</span>(telefonbuch.get(<span class="str">"${escapeHtml(k)}"</span>))`;
+    if(k in dict){ render(k); statusEl.innerHTML=`<span class="hl">telefonbuch["${escapeHtml(k)}"]</span> = "${escapeHtml(String(dict[k]))}"`; }
+    else { render(); statusEl.innerHTML=`Schlüssel <span class="hl">"${escapeHtml(k)}"</span> nicht gefunden → <code>.get()</code> gäbe <code>None</code>.`; }
+  };
+  document.getElementById('d-del').onclick=()=>{
+    const k=document.getElementById('d-key').value.trim();
+    codeEl.innerHTML=`<span class="kw">del</span> telefonbuch[<span class="str">"${escapeHtml(k)}"</span>]`;
+    if(k in dict){ delete dict[k]; render(); statusEl.innerHTML=`Paar mit Schlüssel <span class="hl">"${escapeHtml(k)}"</span> gelöscht.`; }
+    else { statusEl.innerHTML=`Schlüssel <span class="hl">"${escapeHtml(k)}"</span> gibt es nicht.`; }
+  };
+  document.getElementById('d-reset').onclick=reset;
+  reset();
+})();
+
+/* ===================================================================== */
+/*  VISUALIZER: Funktion (rein -> raus)                                  */
+/* ===================================================================== */
+(function(){
+  const flowEl=document.getElementById('f-flow');
+  const statusEl=document.getElementById('f-status');
+  const codeEl=document.getElementById('f-code');
+  function code(){
+    codeEl.innerHTML=
+`<span class="kw">def</span> <span class="fn">addiere</span>(a, b):
+    ergebnis = a + b
+    <span class="kw">return</span> ergebnis
+
+x = <span class="fn">addiere</span>(<span class="num">${ga()}</span>, <span class="num">${gb()}</span>)
+<span class="fn">print</span>(x)`;
+  }
+  function ga(){return parseInt(document.getElementById('f-a').value)||0;}
+  function gb(){return parseInt(document.getElementById('f-b').value)||0;}
+  function render(stage,result){
+    const a=ga(),b=gb();
+    flowEl.innerHTML=
+      `<div class="pill in${stage>=1?' lit':''}">a=${a}, b=${b}</div>`+
+      `<span class="ar">→</span>`+
+      `<div class="pill box${stage===2?' lit':''}">addiere()<br><span style="font-size:12px">a + b</span></div>`+
+      `<span class="ar">→</span>`+
+      `<div class="pill out${stage>=3?' lit':''}">${stage>=3?('return '+result):'return ?'}</div>`;
+  }
+  function run(){
+    code(); const a=ga(),b=gb();
+    render(1); statusEl.innerHTML=`Aufruf: <span class="hl">addiere(${a}, ${b})</span> – die Werte gehen als a und b hinein.`;
+    setTimeout(()=>{ render(2); statusEl.innerHTML=`Drinnen: ergebnis = a + b = ${a} + ${b} = <span class="hl">${a+b}</span>`; },700);
+    setTimeout(()=>{ render(3,a+b); statusEl.innerHTML=`<span class="hl">return ${a+b}</span> – das Ergebnis kommt heraus und landet in x.`; },1400);
+  }
+  document.getElementById('f-call').onclick=run;
+  render(0); code();
+})();
+
+/* ===================================================================== */
+/*  VISUALIZER: String-Slicing                                           */
+/* ===================================================================== */
+(function(){
+  const rowEl=document.getElementById('sl-row');
+  const statusEl=document.getElementById('sl-status');
+  const codeEl=document.getElementById('sl-code');
+  function run(){
+    const text=document.getElementById('sl-text').value||"";
+    let start=parseInt(document.getElementById('sl-start').value); if(isNaN(start))start=0;
+    let stop=parseInt(document.getElementById('sl-stop').value); if(isNaN(stop))stop=text.length;
+    rowEl.innerHTML='';
+    [...text].forEach((ch,i)=>{
+      const inSlice = i>=start && i<stop;
+      const c=document.createElement('div'); c.className='slicechar'+(inSlice?' sel':'');
+      c.innerHTML=`<div class="ch">${escapeHtml(ch)}</div><div class="ix">${i}</div>`;
+      rowEl.appendChild(c);
+    });
+    const result=text.slice(Math.max(0,start),Math.max(0,stop));
+    codeEl.innerHTML=`text = <span class="str">"${escapeHtml(text)}"</span>\n`+
+      `<span class="fn">print</span>(text[<span class="num">${start}</span>:<span class="num">${stop}</span>])  <span class="cm"># ${escapeHtml(result)}</span>`;
+    statusEl.innerHTML=`text[${start}:${stop}] = <span class="hl">"${escapeHtml(result)}"</span> `+
+      `(${result.length} Zeichen – Index ${start} bis ${stop-1})`;
+  }
+  document.getElementById('sl-go').onclick=run;
+  ['sl-text','sl-start','sl-stop'].forEach(id=>document.getElementById(id).addEventListener('change',run));
+  run();
+})();
+
+/* ===================================================================== */
+/*  ÜBUNGEN MIT AUTO-CHECK (nutzt Pyodide)                               */
+/* ===================================================================== */
+const QUIZZES=[
+  { title:"Variable & Ausgabe",
+    task:"Erstelle eine Variable <code>name</code> mit dem Wert <code>\"Python\"</code> und gib mit <code>print()</code> den Text <code>Hallo Python</code> aus.",
+    expect:"Hallo Python",
+    hint:"Mit <code>print(\"Hallo\", name)</code> setzt Python automatisch ein Leerzeichen dazwischen.",
+    sol:'name = "Python"\nprint("Hallo", name)' },
+  { title:"Rechnen",
+    task:"Berechne <code>17 + 25</code> und gib nur das Ergebnis aus.",
+    expect:"42",
+    hint:"<code>print(17 + 25)</code> – Python rechnet selbst.",
+    sol:'print(17 + 25)' },
+  { title:"for-Schleife & Summe",
+    task:"Bilde die Summe der Zahlen <code>1</code> bis <code>5</code> und gib sie aus (erwartet: 15).",
+    expect:"15",
+    hint:"<code>range(1, 6)</code> geht 1,2,3,4,5. Einen Akkumulator <code>summe</code> hochzählen.",
+    sol:'summe = 0\nfor i in range(1, 6):\n    summe += i\nprint(summe)' },
+  { title:"Modulo – gerade Zahl?",
+    task:"Prüfe mit <code>%</code>, ob <code>10</code> gerade ist, und gib <code>gerade</code> oder <code>ungerade</code> aus.",
+    expect:"gerade",
+    hint:"Gerade Zahlen haben <code>zahl % 2 == 0</code>.",
+    sol:'zahl = 10\nif zahl % 2 == 0:\n    print("gerade")\nelse:\n    print("ungerade")' },
+  { title:"Liste & Mittelwert",
+    task:"Gegeben <code>werte = [4, 8, 15, 16, 23]</code>. Gib den Mittelwert aus (erwartet: 13.2).",
+    expect:"13.2",
+    hint:"Mittelwert = <code>sum(werte) / len(werte)</code>.",
+    sol:'werte = [4, 8, 15, 16, 23]\nprint(sum(werte) / len(werte))' },
+  { title:"Funktion schreiben",
+    task:"Schreibe eine Funktion <code>verdopple(x)</code>, die <code>x * 2</code> zurückgibt, und gib <code>verdopple(21)</code> aus (erwartet: 42).",
+    expect:"42",
+    hint:"<code>def verdopple(x):</code> … <code>return x * 2</code>, dann <code>print(verdopple(21))</code>.",
+    sol:'def verdopple(x):\n    return x * 2\nprint(verdopple(21))' }
+];
+
+(function(){
+  const listEl=document.getElementById('quiz-list');
+  QUIZZES.forEach((q,i)=>{
+    const card=document.createElement('div'); card.className='quiz-card';
+    card.innerHTML=
+      `<span class="q-num">Aufgabe ${i+1}</span>`+
+      `<h3>${q.title}</h3>`+
+      `<div class="q-task">${q.task}</div>`+
+      `<textarea spellcheck="false" id="qa-${i}" placeholder="# dein Code hier"></textarea>`+
+      `<div class="q-actions">`+
+        `<button class="btn btn-run btn-sm" data-q="${i}" data-act="check" disabled>✓ Prüfen</button>`+
+        `<button class="btn btn-ghost btn-sm" data-q="${i}" data-act="hint">💡 Tipp</button>`+
+        `<button class="btn btn-ghost btn-sm" data-q="${i}" data-act="sol">👁 Lösung</button>`+
+      `</div>`+
+      `<div class="q-feedback" id="qf-${i}"></div>`+
+      `<div class="q-hint" id="qh-${i}">💡 ${q.hint}</div>`+
+      `<div class="q-sol" id="qs-${i}"><b>Musterlösung:</b><div class="codeblock" style="margin:8px 0 0">${escapeHtml(q.sol)}</div></div>`;
+    listEl.appendChild(card);
+  });
+
+  listEl.querySelectorAll('[data-act]').forEach(btn=>{
+    btn.addEventListener('click',async()=>{
+      const i=btn.dataset.q, act=btn.dataset.act;
+      if(act==='hint'){ document.getElementById('qh-'+i).classList.toggle('show'); return; }
+      if(act==='sol'){ document.getElementById('qs-'+i).classList.toggle('show'); return; }
+      if(act==='check'){ await checkAnswer(i); }
+    });
+  });
+
+  async function checkAnswer(i){
+    const fb=document.getElementById('qf-'+i);
+    const code=document.getElementById('qa-'+i).value;
+    if(!pyReady){ fb.className='q-feedback fail show'; fb.innerHTML='Python lädt noch – einen Moment.'; return; }
+    let output='', err=null;
+    try{
+      setupInput();
+      pyodide.runPython("import sys, io\nsys.stdout=io.StringIO()\nsys.stderr=sys.stdout");
+      try{ await pyodide.runPythonAsync(code); }catch(e){ err=e; }
+      output=pyodide.runPython("sys.stdout.getvalue()");
+      pyodide.runPython("sys.stdout=sys.__stdout__; sys.stderr=sys.__stderr__");
+    }catch(e){ err=e; }
+    const got=(output||'').trim();
+    const want=QUIZZES[i].expect.trim();
+    if(err){
+      const msg=String(err.message||err).trim().split('\n').slice(-2).join(' ');
+      fb.className='q-feedback fail show';
+      fb.innerHTML=`<b>Fehler im Code:</b> <span style="color:var(--lab-red)">${escapeHtml(msg)}</span><br>Tipp: lies die Fehlermeldung – oft ein Tippfehler oder fehlender Doppelpunkt.`;
+    } else if(got===want || got.replace(',','.')===want){
+      fb.className='q-feedback pass show';
+      fb.innerHTML=`<b>✓ Richtig!</b> Ausgabe: <code>${escapeHtml(got)}</code>`;
+    } else if(!got){
+      fb.className='q-feedback fail show';
+      fb.innerHTML=`<b>Keine Ausgabe.</b> Hast du <code>print(...)</code> benutzt? Erwartet wird: <code>${escapeHtml(want)}</code>`;
+    } else {
+      fb.className='q-feedback fail show';
+      fb.innerHTML=`<b>Noch nicht ganz.</b> Deine Ausgabe: <code>${escapeHtml(got)}</code><br>Erwartet: <code>${escapeHtml(want)}</code>`;
+    }
+  }
+
+  // Prüf-Buttons aktivieren, sobald Pyodide bereit ist
+  const quizNote=document.getElementById('quiz-note');
+  const wait=setInterval(()=>{
+    if(typeof pyReady!=='undefined' && pyReady){
+      clearInterval(wait);
+      listEl.querySelectorAll('[data-act="check"]').forEach(b=>b.disabled=false);
+      if(quizNote){ quizNote.className='note merk';
+        quizNote.innerHTML='<strong style="color:var(--lab-green)">✓ Auto-Check bereit.</strong> Schreib deine Lösung und drücke „Prüfen“.'; }
+    }
+  },400);
 })();
 
 /* Service Worker (nur live aktiv) */
