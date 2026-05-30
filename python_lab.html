@@ -269,6 +269,10 @@
     transform:translateY(-3px)}
 
   /* Quiz / Auto-Check */
+  .level-head{font-family:var(--fmono);font-size:12px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--lab-accent2);margin:26px 0 12px;display:flex;align-items:center;gap:10px}
+  .level-head::after{content:'';flex:1;height:1px;background:var(--lab-line2)}
+  .level-head:first-child{margin-top:6px}
   .quiz-card{background:var(--lab-panel);border:1px solid var(--lab-line);border-radius:14px;
     padding:20px;margin-bottom:18px}
   .quiz-card .q-num{font-family:var(--fmono);font-size:11px;color:var(--lab-accent);
@@ -290,6 +294,36 @@
     background:rgba(139,155,255,.07);border-left:3px solid var(--lab-accent2);
     border-radius:0 9px 9px 0;padding:10px 14px;display:none}
   .q-hint.show,.q-sol.show{display:block}
+
+  /* ===== Struktogramm (Nassi-Shneiderman) ===== */
+  .ns{border:2px solid var(--lab-line2);border-radius:4px;overflow:hidden;font-family:var(--fmono);
+    font-size:14px;max-width:520px;margin:6px 0}
+  .ns-row{padding:12px 14px;border-bottom:2px solid var(--lab-line2);color:var(--lab-ink);background:var(--lab-panel2)}
+  .ns-row:last-child{border-bottom:none}
+  .ns-row.seq{background:var(--lab-panel2)}
+  /* Verzweigung */
+  .ns-if{border-bottom:2px solid var(--lab-line2)}
+  .ns-if .cond{text-align:center;padding:10px 8px;color:var(--lab-amber);position:relative;
+    background:rgba(245,185,69,.07)}
+  .ns-if .branches{display:flex}
+  .ns-if .branches>div{flex:1;padding:11px 12px;color:var(--lab-ink)}
+  .ns-if .branches>div:first-child{border-right:2px solid var(--lab-line2)}
+  .ns-if .tf{font-size:11px;color:var(--lab-muted);display:block;margin-bottom:4px}
+  /* Schleife */
+  .ns-loop{border-bottom:2px solid var(--lab-line2)}
+  .ns-loop .lhead{padding:10px 14px;color:var(--lab-accent);background:rgba(70,212,230,.07)}
+  .ns-loop .lbody{padding:11px 14px 11px 26px;border-top:2px solid var(--lab-line2);
+    border-left:14px solid var(--lab-line2);color:var(--lab-ink)}
+  /* Pseudocode-Block */
+  .pseudo{display:block;font-family:var(--fmono);background:#0a0d14;border:1px solid var(--lab-line);
+    border-left:3px solid var(--lab-amber);border-radius:0 10px 10px 0;padding:14px 16px;margin:10px 0;
+    font-size:14px;line-height:1.8;color:var(--lab-read);white-space:pre;overflow-x:auto}
+  .pseudo .pk{color:var(--lab-amber);font-weight:700}
+  /* Gegenüberstellung Pseudocode <-> Python */
+  .vs2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+  .vs2 .lab{font-family:var(--fmono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--lab-muted);margin-bottom:5px}
+  @media(max-width:640px){.vs2{grid-template-columns:1fr}}
 
   @media(max-width:560px){
     .page{padding:20px 14px 70px}
@@ -316,6 +350,7 @@
   <button class="tab-btn" data-page="func">⚙️ Funktionen</button>
   <button class="tab-btn" data-page="strings">✂️ Strings</button>
   <button class="tab-btn" data-page="sort">📊 Sortieren</button>
+  <button class="tab-btn" data-page="strukto">📐 Struktogramm</button>
   <button class="tab-btn" data-page="quiz">✅ Übungen</button>
   <button class="tab-btn" data-page="path">🧭 Lernpfad</button>
 </div>
@@ -636,6 +671,138 @@ print("Summe 1 bis 10:", summe)
     <code>text[-1]</code> = letztes Zeichen.</div>
 </div>
 
+<!-- ===================== STRUKTOGRAMM & PSEUDOCODE ===================== -->
+<div id="page-strukto" class="page">
+  <div class="hero">
+    <div class="badge">AP1-Prüfungsstoff</div>
+    <h1>Struktogramm &amp; <span>Pseudocode</span></h1>
+    <p>Bevor man Code schreibt, plant man den Ablauf. In der AP1 geschieht das oft als
+       <strong>Struktogramm</strong> (Bild) oder <strong>Pseudocode</strong> (halb Sprache, halb Code).
+       Beides ist programmiersprachen-unabhängig – es zeigt die <em>Logik</em>, nicht die Syntax.</p>
+  </div>
+
+  <div class="lab-card">
+    <h2>Was ist was?</h2>
+    <div class="wozu"><b>Wozu?</b> Struktogramm und Pseudocode beschreiben einen Ablauf, ohne sich um
+      Python-Details (Doppelpunkte, Klammern) zu kümmern. So denkt man erst über die <em>Lösung</em> nach
+      und übersetzt sie danach in echten Code.
+      <span class="real">In echt: <em>Aufgabe in der Prüfung planen</em>, <em>Ablauf im Team abstimmen</em>,
+      <em>Logik dokumentieren</em>.</span></div>
+    <ul>
+      <li><strong>Struktogramm</strong> (Nassi-Shneiderman): Kästchen, von oben nach unten gelesen.</li>
+      <li><strong>Pseudocode</strong>: Schlüsselwörter wie <code>WENN</code>, <code>SOLANGE</code>,
+        <code>WIEDERHOLE</code> – nah an Sprache, aber strukturiert.</li>
+    </ul>
+  </div>
+
+  <div class="lab-card">
+    <h2>Baustein 1 · Sequenz (nacheinander)</h2>
+    <p>Anweisungen werden der Reihe nach abgearbeitet – einfach von oben nach unten.</p>
+    <div class="ns">
+      <div class="ns-row seq">lies Preis</div>
+      <div class="ns-row seq">lies Menge</div>
+      <div class="ns-row seq">gesamt = Preis × Menge</div>
+      <div class="ns-row seq">gib gesamt aus</div>
+    </div>
+    <div class="vs2">
+      <div><div class="lab">Pseudocode</div><div class="pseudo">lies preis
+lies menge
+gesamt &larr; preis * menge
+gib gesamt aus</div></div>
+      <div><div class="lab">Python</div><div class="codeblock">preis = <span class="fn">float</span>(<span class="fn">input</span>())
+menge = <span class="fn">float</span>(<span class="fn">input</span>())
+gesamt = preis * menge
+<span class="fn">print</span>(gesamt)</div></div>
+    </div>
+  </div>
+
+  <div class="lab-card">
+    <h2>Baustein 2 · Verzweigung (WENN … SONST)</h2>
+    <p>Das Programm entscheidet sich für einen von zwei Wegen. Im Struktogramm steht die Bedingung
+       oben, links der „wahr“-Zweig, rechts der „falsch“-Zweig.</p>
+    <div class="ns">
+      <div class="ns-if">
+        <div class="cond">alter &lt; 18 ?</div>
+        <div class="branches">
+          <div><span class="tf">wahr (ja)</span>gib „minderjährig“ aus</div>
+          <div><span class="tf">falsch (nein)</span>gib „volljährig“ aus</div>
+        </div>
+      </div>
+    </div>
+    <div class="vs2">
+      <div><div class="lab">Pseudocode</div><div class="pseudo"><span class="pk">WENN</span> alter &lt; 18 <span class="pk">DANN</span>
+    gib "minderjährig" aus
+<span class="pk">SONST</span>
+    gib "volljährig" aus
+<span class="pk">ENDE WENN</span></div></div>
+      <div><div class="lab">Python</div><div class="codeblock"><span class="kw">if</span> alter &lt; <span class="num">18</span>:
+    <span class="fn">print</span>(<span class="str">"minderjährig"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"volljährig"</span>)</div></div>
+    </div>
+    <button class="btn btn-ghost btn-sm to-lab" data-lab="if-else">▶ Im Code-Labor öffnen</button>
+  </div>
+
+  <div class="lab-card">
+    <h2>Baustein 3 · Schleife (SOLANGE / WIEDERHOLE)</h2>
+    <p>Ein Teil wird wiederholt. Im Struktogramm umrahmt der Schleifenkopf den eingerückten Rumpf.</p>
+    <div class="ns">
+      <div class="ns-loop">
+        <div class="lhead">SOLANGE i &le; 5</div>
+        <div class="lbody">summe = summe + i<br>i = i + 1</div>
+      </div>
+      <div class="ns-row seq">gib summe aus</div>
+    </div>
+    <div class="vs2">
+      <div><div class="lab">Pseudocode</div><div class="pseudo">summe &larr; 0
+i &larr; 1
+<span class="pk">SOLANGE</span> i &lt;= 5
+    summe &larr; summe + i
+    i &larr; i + 1
+<span class="pk">ENDE SOLANGE</span>
+gib summe aus</div></div>
+      <div><div class="lab">Python</div><div class="codeblock">summe = <span class="num">0</span>
+i = <span class="num">1</span>
+<span class="kw">while</span> i &lt;= <span class="num">5</span>:
+    summe = summe + i
+    i = i + <span class="num">1</span>
+<span class="fn">print</span>(summe)</div></div>
+    </div>
+    <button class="btn btn-ghost btn-sm to-lab" data-lab="while-Summe">▶ Im Code-Labor öffnen</button>
+  </div>
+
+  <div class="lab-card">
+    <h2>Pseudocode-Schlüsselwörter (IHK-Stil)</h2>
+    <p>In der Prüfung tauchen meist diese Wörter auf. Sie sind nicht streng genormt – wichtig ist,
+       dass die <strong>Struktur</strong> klar wird (Einrückung, Anfang/Ende).</p>
+    <ul>
+      <li><code>WENN … DANN … SONST … ENDE WENN</code> → Verzweigung (Python: <code>if/else</code>)</li>
+      <li><code>SOLANGE … ENDE SOLANGE</code> → kopfgesteuerte Schleife (Python: <code>while</code>)</li>
+      <li><code>WIEDERHOLE … BIS</code> → fußgesteuerte Schleife (mind. 1 Durchlauf)</li>
+      <li><code>FÜR i VON 1 BIS n</code> → Zählschleife (Python: <code>for i in range(1, n+1)</code>)</li>
+      <li><code>&larr;</code> oder <code>:=</code> → Zuweisung (Python: <code>=</code>)</li>
+    </ul>
+    <div class="note merk"><strong>Merke:</strong> <code>=</code> in Pseudocode/Mathe heißt oft „ist gleich?“ (Vergleich).
+      Für „weise zu“ nutzt man dort <code>&larr;</code>. In Python ist <code>=</code> zuweisen und <code>==</code> vergleichen.</div>
+  </div>
+
+  <div class="lab-card">
+    <h2>Übung: Struktogramm → Python</h2>
+    <p>Setze dieses Struktogramm in Python um und teste es im Code-Labor:</p>
+    <div class="ns">
+      <div class="ns-row seq">lies zahl</div>
+      <div class="ns-if">
+        <div class="cond">zahl % 2 = 0 ?</div>
+        <div class="branches">
+          <div><span class="tf">wahr</span>gib „gerade“ aus</div>
+          <div><span class="tf">falsch</span>gib „ungerade“ aus</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-ghost btn-sm to-lab" data-lab="GeradeUngerade">▶ Vorlage im Code-Labor öffnen</button>
+  </div>
+</div>
+
 <!-- ===================== ÜBUNGEN (Auto-Check) ===================== -->
 <div id="page-quiz" class="page">
   <div class="hero">
@@ -716,6 +883,26 @@ print("Summe 1 bis 10:", summe)
     <h2>8 · Eigene Funktionen (def)</h2>
     <p>Code, den du benennst und wiederverwendest. <code>def name(parameter):</code> … <code>return wert</code>.
        Damit baust du größere Programme aus kleinen Bausteinen.</p>
+  </div>
+
+  <div class="lab-card">
+    <h2>9 · Dictionary &amp; Strings</h2>
+    <p>Ein <strong>Dictionary</strong> speichert Schlüssel→Wert-Paare (Tab <strong>Dictionary</strong>).
+       Mit <strong>String-Slicing</strong> <code>text[start:stop]</code> schneidest du Textteile heraus
+       (Tab <strong>Strings</strong>).</p>
+  </div>
+
+  <div class="lab-card">
+    <h2>10 · Struktogramm &amp; Pseudocode</h2>
+    <p>Den Ablauf erst planen, dann coden – genau wie in der AP1. Die drei Bausteine Sequenz,
+       Verzweigung und Schleife übersetzt du Schritt für Schritt nach Python.
+       → Tab <strong>Struktogramm</strong>.</p>
+  </div>
+
+  <div class="lab-card">
+    <h2>11 · Üben &amp; prüfen</h2>
+    <p>Im Tab <strong>Übungen</strong> warten Aufgaben in vier Stufen – von Basics bis AP1-Training –
+       mit echtem Auto-Check, Tipp und Musterlösung. Das ist der beste Test, ob ein Thema wirklich sitzt.</p>
   </div>
 </div>
 
@@ -1240,7 +1427,15 @@ print("Und nochmal:", addiere(10, 5))`,
 print("text[0:3] =", text[0:3])
 print("text[:3]  =", text[:3])
 print("text[3:]  =", text[3:])
-print("text[-1]  =", text[-1])`
+print("text[-1]  =", text[-1])`,
+  "GeradeUngerade":
+`# Struktogramm in Python umsetzen:
+zahl = int(input("Zahl: "))
+
+if zahl % 2 == 0:
+    print("gerade")
+else:
+    print("ungerade")`
 };
 function openInLab(key){
   const code = LAB_SNIPPETS[key];
@@ -1413,32 +1608,125 @@ x = <span class="fn">addiere</span>(<span class="num">${ga()}</span>, <span clas
 /*  ÜBUNGEN MIT AUTO-CHECK (nutzt Pyodide)                               */
 /* ===================================================================== */
 const QUIZZES=[
-  { title:"Variable & Ausgabe",
+  /* ===== STUFE 1: BASICS ===== */
+  { level:"Basics", title:"Variable & Ausgabe",
     task:"Erstelle eine Variable <code>name</code> mit dem Wert <code>\"Python\"</code> und gib mit <code>print()</code> den Text <code>Hallo Python</code> aus.",
     expect:"Hallo Python",
     hint:"Mit <code>print(\"Hallo\", name)</code> setzt Python automatisch ein Leerzeichen dazwischen.",
     sol:'name = "Python"\nprint("Hallo", name)' },
-  { title:"Rechnen",
+  { level:"Basics", title:"Rechnen",
     task:"Berechne <code>17 + 25</code> und gib nur das Ergebnis aus.",
     expect:"42",
     hint:"<code>print(17 + 25)</code> – Python rechnet selbst.",
     sol:'print(17 + 25)' },
-  { title:"for-Schleife & Summe",
+  { level:"Basics", title:"Ganzzahl- & Restdivision",
+    task:"Gib für <code>17 / 5</code> die Ganzzahldivision und den Rest aus – jeweils in einer eigenen Zeile (erwartet: 3 und 2).",
+    expect:"3\n2",
+    hint:"<code>//</code> ist die Ganzzahldivision, <code>%</code> der Rest (Modulo).",
+    sol:'print(17 // 5)\nprint(17 % 5)' },
+  { level:"Basics", title:"Potenz",
+    task:"Berechne 2 hoch 10 und gib das Ergebnis aus (erwartet: 1024).",
+    expect:"1024",
+    hint:"Die Potenz schreibt man mit <code>**</code>: <code>2 ** 10</code>.",
+    sol:'print(2 ** 10)' },
+  { level:"Basics", title:"String-Länge",
+    task:"Gegeben <code>wort = \"Systemintegration\"</code>. Gib die Anzahl der Buchstaben aus (erwartet: 17).",
+    expect:"17",
+    hint:"<code>len(wort)</code> zählt die Zeichen.",
+    sol:'wort = "Systemintegration"\nprint(len(wort))' },
+  { level:"Basics", title:"Großbuchstaben",
+    task:"Gegeben <code>name = \"fisi\"</code>. Gib ihn komplett in Großbuchstaben aus (erwartet: FISI).",
+    expect:"FISI",
+    hint:"Die String-Methode <code>.upper()</code> macht alles groß.",
+    sol:'name = "fisi"\nprint(name.upper())' },
+  { level:"Basics", title:"if/else – volljährig?",
+    task:"Gegeben <code>alter = 17</code>. Gib <code>minderjährig</code> aus, wenn das Alter unter 18 liegt, sonst <code>volljährig</code>.",
+    expect:"minderjährig",
+    hint:"<code>if alter < 18:</code> … <code>else:</code> …",
+    sol:'alter = 17\nif alter < 18:\n    print("minderjährig")\nelse:\n    print("volljährig")' },
+
+  /* ===== STUFE 2: SCHLEIFEN & LISTEN ===== */
+  { level:"Schleifen & Listen", title:"for-Schleife & Summe",
     task:"Bilde die Summe der Zahlen <code>1</code> bis <code>5</code> und gib sie aus (erwartet: 15).",
     expect:"15",
     hint:"<code>range(1, 6)</code> geht 1,2,3,4,5. Einen Akkumulator <code>summe</code> hochzählen.",
     sol:'summe = 0\nfor i in range(1, 6):\n    summe += i\nprint(summe)' },
-  { title:"Modulo – gerade Zahl?",
-    task:"Prüfe mit <code>%</code>, ob <code>10</code> gerade ist, und gib <code>gerade</code> oder <code>ungerade</code> aus.",
-    expect:"gerade",
-    hint:"Gerade Zahlen haben <code>zahl % 2 == 0</code>.",
-    sol:'zahl = 10\nif zahl % 2 == 0:\n    print("gerade")\nelse:\n    print("ungerade")' },
-  { title:"Liste & Mittelwert",
+  { level:"Schleifen & Listen", title:"Zahlen nebeneinander",
+    task:"Gib die Zahlen 1 bis 5 in EINER Zeile aus, durch Leerzeichen getrennt (erwartet: 1 2 3 4 5).",
+    expect:"1 2 3 4 5",
+    hint:"<code>print(i, end=\" \")</code> hängt statt Zeilenumbruch ein Leerzeichen an.",
+    accept:["1 2 3 4 5 "],
+    sol:'for i in range(1, 6):\n    print(i, end=" ")' },
+  { level:"Schleifen & Listen", title:"while – Countdown",
+    task:"Zähle mit einer <code>while</code>-Schleife von 3 herunter bis 1, jede Zahl in eigener Zeile (erwartet: 3, 2, 1).",
+    expect:"3\n2\n1",
+    hint:"<code>i = 3</code>, dann <code>while i > 0:</code> … <code>i -= 1</code>.",
+    sol:'i = 3\nwhile i > 0:\n    print(i)\n    i -= 1' },
+  { level:"Schleifen & Listen", title:"Liste sortieren",
+    task:"Gegeben <code>zahlen = [5, 2, 8, 1]</code>. Gib die sortierte Liste aus (erwartet: [1, 2, 5, 8]).",
+    expect:"[1, 2, 5, 8]",
+    hint:"<code>zahlen.sort()</code> sortiert direkt, dann <code>print(zahlen)</code>.",
+    sol:'zahlen = [5, 2, 8, 1]\nzahlen.sort()\nprint(zahlen)' },
+  { level:"Schleifen & Listen", title:"Größter Wert",
+    task:"Gegeben <code>werte = [12, 45, 7, 88, 23]</code>. Gib den größten Wert aus (erwartet: 88).",
+    expect:"88",
+    hint:"<code>max(werte)</code> liefert das Maximum.",
+    sol:'werte = [12, 45, 7, 88, 23]\nprint(max(werte))' },
+  { level:"Schleifen & Listen", title:"Liste durchzählen",
+    task:"Gegeben <code>namen = [\"Anna\", \"Tom\", \"Lisa\"]</code>. Gib aus, wie viele Namen die Liste enthält (erwartet: 3).",
+    expect:"3",
+    hint:"<code>len(namen)</code> zählt die Elemente.",
+    sol:'namen = ["Anna", "Tom", "Lisa"]\nprint(len(namen))' },
+  { level:"Schleifen & Listen", title:"FizzBuzz-Stück",
+    task:"Gib für die Zahlen 1 bis 5 jeweils die Zahl aus – außer bei Vielfachen von 3, da <code>Fizz</code> (erwartet: 1, 2, Fizz, 4, 5).",
+    expect:"1\n2\nFizz\n4\n5",
+    hint:"In der Schleife: <code>if i % 3 == 0: print(\"Fizz\")</code> sonst <code>print(i)</code>.",
+    sol:'for i in range(1, 6):\n    if i % 3 == 0:\n        print("Fizz")\n    else:\n        print(i)' },
+
+  /* ===== STUFE 3: SCHULSTOFF (Zufall, Würfeln, Statistik) ===== */
+  { level:"Schulstoff: Zufall & Statistik", title:"Mittelwert einer Liste",
     task:"Gegeben <code>werte = [4, 8, 15, 16, 23]</code>. Gib den Mittelwert aus (erwartet: 13.2).",
     expect:"13.2",
     hint:"Mittelwert = <code>sum(werte) / len(werte)</code>.",
     sol:'werte = [4, 8, 15, 16, 23]\nprint(sum(werte) / len(werte))' },
-  { title:"Funktion schreiben",
+  { level:"Schulstoff: Zufall & Statistik", title:"Würfel mit festem Startwert",
+    task:"Setze <code>random.seed(1)</code>, würfle dann EINMAL mit <code>randint(1, 6)</code> und gib das Ergebnis aus (erwartet: 2).",
+    expect:"2",
+    hint:"Mit gleichem <code>seed</code> kommt immer dieselbe Zahl – so ist das Ergebnis prüfbar.",
+    sol:'import random\nrandom.seed(1)\nprint(random.randint(1, 6))' },
+  { level:"Schulstoff: Zufall & Statistik", title:"Augenzahl zählen",
+    task:"Gegeben <code>wuerfe = [1, 6, 3, 6, 2, 6, 4]</code>. Gib aus, wie oft die <code>6</code> vorkommt (erwartet: 3).",
+    expect:"3",
+    hint:"Listen haben die Methode <code>.count(6)</code>.",
+    sol:'wuerfe = [1, 6, 3, 6, 2, 6, 4]\nprint(wuerfe.count(6))' },
+  { level:"Schulstoff: Zufall & Statistik", title:"Summe & Mittelwert gerundet",
+    task:"Gegeben <code>messwerte = [3, 7, 2, 8, 5]</code>. Gib den Mittelwert auf 2 Nachkommastellen gerundet aus (erwartet: 5.0).",
+    expect:"5.0",
+    hint:"<code>round(sum(messwerte)/len(messwerte), 2)</code>.",
+    sol:'messwerte = [3, 7, 2, 8, 5]\nprint(round(sum(messwerte) / len(messwerte), 2))' },
+
+  /* ===== STUFE 4: AP1-NAH ===== */
+  { level:"AP1-Training", title:"Prozent berechnen & runden",
+    task:"Von <code>12000</code> Besuchern kamen <code>5562</code> über eine Suchmaschine. Gib den Anteil in Prozent auf 2 Nachkommastellen aus (erwartet: 46.35).",
+    expect:"46.35",
+    hint:"Anteil = <code>(teil / ganzes) * 100</code>, dann <code>round(..., 2)</code>.",
+    sol:'besucher = 12000\nsuchmaschine = 5562\nprint(round(suchmaschine / besucher * 100, 2))' },
+  { level:"AP1-Training", title:"Schwellenwert: > oder >=",
+    task:"Ein Server gilt als überlastet, wenn die Auslastung <strong>über 80%</strong> liegt (80 zählt noch NICHT). Gegeben <code>auslastung = 80</code> – gib <code>OK</code> oder <code>ÜBERLASTET</code> aus.",
+    expect:"OK",
+    hint:"„über 80“ heißt <code>> 80</code>, nicht <code>>= 80</code>. 80 ist also OK.",
+    sol:'auslastung = 80\nif auslastung > 80:\n    print("ÜBERLASTET")\nelse:\n    print("OK")' },
+  { level:"AP1-Training", title:"Seitenaufrufe pro Besucher",
+    task:"Bei <code>33000</code> Aufrufen und <code>12000</code> Besuchern: gib die Aufrufe pro Besucher auf 2 Nachkommastellen aus (erwartet: 2.75).",
+    expect:"2.75",
+    hint:"Division <code>aufrufe / besucher</code>, dann <code>round(..., 2)</code>.",
+    sol:'aufrufe = 33000\nbesucher = 12000\nprint(round(aufrufe / besucher, 2))' },
+  { level:"AP1-Training", title:"Non-Bounce-Rate (Gegenmenge)",
+    task:"Von <code>12000</code> Besuchern sind <code>7554</code> sofort abgesprungen (Bounce). Gib die Rate der NICHT-Absprünge in % auf 2 Nachkommastellen aus (erwartet: 37.05).",
+    expect:"37.05",
+    hint:"Erst Gegenmenge: <code>besucher - bounces</code>, dann <code>/ besucher * 100</code> und runden.",
+    sol:'besucher = 12000\nbounces = 7554\nnon_bounce = besucher - bounces\nprint(round(non_bounce / besucher * 100, 2))' },
+  { level:"AP1-Training", title:"Funktion mit return",
     task:"Schreibe eine Funktion <code>verdopple(x)</code>, die <code>x * 2</code> zurückgibt, und gib <code>verdopple(21)</code> aus (erwartet: 42).",
     expect:"42",
     hint:"<code>def verdopple(x):</code> … <code>return x * 2</code>, dann <code>print(verdopple(21))</code>.",
@@ -1447,7 +1735,14 @@ const QUIZZES=[
 
 (function(){
   const listEl=document.getElementById('quiz-list');
+  let lastLevel=null;
   QUIZZES.forEach((q,i)=>{
+    if(q.level && q.level!==lastLevel){
+      lastLevel=q.level;
+      const h=document.createElement('div'); h.className='level-head';
+      h.textContent=q.level;
+      listEl.appendChild(h);
+    }
     const card=document.createElement('div'); card.className='quiz-card';
     card.innerHTML=
       `<span class="q-num">Aufgabe ${i+1}</span>`+
@@ -1487,12 +1782,19 @@ const QUIZZES=[
       pyodide.runPython("sys.stdout=sys.__stdout__; sys.stderr=sys.__stderr__");
     }catch(e){ err=e; }
     const got=(output||'').trim();
-    const want=QUIZZES[i].expect.trim();
+    const q=QUIZZES[i];
+    const want=q.expect.trim();
+    // Normalisierung: Komma->Punkt (Dezimal), Mehrfach-Leerzeichen, Zeilen trimmen
+    const norm=s=>s.split('\n').map(z=>z.trim().replace(',','.').replace(/\s+/g,' ')).join('\n').trim();
+    const g=norm(got), w=norm(want);
+    // optionale Alternativ-Lösungen (q.accept = Array)
+    const accepts=[w].concat((q.accept||[]).map(norm));
+    const ok = accepts.includes(g);
     if(err){
       const msg=String(err.message||err).trim().split('\n').slice(-2).join(' ');
       fb.className='q-feedback fail show';
       fb.innerHTML=`<b>Fehler im Code:</b> <span style="color:var(--lab-red)">${escapeHtml(msg)}</span><br>Tipp: lies die Fehlermeldung – oft ein Tippfehler oder fehlender Doppelpunkt.`;
-    } else if(got===want || got.replace(',','.')===want){
+    } else if(ok){
       fb.className='q-feedback pass show';
       fb.innerHTML=`<b>✓ Richtig!</b> Ausgabe: <code>${escapeHtml(got)}</code>`;
     } else if(!got){
