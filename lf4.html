@@ -132,6 +132,35 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
 .theme-tg{font-family:var(--fmono);font-size:12.5px;border:1px solid var(--line);background:var(--glass);
   color:var(--muted);border-radius:4px;padding:6px 11px;cursor:pointer;transition:.14s;white-space:nowrap}
 .theme-tg:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* ===================================================================== */
+/*  TOC-FIX: Inhaltsverzeichnis darf den Text NICHT überlappen.          */
+/*  theme.css nutzt float:right; die Kapitel-Karten (volle Breite)       */
+/*  umfließen den Float nicht, dadurch lag die TOC über dem Text.        */
+/*  Lösung: Ab genug Platz (>=1240px) als feste Spalte RECHTS NEBEN der  */
+/*  920px-Textspalte. Darunter: einklappbarer Button (wie mobil).        */
+/* ===================================================================== */
+
+/* Sehr breit: TOC als fixe Sidebar rechts außerhalb der Textspalte.
+   (920px Spalte mittig -> rechts daneben ist Platz ab ~1240px) */
+@media(min-width:1240px){
+  .toc-wrap{position:fixed;float:none;top:96px;width:212px;margin:0;z-index:40;
+    left:calc(50% + 480px);}            /* 480 = halbe Spalte(460) + 20 Abstand */
+  .toc{max-height:calc(100vh - 130px);overflow-y:auto}
+  .toc-toggle{display:none}
+}
+
+/* Mittlerer Bereich (881–1239px): kein Platz für Seitenspalte ->
+   schwebender Klapp-Button unten rechts, Text bleibt voll lesbar. */
+@media(min-width:881px) and (max-width:1239px){
+  .toc-wrap{position:fixed;float:none;top:auto;bottom:18px;right:14px;width:auto;margin:0;z-index:60}
+  .toc{display:none;position:absolute;bottom:54px;right:0;width:240px;max-height:60vh;
+    overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+  .toc-wrap.open .toc{display:block}
+  .toc-toggle{display:flex;align-items:center;justify-content:center;width:50px;height:50px;
+    border-radius:50%;background:var(--cyan);color:#04121a;border:none;font-size:20px;cursor:pointer;
+    box-shadow:0 6px 20px rgba(45,226,230,.4)}
+}
 </style>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#070710">
