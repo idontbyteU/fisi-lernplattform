@@ -140,18 +140,12 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
 /*  Lösung: Ab genug Platz (>=1240px) als feste Spalte RECHTS NEBEN der  */
 /*  920px-Textspalte. Darunter: einklappbarer Button (wie mobil).        */
 /* ===================================================================== */
-
-/* Sehr breit: TOC als fixe Sidebar rechts außerhalb der Textspalte.
-   (920px Spalte mittig -> rechts daneben ist Platz ab ~1240px) */
 @media(min-width:1240px){
   .toc-wrap{position:fixed;float:none;top:96px;width:212px;margin:0;z-index:40;
-    left:calc(50% + 480px);}            /* 480 = halbe Spalte(460) + 20 Abstand */
+    left:calc(50% + 480px);}
   .toc{max-height:calc(100vh - 130px);overflow-y:auto}
   .toc-toggle{display:none}
 }
-
-/* Mittlerer Bereich (881–1239px): kein Platz für Seitenspalte ->
-   schwebender Klapp-Button unten rechts, Text bleibt voll lesbar. */
 @media(min-width:881px) and (max-width:1239px){
   .toc-wrap{position:fixed;float:none;top:auto;bottom:18px;right:14px;width:auto;margin:0;z-index:60}
   .toc{display:none;position:absolute;bottom:54px;right:0;width:240px;max-height:60vh;
