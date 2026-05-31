@@ -141,10 +141,14 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
 /*  920px-Textspalte. Darunter: einklappbarer Button (wie mobil).        */
 /* ===================================================================== */
 @media(min-width:1240px){
-  .toc-wrap{position:fixed;float:none;top:96px;width:212px;margin:0;z-index:40;
-    left:calc(50% + 480px);}
+  .toc-wrap{position:fixed;float:none;top:96px;width:208px;margin:0;z-index:40;
+    right:max(16px, calc(50% - 460px - 224px));}  /* rechts vom 920er-Text, nie aus dem Viewport */
   .toc{max-height:calc(100vh - 130px);overflow-y:auto}
   .toc-toggle{display:none}
+}
+/* Sehr breite Schirme: TOC mittig an die Textspalte andocken statt ganz außen */
+@media(min-width:1480px){
+  .toc-wrap{right:auto;left:calc(50% + 472px)}
 }
 @media(min-width:881px) and (max-width:1239px){
   .toc-wrap{position:fixed;float:none;top:auto;bottom:18px;right:14px;width:auto;margin:0;z-index:60}
