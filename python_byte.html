@@ -57,6 +57,15 @@
   .solution-box{display:none;margin-top:14px;background:rgba(240,192,64,.05);border:1px solid rgba(240,192,64,.2);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.7}
   .solution-box.show{display:block}
   .solution-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:8px}
+  .btn-explain{background:rgba(45,226,150,.1);color:var(--green);border:1px solid rgba(45,226,150,.28)}
+  .btn-explain:hover{background:rgba(45,226,150,.2)}
+  .explain-box{display:none;margin-top:14px;background:rgba(45,226,150,.05);border:1px solid rgba(45,226,150,.22);border-radius:10px;padding:14px 16px;font-size:13.5px;line-height:1.75;color:var(--text)}
+  .explain-box.show{display:block}
+  .explain-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:8px}
+  .explain-box ol{margin:0;padding-left:20px}
+  .explain-box ol li{margin-bottom:8px}
+  .explain-box code{font-family:var(--mono);background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px;font-size:12.5px}
+  .explain-box .ergebnis{margin-top:10px;padding:8px 12px;background:rgba(45,226,150,.08);border-radius:6px;font-family:var(--mono);font-size:12.5px}
   .done-badge{display:none;font-size:11px;font-weight:700;color:var(--green);margin-left:auto;align-items:center;gap:5px}
   .exercise-card.done .done-badge{display:flex}
   .section-title{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:700;margin:32px 0 12px;color:var(--accent);letter-spacing:-.01em}
@@ -125,6 +134,10 @@
     <div class="ref-card">
       <div class="ref-card-header"><span class="ref-icon">🔵</span> Level 4 – AP1-Training (Aufgaben 17–18)</div>
       <div style="padding:16px 18px;font-size:14px;color:var(--muted);line-height:1.7">Kennzahlen mit Runden &amp; Schwellenwerte (<code>&gt;</code> vs. <code>&gt;=</code>) – genau im Stil der Abschlussprüfung Teil 1.<br><strong style="color:var(--text)">Ziel:</strong> Du löst typische Pseudocode-/Rechenaufgaben sicher.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-card-header"><span class="ref-icon">🟣</span> Level 5 – Praxis &amp; Algorithmen (Aufgaben 19–28)</div>
+      <div style="padding:16px 18px;font-size:14px;color:var(--muted);line-height:1.7">Listen-Checklisten, Akkumulatoren, Dictionaries, verschachtelte Schleifen, Funktionen, Fibonacci, Palindrome. Jede Aufgabe mit ausführlicher <strong style="color:var(--green)">📖 Schritt-für-Schritt-Erklärung</strong>.<br><strong style="color:var(--text)">Ziel:</strong> Du kombinierst die Bausteine sicher zu echten kleinen Programmen.</div>
     </div>
   </div>
   <div class="tip" style="margin-top:24px"><strong>Wie du am besten lernst:</strong> Öffne IDLE oder VS Code parallel. Schreibe jede Aufgabe selbst ab – nicht kopieren! Wenn du einen Fehler bekommst, lies ihn genau (→ Tab "Debugging").</div>
@@ -627,6 +640,326 @@ non_bounce_rate = (non_bouncer / besucher) * <span class="num">100</span>
 <span class="cm"># 80  -&gt; OK         (80 ist NICHT &gt; 80)</span>
 <span class="cm"># 81  -&gt; ÜBERLASTET (81 ist &gt; 80)</span></div></div>
   </div>
+  <div class="level-title"><span class="dot dot-medium"></span> Level 5 – Praxis &amp; Algorithmen</div>
+
+  <!-- #19 -->
+  <div class="exercise-card" id="card-19">
+    <div class="card-header"><span class="card-num">#19</span><span class="card-title">Durchschnitt &amp; Abweichung</span><span class="done-badge">✓ Erledigt</span></div>
+    <div class="card-body">Lies <strong>drei Messwerte</strong> (Kommazahlen) ein. Berechne den Durchschnitt (2 Nachkommastellen). Gib für jeden Wert aus, ob er <strong>ÜBER</strong> oder <strong>UNTER</strong> dem Durchschnitt liegt.</div>
+    <div class="card-actions">
+      <button class="btn btn-hint" data-act="hint" data-n="19">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="19">👁 Lösung</button>
+      <button class="btn btn-explain" data-act="explain" data-n="19">📖 Erklärung</button>
+      <button class="btn btn-done" data-act="done" data-n="19">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-19"><div class="hint-title">💡 Hinweis</div>Durchschnitt = <code>(a + b + c) / 3</code> – die Klammern sind wichtig! Runden mit <code>round(x, 2)</code>. Den Vergleich für alle drei Werte machst du am elegantesten mit einer Schleife über eine Liste <code>[a, b, c]</code>.</div>
+    <div class="solution-box" id="solution-19"><div class="solution-title">✓ Musterlösung</div><div class="code-block">a = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Wert 1: "</span>))
+b = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Wert 2: "</span>))
+c = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Wert 3: "</span>))
+
+schnitt = <span class="fn">round</span>((a + b + c) / <span class="num">3</span>, <span class="num">2</span>)
+<span class="fn">print</span>(<span class="str">"Durchschnitt:"</span>, schnitt)
+
+<span class="kw">for</span> wert <span class="kw">in</span> [a, b, c]:
+    <span class="kw">if</span> wert &gt; schnitt:
+        <span class="fn">print</span>(wert, <span class="str">"liegt ÜBER dem Schnitt"</span>)
+    <span class="kw">elif</span> wert &lt; schnitt:
+        <span class="fn">print</span>(wert, <span class="str">"liegt UNTER dem Schnitt"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(wert, <span class="str">"ist genau der Schnitt"</span>)</div></div>
+    <div class="explain-box" id="explain-19"><div class="explain-title">📖 Schritt für Schritt</div><ol>
+      <li><code>input()</code> liefert <strong>immer Text</strong>. <code>float(...)</code> macht daraus eine Kommazahl – nur damit lässt sich rechnen.</li>
+      <li><code>(a + b + c) / 3</code>: Die Klammer erzwingt, dass <strong>zuerst</strong> addiert und <strong>dann</strong> geteilt wird. Ohne Klammer würde nur <code>c</code> durch 3 geteilt (Punkt vor Strich).</li>
+      <li><code>round(x, 2)</code> rundet auf 2 Nachkommastellen.</li>
+      <li>Statt den Vergleich dreimal zu schreiben, packen wir die Werte in eine Liste und gehen sie mit <code>for</code> durch – weniger Code, weniger Fehler.</li>
+      <li><code>if / elif / else</code>: Python prüft von oben nach unten, die <strong>erste</strong> zutreffende Bedingung gewinnt.</li>
+    </ol></div>
+  </div>
+
+  <!-- #20 -->
+  <div class="exercise-card" id="card-20">
+    <div class="card-header"><span class="card-num">#20</span><span class="card-title">Checkliste: Passwort-Stärke (True/False)</span><span class="done-badge">✓ Erledigt</span></div>
+    <div class="card-body">Prüfe ein Passwort gegen <strong>drei Regeln</strong> und hake sie der Reihe nach ab:<br>(a) mind. 8 Zeichen · (b) enthält eine Ziffer · (c) enthält einen Großbuchstaben.<br>Speichere jedes Ergebnis als <strong>True/False</strong> in einer Liste, gib jede Regel mit ✓/✗ aus und am Ende, ob <strong>alle</strong> erfüllt sind.</div>
+    <div class="card-actions">
+      <button class="btn btn-hint" data-act="hint" data-n="20">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="20">👁 Lösung</button>
+      <button class="btn btn-explain" data-act="explain" data-n="20">📖 Erklärung</button>
+      <button class="btn btn-done" data-act="done" data-n="20">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-20"><div class="hint-title">💡 Hinweis</div>Länge: <code>len(pw) &gt;= 8</code>.<br>Zeichen durchgehen mit <code>for z in pw</code>: <code>z.isdigit()</code> erkennt Ziffern, <code>z.isupper()</code> Großbuchstaben.<br>Ergebnisse in eine Liste <code>checks = [...]</code> packen. <code>all(checks)</code> ist True, wenn <strong>alle</strong> True sind.</div>
+    <div class="solution-box" id="solution-20"><div class="solution-title">✓ Musterlösung</div><div class="code-block">pw = <span class="fn">input</span>(<span class="str">"Passwort: "</span>)
+
+lang_genug = <span class="fn">len</span>(pw) &gt;= <span class="num">8</span>
+hat_ziffer = <span class="kw">False</span>
+hat_gross = <span class="kw">False</span>
+
+<span class="kw">for</span> z <span class="kw">in</span> pw:
+    <span class="kw">if</span> z.<span class="fn">isdigit</span>():
+        hat_ziffer = <span class="kw">True</span>
+    <span class="kw">if</span> z.<span class="fn">isupper</span>():
+        hat_gross = <span class="kw">True</span>
+
+checks = [lang_genug, hat_ziffer, hat_gross]
+namen = [<span class="str">"mind. 8 Zeichen"</span>, <span class="str">"enthält Ziffer"</span>, <span class="str">"enthält Großbuchstabe"</span>]
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(checks)):
+    status = <span class="str">"✓"</span> <span class="kw">if</span> checks[i] <span class="kw">else</span> <span class="str">"✗"</span>
+    <span class="fn">print</span>(status, namen[i])
+
+<span class="kw">if</span> <span class="fn">all</span>(checks):
+    <span class="fn">print</span>(<span class="str">"Passwort ist sicher!"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"Passwort zu schwach."</span>)</div></div>
+    <div class="explain-box" id="explain-20"><div class="explain-title">📖 Schritt für Schritt</div><ol>
+      <li>Wir starten mit drei Wahrheitswerten. <code>lang_genug</code> lässt sich sofort berechnen; <code>hat_ziffer</code> und <code>hat_gross</code> beginnen mit <code>False</code> und werden <code>True</code>, sobald wir ein passendes Zeichen finden.</li>
+      <li><code>for z in pw</code> geht jedes Zeichen des Passworts durch. <code>z.isdigit()</code> ist True bei 0–9, <code>z.isupper()</code> bei Großbuchstaben.</li>
+      <li>Die Ergebnisse sammeln wir in der Liste <code>checks</code> – genau das „Bedingungen der Reihe nach abhaken"-Schema.</li>
+      <li><code>for i in range(len(checks))</code> ist eine Index-Schleife: damit geben wir Prüfung <strong>und</strong> passenden Namen parallel aus. <code>"✓" if ... else "✗"</code> ist die Kurzform von if/else in einer Zeile.</li>
+      <li><code>all(checks)</code> ist True, wenn <strong>jedes</strong> Element True ist. Das Gegenstück <code>any(checks)</code> wäre True, sobald <strong>mindestens eins</strong> True ist.</li>
+    </ol></div>
+  </div>
+
+  <!-- #21 -->
+  <div class="exercise-card" id="card-21">
+    <div class="card-header"><span class="card-num">#21</span><span class="card-title">Gerade &amp; ungerade trennen</span><span class="done-badge">✓ Erledigt</span></div>
+    <div class="card-body">Gegeben: <code>zahlen = [4, 7, 10, 3, 8, 15, 22, 1]</code>.<br>Sortiere alle <strong>geraden</strong> Zahlen in eine Liste, alle <strong>ungeraden</strong> in eine andere. Gib beide Listen und ihre Summen aus.</div>
+    <div class="card-actions">
+      <button class="btn btn-hint" data-act="hint" data-n="21">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="21">👁 Lösung</button>
+      <button class="btn btn-explain" data-act="explain" data-n="21">📖 Erklärung</button>
+      <button class="btn btn-done" data-act="done" data-n="21">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-21"><div class="hint-title">💡 Hinweis</div>Gerade prüfst du mit <code>zahl % 2 == 0</code> (Rest 0 beim Teilen durch 2). Neue leere Listen mit <code>[]</code> anlegen, mit <code>.append(zahl)</code> füllen, Summe mit <code>sum(liste)</code>.</div>
+    <div class="solution-box" id="solution-21"><div class="solution-title">✓ Musterlösung</div><div class="code-block">zahlen = [<span class="num">4</span>, <span class="num">7</span>, <span class="num">10</span>, <span class="num">3</span>, <span class="num">8</span>, <span class="num">15</span>, <span class="num">22</span>, <span class="num">1</span>]
+gerade = []
+ungerade = []
+
+<span class="kw">for</span> zahl <span class="kw">in</span> zahlen:
+    <span class="kw">if</span> zahl % <span class="num">2</span> == <span class="num">0</span>:
+        gerade.<span class="fn">append</span>(zahl)
+    <span class="kw">else</span>:
+        ungerade.<span class="fn">append</span>(zahl)
+
+<span class="fn">print</span>(<span class="str">"Gerade:"</span>, gerade, <span class="str">"Summe:"</span>, <span class="fn">sum</span>(gerade))
+<span class="fn">print</span>(<span class="str">"Ungerade:"</span>, ungerade, <span class="str">"Summe:"</span>, <span class="fn">sum</span>(ungerade))</div></div>
+    <div class="explain-box" id="explain-21"><div class="explain-title">📖 Schritt für Schritt</div><ol>
+      <li>Zwei leere Listen sind die „Eimer", in die wir einsortieren.</li>
+      <li><code>zahl % 2</code> gibt den <strong>Rest</strong> der Division durch 2 zurück. Bei geraden Zahlen ist dieser Rest 0.</li>
+      <li><code>.append(zahl)</code> hängt die Zahl hinten an die jeweilige Liste an.</li>
+      <li><code>sum(liste)</code> addiert alle Elemente automatisch – eine eigene Summenschleife ist nicht nötig.</li>
+      <div class="ergebnis">Gerade: [4, 10, 8, 22] Summe: 44 · Ungerade: [7, 3, 15, 1] Summe: 26</div>
+    </ol></div>
+  </div>
+
+  <!-- #22 -->
+  <div class="exercise-card" id="card-22">
+    <div class="card-header"><span class="card-num">#22</span><span class="card-title">Vielfache von 3 oder 5 summieren</span><span class="done-badge">✓ Erledigt</span></div>
+    <div class="card-body">Berechne die <strong>Summe aller Zahlen unter 1000</strong>, die durch 3 <em>oder</em> durch 5 teilbar sind (3, 5, 6, 9, 10 … zählen mit). Ein bekannter Programmier-Klassiker.</div>
+    <div class="card-actions">
+      <button class="btn btn-hint" data-act="hint" data-n="22">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="22">👁 Lösung</button>
+      <button class="btn btn-explain" data-act="explain" data-n="22">📖 Erklärung</button>
+      <button class="btn btn-done" data-act="done" data-n="22">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-22"><div class="hint-title">💡 Hinweis</div><code>range(1, 1000)</code> geht 1 bis 999. Bedingung: <code>i % 3 == 0 or i % 5 == 0</code>. Mit einem Akkumulator <code>summe = 0</code> starten und mit <code>summe += i</code> aufaddieren. Das <code>or</code> sorgt dafür, dass 15 nur einmal zählt.</div>
+    <div class="solution-box" id="solution-22"><div class="solution-title">✓ Musterlösung</div><div class="code-block">summe = <span class="num">0</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">1000</span>):
+    <span class="kw">if</span> i % <span class="num">3</span> == <span class="num">0</span> <span class="kw">or</span> i % <span class="num">5</span> == <span class="num">0</span>:
+        summe += i
+<span class="fn">print</span>(<span class="str">"Summe:"</span>, summe)</div></div>
+    <div class="explain-box" id="explain-22"><div class="explain-title">📖 Schritt für Schritt</div><ol>
+      <li><code>summe = 0</code> ist der <strong>Akkumulator</strong> (Sammelvariable) – er startet leer bei 0.</li>
+      <li><code>range(1, 1000)</code> erzeugt 1, 2, …, 999. Die obere Grenze 1000 ist <strong>nicht</strong> dabei.</li>
+      <li><code>or</code> ist True, sobald <strong>mindestens eine</strong> Seite stimmt. Eine Zahl wie 15 (durch 3 UND 5 teilbar) wird trotzdem nur einmal gezählt, weil wir sie pro Durchlauf nur einmal addieren.</li>
+      <li><code>summe += i</code> ist die Kurzform für <code>summe = summe + i</code> – das Akkumulator-Muster, das in fast jeder Rechenaufgabe vorkommt.</li>
+      <div class="ergebnis">Ergebnis: 233168</div>
+    </ol></div>
+  </div>
+
+  <!-- #23 -->
+  <div class="exercise-card" id="card-23">
+    <div class="card-header"><span class="card-num">#23</span><span class="card-title">Buchstaben zählen (Dictionary)</span><span class="done-badge">✓ Erledigt</span></div>
+    <div class="card-body">Zähle, wie oft jeder Buchstabe im Wort <code>"banane"</code> vorkommt, und gib das Ergebnis als <code>{Buchstabe: Anzahl}</code> aus.</div>
+    <div class="card-actions">
+      <button class="btn btn-hint" data-act="hint" data-n="23">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="23">👁 Lösung</button>
+      <button class="btn btn-explain" data-act="explain" data-n="23">📖 Erklärung</button>
+      <button class="btn btn-done" data-act="done" data-n="23">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-23"><div class="hint-title">💡 Hinweis</div>Leeres Dictionary: <code>zaehler = {}</code>. Für jeden Buchstaben: <code>zaehler[b] = zaehler.get(b, 0) + 1</code>. <code>get(b, 0)</code> liefert die bisherige Anzahl – oder 0, falls der Buchstabe neu ist.</div>
+    <div class="solution-box" id="solution-23"><div class="solution-title">✓ Musterlösung</div><div class="code-block">wort = <span class="str">"banane"</span>
+zaehler = {}
+
+<span class="kw">for</span> b <span class="kw">in</span> wort:
+    zaehler[b] = zaehler.<span class="fn">get</span>(b, <span class="num">0</span>) + <span class="num">1</span>
+
+<span class="fn">print</span>(zaehler)</div></div>
+    <div class="explain-box" id="explain-23"><div class="explain-title">📖 Schritt für Schritt</div><ol>
+      <li>Ein <strong>Dictionary</strong> speichert Paare aus Schlüssel und Wert – hier Buchstabe → Anzahl.</li>
+      <li><code>zaehler.get(b, 0)</code> fragt: „Gibt es <code>b</code> schon? Dann gib seinen Wert, sonst 0." Das erspart eine if-Abfrage, ob der Buchstabe bereits existiert.</li>
+      <li><code>+ 1</code> und Zuweisung erhöhen den Zähler für genau diesen Buchstaben.</li>
+      <div class="ergebnis">Ergebnis: {'b': 1, 'a': 3, 'n': 2, 'e': 1}</div>
+    </ol></div>
+  </div>
+
+  <!-- #24 -->
+  <div class="exercise-card" id="card-24">
+    <div class="card-header"><span class="card-num">#24</span><span class="card-title">Einmaleins-Tabelle (verschachtelte Schleifen)</span><span class="done-badge">✓ Erledigt</span></div>
+    <div class="card-body">Gib das kleine Einmaleins aus: für jede Zeile 1–10 die Produkte <code>1×z</code> bis <code>10×z</code>, sauber in Spalten formatiert.</div>
+    <div class="card-actions">
+      <button class="btn btn-hint" data-act="hint" data-n="24">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="24">👁 Lösung</button>
+      <button class="btn btn-explain" data-act="explain" data-n="24">📖 Erklärung</button>
+      <button class="btn btn-done" data-act="done" data-n="24">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-24"><div class="hint-title">💡 Hinweis</div>Eine Schleife in der anderen: die <strong>äußere</strong> für die Zeile, die <strong>innere</strong> für die Spalte. <code>f"{x:4}"</code> reserviert 4 Stellen für gleiche Spaltenbreite. <code>end=""</code> verhindert den Zeilenumbruch nach jedem print.</div>
+    <div class="solution-box" id="solution-24"><div class="solution-title">✓ Musterlösung</div><div class="code-block"><span class="kw">for</span> zeile <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">11</span>):
+    <span class="kw">for</span> spalte <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">11</span>):
+        <span class="fn">print</span>(<span class="str">f"{zeile * spalte:4}"</span>, end=<span class="str">""</span>)
+    <span class="fn">print</span>()</div></div>
+    <div class="explain-box" id="explain-24"><div class="explain-title">📖 Schritt für Schritt</div><ol>
+      <li>Die äußere Schleife (<code>zeile</code>) läuft 1–10. Für <strong>jeden</strong> Wert von <code>zeile</code> läuft die innere Schleife (<code>spalte</code>) komplett 1–10 durch – das sind 10×10 = 100 Durchläufe.</li>
+      <li><code>print(..., end="")</code>: Normalerweise springt <code>print</code> in die nächste Zeile. Mit <code>end=""</code> bleibt der Cursor in derselben Zeile, sodass eine Zeile nebeneinander entsteht.</li>
+      <li><code>f"{zeile*spalte:4}"</code> ist ein f-String. Der Teil <code>:4</code> reserviert 4 Zeichen Breite, damit die Spalten sauber untereinander stehen.</li>
+      <li>Das leere <code>print()</code> <strong>nach</strong> der inneren Schleife macht den Zeilenumbruch – die Zeile ist fertig.</li>
+    </ol></div>
+  </div>
+
+  <!-- #25 -->
+  <div class="exercise-card" id="card-25">
+    <div class="card-header"><span class="card-num">#25</span><span class="card-title">Funktion: Primzahltest</span><span class="done-badge">✓ Erledigt</span></div>
+    <div class="card-body">Schreibe eine <strong>Funktion</strong> <code>ist_primzahl(n)</code>, die <code>True</code> zurückgibt, wenn <code>n</code> eine Primzahl ist, sonst <code>False</code>. Gib damit alle Primzahlen von 2 bis 50 aus.</div>
+    <div class="card-actions">
+      <button class="btn btn-hint" data-act="hint" data-n="25">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="25">👁 Lösung</button>
+      <button class="btn btn-explain" data-act="explain" data-n="25">📖 Erklärung</button>
+      <button class="btn btn-done" data-act="done" data-n="25">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-25"><div class="hint-title">💡 Hinweis</div>Eine Primzahl ist nur durch 1 und sich selbst teilbar. Prüfe Teiler von 2 bis <code>n-1</code>: geht einer auf (<code>n % t == 0</code>), ist es <strong>keine</strong> Primzahl → <code>return False</code>. Zahlen unter 2 sind keine Primzahlen.</div>
+    <div class="solution-box" id="solution-25"><div class="solution-title">✓ Musterlösung</div><div class="code-block"><span class="kw">def</span> <span class="fn">ist_primzahl</span>(n):
+    <span class="kw">if</span> n &lt; <span class="num">2</span>:
+        <span class="kw">return</span> <span class="kw">False</span>
+    <span class="kw">for</span> t <span class="kw">in</span> <span class="fn">range</span>(<span class="num">2</span>, n):
+        <span class="kw">if</span> n % t == <span class="num">0</span>:
+            <span class="kw">return</span> <span class="kw">False</span>
+    <span class="kw">return</span> <span class="kw">True</span>
+
+<span class="kw">for</span> zahl <span class="kw">in</span> <span class="fn">range</span>(<span class="num">2</span>, <span class="num">51</span>):
+    <span class="kw">if</span> <span class="fn">ist_primzahl</span>(zahl):
+        <span class="fn">print</span>(zahl, end=<span class="str">" "</span>)
+<span class="fn">print</span>()</div></div>
+    <div class="explain-box" id="explain-25"><div class="explain-title">📖 Schritt für Schritt</div><ol>
+      <li><code>def ist_primzahl(n):</code> definiert eine Funktion mit dem Parameter <code>n</code>. <code>return</code> gibt ein Ergebnis zurück und beendet die Funktion sofort.</li>
+      <li>Sonderfall zuerst: Zahlen kleiner als 2 sind per Definition keine Primzahlen → sofort <code>return False</code>.</li>
+      <li><code>for t in range(2, n)</code> probiert alle möglichen Teiler von 2 bis <code>n-1</code>. Sobald <strong>ein</strong> Teiler aufgeht (Rest 0), steht fest: keine Primzahl → <code>return False</code> bricht ab.</li>
+      <li>Läuft die Schleife ohne Treffer durch, wird das <code>return True</code> ganz unten erreicht – die Zahl hat keinen Teiler, ist also prim.</li>
+      <li>Die zweite Schleife ruft die Funktion für jede Zahl 2–50 auf. So trennt man <strong>Logik</strong> (Funktion) von <strong>Anwendung</strong> (Schleife) – ein zentrales Prinzip beim Programmieren.</li>
+    </ol></div>
+  </div>
+
+  <!-- #26 -->
+  <div class="exercise-card" id="card-26">
+    <div class="card-header"><span class="card-num">#26</span><span class="card-title">Fibonacci-Folge</span><span class="done-badge">✓ Erledigt</span></div>
+    <div class="card-body">Gib alle <strong>Fibonacci-Zahlen bis 100</strong> aus (jede Zahl ist die Summe der beiden vorigen: 0, 1, 1, 2, 3, 5, 8 …). Zusatz: Summe der <strong>geraden</strong> Fibonacci-Zahlen.</div>
+    <div class="card-actions">
+      <button class="btn btn-hint" data-act="hint" data-n="26">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="26">👁 Lösung</button>
+      <button class="btn btn-explain" data-act="explain" data-n="26">📖 Erklärung</button>
+      <button class="btn btn-done" data-act="done" data-n="26">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-26"><div class="hint-title">💡 Hinweis</div>Zwei Variablen: <code>a, b = 0, 1</code>. In der Schleife <code>a</code> ausgeben, dann <strong>gleichzeitig</strong> aktualisieren: <code>a, b = b, a + b</code>. Die Schleife läuft mit <code>while a &lt;= 100</code>, solange <code>a</code> 100 nicht übersteigt.</div>
+    <div class="solution-box" id="solution-26"><div class="solution-title">✓ Musterlösung</div><div class="code-block">a, b = <span class="num">0</span>, <span class="num">1</span>
+summe_gerade = <span class="num">0</span>
+
+<span class="kw">while</span> a &lt;= <span class="num">100</span>:
+    <span class="fn">print</span>(a, end=<span class="str">" "</span>)
+    <span class="kw">if</span> a % <span class="num">2</span> == <span class="num">0</span>:
+        summe_gerade += a
+    a, b = b, a + b
+
+<span class="fn">print</span>()
+<span class="fn">print</span>(<span class="str">"Summe der geraden:"</span>, summe_gerade)</div></div>
+    <div class="explain-box" id="explain-26"><div class="explain-title">📖 Schritt für Schritt</div><ol>
+      <li><code>a, b = 0, 1</code> ist eine Mehrfachzuweisung: <code>a</code> wird 0, <code>b</code> wird 1 in einer Zeile.</li>
+      <li><code>while a &lt;= 100</code> prüft <strong>vor</strong> jedem Durchlauf. Sobald <code>a</code> über 100 ist, stoppt die Schleife.</li>
+      <li><code>a, b = b, a + b</code> ist der Trick: Die rechte Seite wird <strong>zuerst komplett</strong> mit den alten Werten berechnet, dann zugewiesen. So wird <code>a</code> zum alten <code>b</code> und <code>b</code> zur Summe – ganz ohne Hilfsvariable.</li>
+      <li><code>a % 2 == 0</code> sammelt nebenbei die geraden Werte im Akkumulator <code>summe_gerade</code>.</li>
+      <div class="ergebnis">Ausgabe: 0 1 1 2 3 5 8 13 21 34 55 89 · Summe der geraden: 44</div>
+    </ol></div>
+  </div>
+
+  <!-- #27 -->
+  <div class="exercise-card" id="card-27">
+    <div class="card-header"><span class="card-num">#27</span><span class="card-title">Notenstatistik aus einer Liste</span><span class="done-badge">✓ Erledigt</span></div>
+    <div class="card-body">Gegeben: <code>noten = [2, 4, 1, 5, 3, 2, 4, 1]</code>.<br>Berechne und gib aus: Durchschnitt (2 Nachkommastellen), beste und schlechteste Note, Anzahl <strong>bestanden</strong> (Note ≤ 4) und die Bestehensquote in Prozent.</div>
+    <div class="card-actions">
+      <button class="btn btn-hint" data-act="hint" data-n="27">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="27">👁 Lösung</button>
+      <button class="btn btn-explain" data-act="explain" data-n="27">📖 Erklärung</button>
+      <button class="btn btn-done" data-act="done" data-n="27">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-27"><div class="hint-title">💡 Hinweis</div>Durchschnitt: <code>sum(noten) / len(noten)</code>. Beste Note ist die <strong>kleinste</strong> Zahl → <code>min(noten)</code>, schlechteste → <code>max(noten)</code>. Bestanden zählen mit einer Schleife und einem Zähler. Quote: <code>bestanden / len(noten) * 100</code>.</div>
+    <div class="solution-box" id="solution-27"><div class="solution-title">✓ Musterlösung</div><div class="code-block">noten = [<span class="num">2</span>, <span class="num">4</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">3</span>, <span class="num">2</span>, <span class="num">4</span>, <span class="num">1</span>]
+
+schnitt = <span class="fn">round</span>(<span class="fn">sum</span>(noten) / <span class="fn">len</span>(noten), <span class="num">2</span>)
+beste = <span class="fn">min</span>(noten)
+schlechteste = <span class="fn">max</span>(noten)
+
+bestanden = <span class="num">0</span>
+<span class="kw">for</span> n <span class="kw">in</span> noten:
+    <span class="kw">if</span> n &lt;= <span class="num">4</span>:
+        bestanden += <span class="num">1</span>
+
+quote = <span class="fn">round</span>(bestanden / <span class="fn">len</span>(noten) * <span class="num">100</span>, <span class="num">1</span>)
+
+<span class="fn">print</span>(<span class="str">"Durchschnitt:"</span>, schnitt)
+<span class="fn">print</span>(<span class="str">"Beste:"</span>, beste, <span class="str">" Schlechteste:"</span>, schlechteste)
+<span class="fn">print</span>(<span class="str">"Bestanden:"</span>, bestanden, <span class="str">"von"</span>, <span class="fn">len</span>(noten))
+<span class="fn">print</span>(<span class="str">"Quote:"</span>, quote, <span class="str">"%"</span>)</div></div>
+    <div class="explain-box" id="explain-27"><div class="explain-title">📖 Schritt für Schritt</div><ol>
+      <li><code>sum(noten) / len(noten)</code> – Summe geteilt durch Anzahl ist der Durchschnitt. <code>len()</code> zählt die Elemente.</li>
+      <li>Bei Schulnoten ist die <strong>beste</strong> die kleinste Zahl (1) → <code>min()</code>; die schlechteste ist <code>max()</code> (hier 5). Nicht von „beste = größte" täuschen lassen – es hängt vom Kontext ab.</li>
+      <li>Die Zähl-Schleife: <code>bestanden</code> startet bei 0 und steigt für jede Note ≤ 4 um eins.</li>
+      <li><code>bestanden / len(noten) * 100</code> – Anteil mal 100 ergibt Prozent. Reihenfolge beachten: erst die Division, dann <code>* 100</code> (Punkt vor Strich, von links nach rechts).</li>
+      <div class="ergebnis">Durchschnitt: 2.75 · Beste: 1 · Schlechteste: 5 · Bestanden: 7 von 8 · Quote: 87.5 %</div>
+    </ol></div>
+  </div>
+
+  <!-- #28 -->
+  <div class="exercise-card" id="card-28">
+    <div class="card-header"><span class="card-num">#28</span><span class="card-title">Palindrom-Prüfer mit Statistik</span><span class="done-badge">✓ Erledigt</span></div>
+    <div class="card-body">Lies Wörter ein, bis <code>"stop"</code> getippt wird. Prüfe für jedes Wort, ob es ein <strong>Palindrom</strong> ist (vorwärts = rückwärts, z.&nbsp;B. „otto"). Groß-/Kleinschreibung ignorieren. Am Ende: wie viele Palindrome waren dabei – und welche?</div>
+    <div class="card-actions">
+      <button class="btn btn-hint" data-act="hint" data-n="28">💡 Hinweis</button>
+      <button class="btn btn-solution" data-act="sol" data-n="28">👁 Lösung</button>
+      <button class="btn btn-explain" data-act="explain" data-n="28">📖 Erklärung</button>
+      <button class="btn btn-done" data-act="done" data-n="28">✓ Erledigt</button>
+    </div>
+    <div class="hint-box" id="hint-28"><div class="hint-title">💡 Hinweis</div>Endlosschleife mit <code>while True</code> und <code>break</code> bei „stop". Umkehren mit dem Slice <code>wort[::-1]</code>. Case-insensitiv vergleichen: <code>klein == klein[::-1]</code>, wobei <code>klein = wort.lower()</code>. Treffer in einer Liste sammeln.</div>
+    <div class="solution-box" id="solution-28"><div class="solution-title">✓ Musterlösung</div><div class="code-block">palindrome = []
+
+<span class="kw">while</span> <span class="kw">True</span>:
+    wort = <span class="fn">input</span>(<span class="str">"Wort (oder 'stop'): "</span>)
+    <span class="kw">if</span> wort == <span class="str">"stop"</span>:
+        <span class="kw">break</span>
+    klein = wort.<span class="fn">lower</span>()
+    <span class="kw">if</span> klein == klein[::-<span class="num">1</span>]:
+        <span class="fn">print</span>(wort, <span class="str">"ist ein Palindrom!"</span>)
+        palindrome.<span class="fn">append</span>(wort)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(wort, <span class="str">"ist KEIN Palindrom."</span>)
+
+<span class="fn">print</span>(<span class="str">"Gefundene Palindrome:"</span>, <span class="fn">len</span>(palindrome))
+<span class="fn">print</span>(palindrome)</div></div>
+    <div class="explain-box" id="explain-28"><div class="explain-title">📖 Schritt für Schritt</div><ol>
+      <li><code>while True:</code> ist absichtlich eine Endlosschleife – sie läuft, bis wir sie selbst mit <code>break</code> abbrechen. Das ist das übliche Muster für „lies ein, bis ein Stichwort kommt".</li>
+      <li><code>break</code> verlässt die Schleife sofort, sobald „stop" eingegeben wird.</li>
+      <li><code>wort.lower()</code> macht alles klein, damit „Otto" und „otto" gleich behandelt werden.</li>
+      <li><code>klein[::-1]</code> ist der Slice-Trick: <code>[::-1]</code> liest die Zeichenkette rückwärts. Ist das Wort rückwärts gleich dem Wort vorwärts, ist es ein Palindrom.</li>
+      <li>Treffer sammeln wir in der Liste <code>palindrome</code>. Am Ende zeigt <code>len()</code> die Anzahl und die Liste selbst die Wörter.</li>
+    </ol></div>
+  </div>
+
 </div><!-- DEBUGGING -->
 <div id="page-debug" class="page">
   <div class="hero" style="padding-top:24px;text-align:left">
@@ -858,6 +1191,7 @@ SyntaxError: expected ':'</div>
       var n = btn.dataset.n, act = btn.dataset.act;
       if(act === 'hint'){ document.getElementById('hint-'+n).classList.toggle('show'); }
       else if(act === 'sol'){ document.getElementById('solution-'+n).classList.toggle('show'); }
+      else if(act === 'explain'){ document.getElementById('explain-'+n).classList.toggle('show'); }
       else if(act === 'done'){
         var card = document.getElementById('card-'+n);
         if(done.has(n)){ done.delete(n); card.classList.remove('done'); }
