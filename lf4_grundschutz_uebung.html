@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT-Grundschutz · Übung · LF4 · FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+/* Szenario-Auswahl */
+.scen-pick{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 1.3rem}
+.scen-btn{flex:1;min-width:240px;text-align:left;border:1px solid var(--line);background:var(--glass);border-radius:10px;
+  padding:14px 16px;cursor:pointer;transition:.15s;color:var(--read)}
+.scen-btn:hover{border-color:var(--cyan);background:var(--glass2)}
+.scen-btn.on{border-color:var(--cyan);background:rgba(45,226,230,.08);box-shadow:0 0 0 1px var(--cyan)}
+.scen-btn .si{font-size:22px}
+.scen-btn b{display:block;color:var(--ink);font-size:15px;margin:.3rem 0 .15rem}
+.scen-btn small{color:var(--muted);font-family:var(--fmono);font-size:11.5px;line-height:1.4;display:block}
+
+/* Phasen-Fortschritt */
+.phase-flow{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 1.4rem;font-family:var(--fmono);font-size:11.5px}
+.phase-flow span{padding:4px 9px;border:1px solid var(--line);border-radius:99px;color:var(--dim)}
+.phase-flow span.cur{border-color:var(--cyan);color:var(--cyan);background:rgba(45,226,230,.08)}
+
+/* Fall-Box */
+.fallbox{border:1px solid var(--line);border-left:3px solid var(--amber);background:var(--glass);border-radius:8px;padding:1rem 1.1rem;margin:0 0 1.5rem;line-height:1.6}
+.fallbox h3{font-family:var(--fmono);font-size:13px;color:var(--amber);letter-spacing:.5px;margin:0 0 .5rem;text-transform:uppercase}
+
+/* Phase als aufklappbares details */
+details.phase{margin:0 0 1rem;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--glass)}
+details.phase>summary{cursor:pointer;list-style:none;padding:.85rem 1rem;display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:1.05rem}
+details.phase>summary::-webkit-details-marker{display:none}
+details.phase>summary .pnum{font-family:var(--fmono);font-size:12px;background:var(--cyan);color:#04121a;border-radius:6px;padding:2px 8px;flex-shrink:0}
+details.phase>summary .ar{margin-left:auto;transition:.2s;color:var(--muted)}
+details.phase[open]>summary{border-bottom:1px solid var(--line);color:var(--cyan)}
+details.phase[open]>summary .ar{transform:rotate(90deg)}
+.phase-body{padding:1rem 1.1rem}
+.phase-body .ziel{font-family:var(--fmono);font-size:12.5px;color:var(--dim);margin:0 0 .7rem}
+.phase-body .frage{font-size:1.02rem;line-height:1.55;margin:0 0 .9rem}
+.phase-body .frage b{color:var(--amber)}
+
+/* Aufdeck-Buttons + Boxen */
+.exrow{display:flex;gap:8px;flex-wrap:wrap;margin:.3rem 0 .2rem}
+.exb{font-family:var(--fmono);font-size:12.5px;border-radius:6px;padding:7px 13px;cursor:pointer;transition:.12s;border:1px solid}
+.exb.tip{border-color:var(--amber);color:var(--amber);background:transparent}
+.exb.tip:hover{background:var(--amber);color:#04121a}
+.exb.sol{border-color:var(--ok);color:var(--ok);background:transparent}
+.exb.sol:hover{background:var(--ok);color:#04121a}
+.tipbox,.solbox{display:none;margin-top:.7rem;border-radius:8px;padding:.8rem 1rem;font-size:.97rem;line-height:1.6}
+.tipbox.show,.solbox.show{display:block}
+.tipbox{background:rgba(255,180,59,.06);border:1px solid rgba(255,180,59,.25);color:#f0d49a}
+.tipbox .l,.solbox .l{font-family:var(--fmono);font-size:11px;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:.4rem}
+.tipbox .l{color:var(--amber)}
+.solbox{background:rgba(39,245,154,.05);border:1px solid rgba(39,245,154,.22);color:var(--read)}
+.solbox .l{color:var(--ok)}
+.solbox table{width:100%;border-collapse:collapse;margin:.3rem 0;font-size:.9rem}
+.solbox th{text-align:left;color:var(--cyan);font-family:var(--fmono);font-size:11px;border-bottom:1px solid var(--line);padding:.35rem .5rem;text-transform:uppercase;letter-spacing:.3px}
+.solbox td{border-bottom:1px solid var(--line);padding:.4rem .5rem;vertical-align:top}
+.solbox .tag{font-family:var(--fmono);font-size:11px;padding:1px 7px;border-radius:99px;color:#04121a;white-space:nowrap}
+.solbox ul{margin:.3rem 0;padding-left:1.1rem}
+.solbox li{margin-bottom:.35rem}
+.solbox .why{margin-top:.6rem;padding-top:.5rem;border-top:1px dashed var(--line);color:var(--muted);font-size:.9rem}
+
+.theme-tg{font-family:var(--fmono);font-size:12.5px;border:1px solid var(--line);background:var(--glass);color:var(--muted);border-radius:4px;padding:6px 11px;cursor:pointer;transition:.14s;white-space:nowrap}
+.theme-tg:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* Light-Theme */
+html[data-theme="light"]{--bg:#fff;--bg2:#f4f7fa;--ink:#16202b;--muted:#5a6675;--dim:#7c8896;--read:#222e3a;
+  --cyan:#0892a5;--magenta:#c81e5a;--purple:#7a3ec8;--amber:#b8801f;--ok:#138a5e;--lime:#3f9612;
+  --line:#d4dde6;--glass:#f4f7fa;--glass2:#eef3f8;--card:#fff;--shadow:0 6px 20px rgba(30,50,80,.1)}
+html[data-theme="light"] body{background:#fff;color:var(--ink)}
+html[data-theme="light"] .scan{display:none}
+html[data-theme="light"] .hdr{background:#fff;border-bottom:1px solid var(--line)}
+html[data-theme="light"] .tipbox{background:#fff8ec;border-color:#f0d9a8;color:#6b5320}
+html[data-theme="light"] .solbox{background:#eefaf3;border-color:#bfe6d2;color:#1c3a2c}
+</style>
+</head>
+<body>
+<div class="scan"></div>
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="lf4.html">← Lernfeld 4</a>
+    <div><h1><span class="tag" style="background:var(--magenta)">LF4</span>IT-Grundschutz · Übung</h1>
+    <div class="sub">Der komplette BSI-Prozess Schritt für Schritt – an zwei Fällen durchgespielt</div></div>
+    <div class="sp"></div>
+    <button class="theme-tg" id="themeTg" title="Hell/Dunkel umschalten">☀ Hell</button>
+  </div>
+</header>
+
+<div class="wrap sum">
+
+  <p class="lead" style="margin-top:0">Diese Übung führt den <b>IT-Grundschutz nach BSI</b> einmal komplett durch – von der Strukturanalyse bis zu den Maßnahmen. Wähle ein Szenario, lies den Fall, überlege bei jeder Phase selbst und decke dann <b>Tipp</b> und <b>Lösung</b> auf.</p>
+
+  <div class="scen-pick">
+    <button class="scen-btn on" data-scen="praxis"><span class="si">🩺</span><b>Kleine Arztpraxis</b><small>Hausarztpraxis · 1 Empfangs-PC · Praxissoftware · wenige Objekte</small></button>
+    <button class="scen-btn" data-scen="firma"><span class="si">🏢</span><b>Große Firma</b><small>Mittelständischer Online-Händler · Server · AD · Webshop · viele Objekte</small></button>
+  </div>
+
+  <div class="phase-flow">
+    <span class="cur">1 Strukturanalyse</span><span>2 Schutzbedarf</span><span>3 Modellierung</span><span>4 Check</span><span>5 Risiko</span><span>6 Maßnahmen</span>
+  </div>
+
+  <div id="fall" class="fallbox"></div>
+  <div id="phases"></div>
+
+  <div class="callout tip" style="margin-top:1.5rem"><span class="ci">🎯</span><div><b>Lerntipp:</b> Die Reihenfolge ist immer gleich – <b>erst wissen, was man hat</b> (Struktur), <b>dann wie wichtig es ist</b> (Schutzbedarf), <b>dann was gilt</b> (Modellierung), <b>dann was fehlt</b> (Check), <b>dann was bedroht</b> (Risiko), <b>dann was zu tun ist</b> (Maßnahmen).</div></div>
+
+  <footer>FISI Lernplattform · LF4 – IT-Grundschutz-Übung · Inhalte aus den Kursunterlagen &amp; BSI 200-2/200-3</footer>
+</div>
+
+<script>
+/* ====== DATEN: zwei Szenarien, je 6 Phasen ====== */
+const T={ok:"var(--ok)",amber:"var(--amber)",mag:"var(--magenta)",cyan:"var(--cyan)",purple:"var(--purple)",mut:"var(--muted)"};
+function tag(txt,col){return '<span class="tag" style="background:'+col+'">'+txt+'</span>';}
+
+const SCEN={
+ praxis:{
+  fall:'<h3>🩺 Fall: Kleine Hausarztpraxis</h3>Eine Hausarztpraxis mit drei Mitarbeitenden. Am Empfang steht <b>ein Windows-PC</b> mit der <b>Praxisverwaltungssoftware</b>, an der Patienten angemeldet, Termine vergeben und Diagnosen dokumentiert werden. Ein <b>Multifunktionsdrucker</b> (Drucken/Scannen) und persönliche <b>Benutzerkonten</b> gehören dazu. Verarbeitet werden hochsensible <b>Gesundheitsdaten</b>.',
+  phases:[
+   {t:"Strukturanalyse",ziel:"Was haben wir überhaupt? Geschäftsprozesse → Informationen → Anwendungen → IT-Systeme → Abhängigkeiten.",
+    frage:"Erfasse die <b>Zielobjekte</b> der Praxis: Welche Geschäftsprozesse gibt es, welche Daten, Anwendungen und IT-Systeme hängen daran?",
+    tip:"Geh von den Tätigkeiten am Empfang aus: anmelden, Termine, Dokumentation. Frag dann je Prozess: Welche Daten? Welche Software? Welche Geräte?",
+    sol:'<table><tr><th>Prozess</th><th>Informationen</th><th>Anwendung</th><th>IT-System</th></tr>'+
+      '<tr><td>Patienten anmelden</td><td>Stammdaten, KV-Daten</td><td>Praxissoftware</td><td>Empfangs-PC (Windows)</td></tr>'+
+      '<tr><td>Termine vergeben</td><td>Termindaten</td><td>Praxissoftware / Kalender</td><td>Empfangs-PC, Benutzerkonten</td></tr>'+
+      '<tr><td>Dokumentenmanagement</td><td>Diagnosen, Laborwerte, Rezepte</td><td>Praxissoftware</td><td>Drucker/Scanner, Empfangs-PC</td></tr></table>'+
+      '<div class="why">Abhängigkeiten: alles hängt an der Verfügbarkeit der Praxissoftware und an gültigen Benutzerkennungen. Fällt der PC oder die Software aus, steht der Empfang.</div>'},
+   {t:"Schutzbedarfsfeststellung",ziel:"Wie wichtig ist jedes Objekt? Je C/I/A einstufen: normal · hoch · sehr hoch – immer mit Begründung.",
+    frage:"Stufe für die <b>Praxisverwaltungssoftware</b> und den <b>Empfangs-PC</b> den Schutzbedarf nach <b>Vertraulichkeit, Integrität, Verfügbarkeit</b> ein.",
+    tip:"Frag pro Grundwert: Was passiert im schlimmsten Fall? Gesundheitsdaten = Datenschutz-Höchststufe. Überleg, ob ein Ausfall organisatorisch überbrückbar ist (→ Verfügbarkeit).",
+    sol:'<table><tr><th>Objekt</th><th>V</th><th>I</th><th>A</th></tr>'+
+      '<tr><td>Praxissoftware</td><td>'+tag("sehr hoch",T.mag)+'</td><td>'+tag("sehr hoch",T.mag)+'</td><td>'+tag("sehr hoch",T.mag)+'</td></tr>'+
+      '<tr><td>Empfangs-PC</td><td>'+tag("hoch",T.amber)+'</td><td>'+tag("hoch",T.amber)+'</td><td>'+tag("normal",T.ok)+'</td></tr></table>'+
+      '<div class="why">Software: verarbeitet alle Patienten-/Abrechnungsdaten → unbefugter Zugriff hätte erhebliche Datenschutzfolgen, ohne sie ist kein Betrieb möglich. PC: zeigt Gesundheitsdaten an (hoch), ein Ausfall ist aber kurzfristig organisatorisch überbrückbar (Verfügbarkeit nur normal).</div>'},
+   {t:"Modellierung",ziel:"Was gilt? Jedem Zielobjekt die passenden Bausteine aus dem IT-Grundschutz-Kompendium zuordnen.",
+    frage:"Ordne dem <b>Empfangs-PC</b>, der <b>Praxissoftware</b>, den <b>Benutzerkonten</b> und dem <b>Drucker</b> je einen passenden Baustein zu.",
+    tip:"Bausteine haben Präfixe: SYS = IT-Systeme, APP = Anwendungen, ORP = Organisation/Personal, NET = Netze, INF = Infrastruktur. Ordne nach Art des Objekts.",
+    sol:'<table><tr><th>Zielobjekt</th><th>Baustein</th></tr>'+
+      '<tr><td>Empfangs-PC (Windows)</td><td>SYS.2.1 allg. Client + SYS.2.2.3 Client unter Windows</td></tr>'+
+      '<tr><td>Praxisverwaltungssoftware</td><td>APP.6 Allgemeine Software</td></tr>'+
+      '<tr><td>Benutzerkonto / Berechtigungen</td><td>ORP.4 Identitäts- &amp; Berechtigungsmanagement</td></tr>'+
+      '<tr><td>Multifunktionsdrucker</td><td>SYS.4.1 Drucker, Kopierer &amp; Multifunktionsgeräte</td></tr></table>'+
+      '<div class="why">Jeder Baustein bringt seine eigenen Gefährdungen und Anforderungen mit. Die Zuordnung ergibt den \"Prüfplan\" für den nächsten Schritt.</div>'},
+   {t:"IT-Grundschutz-Check",ziel:"Was ist umgesetzt, was fehlt? Soll-Ist-Vergleich je Anforderung: ja · teilweise · nein · entbehrlich.",
+    frage:"Prüfe für den Empfangs-PC zwei Anforderungen: <b>Autoupdate aktiviert</b> (SYS.2.1.A3) und <b>Schutzprogramm gegen Schadsoftware</b> (SYS.2.1.A6). Vergib Status, Nachweis, Lücke.",
+    tip:"Status ja = vollständig nachweisbar umgesetzt, teilweise = begonnen aber lückenhaft, nein = offen, entbehrlich = begründet nicht nötig. Frag nach dem Nachweis: Gibt es eine Kontrolle/Dokumentation?",
+    sol:'<table><tr><th>Anforderung</th><th>Status</th><th>Lücke / Maßnahme</th></tr>'+
+      '<tr><td>A3 Autoupdate</td><td>'+tag("teilweise",T.amber)+'</td><td>Updates laufen automatisch, aber ohne dokumentierte Kontrolle → regelmäßige Prüfung einführen</td></tr>'+
+      '<tr><td>A6 Schadsoftwareschutz</td><td>'+tag("ja",T.ok)+'</td><td>Microsoft Defender aktiv → keine weitere Maßnahme</td></tr></table>'+
+      '<div class="why">\"Teilweise\" ist typisch: die Technik ist da, aber der organisatorische Nachweis (Kontrolle/Doku) fehlt. Verantwortlich wäre hier der IT-Admin/Dienstleister.</div>'},
+   {t:"Risikoanalyse",ziel:"Was bedroht uns über den Standard hinaus? Gefährdung → C/I/A → Häufigkeit × Schaden = Gesamtrisiko → Behandlung.",
+    frage:"Bewerte für den Empfangs-PC die Gefährdung <b>G 0.39 Schadsoftware über USB-Stick</b>: betroffene Grundwerte, Eintrittshäufigkeit, Schadenshöhe, Gesamtrisiko – und wähle eine Behandlung.",
+    tip:"Häufigkeit (selten/mittel/häufig) × Schadenshöhe (begrenzt/hoch/existenzbedrohend) ergibt über die Risikomatrix die Klasse. Behandlung: vermeiden / reduzieren / transferieren / akzeptieren.",
+    sol:'<table><tr><th>Gefährdung</th><th>C/I/A</th><th>Häufigk.</th><th>Schaden</th><th>Risiko</th></tr>'+
+      '<tr><td>G 0.39 USB-Schadsoftware</td><td>C/I/A</td><td>mittel</td><td>hoch</td><td>'+tag("hoch",T.mag)+'</td></tr></table>'+
+      '<ul><li><b>Behandlung (Reduktion):</b> USB-Nutzung einschränken, Datenträger kontrollieren, Mitarbeiterschulungen.</li></ul>'+
+      '<div class="why">Vorhandene Maßnahme (Defender) senkt das Risiko schon, beseitigt es aber nicht. Restrisiko wird durch organisatorische Reduktion weiter gesenkt.</div>'},
+   {t:"Maßnahmen & Realisierung",ziel:"Was tun – in welcher Reihenfolge? Maßnahmen mit Risikoklasse (R1/R2/R3), Bezug und Begründung.",
+    frage:"Überführe die Risiken in konkrete <b>Maßnahmen</b> mit Priorität (R1 kurzfristig / R2 mittel / R3 lang) und Bezug zur Gefährdung.",
+    tip:"R1 = dringend (hohes Risiko/zentrale Lücke), R2 = wichtig aber nicht akut, R3 = später. Jede Maßnahme braucht einen Bezug (zu welcher Gefährdung/Anforderung) und eine kurze Begründung.",
+    sol:'<table><tr><th>Prio</th><th>Maßnahme</th><th>Bezug</th></tr>'+
+      '<tr><td>'+tag("R2",T.amber)+'</td><td>USB-Nutzung einschränken, Datenträger kontrollieren, Schulungen</td><td>G 0.39 · SYS.2.1.A6</td></tr>'+
+      '<tr><td>'+tag("R2",T.amber)+'</td><td>Bildschirmsperre verkürzen, Sichtschutz, Schulung</td><td>G 0.19 Offenlegung</td></tr></table>'+
+      '<div class="why">Reihenfolge generell: erst Basis-, dann Standard-, dann erhöhte Anforderungen. Restrisiken legt man der Leitung zur Entscheidung vor – Akzeptanz ist Chefsache.</div>'}
+  ]
+ },
+ firma:{
+  fall:'<h3>🏢 Fall: Mittelständischer Online-Händler (≈120 Mitarbeitende)</h3>Ein wachsendes Handelsunternehmen betreibt einen <b>Webshop</b>, im Hintergrund einen <b>Datenbankserver</b> mit Kunden- und Bestelldaten, ein <b>Active Directory</b> für die Benutzerverwaltung und ein zentrales <b>Backup-System</b>. Mitarbeitende arbeiten an Clients, teils im <b>Homeoffice über VPN</b>. Es werden Kunden-, Zahlungs- und Beschäftigtendaten verarbeitet.',
+  phases:[
+   {t:"Strukturanalyse",ziel:"Was haben wir? Bei größeren Verbünden zuerst sinnvoll gruppieren statt jedes Gerät einzeln.",
+    frage:"Erfasse die zentralen <b>Zielobjekte</b> des Unternehmens und ihre Abhängigkeiten. Welche Prozesse, Anwendungen und Systeme tragen das Geschäft?",
+    tip:"Bei vielen gleichartigen Geräten bildet man Gruppen (z. B. eine Gruppe 'Clients Vertrieb'). Geh vom Kernprozess Bestellung/Verkauf aus und arbeite dich zu den tragenden Systemen vor.",
+    sol:'<table><tr><th>Prozess</th><th>Anwendung</th><th>IT-System</th></tr>'+
+      '<tr><td>Bestellung / Verkauf</td><td>Webshop</td><td>Webserver (DMZ)</td></tr>'+
+      '<tr><td>Daten speichern</td><td>Datenbank</td><td>DB-Server (internes Netz)</td></tr>'+
+      '<tr><td>Benutzer verwalten</td><td>Verzeichnisdienst</td><td>Active-Directory-Server</td></tr>'+
+      '<tr><td>Datensicherung</td><td>Backup-Software</td><td>Backup-System / NAS</td></tr>'+
+      '<tr><td>Arbeiten (intern/HO)</td><td>Office, VPN-Client</td><td>Client-Gruppe, VPN-Gateway</td></tr></table>'+
+      '<div class="why">Abhängigkeiten sind hier zentral: Webshop hängt an DB-Server, fast alles hängt am Active Directory (Anmeldung), und das Backup schützt alle Datenbestände.</div>'},
+   {t:"Schutzbedarfsfeststellung",ziel:"Wie wichtig ist jedes Objekt? Achte auf Vererbung und den Kumulationseffekt.",
+    frage:"Stufe <b>DB-Server</b>, <b>Active Directory</b> und <b>Webshop</b> nach C/I/A ein. Begründe besonders, warum das AD so kritisch ist.",
+    tip:"Denk an Vererbung: ein Server, der viele wichtige Anwendungen trägt, erbt deren Schutzbedarf (Maximalprinzip). Das AD steuert alle Anmeldungen – fällt es aus oder wird es kompromittiert, ist alles betroffen (Kumulation).",
+    sol:'<table><tr><th>Objekt</th><th>V</th><th>I</th><th>A</th></tr>'+
+      '<tr><td>DB-Server (Kunden/Zahlung)</td><td>'+tag("sehr hoch",T.mag)+'</td><td>'+tag("sehr hoch",T.mag)+'</td><td>'+tag("hoch",T.amber)+'</td></tr>'+
+      '<tr><td>Active Directory</td><td>'+tag("sehr hoch",T.mag)+'</td><td>'+tag("sehr hoch",T.mag)+'</td><td>'+tag("sehr hoch",T.mag)+'</td></tr>'+
+      '<tr><td>Webshop (Webserver)</td><td>'+tag("hoch",T.amber)+'</td><td>'+tag("hoch",T.amber)+'</td><td>'+tag("sehr hoch",T.mag)+'</td></tr></table>'+
+      '<div class="why">AD = \"Kronjuwel\": organisationsweite Bedeutung → durchgehend sehr hoch. Webshop: Verfügbarkeit ist umsatzkritisch (jede Stunde Ausfall kostet Geld). DB: Zahlungsdaten → Vertraulichkeit/Integrität sehr hoch.</div>'},
+   {t:"Modellierung",ziel:"Was gilt? Prozess- und System-Bausteine zuordnen – bei hohem Bedarf folgt später eine Risikoanalyse.",
+    frage:"Ordne <b>Webserver</b>, <b>DB-Server</b>, <b>Active Directory</b>, <b>VPN</b> und dem <b>Backup</b> je einen passenden Baustein zu.",
+    tip:"APP = Anwendungen (Webserver, DB), SYS = Systeme, NET = Netze/Kommunikation (VPN), CON/OPS = Konzepte/Betrieb (Backup-Konzept). Bei sehr hohem Schutzbedarf wird zusätzlich eine Risikoanalyse nötig.",
+    sol:'<table><tr><th>Zielobjekt</th><th>Baustein (Auswahl)</th></tr>'+
+      '<tr><td>Webserver</td><td>APP.3.1 Webanwendungen / APP.3.2 Webserver</td></tr>'+
+      '<tr><td>DB-Server</td><td>APP.4.3 Relationale Datenbanken</td></tr>'+
+      '<tr><td>Active Directory</td><td>APP.2.2 Active Directory Domain Services</td></tr>'+
+      '<tr><td>VPN (Homeoffice)</td><td>NET.3.3 VPN</td></tr>'+
+      '<tr><td>Datensicherung</td><td>CON.3 Datensicherungskonzept</td></tr></table>'+
+      '<div class="why">Für AD und DB-Server mit sehr hohem Schutzbedarf reicht der Standard nicht – sie kommen in Phase 5 in die ergänzende Risikoanalyse.</div>'},
+   {t:"IT-Grundschutz-Check",ziel:"Was ist umgesetzt, was fehlt? Soll-Ist je Anforderung, mit Nachweis und Verantwortlichem.",
+    frage:"Prüfe drei Anforderungen: <b>MFA für Admin-Zugänge</b>, <b>regelmäßige Restore-Tests des Backups</b> und <b>Patchmanagement der Server</b>. Vergib Status und Lücke.",
+    tip:"'Backup läuft' heißt nicht 'Restore funktioniert' – ohne Rücksicherungstest ist die Anforderung nur teilweise erfüllt. MFA nur für manche Konten = teilweise.",
+    sol:'<table><tr><th>Anforderung</th><th>Status</th><th>Lücke / Maßnahme</th></tr>'+
+      '<tr><td>MFA für Admins</td><td>'+tag("teilweise",T.amber)+'</td><td>nur 2 von 6 Admin-Konten → MFA flächendeckend ausrollen</td></tr>'+
+      '<tr><td>Restore-Tests</td><td>'+tag("nein",T.mag)+'</td><td>Backups laufen, aber nie zurückgespielt → regelmäßigen Restore-Test etablieren</td></tr>'+
+      '<tr><td>Patchmanagement Server</td><td>'+tag("ja",T.ok)+'</td><td>zentrales Patchmanagement aktiv → keine weitere Maßnahme</td></tr></table>'+
+      '<div class="why">Der Restore-Test ist der Klassiker: ein nie getestetes Backup ist im Ernstfall oft wertlos. Offene MUSS-Anforderungen (z. B. MFA) sollte man nicht akzeptieren.</div>'},
+   {t:"Risikoanalyse",ziel:"Über den Standard hinaus – Pflicht bei sehr hohem Schutzbedarf (AD, DB-Server).",
+    frage:"Bewerte für das <b>Active Directory</b> die Gefährdung <b>Ransomware/Verschlüsselungstrojaner</b> (G 0.39 / G 0.45): Grundwerte, Häufigkeit, Schaden, Gesamtrisiko und Behandlung.",
+    tip:"Ransomware trifft vor allem Verfügbarkeit und Integrität. Bei einem AD ist der Schaden existenzbedrohend (gesamtes Unternehmen steht). Auch wenn die Häufigkeit \"mittel\" ist – hoher Schaden treibt die Risikoklasse nach oben.",
+    sol:'<table><tr><th>Gefährdung</th><th>C/I/A</th><th>Häufigk.</th><th>Schaden</th><th>Risiko</th></tr>'+
+      '<tr><td>Ransomware auf AD</td><td>I/A</td><td>mittel</td><td>existenzbedrohend</td><td>'+tag("sehr hoch",T.mag)+'</td></tr></table>'+
+      '<ul><li><b>Behandlung (Reduktion):</b> Netzsegmentierung, strikt getrennte Admin-Konten (Tier-Modell), MFA, offline/immutable Backups, Monitoring &amp; Notfallplan.</li>'+
+      '<li><b>Transfer (ergänzend):</b> Cyber-Versicherung für Restschaden.</li></ul>'+
+      '<div class="why">Mehrere Maßnahmen wirken zusammen (Defense in Depth). Ein Restrisiko bleibt immer – es wird dokumentiert und der Leitung vorgelegt.</div>'},
+   {t:"Maßnahmen & Realisierung",ziel:"Priorisieren und planen: R1/R2/R3, Verantwortliche, Termine, Nachweis.",
+    frage:"Erstelle einen kurzen <b>Realisierungsplan</b>: priorisiere die Maßnahmen aus Check und Risiko (R1/R2/R3) mit Bezug.",
+    tip:"Was ein akutes, hohes Risiko senkt, ist R1 (z. B. Restore-Test + MFA). Organisatorische Verbesserungen sind oft R2. Reihenfolge: erst Basis, dann Standard, dann erhöht.",
+    sol:'<table><tr><th>Prio</th><th>Maßnahme</th><th>Bezug</th></tr>'+
+      '<tr><td>'+tag("R1",T.mag)+'</td><td>Restore-Test etablieren + immutable/offline Backup</td><td>Ransomware · CON.3</td></tr>'+
+      '<tr><td>'+tag("R1",T.mag)+'</td><td>MFA für alle Admin-Konten ausrollen</td><td>AD-Schutz · Check-Lücke</td></tr>'+
+      '<tr><td>'+tag("R2",T.amber)+'</td><td>Netzsegmentierung &amp; Admin-Tier-Modell</td><td>laterale Bewegung</td></tr>'+
+      '<tr><td>'+tag("R3",T.ok)+'</td><td>Security-Monitoring/SIEM ausbauen</td><td>Früherkennung</td></tr></table>'+
+      '<div class="why">R1 zuerst, weil es das sehr hohe Risiko direkt senkt. Der Plan enthält in der Praxis je Zeile noch Verantwortlichen, Aufwand, Termin und Nachweis – damit die Leitung den Fortschritt verfolgen kann.</div>'}
+  ]
+ }
+};
+
+/* ====== RENDERING ====== */
+let cur="praxis";
+const fallEl=document.getElementById('fall'), phasesEl=document.getElementById('phases');
+
+function render(){
+  const s=SCEN[cur];
+  fallEl.innerHTML=s.fall;
+  phasesEl.innerHTML="";
+  s.phases.forEach((p,i)=>{
+    const d=document.createElement('details'); d.className='phase'; if(i===0)d.open=true;
+    d.innerHTML=
+      '<summary><span class="pnum">'+(i+1)+'</span>'+p.t+'<span class="ar">▸</span></summary>'+
+      '<div class="phase-body">'+
+        '<div class="ziel">🎯 Ziel: '+p.ziel+'</div>'+
+        '<div class="frage">'+p.frage+'</div>'+
+        '<div class="exrow">'+
+          '<button class="exb tip" data-x="tip">💡 Tipp</button>'+
+          '<button class="exb sol" data-x="sol">✓ Lösung zeigen</button>'+
+        '</div>'+
+        '<div class="tipbox"><span class="l">💡 Tipp</span>'+p.tip+'</div>'+
+        '<div class="solbox"><span class="l">✓ Musterlösung</span>'+p.sol+'</div>'+
+      '</div>';
+    phasesEl.appendChild(d);
+  });
+  // Aufdeck-Buttons binden
+  phasesEl.querySelectorAll('.exb').forEach(btn=>{
+    btn.onclick=()=>{
+      const body=btn.closest('.phase-body');
+      const box=body.querySelector(btn.dataset.x==='tip'?'.tipbox':'.solbox');
+      const open=box.classList.toggle('show');
+      if(btn.dataset.x==='sol')btn.textContent=open?'✕ Lösung verbergen':'✓ Lösung zeigen';
+      else btn.textContent=open?'💡 Tipp verbergen':'💡 Tipp';
+    };
+  });
+}
+
+document.querySelectorAll('.scen-btn').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('.scen-btn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); cur=b.dataset.scen; render();
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+render();
+
+/* ====== THEME-UMSCHALTER ====== */
+(function(){
+  const KEY="fisi_gsue_theme", btn=document.getElementById('themeTg'), root=document.documentElement;
+  function apply(t){ if(t==="light"){root.setAttribute('data-theme','light');btn.textContent="🌙 Dunkel";}else{root.removeAttribute('data-theme');btn.textContent="☀ Hell";} }
+  let saved="dark"; try{saved=localStorage.getItem(KEY)||"dark";}catch(e){}
+  apply(saved);
+  btn.onclick=()=>{const now=root.getAttribute('data-theme')==="light"?"dark":"light";apply(now);try{localStorage.setItem(KEY,now);}catch(e){}};
+})();
+</script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});}
+</script>
+</body>
+</html>

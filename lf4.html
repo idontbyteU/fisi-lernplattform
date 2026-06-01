@@ -43,34 +43,6 @@
 .reveal-on .term.shown .term-def::after,
 .reveal-on .term.shown .term-ex::before{display:none}
 
-/* ===== Begriffe einzeln auf-/zuklappbar (Übersichtsmodus) ===== */
-/* Gilt NUR, wenn der Aufdeck-Modus AUS ist – der Verdeck-Modus bleibt unverändert. */
-/* Standard: nur der Begriffsname ist sichtbar, Erklärung + Beispiel sind eingeklappt. */
-#vTerms:not(.reveal-on) .term .term-def,
-#vTerms:not(.reveal-on) .term .term-ex{display:none}
-#vTerms:not(.reveal-on) .term.open .term-def,
-#vTerms:not(.reveal-on) .term.open .term-ex{display:block}
-/* Klappbarer Kopf mit drehendem Pfeil */
-#vTerms:not(.reveal-on) .term .term-name{cursor:pointer;user-select:none;margin-bottom:0;display:flex;align-items:flex-start;gap:.45rem}
-#vTerms:not(.reveal-on) .term.open .term-name{margin-bottom:.2rem}
-#vTerms:not(.reveal-on) .term .term-name::before{content:"\25B8";color:var(--cyan);flex-shrink:0;transition:transform .15s;line-height:1.35}
-#vTerms:not(.reveal-on) .term.open .term-name::before{transform:rotate(90deg)}
-/* eingeklappte Karten etwas kompakter */
-#vTerms:not(.reveal-on) .term:not(.open){padding-top:.55rem;padding-bottom:.55rem}
-
-/* ===== deflist-Fix: Überlappen (mobil) + Abschneiden (breitere Screens) verhindern ===== */
-/* Breitere Screens (Row-Layout): dd ist Flex-Item und muss schrumpfen dürfen -> Text bricht um statt abzuschneiden. */
-.sum dl.deflist > div{min-width:0}
-.sum dl.deflist dd{min-width:0;overflow-wrap:anywhere}
-/* Schmale Screens (Spalten-Layout): theme.css setzt dt auf flex-basis:100% – in einer Spalten-Flexbox
-   füllt das die BOXHÖHE, wodurch dd herausgedrückt wird und die nächste Karte überlappt.
-   dt + dd auf natürliche Höhe (flex:0 0 auto) zwingen und voll breit stapeln. */
-@media(max-width:560px){
-  .sum dl.deflist > div{flex-direction:column;align-items:stretch;gap:.2rem}
-  .sum dl.deflist dt{flex:0 0 auto;width:100%;min-width:0}
-  .sum dl.deflist dd{flex:0 0 auto;width:100%;min-width:0}
-}
-
 /* Ausklappbare Kapitel: details/summary nutzen den vorhandenen theme.css-Stil.
    h-sec-Optik in die summary übertragen. */
 details.chap{margin:0 0 1.1rem}
@@ -132,33 +104,6 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
 .theme-tg{font-family:var(--fmono);font-size:12.5px;border:1px solid var(--line);background:var(--glass);
   color:var(--muted);border-radius:4px;padding:6px 11px;cursor:pointer;transition:.14s;white-space:nowrap}
 .theme-tg:hover{border-color:var(--cyan);color:var(--cyan)}
-
-/* ===================================================================== */
-/*  TOC-FIX: Inhaltsverzeichnis darf den Text NICHT überlappen.          */
-/*  theme.css nutzt float:right; die Kapitel-Karten (volle Breite)       */
-/*  umfließen den Float nicht, dadurch lag die TOC über dem Text.        */
-/*  Lösung: Ab genug Platz (>=1240px) als feste Spalte RECHTS NEBEN der  */
-/*  920px-Textspalte. Darunter: einklappbarer Button (wie mobil).        */
-/* ===================================================================== */
-@media(min-width:1240px){
-  .toc-wrap{position:fixed;float:none;top:96px;width:208px;margin:0;z-index:40;
-    right:max(16px, calc(50% - 460px - 224px));}  /* rechts vom 920er-Text, nie aus dem Viewport */
-  .toc{max-height:calc(100vh - 130px);overflow-y:auto}
-  .toc-toggle{display:none}
-}
-/* Sehr breite Schirme: TOC mittig an die Textspalte andocken statt ganz außen */
-@media(min-width:1480px){
-  .toc-wrap{right:auto;left:calc(50% + 472px)}
-}
-@media(min-width:881px) and (max-width:1239px){
-  .toc-wrap{position:fixed;float:none;top:auto;bottom:18px;right:14px;width:auto;margin:0;z-index:60}
-  .toc{display:none;position:absolute;bottom:54px;right:0;width:240px;max-height:60vh;
-    overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.5)}
-  .toc-wrap.open .toc{display:block}
-  .toc-toggle{display:flex;align-items:center;justify-content:center;width:50px;height:50px;
-    border-radius:50%;background:var(--cyan);color:#04121a;border:none;font-size:20px;cursor:pointer;
-    box-shadow:0 6px 20px rgba(45,226,230,.4)}
-}
 </style>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#070710">
@@ -174,6 +119,7 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
     <div><h1><span class="tag" style="background:var(--magenta)">LF4</span>IT-Sicherheit &amp; Datenschutz</h1>
     <div class="sub">Schutzziele · ISMS · DSGVO · Bedrohungen · Firewall · Krypto · Grundschutz</div></div>
     <div class="sp"></div>
+    <a class="pdf-dl" href="lf4_grundschutz_uebung.html">🛡️ Grundschutz-Übung</a>
     <a class="pdf-dl" href="lf4_zusammenfassung.pdf" download>📄 PDF-Spickzettel</a>
     <div class="tabs">
       <button id="tSum" class="on">Zusammenfassung</button>
@@ -190,6 +136,10 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
 
 <!-- ZUSAMMENFASSUNG -->
 <div id="vSum" class="view on sum">
+
+  <div class="quicklinks">
+    <a class="ql-link" href="bsi_anforderungsindex.html"><span class="ql-ico">📖</span><span class="ql-tx"><b>BSI-Anforderungsindex 2023</b><small>Nachschlagewerk · 111 Bausteine · 1.846 Anforderungen · Suche</small></span><span class="ql-arr">→</span></a>
+  </div>
 
   <div class="h-sec"><span class="ico">🛡️</span> IT-Grundschutz: Modellierung</div>
 
@@ -529,11 +479,6 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
     <div><dt>Differenziell</dt><dd>Alle Änderungen seit letzter Vollsicherung. Mittelweg.</dd></div>
   </dl>
   <div class="callout merk"><span class="ci">💾</span><div><b>3-2-1-Regel:</b> 3 Kopien · 2 verschiedene Medien · 1 Kopie extern/offsite. Schutz vor Ransomware, Brand, Diebstahl.</div></div>
-
-  <div class="quicklinks" style="margin-top:1.8rem;flex-direction:column">
-    <div style="font-family:var(--fmono);font-size:11px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;margin-bottom:2px">Nachschlagewerk</div>
-    <a class="ql-link" href="bsi_anforderungsindex.html"><span class="ql-ico">📖</span><span class="ql-tx"><b>BSI-Anforderungsindex 2023</b><small>Nachschlagewerk · 111 Bausteine · 1.846 Anforderungen · Suche</small></span><span class="ql-arr">→</span></a>
-  </div>
 
 </div>
 
@@ -1264,8 +1209,6 @@ function buildTermChips(){
   });
 }
 function filterTerms(){
-  const view=document.getElementById('vTerms');
-  const reveal=view.classList.contains('reveal-on');
   const q=document.getElementById('termSearch').value.toLowerCase();
   document.querySelectorAll('.term-group').forEach(g=>{
     const catOk=termCat==="alle"||g.dataset.cat===termCat;
@@ -1275,11 +1218,6 @@ function filterTerms(){
       const ok=catOk&&(q===""||txt.includes(q));
       t.style.display=ok?"":"none";
       if(ok)anyVisible=true;
-      // Bei aktiver Suche Treffer automatisch aufklappen, bei leerer Suche einklappen (nur Übersichtsmodus).
-      if(!reveal){
-        if(q!=="" && ok) t.classList.add('open');
-        else if(q==="") t.classList.remove('open');
-      }
     });
     g.style.display=anyVisible?"":"none";
   });
@@ -1355,21 +1293,13 @@ buildTermChips();
 
   /* ---- 3) Aufdecken: Begriffe-Tab ---- */
   function bindTerms(){
-    const view=document.getElementById('vTerms');
     document.querySelectorAll('#vTerms .term').forEach(t=>{
       const name=t.querySelector('.term-name');
       if(!name||name.dataset.rv)return;
       name.dataset.rv="1";
-      // Klick auf den Namen: im Aufdeck-Modus aufdecken, sonst Karte auf-/zuklappen.
-      name.addEventListener('click',e=>{
-        e.stopPropagation();
-        if(view.classList.contains('reveal-on')) t.classList.toggle('shown');
-        else t.classList.toggle('open');
-      });
-      // Klick auf den restlichen Karteninhalt: nur im Aufdeck-Modus aufdecken.
-      t.addEventListener('click',()=>{
-        if(view.classList.contains('reveal-on') && !t.classList.contains('shown')) t.classList.add('shown');
-      });
+      const toggle=()=>{ if(document.getElementById('vTerms').classList.contains('reveal-on')) t.classList.toggle('shown'); };
+      name.addEventListener('click',e=>{e.stopPropagation();toggle();});
+      t.addEventListener('click',e=>{ if(!t.classList.contains('shown'))toggle(); });
     });
   }
 
@@ -1378,36 +1308,19 @@ buildTermChips();
     const view=document.getElementById(viewId);
     if(!view||view.querySelector('.rvtools'))return;
     const bar=document.createElement('div'); bar.className='rvtools';
-    // Übersichts-Knopf nur im Begriffe-Tab: klappt alle Karten auf/zu
-    let bFold=null;
-    if(isTerms){
-      bFold=document.createElement('button'); bFold.className='tbtn'; bFold.textContent='⬍ Alle ausklappen';
-      bFold.onclick=()=>{
-        if(view.classList.contains('reveal-on'))return;
-        const cards=[...view.querySelectorAll('.term')].filter(t=>t.style.display!=='none');
-        const expand=cards.some(t=>!t.classList.contains('open')); // erst aufklappen, dann einklappen
-        cards.forEach(t=>t.classList.toggle('open',expand));
-        bFold.textContent=expand?'⬍ Alle einklappen':'⬍ Alle ausklappen';
-      };
-    }
     const bReveal=document.createElement('button'); bReveal.className='tbtn';
     bReveal.textContent='🙈 Erklärungen verdecken';
     const bAll=document.createElement('button'); bAll.className='tbtn'; bAll.textContent='⬇ Alle aufdecken';
     const hint=document.createElement('span'); hint.className='hint';
-    hint.textContent=isTerms?'Tippe einen Begriff an, um ihn auf- oder zuzuklappen.'
+    hint.textContent=isTerms?'Tippe einen Begriff an, um die Erklärung aufzudecken.'
                              :'Tippe einen Begriff (▸) an, um die Erklärung aufzudecken.';
     bReveal.onclick=()=>{
       const on=view.classList.toggle('reveal-on');
       bReveal.classList.toggle('on',on);
       bReveal.textContent=on?'👁 Erklärungen zeigen':'🙈 Erklärungen verdecken';
       bAll.style.display=on?'':'none';
-      if(bFold) bFold.style.display=on?'none':''; // Klapp-Knopf nur im Übersichtsmodus
-      hint.textContent=on?'Tippe einen Begriff an, um die Erklärung aufzudecken.'
-                         :'Tippe einen Begriff an, um ihn auf- oder zuzuklappen.';
-      if(!on){ // beim Ausschalten alles wieder normal: aufgedeckte zurücksetzen und einklappen
+      if(!on){ // beim Ausschalten alles wieder normal
         view.querySelectorAll('.shown').forEach(x=>x.classList.remove('shown'));
-        view.querySelectorAll('.term.open').forEach(x=>x.classList.remove('open'));
-        if(bFold) bFold.textContent='⬍ Alle ausklappen';
       }
     };
     bAll.style.display='none';
@@ -1415,7 +1328,6 @@ buildTermChips();
       if(isTerms) view.querySelectorAll('.term').forEach(t=>t.classList.add('shown'));
       else view.querySelectorAll('.deflist dd').forEach(d=>d.classList.add('shown'));
     };
-    if(bFold) bar.appendChild(bFold);
     bar.appendChild(bReveal); bar.appendChild(bAll); bar.appendChild(hint);
     // Einfügen: Zusammenfassung ganz oben; Begriffe nach der Suchleiste/Chips
     if(isTerms){
