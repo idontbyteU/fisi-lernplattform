@@ -59,18 +59,6 @@ details.chap>summary>*{min-width:0}
   details.chap .chap-body{padding:.3rem 0 0}
 }
 
-/* Schnellzugriff-Box (BSI-Index oben) */
-.quicklinks{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 1.2rem}
-.ql-link{display:flex;align-items:center;gap:14px;padding:10px 14px;border:1px solid var(--line);
-  background:var(--glass);border-radius:6px;text-decoration:none;color:var(--read);
-  transition:.15s;flex:1;min-width:280px}
-.ql-link:hover{border-color:var(--cyan);background:var(--glass2);transform:translateX(2px)}
-.ql-link .ql-ico{font-size:22px;flex-shrink:0}
-.ql-link .ql-tx{display:flex;flex-direction:column;flex:1;line-height:1.35}
-.ql-link .ql-tx b{color:var(--ink);font-size:14px}
-.ql-link .ql-tx small{color:var(--muted);font-family:var(--fmono);font-size:11px;margin-top:2px}
-.ql-link .ql-arr{color:var(--cyan);font-family:var(--fmono);font-size:18px;flex-shrink:0}
-
 /* ============================================================ */
 /*  LICHT-THEME (PDF-Stil) – aktiv bei <html data-theme="light"> */
 /*  Überschreibt nur Variablen + wenige feste Dunkelwerte;       */
@@ -136,10 +124,6 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
 
 <!-- ZUSAMMENFASSUNG -->
 <div id="vSum" class="view on sum">
-
-  <div class="quicklinks">
-    <a class="ql-link" href="bsi_anforderungsindex.html"><span class="ql-ico">📖</span><span class="ql-tx"><b>BSI-Anforderungsindex 2023</b><small>Nachschlagewerk · 111 Bausteine · 1.846 Anforderungen · Suche</small></span><span class="ql-arr">→</span></a>
-  </div>
 
   <div class="h-sec"><span class="ico">🛡️</span> IT-Grundschutz: Modellierung</div>
 

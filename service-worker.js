@@ -30,7 +30,6 @@ const ASSETS = [
   "./python_byte.html",
   "./lf4_it_sicherheit.html",
   "./lf_isms_grundschutz.html",
-  "./bsi_anforderungsindex.html",
   "./lzk.html"
 ];
 
