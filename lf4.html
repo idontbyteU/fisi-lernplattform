@@ -88,10 +88,20 @@ html[data-theme="light"] .reveal-on .term .term-ex::before{
 html[data-theme="light"] details.chap[open]>summary{background:#e6f4f6;color:var(--cyan)}
 html[data-theme="light"] details.chap>summary{background:#f4f7fa}
 
-/* Theme-Umschalter-Button oben */
-.theme-tg{font-family:var(--fmono);font-size:12.5px;border:1px solid var(--line);background:var(--glass);
-  color:var(--muted);border-radius:4px;padding:6px 11px;cursor:pointer;transition:.14s;white-space:nowrap}
-.theme-tg:hover{border-color:var(--cyan);color:var(--cyan)}
+/* Mobil: PDF-Links nach den Tabs einordnen, nicht vor dem Zurück-Button */
+@media(max-width:640px){
+  .hdr-in > .pdf-dl{order:5;flex:1 1 45%;justify-content:center;font-size:11px;padding:4px 7px}
+}
+
+/* Theme-Umschalter: zeigt visuell das Ziel-Theme als Vorschau */
+.theme-tg{font-family:var(--fmono);font-size:12.5px;border-radius:4px;padding:6px 11px;
+  cursor:pointer;transition:.14s;white-space:nowrap;font-weight:600;
+  /* Dunkel-Modus aktiv → Button wirkt hell (Vorschau "Hell") */
+  background:rgba(243,251,255,.90);color:#0d1a26;border:1px solid rgba(200,220,240,.45)}
+.theme-tg:hover{border-color:var(--cyan);box-shadow:0 0 10px rgba(45,226,230,.18)}
+/* Hell-Modus aktiv → Button wirkt dunkel (Vorschau "Dunkel") */
+html[data-theme="light"] .theme-tg{background:#0c0c1a;color:#f3fbff;border-color:rgba(45,226,230,.4)}
+html[data-theme="light"] .theme-tg:hover{border-color:var(--cyan)}
 </style>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#070710">
