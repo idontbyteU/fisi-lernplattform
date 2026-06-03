@@ -337,7 +337,7 @@ footer span{color:var(--cyan)}
 
 /* ---------- RESPONSIVE ---------- */
 @media(max-width:880px){.shell{grid-template-columns:1fr}.rail{position:relative;top:0;max-height:none}}
-@media(max-width:560px){.grid,.plan-grid{grid-template-columns:1fr}.sum dl.deflist dt{min-width:auto;flex-basis:100%}.sum dl.deflist > div{flex-direction:column;gap:.2rem}}
+@media(max-width:560px){.grid,.plan-grid{grid-template-columns:1fr}.sum dl.deflist dt{min-width:auto;flex-basis:auto}.sum dl.deflist > div{flex-direction:column;gap:.2rem}}
 
 /* ---------- KARTEIKARTEN / STUDY (LF1–LF4) ---------- */
 .bar{display:flex;align-items:center;gap:.9rem;background:var(--glass);border:1px solid var(--line);border-radius:8px;padding:.65rem .9rem;margin-bottom:1rem;flex-wrap:wrap;backdrop-filter:blur(6px)}
@@ -474,7 +474,7 @@ button,.chip,.tbtn,.btn,.mode button,.tabs button{touch-action:manipulation}
   .gloss .pop::after{display:none}
 
   /* Zusammenfassung: Definitionslisten gestapelt, mehr Luft */
-  .sum dl.deflist dt{min-width:auto;flex-basis:100%}
+  .sum dl.deflist dt{min-width:auto;flex-basis:auto}
   .sum dl.deflist > div{flex-direction:column;gap:.25rem}
   .sum .h-sec{font-size:19px}
 
