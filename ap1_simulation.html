@@ -396,7 +396,152 @@ Brand, Diebstahl oder Wasserschaden am Standort.` },
     solution:`<b>Vorteil:</b> Zeitersparnis/geringere Personalkosten – z. B. automatische Vorsortierung oder
 Zusammenfassung von Dokumenten beschleunigt die Bearbeitung.
 <b>Risiko:</b> Vertrauliche Mandantendaten könnten an externe KI-Dienste abfließen (DSGVO-Verstoß).
-Außerdem: mögliche Fehler der KI ohne fachliche Kontrolle, Abhängigkeit vom Anbieter.` }
+Außerdem: mögliche Fehler der KI ohne fachliche Kontrolle, Abhängigkeit vom Anbieter.` },
+
+  /* ---- Angebotsvergleich ---- */
+  { id:"angebot", topic:"Wirtschaftlichkeit", label:"1c", pts:4, short:true,
+    text:`Für Drucker-Verbrauchsmaterial liegen zwei Angebote vor:
+      <table><tr><th></th><th>Anbieter X</th><th>Anbieter Y</th></tr>
+      <tr><td>Tonerkartusche</td><td>45,00 €</td><td>38,00 €</td></tr>
+      <tr><td>Lieferkosten</td><td>0,00 €</td><td>6,50 €</td></tr>
+      <tr><td>Skonto</td><td>2 % bei Zahlung binnen 8 Tagen</td><td>keins</td></tr></table>
+      Die Kanzlei kauft <strong>12 Kartuschen</strong> auf einmal und nutzt stets Skonto.
+      Berechnen Sie den <strong>günstigeren Gesamtpreis</strong> mit Rechenweg.`,
+    answerType:"mono",
+    solution:`<b>Anbieter X:</b> 12 × 45 € = 540 € − 2 % Skonto (= 10,80 €) = <b>529,20 €</b> (+ 0 € Versand)
+<b>Anbieter Y:</b> 12 × 38 € = 456 € + 6,50 € Lieferung = <b>462,50 €</b> (kein Skonto)
+<b>Anbieter Y ist günstiger</b> (462,50 € &lt; 529,20 €).` },
+
+  /* ---- Amortisationsrechnung ---- */
+  { id:"amort", topic:"Wirtschaftlichkeit", label:"1d", pts:3, short:true,
+    text:`Die Kanzlei überlegt, für <code>3.600 €</code> einen leistungsstärkeren Server anzuschaffen.
+      Durch den schnelleren Server werden jährlich <code>1.200 €</code> an Zeitkosten eingespart.
+      Berechnen Sie die <strong>Amortisationsdauer in Jahren</strong> und geben Sie den Rechenweg an.`,
+    answerType:"mono",
+    solution:`<b>Amortisationsdauer</b> = Investitionskosten ÷ jährliche Einsparung
+= 3.600 € ÷ 1.200 €/Jahr = <b>3 Jahre</b>
+Nach 3 Jahren hat sich die Investition durch die eingesparten Kosten vollständig gerechnet.` },
+
+  /* ---- IPv6 ---- */
+  { id:"ipv6", topic:"Netzwerke / IPv6", label:"2c", pts:4, short:false,
+    text:`Eine Workstation erhält die IPv6-Adresse <code>2001:0db8:0000:0042:0000:0000:0000:0001/64</code>.
+      <strong>(1)</strong> Schreiben Sie die Adresse in gekürzter Notation.
+      <strong>(2)</strong> Wie viele Hosts sind bei /64 theoretisch möglich?
+      <strong>(3)</strong> Nennen Sie einen wesentlichen Unterschied zwischen IPv4 und IPv6
+      (außer der Adresslänge).`,
+    answerType:"mono",
+    solution:`<b>(1) Gekürzt:</b> 2001:db8:0:42::1/64
+  (führende Nullen je Block weglassen; längste zusammenhängende Nullfolge → ::)
+<b>(2)</b> /64 → 64 Bit Hostanteil → 2^64 ≈ 1,8 × 10^19 Hosts je Subnetz.
+<b>(3) Unterschied (Auswahl):</b>
+• IPv6 nutzt NDP statt ARP für Adressauflösung im lokalen Netz.
+• SLAAC ermöglicht automatische Adresskonfiguration ohne DHCP.
+• IPv6 benötigt kein NAT (genug globale Adressen).` },
+
+  /* ---- OSI-Modell ---- */
+  { id:"osi", topic:"Netzwerke / OSI", label:"2d", pts:4, short:false,
+    text:`Ordnen Sie die folgenden Komponenten und Protokolle der richtigen OSI-Schicht zu:
+      <code>IP</code>, <code>TCP</code>, <code>HTTP</code>, <code>Switch (Layer 2)</code>.
+      Nennen Sie außerdem die deutschen Bezeichnungen der Schichten 2, 3 und 4.`,
+    answerType:"text",
+    solution:`<b>Zuordnung:</b>
+• <b>IP</b> → Schicht 3 – Vermittlungsschicht (Network Layer)
+• <b>TCP</b> → Schicht 4 – Transportschicht (Transport Layer)
+• <b>HTTP</b> → Schicht 7 – Anwendungsschicht (Application Layer)
+• <b>Switch (Layer 2)</b> → Schicht 2 – Sicherungsschicht (Data Link Layer)
+
+<b>Deutsche Bezeichnungen:</b>
+Schicht 2 = Sicherungsschicht · Schicht 3 = Vermittlungsschicht · Schicht 4 = Transportschicht` },
+
+  /* ---- Cloud-Dienste IaaS / PaaS / SaaS ---- */
+  { id:"cloud", topic:"Cloud / Virtualisierung", label:"5a", pts:4, short:true,
+    text:`Die Kanzlei erwägt, Teile ihrer IT in die Cloud zu verlagern. Erläutern Sie kurz die drei
+      Service-Modelle <strong>IaaS, PaaS und SaaS</strong> und ordnen Sie jedem ein passendes
+      Beispiel zu.`,
+    answerType:"text",
+    solution:`<b>IaaS (Infrastructure as a Service):</b> Anbieter stellt Rechenleistung, Speicher und Netz –
+der Kunde verwaltet OS und Anwendungen selbst. Beispiel: virtuelle Server (Azure VM, AWS EC2).
+<b>PaaS (Platform as a Service):</b> Anbieter liefert Laufzeitumgebung und Plattform – Kunde deployt
+eigene Anwendungen ohne Infrastrukturpflege. Beispiel: Azure App Service, Heroku.
+<b>SaaS (Software as a Service):</b> Komplette Anwendung als Dienst, direkt nutzbar ohne Installation.
+Beispiel: Microsoft 365, Google Workspace, DATEV (Steuersoftware als SaaS).` },
+
+  /* ---- DSGVO Datenpanne ---- */
+  { id:"dsgvo", topic:"Datenschutz / DSGVO", label:"5b", pts:4, short:true,
+    text:`Auf dem Empfangs-PC der Kanzlei wird ein Trojaner entdeckt. Es ist nicht ausgeschlossen,
+      dass Mandantendaten abgeflossen sind. Nennen Sie <strong>zwei konkrete Pflichten</strong>, die
+      sich für die Kanzlei nach der DSGVO unmittelbar aus diesem Vorfall ergeben, und geben Sie
+      jeweils die gesetzliche Frist an.`,
+    answerType:"text",
+    solution:`<b>1. Meldepflicht (Art. 33 DSGVO):</b> Die Datenpanne ist der zuständigen Datenschutz-Aufsichts­behörde
+zu melden – in der Regel <b>binnen 72 Stunden</b> nach Bekanntwerden (sofern ein Risiko für Betroffene besteht).
+<b>2. Benachrichtigung Betroffener (Art. 34 DSGVO):</b> Ist ein <em>hohes</em> Risiko für Mandanten
+wahrscheinlich, müssen diese <b>unverzüglich</b> (ohne schuldhaftes Zögern) informiert werden.
+Zusätzlich: interner Vorfallbericht dokumentieren (Art. 33 Abs. 5).` },
+
+  /* ---- Lizenzmodelle ---- */
+  { id:"lizenz", topic:"Software / Lizenzen", label:"5c", pts:3, short:false,
+    text:`Ordnen Sie die folgenden Softwarearten der richtigen Beschreibung zu:
+      <code>Open Source</code>, <code>Freeware</code>, <code>Proprietär</code>, <code>Shareware</code>.
+      <br>(1) Kostenlos nutzbar, Quellcode jedoch nicht einsehbar.
+      (2) Zeitlich oder funktional eingeschränkte Testversion; voller Umfang kostenpflichtig.
+      (3) Quellcode öffentlich, frei nutzbar und modifizierbar.
+      (4) Lizenz muss erworben werden; Quellcode in der Regel nicht zugänglich.`,
+    answerType:"text",
+    solution:`(1) Kostenlos, Quellcode geschlossen → <b>Freeware</b>
+(2) Eingeschränkte Testversion → <b>Shareware</b>
+(3) Quellcode offen, frei veränderbar → <b>Open Source</b>
+(4) Kauf nötig, Quellcode geschlossen → <b>Proprietär</b>` },
+
+  /* ---- USV ---- */
+  { id:"usv", topic:"Hardware / Verfügbarkeit", label:"4e", pts:4, short:false,
+    text:`Um den Server der Kanzlei vor Stromausfällen zu schützen, soll eine
+      <strong>USV (unterbrechungsfreie Stromversorgung)</strong> beschafft werden.
+      <strong>(1)</strong> Nennen Sie drei Ereignisse, vor denen eine USV schützt.
+      <strong>(2)</strong> Erläutern Sie den Unterschied zwischen einer <em>Offline-USV</em>
+      und einer <em>Online-USV</em>.`,
+    answerType:"text",
+    solution:`<b>(1) Schutz vor (Auswahl):</b>
+• Stromausfall – Überbrückung bis zum geregelten Shutdown oder Aggregat-Start
+• Spannungsschwankungen / Unter- und Überspannung
+• Spannungsspitzen / transienten Störungen (z. B. durch Blitz)
+
+<b>(2) Unterschied:</b>
+<b>Offline-USV (Standby):</b> Gerät läuft direkt am Netz; Batterie schaltet erst bei Ausfall zu –
+kurze Umschaltzeit (Millisekunden), günstig, kein Schutz vor Schwankungen im Normalbetrieb.
+<b>Online-USV (Doppelwandler):</b> Gerät läuft dauerhaft über den Wechselrichter der USV –
+konstant saubere Spannung, keine Umschaltzeit, teurer. Ideal für Server und kritische Systeme.` },
+
+  /* ---- Strukturierte Verkabelung ---- */
+  { id:"verkabelung", topic:"Hardware / Netzwerk", label:"4f", pts:3, short:false,
+    text:`Die Kanzlei bezieht ein neues Bürogebäude. Der Netzwerkverantwortliche plant die
+      <strong>strukturierte Verkabelung</strong> nach EN 50173.
+      Nennen Sie die <strong>drei Verkabelungsbereiche</strong> und beschreiben Sie kurz
+      ihre jeweilige Funktion.`,
+    answerType:"text",
+    solution:`<b>Primärbereich (Campusverkabelung):</b> Verbindet Gebäude untereinander – vom Gebäudeverteiler
+zum Campus-/Standortverteiler. Typisches Medium: Glasfaser (LWL).
+<b>Sekundärbereich (Gebäudeverkabelung):</b> Verbindet Etagenverteiler mit dem Gebäudeverteiler –
+ein Strang je Etage/Zone. Typisches Medium: Glasfaser oder hochwertige Kupferkabel.
+<b>Tertiärbereich (Etagenverkabelung / Horizontalverkabelung):</b> Vom Etagenverteiler zu jeder
+Anschlussdose am Arbeitsplatz. Typisches Medium: Cat 6/6A/7 (Kupfer, Twisted Pair).` },
+
+  /* ---- Berechtigungskonzept ---- */
+  { id:"rechte", topic:"IT-Sicherheit", label:"3d", pts:4, short:false,
+    text:`In der Kanzlei soll ein <strong>Berechtigungskonzept</strong> eingeführt werden.
+      Erklären Sie das <strong>Need-to-know-Prinzip</strong> und nennen Sie
+      <strong>zwei konkrete Maßnahmen</strong>, die dieses Prinzip technisch umsetzen.`,
+    answerType:"text",
+    solution:`<b>Need-to-know-Prinzip:</b> Jeder Mitarbeitende erhält nur Zugriff auf die Informationen und
+Systeme, die er für seine konkrete Tätigkeit benötigt – keine darüber hinausgehenden Rechte.
+
+<b>Technische Maßnahmen (Auswahl, zwei genügen):</b>
+• <b>Rollenbasierte Zugriffssteuerung (RBAC):</b> Benutzergruppen je Aufgabe (z. B. „Buchhaltung",
+  „Empfang") mit exakt definierten Ordner- und Systemrechten.
+• <b>NTFS-Berechtigungen / ACLs:</b> Lese- und Schreibrechte je Ordner auf Gruppenebene setzen –
+  kein globaler Vollzugriff.
+• <b>Trennung von Arbeits- und Administrationskonto:</b> kein dauerhaftes Arbeiten mit Admin-Rechten
+  (= least privilege).` }
 ];
 
 /* ===================== ABLAUF-STEUERUNG ===================== */
@@ -520,11 +665,17 @@ function showResult(){
   } else {
     const map={
       "Nutzwertanalyse":"Wiederhole Nutzwertanalysen im LF2-Bereich – Rangpunkte × Gewichtung, dann Summe vergleichen.",
-      "Wirtschaftlichkeit":"Übe Kostenrechnungen mit Rechenweg und Runden – auch im Python Lab (AP1-Aufgaben).",
+      "Wirtschaftlichkeit":"Übe Kostenrechnungen, Angebotsvergleich und Amortisation mit vollständigem Rechenweg.",
       "Netzwerke / Subnetting":"Schau dir Subnetting in LF3 an: Netz-, Broadcast- und Hostadressen bei /26, /27 usw.",
-      "IT-Sicherheit":"Geh die LF4-Begriffe durch: Schutzziele, Verschlüsselung, least privilege, Backup.",
+      "Netzwerke / IPv6":"IPv6-Grundlagen vertiefen: Adressformat, Kürzungsregeln (::), /64-Präfix, Unterschiede zu IPv4.",
+      "Netzwerke / OSI":"Lerne die 7 OSI-Schichten mit deutschen Bezeichnungen und ordne Protokolle sicher zu.",
+      "IT-Sicherheit":"Geh die LF4-Begriffe durch: Schutzziele, Verschlüsselung, least privilege, Backup, Berechtigungskonzept.",
       "Hardware":"Wiederhole Anschlüsse/Symbole und RAID-Level in LF3 (Hardware & Verfügbarkeit).",
-      "Hardware / Verfügbarkeit":"RAID-Level und USV in LF3 wiederholen – wogegen schützt was?"
+      "Hardware / Verfügbarkeit":"RAID-Level und USV-Typen (Offline vs. Online) in LF3 wiederholen – wogegen schützt was?",
+      "Hardware / Netzwerk":"Strukturierte Verkabelung: drei Bereiche (Primär, Sekundär, Tertiär) nach EN 50173.",
+      "Cloud / Virtualisierung":"IaaS/PaaS/SaaS-Unterschiede lernen – typische Beispiele und Einsatzszenarien kennen.",
+      "Datenschutz / DSGVO":"DSGVO-Kernpflichten: Meldepflicht 72 h (Art. 33), Betroffeneninfo (Art. 34), TOMs (Art. 32).",
+      "Software / Lizenzen":"Lizenzmodelle im Überblick: Proprietär, Open Source, Freeware, Shareware – Merkmale sicher kennen."
     };
     weak.forEach(tp=>{
       const d=document.createElement('div'); d.className='reco';
