@@ -331,6 +331,26 @@
     .viz-controls{gap:8px}
     .bars{height:160px}
   }
+
+  /* ===== ANNOTIERTER CODE – Zeile für Zeile ===== */
+  .anno-code{background:#0a0d14;border:1px solid var(--lab-line);border-radius:10px;padding:10px 0;margin:6px 0;font-family:var(--fmono);font-size:14px}
+  .anno-line{border-bottom:1px solid rgba(140,180,220,.08)}
+  .anno-line:last-child{border-bottom:none}
+  .anno-ln{display:block;padding:7px 16px;line-height:1.7;color:var(--lab-read);white-space:pre-wrap}
+  .anno-indent .anno-ln{padding-left:46px}
+  .anno-exp summary{display:block;padding:3px 16px 6px;font-family:var(--fui);font-size:12px;color:var(--lab-accent);cursor:pointer;list-style:none;letter-spacing:.03em}
+  .anno-exp summary::-webkit-details-marker{display:none}
+  .anno-exp summary::before{content:"▸ "}
+  .anno-exp[open] summary::before{content:"▾ "}
+  .anno-body{padding:8px 16px 12px 28px;font-family:var(--fui);font-size:13.5px;line-height:1.75;color:var(--lab-muted);border-top:1px solid rgba(140,180,220,.08);background:rgba(70,212,230,.04)}
+  .anno-body code{font-family:var(--fmono);font-size:13px;background:rgba(140,180,220,.1);border-radius:4px;padding:1px 5px;color:var(--lab-accent2)}
+  .anno-body strong{color:var(--lab-ink)}
+  /* ===== VERLAUFS-TABELLE ===== */
+  .trace-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--lab-line);margin-top:12px}
+  .trace-tbl{width:100%;border-collapse:collapse;font-family:var(--fmono);font-size:13.5px}
+  .trace-tbl th{background:var(--lab-panel2);color:var(--lab-accent2);font-weight:400;font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:8px 14px;text-align:left;border-bottom:1px solid var(--lab-line2)}
+  .trace-tbl td{padding:7px 14px;color:var(--lab-read);border-bottom:1px solid rgba(140,180,220,.06)}
+  .trace-tbl tbody tr:last-child td{color:var(--lab-accent);font-weight:700;background:rgba(70,212,230,.07);border-bottom:none}
 </style>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d1018">
@@ -448,12 +468,39 @@ print("Summe 1 bis 10:", summe)
     </div>
     <div class="codeblock" id="r-code"></div>
     <div class="viz-stage"><div class="numline" id="r-line"></div></div>
-    <div class="viz-status" id="r-status">Drücke „Abspielen“ oder geh „Schritt“ für Schritt.</div>
-    <button class="btn btn-ghost btn-sm to-lab" data-lab="for-Schleife">▶ Im Code-Labor öffnen</button>
+    <div class=”viz-status” id=”r-status”>Drücke „Abspielen” oder geh „Schritt” für Schritt.</div>
+    <div class=”trace-wrap” id=”r-trace-wrap” style=”display:none”>
+      <table class=”trace-tbl”>
+        <thead><tr><th>Durchlauf</th><th>i</th><th>print(i)</th></tr></thead>
+        <tbody id=”r-tbody”></tbody>
+      </table>
+    </div>
+    <button class=”btn btn-ghost btn-sm to-lab” data-lab=”for-Schleife”>▶ Im Code-Labor öffnen</button>
   </div>
 
-  <div class="viz">
-    <div class="viz-title">🔂 while-Schleife: Summe bilden</div>
+  <div class=”lab-card”>
+    <div class=”viz-title” style=”font-size:15px;margin-bottom:10px”>📖 Code – Zeile für Zeile</div>
+    <div class=”anno-code”>
+      <div class=”anno-line”>
+        <span class=”anno-ln”><span class=”kw”>for</span> i <span class=”kw”>in</span> <span class=”fn”>range</span>(<span class=”num”>5</span>):</span>
+        <details class=”anno-exp”>
+          <summary>Was macht das?</summary>
+          <div class=”anno-body”><code>range(5)</code> erzeugt die Zahlen 0, 1, 2, 3, 4 – fängt immer bei 0 an und hört <strong>vor</strong> der 5 auf. Die Variable <code>i</code> nimmt nacheinander jeden dieser Werte an: in Durchlauf 1 ist i&nbsp;=&nbsp;0, in Durchlauf 2 ist i&nbsp;=&nbsp;1 usw.</div>
+        </details>
+      </div>
+      <div class=”anno-line anno-indent”>
+        <span class=”anno-ln”><span class=”fn”>print</span>(i)</span>
+        <details class=”anno-exp”>
+          <summary>Was macht das?</summary>
+          <div class=”anno-body”>Gibt den aktuellen Wert von <code>i</code> aus. Diese Zeile läuft <strong>bei jedem Durchlauf einmal</strong> – weil sie eingerückt unter dem <code>for</code> steht. Einrückung (4 Leerzeichen) = „gehört zur Schleife”.</div>
+        </details>
+      </div>
+    </div>
+    <div class=”note” style=”margin-top:10px”><strong>range(5)</strong> → 0, 1, 2, 3, 4 &nbsp;·&nbsp; <strong>range(1, 5)</strong> → 1, 2, 3, 4 &nbsp;·&nbsp; Regel: range hört immer <strong>VOR</strong> der letzten Zahl auf. Ohne Startzahl beginnt es bei 0.</div>
+  </div>
+
+  <div class=”viz”>
+    <div class=”viz-title”>🔂 while-Schleife: Summe bilden</div>
     <div class="viz-sub">Ein Akkumulator (<code>summe</code>) sammelt Werte, solange die Bedingung
       <code>i &lt;= n</code> wahr ist. Du siehst, wie sich <code>summe</code> und <code>i</code> verändern.</div>
     <div class="wozu"><b>Wozu?</b> <code>while</code> wiederholt, solange eine Bedingung wahr ist – ideal, wenn
@@ -469,7 +516,54 @@ print("Summe 1 bis 10:", summe)
     <div class="codeblock" id="w-code"></div>
     <div class="vars" id="w-vars"></div>
     <div class="viz-status" id="w-status">summe startet bei 0, i bei 1.</div>
+    <div class="trace-wrap" id="w-trace-wrap" style="display:none">
+      <table class="trace-tbl">
+        <thead><tr><th>Durchlauf</th><th>i</th><th>summe</th></tr></thead>
+        <tbody id="w-tbody"></tbody>
+      </table>
+    </div>
     <button class="btn btn-ghost btn-sm to-lab" data-lab="while-Summe">▶ Im Code-Labor öffnen</button>
+  </div>
+
+  <div class="lab-card">
+    <div class="viz-title" style="font-size:15px;margin-bottom:10px">📖 Code – Zeile für Zeile</div>
+    <div class="anno-code">
+      <div class="anno-line">
+        <span class="anno-ln">summe = <span class="num">0</span></span>
+        <details class="anno-exp">
+          <summary>Was macht das?</summary>
+          <div class="anno-body">Legt die Variable <code>summe</code> mit dem Startwert 0 an. Wird <strong>einmal</strong> vor der Schleife ausgeführt. <code>summe</code> dient als Sammelbehälter – jeder Durchlauf addiert etwas dazu.</div>
+        </details>
+      </div>
+      <div class="anno-line">
+        <span class="anno-ln">i = <span class="num">1</span></span>
+        <details class="anno-exp">
+          <summary>Was macht das?</summary>
+          <div class="anno-body">Legt den Zähler <code>i</code> mit dem Startwert 1 an. <code>i</code> wird in der Bedingung geprüft und am Ende jedes Durchlaufs um 1 erhöht.</div>
+        </details>
+      </div>
+      <div class="anno-line">
+        <span class="anno-ln"><span class="kw">while</span> i &lt;= n:</span>
+        <details class="anno-exp">
+          <summary>Was macht das?</summary>
+          <div class="anno-body">Prüft <strong>vor jedem Durchlauf</strong>: Ist <code>i</code> noch kleiner oder gleich <code>n</code>? Ja → Schleifenkörper läuft. Nein → Schleife endet sofort. Die Prüfung passiert nach jedem Durchlauf erneut.</div>
+        </details>
+      </div>
+      <div class="anno-line anno-indent">
+        <span class="anno-ln">summe = summe + i</span>
+        <details class="anno-exp">
+          <summary>Was macht das?</summary>
+          <div class="anno-body">Rechte Seite zuerst: <code>summe + i</code> wird berechnet. Dann wird das Ergebnis in <code>summe</code> gespeichert – der alte Wert ist weg. In Durchlauf 1: summe = 0 + 1 = 1. In Durchlauf 2: summe = 1 + 2 = 3. Usw.</div>
+        </details>
+      </div>
+      <div class="anno-line anno-indent">
+        <span class="anno-ln">i = i + <span class="num">1</span></span>
+        <details class="anno-exp">
+          <summary>Was macht das?</summary>
+          <div class="anno-body">Erhöht <code>i</code> um 1. <strong>Pflicht in jeder while-Schleife</strong> – ohne diese Zeile bleibt <code>i</code> immer 1, die Bedingung ist immer wahr, die Schleife hört nie auf (Endlosschleife!).</div>
+        </details>
+      </div>
+    </div>
   </div>
 
   <div class="note">
@@ -1179,6 +1273,8 @@ initPyodide();
     if(st>0){ for(let i=s;i<e && guard<500;i+=st){seq.push(i);guard++;} }
     else { for(let i=s;i>e && guard<500;i+=st){seq.push(i);guard++;} }
     idx=-1;
+    document.getElementById('r-tbody').innerHTML='';
+    document.getElementById('r-trace-wrap').style.display='none';
     codeEl.innerHTML=`<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(`+
       `<span class="num">${s}</span>, <span class="num">${e}</span>, <span class="num">${st}</span>):\n`+
       `    <span class="fn">print</span>(i)`;
@@ -1199,6 +1295,11 @@ initPyodide();
     if(idx>=seq.length-1){ statusEl.innerHTML='✓ Schleife fertig – alle Werte durchlaufen.'; return false; }
     idx++; render();
     statusEl.innerHTML=`Durchlauf ${idx+1}/${seq.length}: <span class="hl">i = ${seq[idx]}</span> → print(${seq[idx]})`;
+    const tbody=document.getElementById('r-tbody');
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${idx+1}</td><td>${seq[idx]}</td><td>${seq[idx]}</td>`;
+    tbody.appendChild(tr);
+    document.getElementById('r-trace-wrap').style.display='';
     return true;
   }
   function play(){
@@ -1208,7 +1309,7 @@ initPyodide();
   function stop(){ if(timer){clearInterval(timer);timer=null;} }
 
   document.getElementById('r-play').onclick=play;
-  document.getElementById('r-step-btn').onclick=()=>{ if(idx<0)build(); step(); };
+  document.getElementById('r-step-btn').onclick=()=>{ stop(); if(idx<0||idx>=seq.length-1)build(); step(); };
   document.getElementById('r-reset').onclick=()=>{ stop(); build(); };
   ['r-start','r-stop','r-step'].forEach(id=>document.getElementById(id).addEventListener('change',()=>{stop();build();}));
   build();
@@ -1226,6 +1327,8 @@ initPyodide();
   function reset(){
     stop(); n=parseInt(document.getElementById('w-n').value)||5;
     i=1; summe=0; running=false;
+    document.getElementById('w-tbody').innerHTML='';
+    document.getElementById('w-trace-wrap').style.display='none';
     codeEl.innerHTML=`summe = <span class="num">0</span>\n`+
       `i = <span class="num">1</span>\n`+
       `<span class="kw">while</span> i &lt;= <span class="num">${n}</span>:\n`+
@@ -1241,15 +1344,21 @@ initPyodide();
   }
   function step(){
     if(i>n){ statusEl.innerHTML=`✓ Bedingung i &lt;= ${n} ist falsch (i=${i}). Schleife endet. <span class="hl">summe = ${summe}</span>`; return false; }
-    summe+=i;
-    statusEl.innerHTML=`i=${i} ist &lt;= ${n} → summe = summe + ${i} = <span class="hl">${summe}</span>, dann i = ${i+1}`;
+    const iAlt=i;
+    summe+=iAlt;
+    statusEl.innerHTML=`i=${iAlt} ist &lt;= ${n} → summe = summe + ${iAlt} = <span class="hl">${summe}</span>, dann i = ${iAlt+1}`;
+    const tbody=document.getElementById('w-tbody');
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${tbody.rows.length+1}</td><td>${iAlt}</td><td>${summe}</td>`;
+    tbody.appendChild(tr);
+    document.getElementById('w-trace-wrap').style.display='';
     i++; renderVars(); return true;
   }
   function play(){ reset(); running=true; timer=setInterval(()=>{ if(!step())stop(); },750); }
   function stop(){ if(timer){clearInterval(timer);timer=null;} }
 
   document.getElementById('w-play').onclick=play;
-  document.getElementById('w-step').onclick=()=>{ if(i>n&&summe>0){reset();} step(); };
+  document.getElementById('w-step').onclick=()=>{ stop(); if(i>n&&summe>0){reset();} step(); };
   document.getElementById('w-reset').onclick=reset;
   document.getElementById('w-n').addEventListener('change',reset);
   reset();
