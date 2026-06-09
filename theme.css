@@ -20,6 +20,7 @@
   --blue:var(--cyan); --blue-soft:rgba(45,226,230,.1);
   --card:var(--glass); --shadow:0 14px 40px rgba(0,0,0,.45);
   --code-bg:#0a0d14;   /* tiefe Code-/Editor-Fläche (dunkel) */
+  --card-face:#141a2e; /* DECKENDE Karteikarten-Fläche (opak, = rgb von --glass2) */
 }
 
 /* ===================================================================== */
@@ -35,6 +36,7 @@ html[data-theme="light"]{
   --green:var(--cyan); --green-d:var(--cyan); --green-soft:rgba(8,146,165,.10); --blue:var(--cyan); --blue-soft:rgba(8,146,165,.10);
   --card:#ffffff; --shadow:0 6px 20px rgba(30,50,80,.10);
   --code-bg:#eef3f8;   /* helle Code-/Editor-Fläche (Wert aus lf3_ipv6 Light) */
+  --card-face:#eef3f8; /* DECKENDE Karteikarten-Fläche hell (opak, = heller --glass2) */
 }
 html[data-theme="light"] body{background:#ffffff;color:var(--ink)}
 html[data-theme="light"] body::before,
@@ -382,7 +384,7 @@ footer span{color:var(--cyan)}
 .flash{width:100%;max-width:580px;perspective:1600px;cursor:pointer;margin-bottom:1rem}
 .flash-inner{position:relative;width:100%;min-height:300px;transition:transform .55s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
 .flash.flip .flash-inner{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--glass2);border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 40px rgba(0,0,0,.45);padding:1.6rem 1.5rem;display:flex;flex-direction:column;overflow:auto;backdrop-filter:blur(8px)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--card-face);border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 40px rgba(0,0,0,.45);padding:1.6rem 1.5rem;display:flex;flex-direction:column;overflow:auto;backdrop-filter:blur(8px)}
 .face::before{content:"";position:absolute;left:0;top:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
 .face.b{transform:rotateY(180deg);border-color:rgba(45,226,230,.35)}
 .face.b::before{background:linear-gradient(90deg,transparent,var(--magenta),transparent)}
