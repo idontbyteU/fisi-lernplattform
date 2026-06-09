@@ -294,6 +294,17 @@
     background:rgba(139,155,255,.07);border-left:3px solid var(--lab-accent2);
     border-radius:0 9px 9px 0;padding:10px 14px;display:none}
   .q-hint.show,.q-sol.show{display:block}
+  /* Strukturierte Erklärung (Verständnis · Fehler · Merksatz) */
+  .q-expl{margin-top:10px;display:none;flex-direction:column;gap:8px}
+  .q-expl.show{display:flex}
+  .qe-block{border-left:3px solid var(--lab-line2);border-radius:0 9px 9px 0;
+    padding:9px 14px;background:rgba(140,180,220,.05)}
+  .qe-block b{display:block;font-family:var(--fmono);font-size:11px;letter-spacing:.06em;
+    text-transform:uppercase;margin-bottom:3px}
+  .qe-block p{font-size:14px;line-height:1.7;color:var(--lab-read);margin:0}
+  .qe-v{border-left-color:var(--lab-accent2)} .qe-v b{color:var(--lab-accent2)}
+  .qe-f{border-left-color:var(--lab-amber)} .qe-f b{color:var(--lab-amber)}
+  .qe-m{border-left-color:var(--lab-green)} .qe-m b{color:var(--lab-green)}
 
   /* ===== Struktogramm (Nassi-Shneiderman) ===== */
   .ns{border:2px solid var(--lab-line2);border-radius:4px;overflow:hidden;font-family:var(--fmono);
@@ -468,39 +479,39 @@ print("Summe 1 bis 10:", summe)
     </div>
     <div class="codeblock" id="r-code"></div>
     <div class="viz-stage"><div class="numline" id="r-line"></div></div>
-    <div class=”viz-status” id=”r-status”>Drücke „Abspielen” oder geh „Schritt” für Schritt.</div>
-    <div class=”trace-wrap” id=”r-trace-wrap” style=”display:none”>
-      <table class=”trace-tbl”>
+    <div class="viz-status" id="r-status">Drücke „Abspielen” oder geh „Schritt” für Schritt.</div>
+    <div class="trace-wrap" id="r-trace-wrap" style="display:none">
+      <table class="trace-tbl">
         <thead><tr><th>Durchlauf</th><th>i</th><th>print(i)</th></tr></thead>
-        <tbody id=”r-tbody”></tbody>
+        <tbody id="r-tbody"></tbody>
       </table>
     </div>
-    <button class=”btn btn-ghost btn-sm to-lab” data-lab=”for-Schleife”>▶ Im Code-Labor öffnen</button>
+    <button class="btn btn-ghost btn-sm to-lab" data-lab="for-Schleife">▶ Im Code-Labor öffnen</button>
   </div>
 
-  <div class=”lab-card”>
-    <div class=”viz-title” style=”font-size:15px;margin-bottom:10px”>📖 Code – Zeile für Zeile</div>
-    <div class=”anno-code”>
-      <div class=”anno-line”>
-        <span class=”anno-ln”><span class=”kw”>for</span> i <span class=”kw”>in</span> <span class=”fn”>range</span>(<span class=”num”>5</span>):</span>
-        <details class=”anno-exp”>
+  <div class="lab-card">
+    <div class="viz-title" style="font-size:15px;margin-bottom:10px">📖 Code – Zeile für Zeile</div>
+    <div class="anno-code">
+      <div class="anno-line">
+        <span class="anno-ln"><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):</span>
+        <details class="anno-exp">
           <summary>Was macht das?</summary>
-          <div class=”anno-body”><code>range(5)</code> erzeugt die Zahlen 0, 1, 2, 3, 4 – fängt immer bei 0 an und hört <strong>vor</strong> der 5 auf. Die Variable <code>i</code> nimmt nacheinander jeden dieser Werte an: in Durchlauf 1 ist i&nbsp;=&nbsp;0, in Durchlauf 2 ist i&nbsp;=&nbsp;1 usw.</div>
+          <div class="anno-body"><code>range(5)</code> erzeugt die Zahlen 0, 1, 2, 3, 4 – fängt immer bei 0 an und hört <strong>vor</strong> der 5 auf. Die Variable <code>i</code> nimmt nacheinander jeden dieser Werte an: in Durchlauf 1 ist i&nbsp;=&nbsp;0, in Durchlauf 2 ist i&nbsp;=&nbsp;1 usw.</div>
         </details>
       </div>
-      <div class=”anno-line anno-indent”>
-        <span class=”anno-ln”><span class=”fn”>print</span>(i)</span>
-        <details class=”anno-exp”>
+      <div class="anno-line anno-indent">
+        <span class="anno-ln"><span class="fn">print</span>(i)</span>
+        <details class="anno-exp">
           <summary>Was macht das?</summary>
-          <div class=”anno-body”>Gibt den aktuellen Wert von <code>i</code> aus. Diese Zeile läuft <strong>bei jedem Durchlauf einmal</strong> – weil sie eingerückt unter dem <code>for</code> steht. Einrückung (4 Leerzeichen) = „gehört zur Schleife”.</div>
+          <div class="anno-body">Gibt den aktuellen Wert von <code>i</code> aus. Diese Zeile läuft <strong>bei jedem Durchlauf einmal</strong> – weil sie eingerückt unter dem <code>for</code> steht. Einrückung (4 Leerzeichen) = „gehört zur Schleife”.</div>
         </details>
       </div>
     </div>
-    <div class=”note” style=”margin-top:10px”><strong>range(5)</strong> → 0, 1, 2, 3, 4 &nbsp;·&nbsp; <strong>range(1, 5)</strong> → 1, 2, 3, 4 &nbsp;·&nbsp; Regel: range hört immer <strong>VOR</strong> der letzten Zahl auf. Ohne Startzahl beginnt es bei 0.</div>
+    <div class="note" style="margin-top:10px"><strong>range(5)</strong> → 0, 1, 2, 3, 4 &nbsp;·&nbsp; <strong>range(1, 5)</strong> → 1, 2, 3, 4 &nbsp;·&nbsp; Regel: range hört immer <strong>VOR</strong> der letzten Zahl auf. Ohne Startzahl beginnt es bei 0.</div>
   </div>
 
-  <div class=”viz”>
-    <div class=”viz-title”>🔂 while-Schleife: Summe bilden</div>
+  <div class="viz">
+    <div class="viz-title">🔂 while-Schleife: Summe bilden</div>
     <div class="viz-sub">Ein Akkumulator (<code>summe</code>) sammelt Werte, solange die Bedingung
       <code>i &lt;= n</code> wahr ist. Du siehst, wie sich <code>summe</code> und <code>i</code> verändern.</div>
     <div class="wozu"><b>Wozu?</b> <code>while</code> wiederholt, solange eine Bedingung wahr ist – ideal, wenn
@@ -1722,124 +1733,239 @@ const QUIZZES=[
     task:"Erstelle eine Variable <code>name</code> mit dem Wert <code>\"Python\"</code> und gib mit <code>print()</code> den Text <code>Hallo Python</code> aus.",
     expect:"Hallo Python",
     hint:"Mit <code>print(\"Hallo\", name)</code> setzt Python automatisch ein Leerzeichen dazwischen.",
-    sol:'name = "Python"\nprint("Hallo", name)' },
+    sol:'name = "Python"\nprint("Hallo", name)',
+    expl:{
+      verstaendnis:"Eine Variable ist ein benannter Behälter für einen Wert. <code>print()</code> kann mehrere Argumente mit Komma bekommen und setzt automatisch ein Leerzeichen dazwischen – darum gibt <code>print(\"Hallo\", name)</code> genau <code>Hallo Python</code> aus.",
+      fehler:"Anführungszeichen vergessen: <code>name = Python</code> lässt Python nach einer Variable namens <code>Python</code> suchen → <code>NameError</code>. Text muss immer in Anführungszeichen stehen.",
+      merksatz:"Text in Anführungszeichen, Variablennamen ohne. Komma in <code>print()</code> = automatisches Leerzeichen."
+    } },
   { level:"Basics", title:"Rechnen",
     task:"Berechne <code>17 + 25</code> und gib nur das Ergebnis aus.",
     expect:"42",
     hint:"<code>print(17 + 25)</code> – Python rechnet selbst.",
-    sol:'print(17 + 25)' },
+    sol:'print(17 + 25)',
+    expl:{
+      verstaendnis:"Python wertet den Ausdruck <code>17 + 25</code> zuerst aus und gibt erst das Ergebnis <code>42</code> aus. Zahlen brauchen keine Anführungszeichen.",
+      fehler:"<code>print(\"17 + 25\")</code> mit Anführungszeichen gibt den Text <code>17 + 25</code> aus, statt zu rechnen.",
+      merksatz:"Zahlen pur, Text in Anführungszeichen – nur pure Zahlen rechnet Python."
+    } },
   { level:"Basics", title:"Ganzzahl- & Restdivision",
     task:"Gib für <code>17 / 5</code> die Ganzzahldivision und den Rest aus – jeweils in einer eigenen Zeile (erwartet: 3 und 2).",
     expect:"3\n2",
     hint:"<code>//</code> ist die Ganzzahldivision, <code>%</code> der Rest (Modulo).",
-    sol:'print(17 // 5)\nprint(17 % 5)' },
+    sol:'print(17 // 5)\nprint(17 % 5)',
+    expl:{
+      verstaendnis:"<code>//</code> liefert die Ganzzahldivision (wie oft 5 ganz in 17 passt → 3), <code>%</code> (Modulo) den Rest, der übrig bleibt (17 − 3·5 = 2).",
+      fehler:"<code>/</code> mit <code>//</code> verwechseln: <code>17 / 5</code> ergibt die Kommazahl <code>3.4</code>, nicht die Ganzzahldivision.",
+      merksatz:"Doppelter Schrägstrich teilt ganz, Prozentzeichen gibt den Rest."
+    } },
   { level:"Basics", title:"Potenz",
     task:"Berechne 2 hoch 10 und gib das Ergebnis aus (erwartet: 1024).",
     expect:"1024",
     hint:"Die Potenz schreibt man mit <code>**</code>: <code>2 ** 10</code>.",
-    sol:'print(2 ** 10)' },
+    sol:'print(2 ** 10)',
+    expl:{
+      verstaendnis:"<code>**</code> ist der Potenz-Operator: <code>2 ** 10</code> bedeutet 2 zehnmal mit sich selbst multipliziert = 1024.",
+      fehler:"<code>^</code> ist in Python NICHT „hoch", sondern bitweises XOR. Für Potenzen immer <code>**</code> benutzen.",
+      merksatz:"Zwei Sterne heißt „hoch" – ein einzelnes <code>^</code> führt in die Irre."
+    } },
   { level:"Basics", title:"String-Länge",
     task:"Gegeben <code>wort = \"Systemintegration\"</code>. Gib die Anzahl der Buchstaben aus (erwartet: 17).",
     expect:"17",
     hint:"<code>len(wort)</code> zählt die Zeichen.",
-    sol:'wort = "Systemintegration"\nprint(len(wort))' },
+    sol:'wort = "Systemintegration"\nprint(len(wort))',
+    expl:{
+      verstaendnis:"<code>len()</code> zählt die Anzahl der Zeichen in einem String – hier die 17 Buchstaben von „Systemintegration".",
+      fehler:"<code>wort.len()</code> gibt es nicht. <code>len()</code> ist eine eingebaute Funktion und bekommt den String in die Klammern, es ist keine Methode hinter dem Punkt.",
+      merksatz:"<code>len()</code> umklammert – die Länge steckt in den Klammern, nicht hinter dem Punkt."
+    } },
   { level:"Basics", title:"Großbuchstaben",
     task:"Gegeben <code>name = \"fisi\"</code>. Gib ihn komplett in Großbuchstaben aus (erwartet: FISI).",
     expect:"FISI",
     hint:"Die String-Methode <code>.upper()</code> macht alles groß.",
-    sol:'name = "fisi"\nprint(name.upper())' },
+    sol:'name = "fisi"\nprint(name.upper())',
+    expl:{
+      verstaendnis:"<code>.upper()</code> ist eine String-Methode und gibt eine neue, komplett groß geschriebene Version des Textes zurück.",
+      fehler:"<code>.upper</code> ohne Klammern ruft die Methode nicht auf – erst die runden Klammern <code>()</code> starten sie.",
+      merksatz:"Methoden brauchen Klammern – ohne <code>()</code> passiert nichts."
+    } },
   { level:"Basics", title:"if/else – volljährig?",
     task:"Gegeben <code>alter = 17</code>. Gib <code>minderjährig</code> aus, wenn das Alter unter 18 liegt, sonst <code>volljährig</code>.",
     expect:"minderjährig",
     hint:"<code>if alter < 18:</code> … <code>else:</code> …",
-    sol:'alter = 17\nif alter < 18:\n    print("minderjährig")\nelse:\n    print("volljährig")' },
+    sol:'alter = 17\nif alter < 18:\n    print("minderjährig")\nelse:\n    print("volljährig")',
+    expl:{
+      verstaendnis:"<code>if</code> prüft die Bedingung <code>alter < 18</code>. Ist sie wahr (17 < 18), läuft der <code>if</code>-Zweig, sonst der <code>else</code>-Zweig. Hier also „minderjährig".",
+      fehler:"Doppelpunkt nach <code>if</code>/<code>else</code> vergessen oder den Block nicht eingerückt – beides löst einen Syntaxfehler aus.",
+      merksatz:"Nach <code>if</code>/<code>else</code> immer Doppelpunkt, dann einrücken – Einrückung ist in Python Pflicht."
+    } },
 
   /* ===== STUFE 2: SCHLEIFEN & LISTEN ===== */
   { level:"Schleifen & Listen", title:"for-Schleife & Summe",
     task:"Bilde die Summe der Zahlen <code>1</code> bis <code>5</code> und gib sie aus (erwartet: 15).",
     expect:"15",
     hint:"<code>range(1, 6)</code> geht 1,2,3,4,5. Einen Akkumulator <code>summe</code> hochzählen.",
-    sol:'summe = 0\nfor i in range(1, 6):\n    summe += i\nprint(summe)' },
+    sol:'summe = 0\nfor i in range(1, 6):\n    summe += i\nprint(summe)',
+    expl:{
+      verstaendnis:"<code>range(1, 6)</code> liefert 1,2,3,4,5 (die 6 ist nicht dabei). Der Akkumulator <code>summe</code> sammelt mit <code>summe += i</code> jeden Wert auf: 1+2+3+4+5 = 15.",
+      fehler:"<code>range(1, 5)</code> hört schon bei 4 auf (Summe nur 10). Die <code>stop</code>-Zahl ist immer ausgeschlossen, daher <code>range(1, 6)</code>.",
+      merksatz:"<code>range</code> stoppt VOR der letzten Zahl – willst du bis n, schreib n+1."
+    } },
   { level:"Schleifen & Listen", title:"Zahlen nebeneinander",
     task:"Gib die Zahlen 1 bis 5 in EINER Zeile aus, durch Leerzeichen getrennt (erwartet: 1 2 3 4 5).",
     expect:"1 2 3 4 5",
     hint:"<code>print(i, end=\" \")</code> hängt statt Zeilenumbruch ein Leerzeichen an.",
     accept:["1 2 3 4 5 "],
-    sol:'for i in range(1, 6):\n    print(i, end=" ")' },
+    sol:'for i in range(1, 6):\n    print(i, end=" ")',
+    expl:{
+      verstaendnis:"Normalerweise hängt <code>print()</code> nach jeder Ausgabe einen Zeilenumbruch an. <code>end=\" \"</code> ersetzt diesen durch ein Leerzeichen – so landen alle Zahlen in einer Zeile.",
+      fehler:"<code>end</code> ist ein benannter Parameter: <code>print(i, end=\" \")</code> – nicht <code>print(i, \" \")</code> mit dem Leerzeichen als zweitem Argument.",
+      merksatz:"<code>end=</code> bestimmt, was NACH der Ausgabe kommt – Standard ist der unsichtbare Zeilenumbruch."
+    } },
   { level:"Schleifen & Listen", title:"while – Countdown",
     task:"Zähle mit einer <code>while</code>-Schleife von 3 herunter bis 1, jede Zahl in eigener Zeile (erwartet: 3, 2, 1).",
     expect:"3\n2\n1",
     hint:"<code>i = 3</code>, dann <code>while i > 0:</code> … <code>i -= 1</code>.",
-    sol:'i = 3\nwhile i > 0:\n    print(i)\n    i -= 1' },
+    sol:'i = 3\nwhile i > 0:\n    print(i)\n    i -= 1',
+    expl:{
+      verstaendnis:"Die <code>while</code>-Schleife läuft, solange <code>i > 0</code> wahr ist. <code>i -= 1</code> zählt jeden Durchlauf herunter: 3, 2, 1 – bei 0 wird die Bedingung falsch und die Schleife endet.",
+      fehler:"<code>i -= 1</code> vergessen → <code>i</code> bleibt 3, die Bedingung bleibt ewig wahr → Endlosschleife.",
+      merksatz:"Jede <code>while</code>-Schleife braucht etwas, das die Bedingung irgendwann falsch macht – sonst läuft sie ewig."
+    } },
   { level:"Schleifen & Listen", title:"Liste sortieren",
     task:"Gegeben <code>zahlen = [5, 2, 8, 1]</code>. Gib die sortierte Liste aus (erwartet: [1, 2, 5, 8]).",
     expect:"[1, 2, 5, 8]",
     hint:"<code>zahlen.sort()</code> sortiert direkt, dann <code>print(zahlen)</code>.",
-    sol:'zahlen = [5, 2, 8, 1]\nzahlen.sort()\nprint(zahlen)' },
+    sol:'zahlen = [5, 2, 8, 1]\nzahlen.sort()\nprint(zahlen)',
+    expl:{
+      verstaendnis:"<code>.sort()</code> sortiert die Liste an Ort und Stelle aufsteigend und verändert dabei das Original direkt.",
+      fehler:"<code>print(zahlen.sort())</code> gibt <code>None</code> aus – <code>.sort()</code> liefert nichts zurück, sondern ändert die Liste selbst. Erst sortieren, dann die Liste ausgeben.",
+      merksatz:"<code>.sort()</code> sortiert still – es gibt <code>None</code> zurück, nicht die Liste."
+    } },
   { level:"Schleifen & Listen", title:"Größter Wert",
     task:"Gegeben <code>werte = [12, 45, 7, 88, 23]</code>. Gib den größten Wert aus (erwartet: 88).",
     expect:"88",
     hint:"<code>max(werte)</code> liefert das Maximum.",
-    sol:'werte = [12, 45, 7, 88, 23]\nprint(max(werte))' },
+    sol:'werte = [12, 45, 7, 88, 23]\nprint(max(werte))',
+    expl:{
+      verstaendnis:"<code>max()</code> ist eine eingebaute Funktion, die das größte Element einer Liste zurückgibt – hier 88.",
+      fehler:"<code>werte.max()</code> gibt es nicht – <code>max()</code> ist eine Funktion mit der Liste in den Klammern, keine Listen-Methode.",
+      merksatz:"<code>max()</code> und <code>min()</code> umklammern die Liste – Größtes und Kleinstes auf einen Griff."
+    } },
   { level:"Schleifen & Listen", title:"Liste durchzählen",
     task:"Gegeben <code>namen = [\"Anna\", \"Tom\", \"Lisa\"]</code>. Gib aus, wie viele Namen die Liste enthält (erwartet: 3).",
     expect:"3",
     hint:"<code>len(namen)</code> zählt die Elemente.",
-    sol:'namen = ["Anna", "Tom", "Lisa"]\nprint(len(namen))' },
+    sol:'namen = ["Anna", "Tom", "Lisa"]\nprint(len(namen))',
+    expl:{
+      verstaendnis:"<code>len()</code> zählt bei einer Liste die Anzahl der Elemente – hier 3 Namen.",
+      fehler:"Anzahl und Index verwechseln: das letzte Element steht bei Index <code>2</code>, aber <code>len()</code> ist <code>3</code> (gezählt ab 1).",
+      merksatz:"<code>len()</code> zählt ab 1, Indizes laufen ab 0 – der letzte Index ist immer <code>len − 1</code>."
+    } },
   { level:"Schleifen & Listen", title:"FizzBuzz-Stück",
     task:"Gib für die Zahlen 1 bis 5 jeweils die Zahl aus – außer bei Vielfachen von 3, da <code>Fizz</code> (erwartet: 1, 2, Fizz, 4, 5).",
     expect:"1\n2\nFizz\n4\n5",
     hint:"In der Schleife: <code>if i % 3 == 0: print(\"Fizz\")</code> sonst <code>print(i)</code>.",
-    sol:'for i in range(1, 6):\n    if i % 3 == 0:\n        print("Fizz")\n    else:\n        print(i)' },
+    sol:'for i in range(1, 6):\n    if i % 3 == 0:\n        print("Fizz")\n    else:\n        print(i)',
+    expl:{
+      verstaendnis:"<code>i % 3 == 0</code> ist wahr, wenn <code>i</code> ohne Rest durch 3 teilbar ist (ein Vielfaches von 3). Dann „Fizz", sonst die Zahl selbst.",
+      fehler:"<code>=</code> statt <code>==</code> beim Vergleich: ein <code>=</code> ist eine Zuweisung, <code>==</code> prüft auf Gleichheit.",
+      merksatz:"<code>% 3 == 0</code> heißt „glatt durch 3 teilbar" – Modulo-Rest null bedeutet Vielfaches."
+    } },
 
   /* ===== STUFE 3: SCHULSTOFF (Zufall, Würfeln, Statistik) ===== */
   { level:"Schulstoff: Zufall & Statistik", title:"Mittelwert einer Liste",
     task:"Gegeben <code>werte = [4, 8, 15, 16, 23]</code>. Gib den Mittelwert aus (erwartet: 13.2).",
     expect:"13.2",
     hint:"Mittelwert = <code>sum(werte) / len(werte)</code>.",
-    sol:'werte = [4, 8, 15, 16, 23]\nprint(sum(werte) / len(werte))' },
+    sol:'werte = [4, 8, 15, 16, 23]\nprint(sum(werte) / len(werte))',
+    expl:{
+      verstaendnis:"Der Mittelwert ist Summe geteilt durch Anzahl: <code>sum(werte)</code> (= 66) <code>/ len(werte)</code> (= 5) ergibt 13.2.",
+      fehler:"<code>//</code> statt <code>/</code> würde abrunden (13) und den Mittelwert verfälschen. Für den Durchschnitt immer mit <code>/</code> teilen.",
+      merksatz:"Mittelwert = <code>sum() / len()</code> – Summe oben, Anzahl unten."
+    } },
   { level:"Schulstoff: Zufall & Statistik", title:"Würfel mit festem Startwert",
     task:"Setze <code>random.seed(1)</code>, würfle dann EINMAL mit <code>randint(1, 6)</code> und gib das Ergebnis aus (erwartet: 2).",
     expect:"2",
     hint:"Mit gleichem <code>seed</code> kommt immer dieselbe Zahl – so ist das Ergebnis prüfbar.",
-    sol:'import random\nrandom.seed(1)\nprint(random.randint(1, 6))' },
+    sol:'import random\nrandom.seed(1)\nprint(random.randint(1, 6))',
+    expl:{
+      verstaendnis:"<code>random.seed(1)</code> setzt den Startwert des Zufallsgenerators fest. Dadurch liefert <code>randint(1, 6)</code> bei jedem Programmlauf dieselbe Zahl – so ist das Ergebnis reproduzierbar und prüfbar.",
+      fehler:"<code>import random</code> vergessen oder <code>seed()</code> erst NACH dem Würfeln setzen – dann ist das Ergebnis nicht mehr festgelegt.",
+      merksatz:"Gleicher <code>seed</code> = gleiche „Zufalls"-Zahl – Zufall mit Startwert ist berechenbar."
+    } },
   { level:"Schulstoff: Zufall & Statistik", title:"Augenzahl zählen",
     task:"Gegeben <code>wuerfe = [1, 6, 3, 6, 2, 6, 4]</code>. Gib aus, wie oft die <code>6</code> vorkommt (erwartet: 3).",
     expect:"3",
     hint:"Listen haben die Methode <code>.count(6)</code>.",
-    sol:'wuerfe = [1, 6, 3, 6, 2, 6, 4]\nprint(wuerfe.count(6))' },
+    sol:'wuerfe = [1, 6, 3, 6, 2, 6, 4]\nprint(wuerfe.count(6))',
+    expl:{
+      verstaendnis:"Die Listen-Methode <code>.count(6)</code> zählt, wie oft der Wert <code>6</code> in der Liste vorkommt – hier dreimal.",
+      fehler:"In die Klammern gehört der gesuchte Wert, nicht eine Position. <code>.count(6)</code> zählt den Wert 6, nicht das Element an Index 6.",
+      merksatz:"<code>.count(x)</code> zählt, wie oft <code>x</code> drinsteckt – Wert rein, Anzahl raus."
+    } },
   { level:"Schulstoff: Zufall & Statistik", title:"Summe & Mittelwert gerundet",
     task:"Gegeben <code>messwerte = [3, 7, 2, 8, 5]</code>. Gib den Mittelwert auf 2 Nachkommastellen gerundet aus (erwartet: 5.0).",
     expect:"5.0",
     hint:"<code>round(sum(messwerte)/len(messwerte), 2)</code>.",
-    sol:'messwerte = [3, 7, 2, 8, 5]\nprint(round(sum(messwerte) / len(messwerte), 2))' },
+    sol:'messwerte = [3, 7, 2, 8, 5]\nprint(round(sum(messwerte) / len(messwerte), 2))',
+    expl:{
+      verstaendnis:"Erst der Mittelwert <code>sum() / len()</code> (= 5.0), dann <code>round(wert, 2)</code> auf 2 Nachkommastellen runden. Ergebnis bleibt <code>5.0</code>.",
+      fehler:"Die Stellenzahl als erstes Argument schreiben. Reihenfolge ist <code>round(zahl, stellen)</code> – zuerst die Zahl, dann die Nachkommastellen.",
+      merksatz:"<code>round(zahl, stellen)</code> – was gerundet wird zuerst, wie genau danach."
+    } },
 
   /* ===== STUFE 4: AP1-NAH ===== */
   { level:"AP1-Training", title:"Prozent berechnen & runden",
     task:"Von <code>12000</code> Besuchern kamen <code>5562</code> über eine Suchmaschine. Gib den Anteil in Prozent auf 2 Nachkommastellen aus (erwartet: 46.35).",
     expect:"46.35",
     hint:"Anteil = <code>(teil / ganzes) * 100</code>, dann <code>round(..., 2)</code>.",
-    sol:'besucher = 12000\nsuchmaschine = 5562\nprint(round(suchmaschine / besucher * 100, 2))' },
+    sol:'besucher = 12000\nsuchmaschine = 5562\nprint(round(suchmaschine / besucher * 100, 2))',
+    expl:{
+      verstaendnis:"Anteil = <code>teil / ganzes</code> ergibt einen Bruch (0.4635); <code>* 100</code> macht daraus Prozent (46.35), <code>round(..., 2)</code> kürzt auf 2 Stellen.",
+      fehler:"<code>* 100</code> vergessen – dann kommt der Bruchteil <code>0.46</code> heraus statt der Prozentzahl 46.35.",
+      merksatz:"Prozent = Teil durch Ganzes mal 100 – ohne „mal 100" bleibt's ein Bruch."
+    } },
   { level:"AP1-Training", title:"Schwellenwert: > oder >=",
     task:"Ein Server gilt als überlastet, wenn die Auslastung <strong>über 80%</strong> liegt (80 zählt noch NICHT). Gegeben <code>auslastung = 80</code> – gib <code>OK</code> oder <code>ÜBERLASTET</code> aus.",
     expect:"OK",
     hint:"„über 80“ heißt <code>> 80</code>, nicht <code>>= 80</code>. 80 ist also OK.",
-    sol:'auslastung = 80\nif auslastung > 80:\n    print("ÜBERLASTET")\nelse:\n    print("OK")' },
+    sol:'auslastung = 80\nif auslastung > 80:\n    print("ÜBERLASTET")\nelse:\n    print("OK")',
+    expl:{
+      verstaendnis:"„über 80" bedeutet echt größer: <code>> 80</code>. Bei genau 80 ist <code>80 > 80</code> falsch, also läuft der <code>else</code>-Zweig → „OK".",
+      fehler:"<code>>= 80</code> würde die 80 fälschlich als überlastet werten. „über" = <code>></code>, „ab/mindestens" = <code>>=</code>.",
+      merksatz:"„über" ohne Gleichheitszeichen (<code>></code>), „ab/mindestens" mit (<code>>=</code>) – die Grenze selbst entscheidet."
+    } },
   { level:"AP1-Training", title:"Seitenaufrufe pro Besucher",
     task:"Bei <code>33000</code> Aufrufen und <code>12000</code> Besuchern: gib die Aufrufe pro Besucher auf 2 Nachkommastellen aus (erwartet: 2.75).",
     expect:"2.75",
     hint:"Division <code>aufrufe / besucher</code>, dann <code>round(..., 2)</code>.",
-    sol:'aufrufe = 33000\nbesucher = 12000\nprint(round(aufrufe / besucher, 2))' },
+    sol:'aufrufe = 33000\nbesucher = 12000\nprint(round(aufrufe / besucher, 2))',
+    expl:{
+      verstaendnis:"„pro" bedeutet teilen: <code>aufrufe / besucher</code> = 2.75 Aufrufe je Besucher, <code>round(..., 2)</code> begrenzt auf 2 Nachkommastellen.",
+      fehler:"Zähler und Nenner vertauschen. „Aufrufe pro Besucher" heißt Aufrufe geteilt durch Besucher – das Wort vor „pro" steht oben.",
+      merksatz:"„X pro Y" = <code>X / Y</code> – was vor dem „pro" steht, kommt nach oben."
+    } },
   { level:"AP1-Training", title:"Non-Bounce-Rate (Gegenmenge)",
     task:"Von <code>12000</code> Besuchern sind <code>7554</code> sofort abgesprungen (Bounce). Gib die Rate der NICHT-Absprünge in % auf 2 Nachkommastellen aus (erwartet: 37.05).",
     expect:"37.05",
     hint:"Erst Gegenmenge: <code>besucher - bounces</code>, dann <code>/ besucher * 100</code> und runden.",
-    sol:'besucher = 12000\nbounces = 7554\nnon_bounce = besucher - bounces\nprint(round(non_bounce / besucher * 100, 2))' },
+    sol:'besucher = 12000\nbounces = 7554\nnon_bounce = besucher - bounces\nprint(round(non_bounce / besucher * 100, 2))',
+    expl:{
+      verstaendnis:"Gesucht ist die Gegenmenge: erst <code>besucher - bounces</code> (die Gebliebenen = 4446), dann deren Anteil <code>/ besucher * 100</code> = 37.05 %.",
+      fehler:"Direkt die Bounce-Rate ausrechnen – gefragt ist aber das Gegenteil. Erst die Differenz bilden, dann den Prozentsatz.",
+      merksatz:"„nicht/kein" heißt Gegenmenge zuerst – Ganzes minus Teil, dann den Prozentsatz."
+    } },
   { level:"AP1-Training", title:"Funktion mit return",
     task:"Schreibe eine Funktion <code>verdopple(x)</code>, die <code>x * 2</code> zurückgibt, und gib <code>verdopple(21)</code> aus (erwartet: 42).",
     expect:"42",
     hint:"<code>def verdopple(x):</code> … <code>return x * 2</code>, dann <code>print(verdopple(21))</code>.",
-    sol:'def verdopple(x):\n    return x * 2\nprint(verdopple(21))' }
+    sol:'def verdopple(x):\n    return x * 2\nprint(verdopple(21))',
+    expl:{
+      verstaendnis:"<code>def</code> definiert die Funktion, <code>return x * 2</code> gibt das Ergebnis an die Aufrufstelle zurück. <code>print(verdopple(21))</code> ruft sie auf und gibt 42 aus.",
+      fehler:"<code>print</code> statt <code>return</code> in der Funktion: der Wert erscheint zwar, aber <code>verdopple(21)</code> liefert <code>None</code> zurück – man kann nicht damit weiterrechnen.",
+      merksatz:"<code>return</code> gibt zurück, <code>print</code> zeigt nur an – nur ein <code>return</code>-Wert ist weiterverwendbar."
+    } }
 ];
 
 (function(){
@@ -1862,10 +1988,16 @@ const QUIZZES=[
         `<button class="btn btn-run btn-sm" data-q="${i}" data-act="check" disabled>✓ Prüfen</button>`+
         `<button class="btn btn-ghost btn-sm" data-q="${i}" data-act="hint">💡 Tipp</button>`+
         `<button class="btn btn-ghost btn-sm" data-q="${i}" data-act="sol">👁 Lösung</button>`+
+        (q.expl ? `<button class="btn btn-ghost btn-sm" data-q="${i}" data-act="expl">📖 Erklärung</button>` : '')+
       `</div>`+
       `<div class="q-feedback" id="qf-${i}"></div>`+
       `<div class="q-hint" id="qh-${i}">💡 ${q.hint}</div>`+
-      `<div class="q-sol" id="qs-${i}"><b>Musterlösung:</b><div class="codeblock" style="margin:8px 0 0">${escapeHtml(q.sol)}</div></div>`;
+      `<div class="q-sol" id="qs-${i}"><b>Musterlösung:</b><div class="codeblock" style="margin:8px 0 0">${escapeHtml(q.sol)}</div></div>`+
+      (q.expl ? `<div class="q-expl" id="qe-${i}">`+
+        `<div class="qe-block qe-v"><b>Verständnis</b><p>${q.expl.verstaendnis}</p></div>`+
+        `<div class="qe-block qe-f"><b>Typischer Fehler</b><p>${q.expl.fehler}</p></div>`+
+        `<div class="qe-block qe-m"><b>Merksatz</b><p>${q.expl.merksatz}</p></div>`+
+      `</div>` : '');
     listEl.appendChild(card);
   });
 
@@ -1874,6 +2006,7 @@ const QUIZZES=[
       const i=btn.dataset.q, act=btn.dataset.act;
       if(act==='hint'){ document.getElementById('qh-'+i).classList.toggle('show'); return; }
       if(act==='sol'){ document.getElementById('qs-'+i).classList.toggle('show'); return; }
+      if(act==='expl'){ document.getElementById('qe-'+i).classList.toggle('show'); return; }
       if(act==='check'){ await checkAnswer(i); }
     });
   });
