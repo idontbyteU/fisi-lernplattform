@@ -2011,6 +2011,23 @@ const QUIZZES=[
     });
   });
 
+  // Kürzt einen Python-Traceback auf eine Zeile: "Zeile N: FehlerTyp: Meldung"
+  function shortPyError(err){
+    const raw=String(err && err.message ? err.message : err);
+    const lines=raw.split('\n');
+    let typeLine='';
+    for(let k=lines.length-1;k>=0;k--){
+      const t=lines[k].trim();
+      if(/^[A-Za-z_][\w.]*(Error|Exception|Warning|Interrupt|Exit|Iteration)\b/.test(t)){ typeLine=t; break; }
+    }
+    if(!typeLine){
+      for(let k=lines.length-1;k>=0;k--){ if(lines[k].trim()){ typeLine=lines[k].trim(); break; } }
+    }
+    let lineNo=null, m; const re=/File "[^"]*", line (\d+)/g;
+    while((m=re.exec(raw))!==null){ lineNo=m[1]; }
+    return (lineNo ? 'Zeile '+lineNo+': ' : '')+typeLine;
+  }
+
   async function checkAnswer(i){
     const fb=document.getElementById('qf-'+i);
     const code=document.getElementById('qa-'+i).value;
@@ -2033,9 +2050,9 @@ const QUIZZES=[
     const accepts=[w].concat((q.accept||[]).map(norm));
     const ok = accepts.includes(g);
     if(err){
-      const msg=String(err.message||err).trim().split('\n').slice(-2).join(' ');
+      const info=shortPyError(err);
       fb.className='q-feedback fail show';
-      fb.innerHTML=`<b>Fehler im Code:</b> <span style="color:var(--lab-red)">${escapeHtml(msg)}</span><br>Tipp: lies die Fehlermeldung – oft ein Tippfehler oder fehlender Doppelpunkt.`;
+      fb.innerHTML=`<b>Fehler im Code:</b> <span style="color:var(--lab-red)">${escapeHtml(info)}</span><br>Tipp: lies die Fehlermeldung – oft ein Tippfehler oder fehlender Doppelpunkt.`;
     } else if(ok){
       fb.className='q-feedback pass show';
       fb.innerHTML=`<b>✓ Richtig!</b> Ausgabe: <code>${escapeHtml(got)}</code>`;
