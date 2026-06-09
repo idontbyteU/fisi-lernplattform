@@ -1766,8 +1766,8 @@ const QUIZZES=[
     sol:'print(2 ** 10)',
     expl:{
       verstaendnis:"<code>**</code> ist der Potenz-Operator: <code>2 ** 10</code> bedeutet 2 zehnmal mit sich selbst multipliziert = 1024.",
-      fehler:"<code>^</code> ist in Python NICHT „hoch", sondern bitweises XOR. Für Potenzen immer <code>**</code> benutzen.",
-      merksatz:"Zwei Sterne heißt „hoch" – ein einzelnes <code>^</code> führt in die Irre."
+      fehler:"<code>^</code> ist in Python NICHT „hoch“, sondern bitweises XOR. Für Potenzen immer <code>**</code> benutzen.",
+      merksatz:"Zwei Sterne heißt „hoch“ – ein einzelnes <code>^</code> führt in die Irre."
     } },
   { level:"Basics", title:"String-Länge",
     task:"Gegeben <code>wort = \"Systemintegration\"</code>. Gib die Anzahl der Buchstaben aus (erwartet: 17).",
@@ -1775,7 +1775,7 @@ const QUIZZES=[
     hint:"<code>len(wort)</code> zählt die Zeichen.",
     sol:'wort = "Systemintegration"\nprint(len(wort))',
     expl:{
-      verstaendnis:"<code>len()</code> zählt die Anzahl der Zeichen in einem String – hier die 17 Buchstaben von „Systemintegration".",
+      verstaendnis:"<code>len()</code> zählt die Anzahl der Zeichen in einem String – hier die 17 Buchstaben von „Systemintegration“.",
       fehler:"<code>wort.len()</code> gibt es nicht. <code>len()</code> ist eine eingebaute Funktion und bekommt den String in die Klammern, es ist keine Methode hinter dem Punkt.",
       merksatz:"<code>len()</code> umklammert – die Länge steckt in den Klammern, nicht hinter dem Punkt."
     } },
@@ -1795,7 +1795,7 @@ const QUIZZES=[
     hint:"<code>if alter < 18:</code> … <code>else:</code> …",
     sol:'alter = 17\nif alter < 18:\n    print("minderjährig")\nelse:\n    print("volljährig")',
     expl:{
-      verstaendnis:"<code>if</code> prüft die Bedingung <code>alter < 18</code>. Ist sie wahr (17 < 18), läuft der <code>if</code>-Zweig, sonst der <code>else</code>-Zweig. Hier also „minderjährig".",
+      verstaendnis:"<code>if</code> prüft die Bedingung <code>alter < 18</code>. Ist sie wahr (17 < 18), läuft der <code>if</code>-Zweig, sonst der <code>else</code>-Zweig. Hier also „minderjährig“.",
       fehler:"Doppelpunkt nach <code>if</code>/<code>else</code> vergessen oder den Block nicht eingerückt – beides löst einen Syntaxfehler aus.",
       merksatz:"Nach <code>if</code>/<code>else</code> immer Doppelpunkt, dann einrücken – Einrückung ist in Python Pflicht."
     } },
@@ -1868,9 +1868,9 @@ const QUIZZES=[
     hint:"In der Schleife: <code>if i % 3 == 0: print(\"Fizz\")</code> sonst <code>print(i)</code>.",
     sol:'for i in range(1, 6):\n    if i % 3 == 0:\n        print("Fizz")\n    else:\n        print(i)',
     expl:{
-      verstaendnis:"<code>i % 3 == 0</code> ist wahr, wenn <code>i</code> ohne Rest durch 3 teilbar ist (ein Vielfaches von 3). Dann „Fizz", sonst die Zahl selbst.",
+      verstaendnis:"<code>i % 3 == 0</code> ist wahr, wenn <code>i</code> ohne Rest durch 3 teilbar ist (ein Vielfaches von 3). Dann „Fizz“, sonst die Zahl selbst.",
       fehler:"<code>=</code> statt <code>==</code> beim Vergleich: ein <code>=</code> ist eine Zuweisung, <code>==</code> prüft auf Gleichheit.",
-      merksatz:"<code>% 3 == 0</code> heißt „glatt durch 3 teilbar" – Modulo-Rest null bedeutet Vielfaches."
+      merksatz:"<code>% 3 == 0</code> heißt „glatt durch 3 teilbar“ – Modulo-Rest null bedeutet Vielfaches."
     } },
 
   /* ===== STUFE 3: SCHULSTOFF (Zufall, Würfeln, Statistik) ===== */
@@ -1892,7 +1892,7 @@ const QUIZZES=[
     expl:{
       verstaendnis:"<code>random.seed(1)</code> setzt den Startwert des Zufallsgenerators fest. Dadurch liefert <code>randint(1, 6)</code> bei jedem Programmlauf dieselbe Zahl – so ist das Ergebnis reproduzierbar und prüfbar.",
       fehler:"<code>import random</code> vergessen oder <code>seed()</code> erst NACH dem Würfeln setzen – dann ist das Ergebnis nicht mehr festgelegt.",
-      merksatz:"Gleicher <code>seed</code> = gleiche „Zufalls"-Zahl – Zufall mit Startwert ist berechenbar."
+      merksatz:"Gleicher <code>seed</code> = gleiche „Zufalls“-Zahl – Zufall mit Startwert ist berechenbar."
     } },
   { level:"Schulstoff: Zufall & Statistik", title:"Augenzahl zählen",
     task:"Gegeben <code>wuerfe = [1, 6, 3, 6, 2, 6, 4]</code>. Gib aus, wie oft die <code>6</code> vorkommt (erwartet: 3).",
@@ -1924,7 +1924,7 @@ const QUIZZES=[
     expl:{
       verstaendnis:"Anteil = <code>teil / ganzes</code> ergibt einen Bruch (0.4635); <code>* 100</code> macht daraus Prozent (46.35), <code>round(..., 2)</code> kürzt auf 2 Stellen.",
       fehler:"<code>* 100</code> vergessen – dann kommt der Bruchteil <code>0.46</code> heraus statt der Prozentzahl 46.35.",
-      merksatz:"Prozent = Teil durch Ganzes mal 100 – ohne „mal 100" bleibt's ein Bruch."
+      merksatz:"Prozent = Teil durch Ganzes mal 100 – ohne „mal 100“ bleibt's ein Bruch."
     } },
   { level:"AP1-Training", title:"Schwellenwert: > oder >=",
     task:"Ein Server gilt als überlastet, wenn die Auslastung <strong>über 80%</strong> liegt (80 zählt noch NICHT). Gegeben <code>auslastung = 80</code> – gib <code>OK</code> oder <code>ÜBERLASTET</code> aus.",
@@ -1932,9 +1932,9 @@ const QUIZZES=[
     hint:"„über 80“ heißt <code>> 80</code>, nicht <code>>= 80</code>. 80 ist also OK.",
     sol:'auslastung = 80\nif auslastung > 80:\n    print("ÜBERLASTET")\nelse:\n    print("OK")',
     expl:{
-      verstaendnis:"„über 80" bedeutet echt größer: <code>> 80</code>. Bei genau 80 ist <code>80 > 80</code> falsch, also läuft der <code>else</code>-Zweig → „OK".",
-      fehler:"<code>>= 80</code> würde die 80 fälschlich als überlastet werten. „über" = <code>></code>, „ab/mindestens" = <code>>=</code>.",
-      merksatz:"„über" ohne Gleichheitszeichen (<code>></code>), „ab/mindestens" mit (<code>>=</code>) – die Grenze selbst entscheidet."
+      verstaendnis:"„über 80“ bedeutet echt größer: <code>> 80</code>. Bei genau 80 ist <code>80 > 80</code> falsch, also läuft der <code>else</code>-Zweig → „OK“.",
+      fehler:"<code>>= 80</code> würde die 80 fälschlich als überlastet werten. „über“ = <code>></code>, „ab/mindestens“ = <code>>=</code>.",
+      merksatz:"„über“ ohne Gleichheitszeichen (<code>></code>), „ab/mindestens“ mit (<code>>=</code>) – die Grenze selbst entscheidet."
     } },
   { level:"AP1-Training", title:"Seitenaufrufe pro Besucher",
     task:"Bei <code>33000</code> Aufrufen und <code>12000</code> Besuchern: gib die Aufrufe pro Besucher auf 2 Nachkommastellen aus (erwartet: 2.75).",
@@ -1942,9 +1942,9 @@ const QUIZZES=[
     hint:"Division <code>aufrufe / besucher</code>, dann <code>round(..., 2)</code>.",
     sol:'aufrufe = 33000\nbesucher = 12000\nprint(round(aufrufe / besucher, 2))',
     expl:{
-      verstaendnis:"„pro" bedeutet teilen: <code>aufrufe / besucher</code> = 2.75 Aufrufe je Besucher, <code>round(..., 2)</code> begrenzt auf 2 Nachkommastellen.",
-      fehler:"Zähler und Nenner vertauschen. „Aufrufe pro Besucher" heißt Aufrufe geteilt durch Besucher – das Wort vor „pro" steht oben.",
-      merksatz:"„X pro Y" = <code>X / Y</code> – was vor dem „pro" steht, kommt nach oben."
+      verstaendnis:"„pro“ bedeutet teilen: <code>aufrufe / besucher</code> = 2.75 Aufrufe je Besucher, <code>round(..., 2)</code> begrenzt auf 2 Nachkommastellen.",
+      fehler:"Zähler und Nenner vertauschen. „Aufrufe pro Besucher“ heißt Aufrufe geteilt durch Besucher – das Wort vor „pro“ steht oben.",
+      merksatz:"„X pro Y“ = <code>X / Y</code> – was vor dem „pro“ steht, kommt nach oben."
     } },
   { level:"AP1-Training", title:"Non-Bounce-Rate (Gegenmenge)",
     task:"Von <code>12000</code> Besuchern sind <code>7554</code> sofort abgesprungen (Bounce). Gib die Rate der NICHT-Absprünge in % auf 2 Nachkommastellen aus (erwartet: 37.05).",
@@ -1954,7 +1954,7 @@ const QUIZZES=[
     expl:{
       verstaendnis:"Gesucht ist die Gegenmenge: erst <code>besucher - bounces</code> (die Gebliebenen = 4446), dann deren Anteil <code>/ besucher * 100</code> = 37.05 %.",
       fehler:"Direkt die Bounce-Rate ausrechnen – gefragt ist aber das Gegenteil. Erst die Differenz bilden, dann den Prozentsatz.",
-      merksatz:"„nicht/kein" heißt Gegenmenge zuerst – Ganzes minus Teil, dann den Prozentsatz."
+      merksatz:"„nicht/kein“ heißt Gegenmenge zuerst – Ganzes minus Teil, dann den Prozentsatz."
     } },
   { level:"AP1-Training", title:"Funktion mit return",
     task:"Schreibe eine Funktion <code>verdopple(x)</code>, die <code>x * 2</code> zurückgibt, und gib <code>verdopple(21)</code> aus (erwartet: 42).",
