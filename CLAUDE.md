@@ -23,7 +23,8 @@ The PWA Service Worker only activates on HTTPS or `localhost`. On a raw `file://
 ### Shared assets (affect every page)
 | File | Purpose |
 |---|---|
-| `theme.css` | Single design-system file — all colors, fonts, components. Edit here for global changes. |
+| `theme.css` | Single design-system file — all colors, fonts, components. Holds **both** palettes: dark in `:root`, light in `html[data-theme="light"]`. Edit here for global changes. |
+| `theme.js` | Shared theme engine. Applies the saved theme to `<html>` before paint, injects/wires the `.theme-tg` header toggle, persists to `localStorage` key `fisi_theme` (default dark). Include `<script src="theme.js"></script>` in every page `<head>`. |
 | `study.js` | Flashcard engine (`Study.init({cards, cats, key})`). Handles mastery tracking, shuffle, filter, keyboard shortcuts, localStorage. |
 | `service-worker.js` | Network-first PWA cache. **Must be updated** when a new HTML page is added (add its path to the `ASSETS` array). |
 | `manifest.json` | PWA manifest. |
@@ -47,6 +48,30 @@ The PWA Service Worker only activates on HTTPS or `localhost`. On a raw `file://
 ```
 
 Tile accent color is set via the `--ac` CSS variable, overridden by `data-lf="N"` attributes on `.tile` elements.
+
+## Design-Standards (verbindlich für alle Seiten)
+
+Diese zwei Standards gelten für **jede** Seite/Kachel/Modul. Bestehende Seiten werden darauf umgestellt; neue Seiten erfüllen sie von Anfang an.
+
+### 1. Theme: Hell- UND Dunkelmodus (gleichwertig)
+
+- Beide Modi sind Pflicht und gleich wichtig. Umsetzung **ausschließlich über CSS-Custom-Properties**, geschaltet per `data-theme` am `<html>`-Element (`[data-theme="light"]` = hell; ohne Attribut = dunkel).
+- **Umschalt-Button sichtbar im Header jeder Seite** (`.theme-tg`). Wird von `theme.js` injiziert/verdrahtet — Seite braucht nur `<script src="theme.js"></script>` im `<head>`.
+- Auswahl in `localStorage` (Key `fisi_theme`) speichern und beim Laden wiederherstellen. **Standard = dunkel.**
+- **Exakte Paletten, 1:1 aus den bestehenden Modulen** (`lf4.html` / `lf3_ipv6.html` stellen hell und dunkel bereits korrekt dar — sie sind die Farbquelle). Nichts runden, vereinheitlichen oder annähern. Beide Paletten leben zentral in `theme.css`:
+
+  **Dunkel (`:root`):** `--bg:#070710; --bg2:#0c0c1a; --ink:#f3fbff; --muted:#9fb0cc; --dim:#6b768f; --read:#d8e3f2; --cyan:#2de2e6; --magenta:#ff2a6d; --purple:#b66bff; --lime:#9dff52; --amber:#ffb43b; --line:rgba(120,180,220,.14); --glass:rgba(16,20,36,.62); --glass2:rgba(20,26,46,.7); --ok:#27f59a; --warn:#ffb43b; --danger:#ff2a6d` (+ `--lf1..5`, Aliase).
+
+  **Hell (`html[data-theme="light"]`):** `--bg:#ffffff; --bg2:#f4f7fa; --ink:#16202b; --muted:#5a6675; --dim:#7c8896; --read:#222e3a; --cyan:#0892a5; --magenta:#c81e5a; --purple:#7a3ec8; --amber:#b8801f; --ok:#138a5e; --line:#d4dde6; --glass:#f4f7fa; --glass2:#eef3f8; --warn:#b8801f; --danger:#c81e5a; --card:#ffffff; --shadow:0 6px 20px rgba(30,50,80,.10)`.
+
+- Beide Paletten werden **einheitlich auf allen Seiten** verwendet — hell sieht überall gleich aus, dunkel sieht überall gleich aus.
+- **Keine hartcodierten Farben mehr direkt an Elementen.** Seiten mit eigenem `:root` (z. B. `python_lab` mit `--lab-*`) aliasen ihre Variablen auf die kanonischen (`--lab-bg:var(--bg)` usw.), damit beide Modi automatisch greifen.
+
+### 2. Lösungen/Erklärungen: ein einklappbarer Block pro Aufgabe
+
+- Werden **nicht** am Seitenende (oder in einer Seiten-Rail) gesammelt — jede Lösung/Erklärung steht **direkt unter ihrer Aufgabe**.
+- **Ein** einklappbarer Block: **ein Klick öffnet die komplette Lösung, ein Klick schließt sie**. Kein mehrstufiges Aufklappen (kein Tipp→Teil→Komplett).
+- **Standardmäßig zugeklappt.**
 
 ## Key conventions
 

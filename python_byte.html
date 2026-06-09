@@ -5,9 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Python Byte – FISI Lernplattform</title>
 <link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
 <style>
   
-  :root{--bg:#070710;--surface:rgba(16,20,36,.62);--card:rgba(16,20,36,.62);--border:rgba(120,180,220,.14);--accent:#2de2e6;--accent2:#b66bff;--green:#27f59a;--red:#ff2a6d;--text:#e9f7ff;--muted:#7c8aa6;--mono:'Share Tech Mono',monospace;--sans:'Chakra Petch',sans-serif;}
+  /* Farben aliasen auf die kanonischen theme.css-Variablen -> hell+dunkel automatisch;
+     --card/--muted absichtlich weggelassen, damit sie kanonisch geerbt werden */
+  :root{--surface:var(--glass);--border:var(--line);--accent:var(--cyan);--accent2:var(--purple);--green:var(--ok);--red:var(--danger);--text:var(--ink);--mono:'Share Tech Mono',monospace;--sans:'Chakra Petch',sans-serif;}
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh}
   .tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:100}

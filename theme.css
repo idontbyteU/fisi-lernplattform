@@ -19,7 +19,37 @@
   --green:var(--cyan); --green-d:var(--cyan); --green-soft:rgba(45,226,230,.1);
   --blue:var(--cyan); --blue-soft:rgba(45,226,230,.1);
   --card:var(--glass); --shadow:0 14px 40px rgba(0,0,0,.45);
+  --code-bg:#0a0d14;   /* tiefe Code-/Editor-Fläche (dunkel) */
 }
+
+/* ===================================================================== */
+/*  LICHT-THEME — exakte Werte aus den bestehenden Modulen (lf4/lf3_ipv6) */
+/*  Überschreibt nur die Variablen; alle Komponenten beziehen Farben     */
+/*  über diese Variablen und schalten dadurch automatisch mit um.        */
+/* ===================================================================== */
+html[data-theme="light"]{
+  --bg:#ffffff; --bg2:#f4f7fa; --ink:#16202b; --muted:#5a6675; --dim:#7c8896; --read:#222e3a;
+  --cyan:#0892a5; --magenta:#c81e5a; --purple:#7a3ec8; --amber:#b8801f; --ok:#138a5e;
+  --line:#d4dde6; --glass:#f4f7fa; --glass2:#eef3f8;
+  --warn:#b8801f; --danger:#c81e5a;
+  --green:var(--cyan); --green-d:var(--cyan); --green-soft:rgba(8,146,165,.10); --blue:var(--cyan); --blue-soft:rgba(8,146,165,.10);
+  --card:#ffffff; --shadow:0 6px 20px rgba(30,50,80,.10);
+  --code-bg:#eef3f8;   /* helle Code-/Editor-Fläche (Wert aus lf3_ipv6 Light) */
+}
+html[data-theme="light"] body{background:#ffffff;color:var(--ink)}
+html[data-theme="light"] body::before,
+html[data-theme="light"] body::after{display:none}            /* Neon-Glow / Scanline aus */
+html[data-theme="light"] .scan{display:none}
+html[data-theme="light"] .hdr{background:#ffffff;border-bottom:1px solid var(--line)}
+
+/* ---------- THEME-UMSCHALTER (zeigt das Ziel-Theme als Vorschau) ---------- */
+.theme-tg{font-family:var(--fmono);font-size:12.5px;border-radius:4px;padding:6px 11px;
+  cursor:pointer;transition:.14s;white-space:nowrap;font-weight:600;
+  background:rgba(243,251,255,.90);color:#0d1a26;border:1px solid rgba(200,220,240,.45)}
+.theme-tg:hover{border-color:var(--cyan);box-shadow:0 0 10px rgba(45,226,230,.18)}
+html[data-theme="light"] .theme-tg{background:#0c0c1a;color:#f3fbff;border-color:rgba(45,226,230,.4)}
+html[data-theme="light"] .theme-tg:hover{border-color:var(--cyan)}
+.theme-tg--float{position:fixed;top:12px;right:12px;z-index:9999}
 
 /* ---------- RESET + BODY + ATMOSPHÄRE ---------- */
 *{box-sizing:border-box;margin:0;padding:0}

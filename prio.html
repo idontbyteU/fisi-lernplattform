@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prio · Prüfungstraining AP1 · FISI Lernplattform</title>
 <link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<style>.shell{display:block}.main{width:100%}</style>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#070710">
 <link rel="apple-touch-icon" href="icon.svg">
@@ -22,7 +24,6 @@
       <div class="sub">AP1-Stil · Themen der Frühjahrsprüfung · mit Lösungsweg &amp; Erklärungen</div>
     </div>
     <div class="hdr-sp"></div>
-    <button class="rail-toggle" id="railToggle">💡 Erklär-Leiste</button>
   </div>
 </header>
 
@@ -45,15 +46,6 @@
     <div id="list"></div>
   </div>
 
-  <aside class="rail" id="rail">
-    <div class="rail-h"><span class="dot"></span><h3>Erklärungen &amp; Verständnis</h3><button class="x" id="railClose">×</button></div>
-    <div class="rail-body" id="railBody">
-      <div class="rail-empty">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2Z"/><path d="M9 21h6"/><path d="M10 17v4"/><path d="M14 17v4"/></svg>
-        <div>Klicke bei einer Aufgabe auf <b>„Erklärung“</b> – hier erscheinen dann Verständnis-Hinweise, Merksätze und typische Fehler zum Lösungsweg.</div>
-      </div>
-    </div>
-  </aside>
 
   <footer>FISI Lernplattform · Prio-Modul · eigene Übungen im AP1-Stil · Fortschritt wird lokal im Browser gespeichert</footer>
 </div>
@@ -444,8 +436,6 @@ store.solved=store.solved||{}; store.ans=store.ans||{};
 
 const list=document.getElementById('list');
 const chipsEl=document.getElementById('chips');
-const railBody=document.getElementById('railBody');
-const shell=document.getElementById('shell');
 let activeTopic="Alle", query="";
 
 /* ===== RENDER ===== */
@@ -501,15 +491,15 @@ function render(){
         <textarea class="ta" placeholder="Dein Lösungsansatz … (wird lokal gespeichert)">${store.ans[e.id]||""}</textarea>
         <div class="acts">
           <button class="btn hint">💡 Tipp <span class="hc"></span></button>
-          <button class="btn sol">Lösung anzeigen</button>
-          <button class="btn expl">Erklärung →</button>
+          <button class="btn sol">Lösung &amp; Erklärung anzeigen</button>
         </div>
         <div class="hints"></div>
         <div class="panel">
           <div class="panel-h">✓ Lösungsweg</div>
           <div class="panel-c">${e.partial}</div>
-          <button class="full-btn">Kompletten Lösungsweg anzeigen ▾</button>
-          <div class="full-wrap"><div class="panel-c">${e.full}</div></div>
+          <div class="panel-c">${e.full}</div>
+          <div class="panel-h">💡 Verständnis &amp; Merksätze</div>
+          ${e.expl.map(s=>`<div class="det-c${s[2]==='warn'?' warn':''}"><b>${s[2]==='warn'?'⚠️ ':''}${s[0]}</b><br>${s[1]}</div>`).join('')}
         </div>
       </div>`;
     // checkbox
@@ -532,44 +522,17 @@ function render(){
       hc.textContent=hi<e.hints.length?`(${hi}/${e.hints.length})`:"(alle)";
       if(hi>=e.hints.length)hbtn.style.opacity=.55;
     };
-    // solution
+    // Lösung & Erklärung: EIN Klick öffnet/schließt den kompletten Block
     const panel=card.querySelector('.panel');
     card.querySelector('.btn.sol').onclick=(ev)=>{
       panel.classList.toggle('show');
-      ev.target.textContent=panel.classList.contains('show')?"Lösung verbergen":"Lösung anzeigen";
+      ev.target.textContent=panel.classList.contains('show')?"Lösung & Erklärung verbergen":"Lösung & Erklärung anzeigen";
     };
-    const fw=card.querySelector('.full-wrap');
-    card.querySelector('.full-btn').onclick=(ev)=>{
-      fw.classList.toggle('show');
-      ev.target.textContent=fw.classList.contains('show')?"Lösungsweg einklappen ▴":"Kompletten Lösungsweg anzeigen ▾";
-    };
-    // explanation rail
-    card.querySelector('.btn.expl').onclick=()=>openRail(e);
     list.appendChild(card);
   });
   });
 }
 
-/* ===== RIGHT RAIL ===== */
-function openRail(e){
-  shell.classList.remove('rail-closed');
-  document.body.classList.add('rail-open-mobile');
-  let secs="";
-  e.expl.forEach((s,i)=>{
-    const open=s[2]===1?"open":"";
-    const cls=s[2]==="warn"?"det-c warn":"det-c";
-    const icon=s[2]==="warn"?"⚠️ ":"";
-    secs+=`<details ${open}><summary>${icon}${s[0]}<span class="ar">›</span></summary><div class="${cls}">${s[1]}</div></details>`;
-  });
-  railBody.innerHTML=`<div class="rail-topic">${e.topic}</div><div class="rail-title">${e.title}</div>${secs}`;
-  if(window.innerWidth<=880) railBody.scrollIntoView({block:'nearest'});
-}
-function closeRail(){shell.classList.add('rail-closed');document.body.classList.remove('rail-open-mobile');}
-document.getElementById('railClose').onclick=closeRail;
-document.getElementById('railToggle').onclick=()=>{
-  if(shell.classList.contains('rail-closed')){shell.classList.remove('rail-closed');}
-  else{closeRail();}
-};
 
 /* ===== PROGRESS ===== */
 function updateProg(){

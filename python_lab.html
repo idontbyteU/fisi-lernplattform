@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Python Lab – FISI Lernplattform</title>
 <link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
 <style>
   /* ===================================================================== */
   /*  PYTHON LAB · ruhiger Lern-Look auf FISI//OS-Basis                     */
@@ -12,14 +13,15 @@
   /*  lange Lernen: größere Schrift, mehr Abstand, weniger Neon-Glühen.    */
   /* ===================================================================== */
   :root{
-    --lab-bg:#0d1018; --lab-panel:#141926; --lab-panel2:#1a2030;
-    --lab-line:rgba(140,180,220,.16); --lab-line2:rgba(140,180,220,.28);
-    --lab-ink:#eaf2fb; --lab-read:#d4deeb; --lab-muted:#9aa8bf; --lab-dim:#6f7d94;
-    --lab-accent:#46d4e6; --lab-accent2:#8b9bff; --lab-green:#4ed99a;
-    --lab-amber:#f5b945; --lab-red:#ff6b8a; --lab-purple:#b88cff;
-    /* Syntax */
-    --sx-kw:#c79bff; --sx-fn:#7fb0ff; --sx-str:#8fd98a; --sx-num:#46d4e6;
-    --sx-cm:#6f7d94; --sx-op:#d4deeb;
+    /* Farben aliasen auf die kanonischen theme.css-Variablen -> hell+dunkel automatisch */
+    --lab-bg:var(--bg); --lab-panel:var(--bg2); --lab-panel2:var(--glass2);
+    --lab-line:var(--line); --lab-line2:var(--line);
+    --lab-ink:var(--ink); --lab-read:var(--read); --lab-muted:var(--muted); --lab-dim:var(--dim);
+    --lab-accent:var(--cyan); --lab-accent2:var(--purple); --lab-green:var(--ok);
+    --lab-amber:var(--amber); --lab-red:var(--danger); --lab-purple:var(--purple);
+    /* Syntax-Highlighting auf kanonische Akzente (in beiden Modi lesbar) */
+    --sx-kw:var(--purple); --sx-fn:var(--cyan); --sx-str:var(--ok); --sx-num:var(--cyan);
+    --sx-cm:var(--dim); --sx-op:var(--read);
     --fmono:"Share Tech Mono",monospace; --fui:"Chakra Petch",sans-serif; --fdisp:"Orbitron",sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -69,7 +71,7 @@
   /* Inline-Code + Codeblock */
   code{font-family:var(--fmono);background:rgba(140,180,220,.09);border-radius:5px;
     padding:2px 7px;font-size:13.5px;color:var(--lab-accent2)}
-  .codeblock{display:block;font-family:var(--fmono);background:#0a0d14;border:1px solid var(--lab-line);
+  .codeblock{display:block;font-family:var(--fmono);background:var(--code-bg);border:1px solid var(--lab-line);
     border-radius:10px;padding:16px 18px;margin:12px 0;font-size:14px;line-height:1.8;
     color:var(--lab-read);white-space:pre;overflow-x:auto;tab-size:4}
   .codeblock .kw{color:var(--sx-kw)}.codeblock .fn{color:var(--sx-fn)}
@@ -109,14 +111,14 @@
     letter-spacing:.04em}
   .editor-head .sp{flex:1}
   .code-area{position:relative}
-  .code-area textarea{width:100%;min-height:220px;background:#0a0d14;color:var(--lab-read);
+  .code-area textarea{width:100%;min-height:220px;background:var(--code-bg);color:var(--lab-read);
     font-family:var(--fmono);font-size:14px;line-height:1.75;border:none;padding:16px 18px;
     resize:vertical;outline:none;tab-size:4;white-space:pre;overflow-wrap:normal}
   .editor-actions{display:flex;gap:10px;padding:12px 14px;background:var(--lab-panel2);
     border-top:1px solid var(--lab-line);flex-wrap:wrap;align-items:center}
   .editor-actions .status{font-family:var(--fmono);font-size:12px;color:var(--lab-dim);margin-left:auto}
 
-  .output{background:#0a0d14;border:1px solid var(--lab-line);border-radius:12px;
+  .output{background:var(--code-bg);border:1px solid var(--lab-line);border-radius:12px;
     margin-bottom:16px;overflow:hidden}
   .output-head{display:flex;align-items:center;gap:8px;padding:9px 14px;
     background:var(--lab-panel2);border-bottom:1px solid var(--lab-line);
@@ -134,7 +136,7 @@
   .viz-sub{color:var(--lab-muted);font-size:14px;margin-bottom:14px;line-height:1.6}
   .viz-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
   .viz-controls label{font-size:13.5px;color:var(--lab-muted);display:flex;align-items:center;gap:7px}
-  .viz-controls input[type=number],.viz-controls input[type=text]{background:#0a0d14;
+  .viz-controls input[type=number],.viz-controls input[type=text]{background:var(--code-bg);
     border:1px solid var(--lab-line2);border-radius:8px;color:var(--lab-ink);
     font-family:var(--fmono);font-size:14px;padding:8px 10px;width:74px;outline:none}
   .viz-controls input[type=text]{width:auto;min-width:150px}
@@ -222,7 +224,7 @@
   .to-lab{margin-top:12px}
 
   /* if/else Weggabelung */
-  .fork-cond{font-family:var(--fmono);font-size:15px;background:#0a0d14;border:1px solid var(--lab-line2);
+  .fork-cond{font-family:var(--fmono);font-size:15px;background:var(--code-bg);border:1px solid var(--lab-line2);
     border-radius:9px;padding:12px 14px;margin-bottom:12px;color:var(--lab-read)}
   .fork-branches{display:flex;flex-direction:column;gap:8px}
   .branch{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;
@@ -279,7 +281,7 @@
     background:rgba(70,212,230,.1);border-radius:6px;padding:3px 9px;display:inline-block;margin-bottom:8px}
   .quiz-card h3{font-size:16px;font-weight:700;margin-bottom:6px;color:var(--lab-ink)}
   .quiz-card .q-task{color:var(--lab-read);font-size:14.5px;line-height:1.7;margin-bottom:12px}
-  .quiz-card textarea{width:100%;min-height:120px;background:#0a0d14;color:var(--lab-read);
+  .quiz-card textarea{width:100%;min-height:120px;background:var(--code-bg);color:var(--lab-read);
     font-family:var(--fmono);font-size:13.5px;line-height:1.7;border:1px solid var(--lab-line2);
     border-radius:9px;padding:12px 14px;resize:vertical;outline:none;tab-size:4;white-space:pre}
   .quiz-card textarea:focus{border-color:var(--lab-accent)}
@@ -326,7 +328,7 @@
   .ns-loop .lbody{padding:11px 14px 11px 26px;border-top:2px solid var(--lab-line2);
     border-left:14px solid var(--lab-line2);color:var(--lab-ink)}
   /* Pseudocode-Block */
-  .pseudo{display:block;font-family:var(--fmono);background:#0a0d14;border:1px solid var(--lab-line);
+  .pseudo{display:block;font-family:var(--fmono);background:var(--code-bg);border:1px solid var(--lab-line);
     border-left:3px solid var(--lab-amber);border-radius:0 10px 10px 0;padding:14px 16px;margin:10px 0;
     font-size:14px;line-height:1.8;color:var(--lab-read);white-space:pre;overflow-x:auto}
   .pseudo .pk{color:var(--lab-amber);font-weight:700}
@@ -344,7 +346,7 @@
   }
 
   /* ===== ANNOTIERTER CODE – Zeile für Zeile ===== */
-  .anno-code{background:#0a0d14;border:1px solid var(--lab-line);border-radius:10px;padding:10px 0;margin:6px 0;font-family:var(--fmono);font-size:14px}
+  .anno-code{background:var(--code-bg);border:1px solid var(--lab-line);border-radius:10px;padding:10px 0;margin:6px 0;font-family:var(--fmono);font-size:14px}
   .anno-line{border-bottom:1px solid rgba(140,180,220,.08)}
   .anno-line:last-child{border-bottom:none}
   .anno-ln{display:block;padding:7px 16px;line-height:1.7;color:var(--lab-read);white-space:pre-wrap}

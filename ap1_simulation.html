@@ -5,20 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AP1-Prüfungssimulation – FISI Lernplattform</title>
 <link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
 <style>
   :root{
-    --s-bg:#0d1018; --s-panel:#141926; --s-panel2:#1a2030;
-    --s-line:rgba(140,180,220,.16); --s-line2:rgba(140,180,220,.28);
-    --s-ink:#eaf2fb; --s-read:#d4deeb; --s-muted:#9aa8bf; --s-dim:#6f7d94;
-    --s-accent:#46d4e6; --s-accent2:#8b9bff; --s-green:#4ed99a;
-    --s-amber:#f5b945; --s-red:#ff6b8a;
+    /* Farben aliasen auf die kanonischen theme.css-Variablen -> hell+dunkel automatisch */
+    --s-bg:var(--bg); --s-panel:var(--bg2); --s-panel2:var(--glass2);
+    --s-line:var(--line); --s-line2:var(--line);
+    --s-ink:var(--ink); --s-read:var(--read); --s-muted:var(--muted); --s-dim:var(--dim);
+    --s-accent:var(--cyan); --s-accent2:var(--purple); --s-green:var(--ok);
+    --s-amber:var(--amber); --s-red:var(--danger);
     --fmono:"Share Tech Mono",monospace; --fui:"Chakra Petch",sans-serif; --fdisp:"Orbitron",sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--s-bg);color:var(--s-ink);font-family:var(--fui);min-height:100vh;
     line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
-  .topbar{display:flex;align-items:center;gap:14px;background:rgba(13,16,24,.92);
+  .topbar{display:flex;align-items:center;gap:14px;background:var(--glass);
     border-bottom:1px solid var(--s-line);position:sticky;top:0;z-index:100;padding:12px 18px;
     backdrop-filter:blur(10px);flex-wrap:wrap}
   .topbar .home{color:var(--s-muted);text-decoration:none;font-family:var(--fmono);font-size:12px;
@@ -90,7 +92,7 @@
   .q-block th,.q-block td{border:1px solid var(--s-line2);padding:7px 10px;text-align:left}
   .q-block th{background:var(--s-panel2);color:var(--s-ink);font-size:12.5px}
   .q-block td{color:var(--s-read)}
-  .answer{width:100%;min-height:80px;background:#0a0d14;color:var(--s-read);font-family:var(--fui);
+  .answer{width:100%;min-height:80px;background:var(--code-bg);color:var(--s-read);font-family:var(--fui);
     font-size:14.5px;line-height:1.6;border:1px solid var(--s-line2);border-radius:9px;
     padding:11px 14px;resize:vertical;outline:none;margin-top:10px}
   .answer:focus{border-color:var(--s-accent)}
@@ -604,7 +606,7 @@ function renderReview(){
       `<div class="qhead"><span class="qlabel">Aufgabe ${t.label}</span><span class="qpts">${t.pts} P.</span></div>`+
       `<div class="qtext">${t.text}</div>`+
       `<div style="margin-top:10px;font-size:13px;color:var(--s-muted);font-family:var(--fmono)">DEINE ANTWORT:</div>`+
-      `<div style="background:#0a0d14;border:1px solid var(--s-line2);border-radius:9px;padding:11px 14px;`+
+      `<div style="background:var(--code-bg);border:1px solid var(--s-line2);border-radius:9px;padding:11px 14px;`+
       `margin-top:5px;white-space:pre-wrap;font-size:14px;color:var(--s-read)">${escapeHtml(ans)}</div>`+
       `<div class="solution show"><div class="stitle">✓ Musterlösung</div>`+
       `<div class="scontent">${t.solution}</div></div>`+
