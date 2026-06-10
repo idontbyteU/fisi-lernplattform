@@ -77,6 +77,15 @@ Diese zwei Standards gelten für **jede** Seite/Kachel/Modul. Bestehende Seiten 
 
 - Beide Kartenseiten MÜSSEN `backface-visibility:hidden` (inkl. `-webkit-`-Präfix) und einen voll deckenden Hintergrund (Alpha = 1) haben. NIEMALS halbtransparente Flächen (rgba mit Alpha<1, `var(--glass*)` o. Ä.) auf drehenden Kartenseiten verwenden – sonst scheint die gespiegelte Rückseite im Dunkelmodus durch. Gilt für JEDE Seite und JEDE eigene Inline-Engine, nicht nur die zentrale `.face`-Karte.
 
+### 4. Lange Konzept-Erklärungen: opaker Drawer im Vordergrund
+
+Lange Konzept-Erklärungen öffnen in einem opaken Drawer im Vordergrund, standardmäßig angedockt (Desktop: Panel rechts; Handy: hochziehbares Bottom-Sheet), mit Umschaltung auf blockierendes Vollbild. Frei resizebare Panels sind nicht erlaubt – nur feste Zustände. Kurze Aufgaben-Erklärungen bleiben inline einklappbar (siehe Standard 2).
+
+- Zentrale, wiederverwendbare Komponente: `drawer.js` (Logik) + `.drw-*`-Stile in `theme.css`. In jede Seite per `<script src="drawer.js"></script>` im `<head>` einbinden. Nur **eine** Panel-Instanz – neuer Inhalt ersetzt den alten, kein Stapeln.
+- Inhalt laden: Ein Button mit `data-erkl="content/<datei>.md"` (optional `data-erkl-title="…"`) wird automatisch verdrahtet und rendert die Markdown-Datei in den Drawer. Programmatisch: `Drawer.openMarkdown({url|md, title, trigger})` bzw. `Drawer.open({html, title, trigger})`.
+- Panel-Hintergrund **immer voll deckend** (`var(--bg2)`, Alpha = 1), klare Kante/Schatten; eigener Scrollbereich mit `overscroll-behavior:contain`; Code-Blöcke horizontal scrollbar in `var(--code-bg)`. Im Vollbild Fokusfalle, Seite dahinter gesperrt; beim Schließen Fokus zurück auf den auslösenden Button. Schließen per Button, Esc, und (nur im Vollbild) Klick auf den abgedunkelten Hintergrund. Beim Drucken ausgeblendet.
+- Lange Erklär-Inhalte liegen als Markdown unter `content/` und müssen in `service-worker.js` (`ASSETS`) registriert werden (sonst nicht offline). Werden per `fetch` geladen → über lokalen Server/HTTPS öffnen, nicht per `file://`.
+
 ## Key conventions
 
 - **All content is inline**: Card data, question arrays, and page-specific JS live directly inside `<script>` tags in each HTML file — there are no separate JSON or JS data files.
