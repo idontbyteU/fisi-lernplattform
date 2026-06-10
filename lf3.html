@@ -27,6 +27,7 @@
     <div class="mode">
       <button id="mLern" class="on">Lernen</button>
       <button id="mList">Übersicht</button>
+      <button id="mCalc">🧮 Rechnen</button>
     </div>
   </div>
 </header>
@@ -45,6 +46,7 @@
 
   <div id="study" class="study"></div>
   <div id="listView" class="list" style="display:none"></div>
+  <div id="calcView" style="display:none"></div>
 
   <footer>FISI Lernplattform · Lernfeld 3 · Fortschritt wird lokal im Browser gespeichert · Leertaste = umdrehen, ← → = blättern</footer>
 </div>
@@ -281,6 +283,136 @@ function renderList(){
   });
 }
 
+/* ===== RECHEN-MODUS (parametrische Aufgaben, AP1+) ===== */
+const calcEl=document.getElementById('calcView');
+const barEl=document.querySelector('.bar');
+function ri(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function g(n,d){if(d==null)d=2;return Number(n).toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d});}
+function intToIp(n){return [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.');}
+function ipToInt(o){return (o[0]*16777216+o[1]*65536+o[2]*256+o[3])>>>0;}
+function hbits(need){return Math.ceil(Math.log2(need+2));}
+
+const CALC_GENS=[
+{title:"A · Subnetting (Hostbedarf → Subnetze)",gen(){
+  const base=pick([[192,168,ri(0,250)],[10,ri(0,200),ri(0,250)],[172,ri(16,31),ri(0,250)]]);
+  const baseOct=[base[0],base[1],base[2],0], basePrefix=24;
+  const bedarf=ri(10,120), h=hbits(bedarf), newPrefix=32-h;
+  const subnets=Math.pow(2,newPrefix-basePrefix), hosts=Math.pow(2,h)-2, block=Math.pow(2,h);
+  const k=ri(0,Math.min(subnets-1,5)), baseInt=ipToInt(baseOct), netInt=baseInt+k*block;
+  const net=intToIp(netInt), bc=intToIp(netInt+block-1), first=intToIp(netInt+1), last=intToIp(netInt+block-2);
+  const baseStr=baseOct.join('.');
+  return{
+    q:`Das Netz <b>${baseStr}/24</b> soll so unterteilt werden, dass jedes Subnetz mindestens <b>${bedarf} Hosts</b> trägt.<br>a) Neues Präfix? b) Anzahl Subnetze und nutzbare Hosts/Subnetz? c) Netz-, erste/letzte Host- und Broadcast-Adresse von <b>Subnetz Nr.&nbsp;${k+1}</b>?`,
+    given:`Basisnetz = ${baseStr}/24\nHostbedarf = ${bedarf} pro Subnetz`,
+    sol:`<div class="step">a) Hostbits: 2^h − 2 ≥ ${bedarf} → h = ${h} → Präfix = 32 − ${h} = <span class="mono">/${newPrefix}</span></div>
+      <div class="step">b) Subnetze: 2^(${newPrefix}−24) = <span class="mono">${subnets}</span> · Hosts/Subnetz: 2^${h} − 2 = <span class="mono">${hosts}</span></div>
+      <div class="step">c) Blockgröße = ${block} → Subnetz ${k+1} beginnt bei Offset +${k*block}:</div>
+      <table><tr><th>Netz</th><th>Erster Host</th><th>Letzter Host</th><th>Broadcast</th></tr>
+      <tr><td>${net}/${newPrefix}</td><td>${first}</td><td>${last}</td><td>${bc}</td></tr></table>
+      <div class="res"><b>/${newPrefix}</b> · ${subnets} Subnetze · ${hosts} Hosts/Subnetz</div>`
+  };
+}},
+{title:"B · VLSM (mehrere Hostbedarfe)",gen(){
+  const base=pick([[192,168,ri(0,250)],[10,ri(0,200),ri(0,250)],[172,ri(16,31),ri(0,250)]]);
+  const baseOct=[base[0],base[1],base[2],0], nDem=ri(3,4), pool=[2,5,6,10,12,20,25,28,50,60];
+  let demands=[];
+  while(true){
+    demands=[];
+    for(let i=0;i<nDem;i++)demands.push(pick(pool));
+    demands.sort((a,b)=>b-a);
+    const sum=demands.reduce((s,d)=>s+Math.pow(2,hbits(d)),0);
+    if(sum<=256)break;
+  }
+  let ptr=ipToInt(baseOct), rows=[];
+  demands.forEach(d=>{
+    const h=hbits(d), block=Math.pow(2,h), prefix=32-h;
+    rows.push({d,prefix,net:intToIp(ptr),first:intToIp(ptr+1),last:intToIp(ptr+block-2),bc:intToIp(ptr+block-1)});
+    ptr+=block;
+  });
+  const nextFree=intToIp(ptr), baseStr=baseOct.join('.');
+  let tbl='<table><tr><th>Bedarf</th><th>Präfix</th><th>Netz</th><th>Hostbereich</th><th>Broadcast</th></tr>';
+  rows.forEach(r=>{tbl+=`<tr><td>${r.d}</td><td>/${r.prefix}</td><td>${r.net}</td><td>${r.first} – ${r.last}</td><td>${r.bc}</td></tr>`;});
+  tbl+='</table>';
+  return{
+    q:`Im Netz <b>${baseStr}/24</b> sollen per <b>VLSM</b> Teilnetze für folgende Hostbedarfe gebildet werden (größter zuerst): <b>${demands.join(', ')}</b>. Bestimme je Teilnetz Präfix, Netzadresse, Hostbereich und Broadcast – und die nächste freie Netzadresse.`,
+    given:`Basisnetz = ${baseStr}/24\nBedarfe = ${demands.join(', ')}`,
+    sol:`<div class="step">Größten Bedarf zuerst zuteilen; Blockgröße je Teilnetz = 2^⌈log₂(Bedarf+2)⌉. So bleiben alle Netze auf ihrer Grenze ausgerichtet:</div>
+      ${tbl}
+      <div class="res">Nächste freie Netzadresse: <b>${nextFree}</b></div>`
+  };
+}},
+{title:"C · Supernetting / Route-Aggregation",gen(){
+  const count=pick([2,4,8]), trap=pick([false,true]);
+  let start;
+  if(!trap){start=ri(0,Math.floor((255-count+1)/count))*count;}
+  else{do{start=ri(1,250);}while(start%count===0||start+count>255);}
+  function aggr(s,c){let res=[],cur=s,end=s+c;while(cur<end){let align=cur===0?256:(cur&-cur),size=align,rem=end-cur;while(size>rem)size>>=1;res.push({oct:cur,prefix:24-Math.log2(size)});cur+=size;}return res;}
+  const blocks=aggr(start,count), single=blocks.length===1, agP=24-Math.log2(count);
+  let nets=[];for(let i=0;i<count;i++)nets.push('192.168.'+(start+i)+'.0/24');
+  const aggStr=blocks.map(b=>'192.168.'+b.oct+'.0/'+b.prefix).join(', ');
+  return{
+    q:`Fasse folgende <b>${count}</b> aufeinanderfolgenden Netze zum <b>kleinstmöglichen Supernetz</b> zusammen:<br><span class="mono">${nets.join('  ·  ')}</span><br>Wie lautet das Aggregat (CIDR)?`,
+    given:`${count} × /24 ab 192.168.${start}.0`,
+    sol: single
+      ? `<div class="step">Startnetz-Oktett ${start} ist durch ${count} teilbar → die ${count} /24 lassen sich zu <b>einem</b> Block vereinen.</div>
+         <div class="step">Neues Präfix: 24 − log₂(${count}) = ${agP} → <span class="mono">192.168.${start}.0/${agP}</span></div>
+         <div class="res"><b>192.168.${start}.0/${agP}</b></div>`
+      : `<div class="step"><b>Falle:</b> Startnetz-Oktett ${start} ist <b>nicht</b> durch ${count} teilbar → ein einziges /${agP} würde Fremdnetze einschließen.</div>
+         <div class="step">Kleinste exakte Abdeckung ohne Fremdnetze:</div>
+         <table><tr><th>Aggregat</th></tr>${blocks.map(b=>'<tr><td>192.168.'+b.oct+'.0/'+b.prefix+'</td></tr>').join('')}</table>
+         <div class="res"><b>${aggStr}</b></div>`
+  };
+}},
+{title:"D · IPv6 kürzen & Subnetze",gen(){
+  function hx(){return ri(1,65535).toString(16);}
+  const patterns=[
+    ['2001','0db8',hx(),'0000','0000','0000',hx(),hx()],
+    ['2001','0db8','0000','0000',hx(),hx(),'0000',hx()],
+    ['fe80','0000','0000','0000','0000','0000','0000',hx()],
+    ['2001','0db8',hx(),hx(),'0000','0000','0000',hx()]
+  ];
+  const p=pick(patterns).map(x=>('0000'+x).slice(-4)), ints=p.map(x=>parseInt(x,16)), expanded=p.join(':');
+  let best={s:-1,l:0},cur={s:-1,l:0};
+  for(let i=0;i<8;i++){if(ints[i]===0){if(cur.l===0)cur.s=i;cur.l++;if(cur.l>best.l)best={s:cur.s,l:cur.l};}else cur={s:-1,l:0};}
+  const parts=ints.map(x=>x.toString(16));
+  let comp;
+  if(best.l>=2)comp=(parts.slice(0,best.s).join(':')+'::'+parts.slice(best.s+best.l).join(':'));
+  else comp=parts.join(':');
+  const prefix=pick([48,56]), subBits=64-prefix, subs=Math.pow(2,subBits);
+  return{
+    q:`Gegeben ist die IPv6-Adresse (vollständig):<br><span class="mono">${expanded}</span><br>a) Kürze sie nach RFC&nbsp;5952. b) Wie viele <b>/64-Subnetze</b> ergeben sich aus einem <b>/${prefix}</b>-Präfix? c) Wie viele Adressen umfasst ein /64?`,
+    given:`Adresse = ${expanded}\nPräfix = /${prefix}`,
+    sol:`<div class="step">a) Führende Nullen je Block entfernen, längsten Nullblock <b>einmal</b> durch <b>::</b> ersetzen:<br><span class="mono">${comp}</span></div>
+      <div class="step">b) Subnetzbits = 64 − ${prefix} = ${subBits} → 2^${subBits} = <span class="mono">${g(subs,0)}</span> /64-Subnetze</div>
+      <div class="step">c) Adressen pro /64 = 2^64 = <span class="mono">18.446.744.073.709.551.616</span> (≈ 1,8 · 10¹⁹)</div>
+      <div class="res"><b>${comp}</b> · ${g(subs,0)} Subnetze à 2^64 Adressen</div>`
+  };
+}}
+];
+
+const CALC_INTRO="Jede Aufgabe nutzt <b>zufällige, plausible Werte</b> – mit „🎲 Neue Aufgabe“ bekommst du denselben Aufgabentyp mit neuen Zahlen. IP-/Binärwerte in Monospace, Lösungen je Aufgabe in einem einklappbaren Block (standardmäßig zu).";
+function makeCard(gdef){
+  const card=document.createElement('div');card.className='calc-card';
+  function fill(){
+    const d=gdef.gen();
+    card.innerHTML=`<div class="calc-h">${gdef.title}</div>
+      <div class="calc-q">${d.q}</div>
+      ${d.given?`<span class="calc-given">${d.given}</span>`:''}
+      <div class="calc-acts"><button class="calc-new">🎲 Neue Aufgabe</button><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">${d.sol}</div>`;
+    card.querySelector('.calc-new').onclick=fill;
+    const sol=card.querySelector('.calc-sol'),tg=card.querySelector('.calc-toggle');
+    tg.onclick=()=>{const open=sol.classList.toggle('show');tg.textContent=open?'Lösung verbergen':'Lösung anzeigen';};
+  }
+  fill();return card;
+}
+function renderCalc(){
+  calcEl.innerHTML='<div class="calc"><div class="calc-intro">'+CALC_INTRO+'</div></div>';
+  const wrap=calcEl.querySelector('.calc');
+  CALC_GENS.forEach(gd=>wrap.appendChild(makeCard(gd)));
+}
+
 /* ===== CONTROLS ===== */
 document.getElementById('tShuffle').onclick=function(){shuffled=!shuffled;this.classList.toggle('on',shuffled);rebuild();};
 document.getElementById('tOpen').onclick=function(){onlyOpen=!onlyOpen;this.classList.toggle('on',onlyOpen);rebuild();};
@@ -288,8 +420,23 @@ document.getElementById('tReset').onclick=function(){
   const scope=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
   scope.forEach(c=>delete store.known[c.id]);save();rebuild();
 };
-document.getElementById('mLern').onclick=()=>{mode="lern";document.getElementById('mLern').classList.add('on');document.getElementById('mList').classList.remove('on');studyEl.style.display="";listEl.style.display="none";rebuild();};
-document.getElementById('mList').onclick=()=>{mode="list";document.getElementById('mList').classList.add('on');document.getElementById('mLern').classList.remove('on');studyEl.style.display="none";listEl.style.display="";rebuild();};
+function setMode(m){
+  mode=m;
+  document.getElementById('mLern').classList.toggle('on',m==='lern');
+  document.getElementById('mList').classList.toggle('on',m==='list');
+  document.getElementById('mCalc').classList.toggle('on',m==='calc');
+  const calc=m==='calc';
+  chipsEl.style.display=calc?'none':'';
+  barEl.style.display=calc?'none':'';
+  studyEl.style.display=(m==='lern')?'':'none';
+  listEl.style.display=(m==='list')?'':'none';
+  calcEl.style.display=calc?'':'none';
+  if(calc){if(!calcEl.dataset.built){renderCalc();calcEl.dataset.built='1';}}
+  else rebuild();
+}
+document.getElementById('mLern').onclick=()=>setMode('lern');
+document.getElementById('mList').onclick=()=>setMode('list');
+document.getElementById('mCalc').onclick=()=>setMode('calc');
 
 /* keyboard */
 document.addEventListener('keydown',e=>{

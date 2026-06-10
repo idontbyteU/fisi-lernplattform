@@ -26,6 +26,7 @@
     <div class="mode">
       <button id="mLern" class="on">Lernen</button>
       <button id="mList">Übersicht</button>
+      <button id="mCalc">🧮 Rechnen</button>
     </div>
   </div>
 </header>
@@ -44,6 +45,7 @@
 
   <div id="study" class="study"></div>
   <div id="listView" class="list" style="display:none"></div>
+  <div id="calcView" style="display:none"></div>
 
   <footer>FISI Lernplattform · Lernfeld 2 · Fortschritt wird lokal im Browser gespeichert · Leertaste = umdrehen, ← → = blättern</footer>
 </div>
@@ -252,6 +254,176 @@ function renderList(){
   });
 }
 
+/* ===== RECHEN-MODUS (parametrische Aufgaben, AP1+) ===== */
+const calcEl=document.getElementById('calcView');
+const barEl=document.querySelector('.bar');
+function ri(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function g(n,d){if(d==null)d=2;return Number(n).toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d});}
+
+const CALC_GENS=[
+{title:"1 · Stromkosten eines Geräts",gen(){
+  const P=ri(2,16)*50, preis=ri(25,40)/100;
+  const d247=pick([true,false]), hpd=d247?24:ri(8,16);
+  const jahr=pick([true,false]), days=jahr?365:30;
+  const kWh=P/1000*hpd*days, kosten=kWh*preis;
+  return{
+    q:`Ein Gerät mit <b>${P} W</b> läuft ${d247?'<b>rund um die Uhr (24 h/Tag)</b>':'<b>'+hpd+' h pro Tag</b>'} bei einem Strompreis von <b>${g(preis)} €/kWh</b>. Wie hoch sind die Stromkosten pro <b>${jahr?'Jahr (365 Tage)':'Monat (30 Tage)'}</b>?`,
+    given:`P = ${P} W = ${g(P/1000,3)} kW\nBetrieb = ${hpd} h/Tag · ${days} Tage\nPreis = ${g(preis)} €/kWh`,
+    sol:`<div class="step">1) Leistung in kW: ${P} W ÷ 1000 = <span class="mono">${g(P/1000,3)} kW</span></div>
+      <div class="step">2) Energie: ${g(P/1000,3)} kW · ${hpd} h · ${days} = <span class="mono">${g(kWh)} kWh</span></div>
+      <div class="step">3) Kosten: ${g(kWh)} kWh · ${g(preis)} €/kWh</div>
+      <div class="res"><b>≈ ${g(kosten)} €</b> pro ${jahr?'Jahr':'Monat'}</div>`
+  };
+}},
+{title:"2 · Stromkosten mit Kühlung (PUE)",gen(){
+  const P=ri(2,16)*50, preis=ri(25,40)/100, pue=ri(13,18)/10;
+  const kWh=P/1000*8760, itK=kWh*preis, ges=itK*pue, kuehl=ges-itK;
+  return{
+    q:`Ein Server im Rechenzentrum benötigt <b>${P} W</b> IT-Leistung und läuft 24/7. Der Strompreis liegt bei <b>${g(preis)} €/kWh</b>, der <b>PUE-Wert ist ${g(pue,1)}</b>. Wie hoch sind die <b>Gesamtstromkosten pro Jahr</b> (inkl. Kühlung/Infrastruktur), und welcher Anteil entfällt auf die Kühlung?`,
+    given:`P(IT) = ${P} W · 8760 h/Jahr\nPreis = ${g(preis)} €/kWh\nPUE = ${g(pue,1)}`,
+    sol:`<div class="step">1) IT-Energie: ${g(P/1000,3)} kW · 8760 h = <span class="mono">${g(kWh)} kWh</span></div>
+      <div class="step">2) IT-Kosten: ${g(kWh)} · ${g(preis)} = <span class="mono">${g(itK)} €</span></div>
+      <div class="step">3) Gesamt: IT-Kosten · PUE = ${g(itK)} · ${g(pue,1)}</div>
+      <div class="step">4) Kühlanteil: Gesamt − IT = ${g(ges)} − ${g(itK)}</div>
+      <div class="res"><b>Gesamt ≈ ${g(ges)} €/Jahr</b> · davon Kühlung/Infrastruktur ≈ ${g(kuehl)} €</div>`
+  };
+}},
+{title:"3 · Amortisation eines Gerätetauschs",gen(){
+  const Palt=ri(8,16)*50, Pneu=Palt-ri(2,6)*50, preis=ri(25,40)/100, ansch=ri(4,30)*50;
+  const espKWh=(Palt-Pneu)/1000*8760, esp=espKWh*preis, monate=ansch/esp*12, jahre=monate/12;
+  return{
+    q:`Ein altes Gerät verbraucht <b>${Palt} W</b>, ein neues nur <b>${Pneu} W</b> (Dauerbetrieb 24/7). Das neue Gerät kostet <b>${g(ansch,0)} €</b>, der Strompreis beträgt <b>${g(preis)} €/kWh</b>. Nach wie vielen Monaten amortisiert sich der Tausch durch die Stromersparnis?`,
+    given:`ΔP = ${Palt} − ${Pneu} = ${Palt-Pneu} W\n8760 h/Jahr · ${g(preis)} €/kWh\nAnschaffung = ${g(ansch,0)} €`,
+    sol:`<div class="step">1) Ersparnis: ${g((Palt-Pneu)/1000,3)} kW · 8760 h = <span class="mono">${g(espKWh)} kWh/Jahr</span></div>
+      <div class="step">2) in €: ${g(espKWh)} · ${g(preis)} = <span class="mono">${g(esp)} €/Jahr</span></div>
+      <div class="step">3) Amortisation: ${g(ansch,0)} € ÷ ${g(esp)} €/Jahr · 12 Monate</div>
+      <div class="res"><b>≈ ${g(monate,1)} Monate</b> (≈ ${g(jahre,2)} Jahre)</div>`
+  };
+}},
+{title:"4 · Netzteil-Wirkungsgrad & Verlustleistung",gen(){
+  const eta=ri(80,94)/100, Pout=ri(4,14)*50, Pin=Pout/eta, verl=Pin-Pout;
+  return{
+    q:`Ein Netzteil hat einen Wirkungsgrad von <b>η = ${g(eta*100,0)} %</b> und gibt <b>${Pout} W</b> an die Komponenten ab. Wie viel Leistung nimmt es aus dem Netz auf, und wie hoch ist die Verlustleistung (Abwärme)?`,
+    given:`η = ${g(eta,2)}\nP_out = ${Pout} W`,
+    sol:`<div class="step">1) Aufnahme: P_in = P_out ÷ η = ${Pout} ÷ ${g(eta,2)} = <span class="mono">${g(Pin)} W</span></div>
+      <div class="step">2) Verlust: P_in − P_out = ${g(Pin)} − ${Pout}  (= P_out·(1/η−1))</div>
+      <div class="res"><b>P_in ≈ ${g(Pin)} W</b> · Verlustleistung ≈ ${g(verl)} W</div>`
+  };
+}},
+{title:"5 · RAM-Bandbreite",gen(){
+  const mt=pick([2133,2400,2666,3200,3600,4800,5600,6400]), ch=pick([1,2]);
+  const ddr=mt<=3600?'DDR4':'DDR5', mb=mt*8*ch, gb=mb/1000;
+  return{
+    q:`Ein <b>${ddr}-${mt}</b>-RAM (${mt} MT/s) läuft im <b>${ch===2?'Dual':'Single'}-Channel</b> an einem 64-Bit-Bus. Wie groß ist die theoretische Speicherbandbreite?`,
+    given:`Datenrate = ${mt} MT/s\nBusbreite = 64 bit = 8 Byte\nChannels = ${ch}`,
+    sol:`<div class="step">Bandbreite = MT/s · (64 bit ÷ 8) · Channels = ${mt} · 8 · ${ch}</div>
+      <div class="step"><b>Hinweis:</b> Das „DDR“ (double data rate) steckt bereits in den MT/s – also <b>nicht erneut verdoppeln</b>.</div>
+      <div class="step">= <span class="mono">${g(mb,0)} MB/s</span></div>
+      <div class="res"><b>≈ ${g(gb,1)} GB/s</b></div>`
+  };
+}},
+{title:"6 · Unkomprimierte Bildgröße",gen(){
+  const res=pick([[1280,720],[1920,1080],[2560,1440],[3840,2160],[4096,2160]]), depth=pick([8,16,24,32]);
+  const bytes=res[0]*res[1]*depth/8, mib=bytes/1048576, mb=bytes/1e6;
+  return{
+    q:`Ein unkomprimiertes Bild hat <b>${res[0]} × ${res[1]} Pixel</b> bei einer Farbtiefe von <b>${depth} bit/Pixel</b>. Wie groß ist die Datei (in MiB und MB)?`,
+    given:`${res[0]} × ${res[1]} px\nFarbtiefe = ${depth} bit = ${depth/8} Byte/Pixel`,
+    sol:`<div class="step">1) Bytes = B · H · Farbtiefe ÷ 8 = ${res[0]} · ${res[1]} · ${depth} ÷ 8 = <span class="mono">${g(bytes,0)} Byte</span></div>
+      <div class="step">2) MiB: ÷ 1024² = <span class="mono">${g(mib)} MiB</span></div>
+      <div class="step">3) MB: ÷ 1.000.000 = <span class="mono">${g(mb)} MB</span></div>
+      <div class="res"><b>≈ ${g(mib)} MiB</b> (≈ ${g(mb)} MB)</div>`
+  };
+}},
+{title:"7 · Druckgröße & DPI",gen(){
+  const px=pick([[1800,1200],[2400,1600],[3000,2000],[4000,3000],[6000,4000]]), dpi=pick([150,200,300]);
+  const wi=px[0]/dpi, hi=px[1]/dpi, wc=wi*2.54, hc=hi*2.54;
+  return{
+    q:`Ein Foto mit <b>${px[0]} × ${px[1]} Pixel</b> wird mit <b>${dpi} DPI</b> gedruckt. Wie groß ist der Ausdruck in Zoll und in cm?`,
+    given:`${px[0]} × ${px[1]} px\nAuflösung = ${dpi} DPI\n1 Zoll = 2,54 cm`,
+    sol:`<div class="step">1) Breite: ${px[0]} px ÷ ${dpi} DPI = <span class="mono">${g(wi)} Zoll</span> · 2,54 = <span class="mono">${g(wc)} cm</span></div>
+      <div class="step">2) Höhe: ${px[1]} px ÷ ${dpi} DPI = <span class="mono">${g(hi)} Zoll</span> · 2,54 = <span class="mono">${g(hc)} cm</span></div>
+      <div class="res"><b>≈ ${g(wc,1)} cm × ${g(hc,1)} cm</b></div>`
+  };
+}},
+{title:"8 · Druckkosten pro Seite",gen(){
+  const preis=ri(15,45), reich=ri(4,30)*50, seiten=ri(5,60)*100;
+  const proS=preis/reich, ges=proS*seiten;
+  return{
+    q:`Eine Druckerpatrone kostet <b>${preis} €</b> und reicht für <b>${g(reich,0)} Seiten</b>. Wie hoch sind die Kosten pro Seite und die Gesamtkosten für <b>${g(seiten,0)} Seiten</b>?`,
+    given:`Patrone = ${preis} €\nReichweite = ${g(reich,0)} Seiten\nDruckmenge = ${g(seiten,0)} Seiten`,
+    sol:`<div class="step">1) Kosten/Seite = ${preis} € ÷ ${g(reich,0)} = <span class="mono">${g(proS,4)} € ≈ ${g(proS*100,2)} Cent</span></div>
+      <div class="step">2) Gesamt = ${g(proS,4)} € · ${g(seiten,0)} Seiten</div>
+      <div class="res"><b>≈ ${g(ges)} €</b></div>`
+  };
+}},
+{title:"9 · Datenübertragungszeit",gen(){
+  const giB=pick([true,false]), size=ri(2,50), rateM=pick([50,100,250,500,1000]), eff=pick([100,100,90,85]);
+  const bits=giB?size*Math.pow(2,30)*8:size*1e9*8, rate=rateM*1e6*(eff/100), t=bits/rate;
+  return{
+    q:`Eine Datei von <b>${size} ${giB?'GiB':'GB'}</b> wird über eine <b>${rateM} Mbit/s</b>-Leitung übertragen${eff<100?` (nur <b>${eff} %</b> Nutzeffizienz)`:''}. Wie lange dauert die Übertragung?`,
+    given:`Größe = ${size} ${giB?'GiB (1 GiB = 2^30 Byte)':'GB (1 GB = 10^9 Byte)'}\nRate = ${rateM} Mbit/s${eff<100?' · Effizienz '+eff+' %':''}\n1 Byte = 8 bit`,
+    sol:`<div class="step">1) Größe in bit: ${size} · ${giB?'2^30':'10^9'} · 8 = <span class="mono">${g(bits,0)} bit</span></div>
+      <div class="step">2) Nutzrate: ${rateM} · 10^6${eff<100?' · '+eff+'%':''} = <span class="mono">${g(rate,0)} bit/s</span></div>
+      <div class="step">3) Zeit = ${g(bits,0)} ÷ ${g(rate,0)}</div>
+      <div class="res"><b>≈ ${g(t,1)} s</b> (≈ ${g(t/60,2)} min)</div>`
+  };
+}},
+{title:"10 · RAID-Kapazität & Redundanz",gen(){
+  const level=pick([0,1,5,6,10]);
+  let n; if(level===1)n=2; else if(level===0)n=ri(2,4); else if(level===5)n=ri(3,6); else if(level===6)n=ri(4,7); else n=pick([4,6,8]);
+  const s=pick([1,2,4,6,8]), raw=n*s;
+  let usable, formel;
+  if(level===0){usable=n*s;formel=`n · s = ${n} · ${s}`;}
+  else if(level===1){usable=s;formel=`s = ${s} (nur eine von zwei gespiegelten Platten nutzbar)`;}
+  else if(level===5){usable=(n-1)*s;formel=`(n−1) · s = ${n-1} · ${s}`;}
+  else if(level===6){usable=(n-2)*s;formel=`(n−2) · s = ${n-2} · ${s}`;}
+  else {usable=n*s/2;formel=`n · s ÷ 2 = ${n} · ${s} ÷ 2`;}
+  const loss=(raw-usable)/raw*100;
+  return{
+    q:`Ein <b>RAID ${level}</b> besteht aus <b>${n} Festplatten à ${s} TB</b>. Wie groß ist die nutzbare Kapazität, und wie hoch ist der Redundanzverlust (in %)?`,
+    given:`Level = RAID ${level}\nPlatten = ${n} · ${s} TB (Brutto ${raw} TB)`,
+    sol:`<div class="step">1) Nutzbar: ${formel} = <span class="mono">${g(usable,0)} TB</span></div>
+      <div class="step">2) Redundanzverlust: (Brutto − Netto) ÷ Brutto = (${raw} − ${usable}) ÷ ${raw}</div>
+      <div class="res"><b>Nutzbar ${g(usable,0)} TB</b> · Redundanzverlust ${g(loss,1)} %</div>`
+  };
+}},
+{title:"11 · Speichereinheiten (TiB ↔ TB)",gen(){
+  const tib=ri(3,40), platte=pick([4,6,8,10,12,16,18,20]);
+  const dataTB=tib*Math.pow(2,40)/1e12, fits=dataTB<=platte, beleg=dataTB/platte*100;
+  return{
+    q:`Du musst <b>${tib} TiB</b> Daten auf einer Festplatte mit <b>${platte} TB</b> (Herstellerangabe, 1 TB = 10¹² Byte) ablegen. Passt das, und wie hoch wäre die Belegung in %?`,
+    given:`Daten = ${tib} TiB (1 TiB = 2^40 Byte)\nPlatte = ${platte} TB (1 TB = 10^12 Byte)`,
+    sol:`<div class="step">1) Daten in TB: ${tib} · 2^40 ÷ 10^12 = <span class="mono">${g(dataTB)} TB</span></div>
+      <div class="step">2) Vergleich: ${g(dataTB)} TB ${fits?'≤':'>'} ${platte} TB → <b>${fits?'passt':'passt NICHT'}</b></div>
+      <div class="step">3) Belegung: ${g(dataTB)} ÷ ${platte} · 100</div>
+      <div class="res"><b>${fits?'Passt':'Passt nicht'}</b> · Belegung ≈ ${g(beleg,1)} %</div>`
+  };
+}}
+];
+
+const CALC_INTRO="Jede Aufgabe nutzt <b>zufällige, plausible Werte</b> – mit „🎲 Neue Aufgabe“ bekommst du denselben Aufgabentyp mit neuen Zahlen. Die Lösung steht je Aufgabe in einem einklappbaren Block (standardmäßig zu).";
+function makeCard(gdef){
+  const card=document.createElement('div');card.className='calc-card';
+  function fill(){
+    const d=gdef.gen();
+    card.innerHTML=`<div class="calc-h">${gdef.title}</div>
+      <div class="calc-q">${d.q}</div>
+      ${d.given?`<span class="calc-given">${d.given}</span>`:''}
+      <div class="calc-acts"><button class="calc-new">🎲 Neue Aufgabe</button><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">${d.sol}</div>`;
+    card.querySelector('.calc-new').onclick=fill;
+    const sol=card.querySelector('.calc-sol'),tg=card.querySelector('.calc-toggle');
+    tg.onclick=()=>{const open=sol.classList.toggle('show');tg.textContent=open?'Lösung verbergen':'Lösung anzeigen';};
+  }
+  fill();return card;
+}
+function renderCalc(){
+  calcEl.innerHTML='<div class="calc"><div class="calc-intro">'+CALC_INTRO+'</div></div>';
+  const wrap=calcEl.querySelector('.calc');
+  CALC_GENS.forEach(gd=>wrap.appendChild(makeCard(gd)));
+}
+
 /* ===== CONTROLS ===== */
 document.getElementById('tShuffle').onclick=function(){shuffled=!shuffled;this.classList.toggle('on',shuffled);rebuild();};
 document.getElementById('tOpen').onclick=function(){onlyOpen=!onlyOpen;this.classList.toggle('on',onlyOpen);rebuild();};
@@ -259,8 +431,23 @@ document.getElementById('tReset').onclick=function(){
   const scope=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
   scope.forEach(c=>delete store.known[c.id]);save();rebuild();
 };
-document.getElementById('mLern').onclick=()=>{mode="lern";document.getElementById('mLern').classList.add('on');document.getElementById('mList').classList.remove('on');studyEl.style.display="";listEl.style.display="none";rebuild();};
-document.getElementById('mList').onclick=()=>{mode="list";document.getElementById('mList').classList.add('on');document.getElementById('mLern').classList.remove('on');studyEl.style.display="none";listEl.style.display="";rebuild();};
+function setMode(m){
+  mode=m;
+  document.getElementById('mLern').classList.toggle('on',m==='lern');
+  document.getElementById('mList').classList.toggle('on',m==='list');
+  document.getElementById('mCalc').classList.toggle('on',m==='calc');
+  const calc=m==='calc';
+  chipsEl.style.display=calc?'none':'';
+  barEl.style.display=calc?'none':'';
+  studyEl.style.display=(m==='lern')?'':'none';
+  listEl.style.display=(m==='list')?'':'none';
+  calcEl.style.display=calc?'':'none';
+  if(calc){if(!calcEl.dataset.built){renderCalc();calcEl.dataset.built='1';}}
+  else rebuild();
+}
+document.getElementById('mLern').onclick=()=>setMode('lern');
+document.getElementById('mList').onclick=()=>setMode('list');
+document.getElementById('mCalc').onclick=()=>setMode('calc');
 
 /* keyboard */
 document.addEventListener('keydown',e=>{
