@@ -99,6 +99,11 @@
       <p>Echtes Python im Browser ausführen, Variablen-Inspektor und visuelle Demos für Schleifen, Listen &amp; Sortieren.</p>
       <span class="meta st-ok"><span class="dot"></span>Interaktiv · Editor + 4 Visualizer</span>
     </a>
+    <a class="tile" data-lf="5" style="--i:2" href="lf5_vorgehensmodelle.html" data-tags="lf5 vorgehensmodelle anwendungsentwicklung wasserfall v-modell vmodell xt spiralmodell scrum kanban extreme programming xp devops agil klassisch plangetrieben sprint backlog projektmanagement">
+      <span class="ic">🔄</span><h3>Vorgehensmodelle</h3>
+      <p>Klassisch vs. agil: Wasserfall, V-Modell (XT), Spiralmodell, Scrum, XP, Kanban – mit Vergleich, Karteikarten &amp; Quiz.</p>
+      <span class="meta st-ok"><span class="dot"></span>5 Tabs · 34 Karten · 6 Quiz-Aufgaben</span>
+    </a>
   </div>
 
   <div class="sek"><h2>Lernfelder · Karteikarten</h2><div class="sl"></div></div>
@@ -138,7 +143,7 @@ document.getElementById('cdAP2').textContent=daysTo(AP2);
 
 /* ===== SUCHE + FILTER ===== */
 const tiles=[...document.querySelectorAll('.tile')];
-const chipDefs=[["Alle",""],["AP1","ap1"],["AP2","ap2"],["Python","python"],["LF 1","lf1"],["LF 2","lf2"],["LF 3","lf3"],["LF 4","lf4"]];
+const chipDefs=[["Alle",""],["AP1","ap1"],["AP2","ap2"],["Python","python"],["LF 1","lf1"],["LF 2","lf2"],["LF 3","lf3"],["LF 4","lf4"],["LF 5","lf5"]];
 const chips=document.getElementById('chips');let active="";
 chipDefs.forEach(([label,tag],i)=>{const c=document.createElement('button');c.className="chip"+(i===0?" on":"");c.textContent=label;c.onclick=()=>{active=tag;[...chips.children].forEach(x=>x.classList.remove('on'));c.classList.add('on');apply();};chips.appendChild(c);});
 const search=document.getElementById('search');

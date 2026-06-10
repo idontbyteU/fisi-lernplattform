@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernfeld 5 · Vorgehensmodelle · FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<style>
+/* Nur seiten-spezifische Kleinigkeiten – alle Farben über die zentralen Paletten-Variablen */
+.vm-badge{font-family:var(--fmono);font-size:11px;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:99px;margin-left:.55rem;vertical-align:middle;border:1px solid var(--line);font-weight:700}
+.vm-badge.klass{color:var(--cyan)}
+.vm-badge.agil{color:var(--ok)}
+.vm-intro-line{color:var(--read);line-height:1.6}
+.vm-sec{margin:.55rem 0}
+.vm-sec .lbl{display:block;font-family:var(--fmono);font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--cyan);margin-bottom:.18rem}
+.vm-sec.bsp .lbl{color:var(--amber)}
+.vm-sec.pr .lbl{color:var(--magenta)}
+.calc-sol ul{margin:.15rem 0 .15rem 1.15rem;padding:0}
+.calc-sol ul li{margin:.16rem 0;color:var(--read);line-height:1.5}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.q-list{margin:.3rem 0 .3rem 1.3rem;padding:0}
+.q-list li{margin:.3rem 0;color:var(--read);line-height:1.55}
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="index.html">← Übersicht</a>
+    <div>
+      <h1><span class="tag">LF 5</span>Vorgehensmodelle</h1>
+      <div class="sub">Klassisch vs. agil · Wasserfall · V-Modell · Spiralmodell · Scrum · XP · Kanban</div>
+    </div>
+    <div class="sp"></div>
+    <div class="tabs">
+      <button id="tOverview" class="on">Überblick</button>
+      <button id="tModels">Modelle</button>
+      <button id="tCompare">Vergleich</button>
+      <button id="tCards">Karteikarten</button>
+      <button id="tQuiz">Quiz</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ===================================================================== -->
+<!--  ÜBERBLICK                                                             -->
+<!-- ===================================================================== -->
+<div id="vOverview" class="view on sum">
+
+  <div class="h-sec"><span class="ico">🧭</span> Was ist ein Vorgehensmodell?</div>
+  <p class="lead">Ein <b>Vorgehensmodell</b> strukturiert ein (Software-)Projekt, indem es den Ablauf in überschaubare <b>Phasen, Rollen und Ergebnisse</b> unterteilt. Es schafft Transparenz, verbessert Kommunikation und Koordination, hilft bei der Risikominimierung und erhöht die Erfolgswahrscheinlichkeit – es ist die <b>Anleitung</b>, nach der ein Projekt zielgerichtet und effizient durchgeführt wird.</p>
+  <div class="callout tip"><span class="ci">🎯</span><div><b>Kernfrage in der Prüfung:</b> Welches Modell passt zu welcher Projektsituation? Entscheidend sind <b>Anforderungsklarheit</b>, <b>Budget/Zeit</b>, <b>Dokumentationspflicht</b>, <b>Kundeneinbindung</b> und <b>Risiko/Größe</b>.</div></div>
+
+  <div class="h-sub">Hauptzwecke</div>
+  <div class="cardgrid c3">
+    <div class="ic"><h4>Struktur &amp; Komplexität</h4><p>Zerlegt eine große Gesamtaufgabe in kleinere, handhabbare Teilaufgaben/Phasen – das Projekt wird steuerbar.</p></div>
+    <div class="ic"><h4>Transparenz</h4><p>Klarheit über Ablauf, Verantwortlichkeiten und erwartete Ergebnisse.</p></div>
+    <div class="ic"><h4>Kommunikation</h4><p>Definierte Abläufe und Entscheidungspunkte (Meilensteine) erleichtern die Zusammenarbeit im Team und mit dem Auftraggeber.</p></div>
+    <div class="ic"><h4>Planbarkeit &amp; Risiko</h4><p>Zeit- und Kostenrahmen lassen sich besser abschätzen, Risiken früh erkennen und steuern.</p></div>
+    <div class="ic"><h4>Qualitätssicherung</h4><p>Legt fest, wann und wie getestet/geprüft wird (z. B. Testphasen im V-Modell).</p></div>
+    <div class="ic"><h4>Standardisierung</h4><p>Universelle Modelle dienen als Grundlage, die Organisationen an ihre Bedürfnisse anpassen.</p></div>
+  </div>
+
+  <div class="h-sec"><span class="ico">⚖️</span> Plangetrieben (klassisch) vs. agil</div>
+  <p class="lead">Die wichtigste Einordnung: <b>klassische</b> Modelle planen alles möglichst <b>vorab</b> und arbeiten sie sequenziell ab; <b>agile</b> Modelle arbeiten <b>iterativ</b> und passen sich laufend an.</p>
+  <div class="tbl-scroll">
+  <table class="ltbl">
+    <tr><th>Aspekt</th><th>Klassisch / plangetrieben</th><th>Agil</th></tr>
+    <tr><td class="lg">Anforderungen</td><td>früh klar, stabil</td><td>unklar, ändern sich laufend</td></tr>
+    <tr><td class="lg">Planung</td><td>vollständig im Voraus</td><td>rollierend, je Iteration</td></tr>
+    <tr><td class="lg">Änderungen</td><td>schwer / teuer</td><td>ausdrücklich erwünscht</td></tr>
+    <tr><td class="lg">Dokumentation</td><td>umfangreich, durchgängig</td><td>schlank, „nur so viel wie nötig“</td></tr>
+    <tr><td class="lg">Kundeneinbindung</td><td>v. a. am Anfang &amp; Ende</td><td>kontinuierlich, sehr eng</td></tr>
+    <tr><td class="lg">Lieferung</td><td>ein großes Endergebnis</td><td>regelmäßige lauffähige Zwischenstände</td></tr>
+    <tr><td class="lg">Stärke</td><td>Planungssicherheit, Nachweisbarkeit</td><td>Flexibilität, schnelles Feedback</td></tr>
+  </table>
+  </div>
+
+  <div class="h-sub">Einordnung der Modelle</div>
+  <div class="cardgrid">
+    <div class="ic"><h4>Klassisch</h4><p>Wasserfallmodell · Erweitertes Wasserfallmodell · V-Modell · V-Modell XT · Spiralmodell</p></div>
+    <div class="ic"><h4>Agil</h4><p>Scrum · Extreme Programming (XP) · Kanban · DevOps-Ansatz</p></div>
+  </div>
+
+  <div class="h-sec"><span class="ico">🧩</span> Auswahlkriterien</div>
+  <p class="lead">Frag dich bei der Modellwahl konkret:</p>
+  <ul class="clean">
+    <li><b>Wie klar sind die Anforderungen?</b> Klar &amp; stabil → klassisch; unklar/wechselnd → agil oder Spiralmodell.</li>
+    <li><b>Wie fest sind Budget und Termin?</b> Fester Rahmen → Wasserfall/V-Modell; offen/explorativ → agil/Spiral.</li>
+    <li><b>Wie hoch ist die Dokumentations- und Nachweispflicht?</b> Hoch (z. B. Behörde, Sicherheit) → V-Modell / V-Modell XT.</li>
+    <li><b>Wie eng soll der Kunde eingebunden sein?</b> Sehr eng, laufend → Scrum/XP.</li>
+    <li><b>Wie groß und riskant ist das Projekt?</b> Groß, komplex, riskant, unklar → Spiralmodell.</li>
+    <li><b>Ist es ein kontinuierlicher Aufgabenstrom?</b> (Support/Betrieb) → Kanban.</li>
+  </ul>
+  <div class="callout merk"><span class="ci">📌</span><div><b>Merksätze:</b> Behörde/Ausschreibung → <b>V-Modell XT</b>. Klare Anforderungen, festes Budget → <b>Wasserfall</b>. QS &amp; Doku wichtig → <b>V-Modell</b>. Unklare Anforderungen, hohe Risiken → <b>Spiralmodell</b>. Ändernde Anforderungen, enge Kundeneinbindung, Zwischenstände alle paar Wochen → <b>Scrum</b>.</div></div>
+
+</div>
+
+<!-- ===================================================================== -->
+<!--  MODELLE  (Aufklapp-Karten, .calc-*)                                  -->
+<!-- ===================================================================== -->
+<div id="vModels" class="view">
+  <div class="calc">
+    <div class="calc-intro">Jedes Modell hat eine <b>Aufklapp-Karte</b>: oben Grundidee in einer Zeile, ein Klick auf <b>„Details anzeigen“</b> öffnet die komplette Erklärung (Ablauf, Vor-/Nachteile, Eignung, Beispiel, Prüfungssicht). Standardmäßig zugeklappt.</div>
+
+    <!-- WASSERFALL -->
+    <div class="calc-card">
+      <div class="calc-h">Wasserfallmodell <span class="vm-badge klass">klassisch</span></div>
+      <div class="calc-q vm-intro-line"><b>Grundidee:</b> Streng <b>lineares, sequenzielles</b> Modell – jede Phase wird vollständig abgeschlossen, bevor die nächste beginnt; das Ergebnis „fließt“ wie ein Wasserfall nach unten, nicht zurück.</div>
+      <div class="calc-acts"><button class="calc-toggle">Details anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="vm-sec"><span class="lbl">Ablauf / Phasen</span>Anforderungsanalyse → Entwurf (Design) → Implementierung → Test → Betrieb/Wartung. Jede Phase endet mit einem <b>Meilenstein</b> und einem definierten Ergebnis; die <b>Dokumentation läuft parallel</b> über die gesamte Dauer.</div>
+        <div class="vm-sec"><span class="lbl">Vorteile</span><ul><li>Hohe Planungssicherheit (Zeit/Kosten früh abschätzbar)</li><li>Klare, einfache Struktur; gutes Controlling</li><li>Durchgängige Dokumentation</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Nachteile</span><ul><li>Keine nachträglichen Änderungen vorgesehen – späte Fehler/Wünsche sind teuer</li><li>Kunde sieht das Ergebnis erst am Ende</li><li>Unflexibel bei unklaren Anforderungen → eher ungeeignet für Softwareentwicklung</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Wann sinnvoll?</span>Klar definierte, stabile Anforderungen, festes Budget und feste Zeitvorgaben.</div>
+        <div class="vm-sec bsp"><span class="lbl">Beispiel</span>Kleines internes Tool mit fertig beschriebenen Anforderungen und sehr strengem Budget-/Zeitfenster.</div>
+        <div class="vm-sec pr"><span class="lbl">Prüfungssicht</span>Erkennungsmerkmale: „linear“, „keine nachträglichen Änderungen“, „hohe Planungssicherheit“. Der klassische Gegenpol zu agil.</div>
+      </div>
+    </div>
+
+    <!-- ERWEITERTES WASSERFALL -->
+    <div class="calc-card">
+      <div class="calc-h">Erweitertes Wasserfallmodell <span class="vm-badge klass">klassisch</span></div>
+      <div class="calc-q vm-intro-line"><b>Grundidee:</b> Wasserfall mit <b>erlaubten Rücksprüngen</b> – schrittweise Iterationen zwischen benachbarten Phasen sind ausdrücklich vorgesehen.</div>
+      <div class="calc-acts"><button class="calc-toggle">Details anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="vm-sec"><span class="lbl">Ablauf / Phasen</span>Gleiche Phasenfolge wie der Wasserfall, aber mit <b>Verifikations-Rücksprüngen</b> (z. B. vom Test zurück zur Implementierung oder zum Entwurf). Dadurch sind Änderungen möglich.</div>
+        <div class="vm-sec"><span class="lbl">Vorteile</span><ul><li>Behält Struktur und Planbarkeit des Wasserfalls</li><li>Erlaubt Korrekturen → für Softwareprojekte geeignet</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Nachteile</span><ul><li>Weiterhin überwiegend sequenziell</li><li>Rücksprünge nur schrittweise zur Nachbarphase, nicht beliebig</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Wann sinnvoll?</span>Softwareprojekte, bei denen man die Wasserfall-Struktur möchte, aber mit Änderungen rechnet.</div>
+        <div class="vm-sec bsp"><span class="lbl">Beispiel</span>Software mit grundsätzlich klarer Spezifikation, bei der einzelne Details während der Entwicklung nachjustiert werden.</div>
+        <div class="vm-sec pr"><span class="lbl">Prüfungssicht</span>Merkmal: „lineares Vorgehen, Iterationen/Rücksprünge ausdrücklich vorgesehen, für Softwareprojekte geeignet“.</div>
+      </div>
+    </div>
+
+    <!-- V-MODELL -->
+    <div class="calc-card">
+      <div class="calc-h">V-Modell <span class="vm-badge klass">klassisch</span></div>
+      <div class="calc-q vm-intro-line"><b>Grundidee:</b> V-förmige Erweiterung des Wasserfalls – jeder <b>Entwurfsstufe</b> (linker Ast) steht eine zugehörige <b>Teststufe</b> (rechter Ast) gegenüber. Qualitätssicherung steht im Mittelpunkt.</div>
+      <div class="calc-acts"><button class="calc-toggle">Details anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="vm-sec"><span class="lbl">Ablauf / Phasen</span>Links abwärts (steigende Detaillierung): Anforderungsanalyse → Systementwurf/Architektur → Komponentenentwurf → Implementierung (Spitze). Rechts aufwärts: Komponententest → Integrationstest → Systemtest → Abnahmetest. Querbezug: Anforderungen ↔ Abnahmetest, Architektur ↔ Integrationstest usw. (<b>Verifikation &amp; Validierung</b>).</div>
+        <div class="vm-sec"><span class="lbl">Vorteile</span><ul><li>Frühe Fehlererkennung durch frühe Testplanung</li><li>Klare Struktur, durchgängige Dokumentation</li><li>Starke Qualitätssicherung</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Nachteile</span><ul><li>Änderungen schwer machbar (starr wie Wasserfall)</li><li>Hoher Dokumentationsaufwand</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Wann sinnvoll?</span>Software- und Produktionsprojekte mit klaren Anforderungen und hohem Bedarf an Qualitätssicherung und Dokumentation.</div>
+        <div class="vm-sec bsp"><span class="lbl">Beispiel</span>Steuerungssoftware für ein Medizingerät – jede Anforderung muss nachweisbar getestet werden.</div>
+        <div class="vm-sec pr"><span class="lbl">Prüfungssicht</span>Merkmal: „parallele/zugeordnete Testphasen“, „frühe Fehlererkennung“. Jede Entwurfsstufe ↔ eine Teststufe.</div>
+      </div>
+    </div>
+
+    <!-- V-MODELL XT -->
+    <div class="calc-card">
+      <div class="calc-h">V-Modell XT <span class="vm-badge klass">klassisch</span></div>
+      <div class="calc-q vm-intro-line"><b>Grundidee:</b> V-Modell mit <b>Extreme Tailoring (XT)</b> – das Modell wird auf das konkrete Projekt zugeschnitten, nicht benötigte Phasen werden weggelassen. Entwicklungsstandard für öffentliche IT-Projekte.</div>
+      <div class="calc-acts"><button class="calc-toggle">Details anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="vm-sec"><span class="lbl">Ablauf / Phasen</span>Steuerung über <b>Entscheidungspunkte</b>, z. B.: Projekt genehmigt → definiert → Anforderungen festgelegt → ausgeschrieben → beauftragt → Iteration geplant → Projektfortschritt überprüft → Abnahme erfolgt → Projekt abgeschlossen. <b>Iterationen sind möglich.</b></div>
+        <div class="vm-sec"><span class="lbl">Vorteile</span><ul><li>Hohe Anpassbarkeit durch Tailoring</li><li>Klare Aufgaben/Rollen von Auftraggeber und Auftragnehmer</li><li>Standardisierte Produkte und Vorlagen</li><li>Integration agiler Prinzipien möglich</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Nachteile</span><ul><li>Umfangreich und komplex; Einarbeitung in den Standard nötig</li><li>Für kleine Projekte überdimensioniert</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Wann sinnvoll?</span>Große (öffentliche) Projekte mit vielen Beteiligten, klarer AG/AN-Trennung und hoher Dokumentations-/Nachweispflicht.</div>
+        <div class="vm-sec bsp"><span class="lbl">Beispiel</span>Großes Behördenprojekt mit Ausschreibung, vielen Beteiligten und strengen Nachweispflichten.</div>
+        <div class="vm-sec pr"><span class="lbl">Prüfungssicht</span>Merkmal: „Standard für öffentliche Projekte“, „Extreme Tailoring“, „definierte Rollen AG/AN“, „agile Prinzipien integrierbar“.</div>
+      </div>
+    </div>
+
+    <!-- SPIRALMODELL -->
+    <div class="calc-card">
+      <div class="calc-h">Spiralmodell <span class="vm-badge klass">klassisch · iterativ</span></div>
+      <div class="calc-q vm-intro-line"><b>Grundidee:</b> Iteratives Modell in <b>Zyklen („Spiralen“)</b> – im Zentrum jeder Windung steht die <b>Risikoanalyse</b>. Mit jedem Zyklus entsteht ein konkreterer Prototyp, das Produkt wächst nach außen.</div>
+      <div class="calc-acts"><button class="calc-toggle">Details anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="vm-sec"><span class="lbl">Grundphasen je Zyklus</span><ul><li>1. Ziele / Rahmenbedingungen festlegen</li><li>2. Alternativen + Risikoanalyse/-bewertung</li><li>3. Entwicklung &amp; Test (Prototyp)</li><li>4. Auswertung und Planung des nächsten Zyklus</li></ul>Phasen können übersprungen und mehrfach durchlaufen werden; Änderungen sind leicht machbar, Qualitätssicherung ist gewährleistet.</div>
+        <div class="vm-sec"><span class="lbl">Vorteile</span><ul><li>Frühe und laufende Risikobehandlung</li><li>Änderungen leicht möglich</li><li>Gut bei Unsicherheit</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Nachteile</span><ul><li>Aufwändig; erfordert Risikomanagement-Know-how</li><li>Gesamtaufwand schwer kalkulierbar; für kleine Projekte überzogen</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Wann sinnvoll?</span>Große, komplexe Projekte mit <b>unklaren Anforderungen</b> und hohen (technischen) Risiken.</div>
+        <div class="vm-sec bsp"><span class="lbl">Beispiel</span>Forschungs-/Innovationsprojekt, dessen Zielbild erst über mehrere Prototypen klar wird.</div>
+        <div class="vm-sec pr"><span class="lbl">Prüfungssicht</span>Merkmal: „iterativ“, „Risikoanalyse in jedem Zyklus“, „unklare Anforderungen“, „große komplexe Projekte“. Risikogetrieben = Alleinstellungsmerkmal.</div>
+      </div>
+    </div>
+
+    <!-- SCRUM -->
+    <div class="calc-card">
+      <div class="calc-h">Scrum <span class="vm-badge agil">agil</span></div>
+      <div class="calc-q vm-intro-line"><b>Grundidee:</b> Agiles Rahmenwerk – in kurzen Iterationen (<b>Sprints</b>, max. 4 Wochen) entsteht jeweils ein lauffähiges <b>Produktinkrement</b>. Grundsätze: Transparenz, Überprüfung, Anpassung.</div>
+      <div class="calc-acts"><button class="calc-toggle">Details anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="vm-sec"><span class="lbl">Ablauf</span>Product Backlog (alle Anforderungen) → <b>Sprint Planning</b> wählt das Sprint Backlog → <b>Sprint</b> mit täglichem <b>Daily Scrum</b> (~15 min) → am Ende ein lauffähiges <b>Increment</b> → <b>Sprint Review</b> (mit Stakeholdern) → <b>Sprint Retrospektive</b> (Prozessverbesserung) → nächster Sprint.</div>
+        <div class="vm-sec"><span class="lbl">Rollen</span><ul><li><b>Product Owner</b> – priorisiert Anforderungen, Schnittstelle zu Kunde/Stakeholdern, pflegt das Product Backlog</li><li><b>Scrum Master</b> – Moderator, achtet auf den Prozess, beseitigt Hindernisse</li><li><b>Entwicklungsteam</b> – 3–9 interdisziplinäre Mitglieder, setzen das Sprint Backlog um</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Vorteile</span><ul><li>Hohe Flexibilität, schnelle Reaktion auf Änderungen</li><li>Enge Kundeneinbindung, früh nutzbare Ergebnisse</li><li>Transparenz im Team</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Nachteile</span><ul><li>Wenig langfristige Planungssicherheit (Festpreis schwierig)</li><li>Erfordert disziplinierte Selbstorganisation</li><li>Schlankere Dokumentation</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Wann sinnvoll?</span>Softwareentwicklung, innovative Produkte/Dienstleistungen, sich häufig ändernde Anforderungen, enge Kundeneinbindung, regelmäßige Zwischenstände.</div>
+        <div class="vm-sec bsp"><span class="lbl">Beispiel</span>Start-up entwickelt eine App; Anforderungen ändern sich laufend, alle 2–4 Wochen soll ein lauffähiger Zwischenstand vorliegen.</div>
+        <div class="vm-sec pr"><span class="lbl">Prüfungssicht</span>Rollen, Artefakte und Events sicher benennen. Sprint ≤ 4 Wochen, Daily ~15 min, Team 3–9.</div>
+      </div>
+    </div>
+
+    <!-- XP -->
+    <div class="calc-card">
+      <div class="calc-h">Extreme Programming (XP) <span class="vm-badge agil">agil</span></div>
+      <div class="calc-q vm-intro-line"><b>Grundidee:</b> Agile Methode mit Fokus auf <b>Softwarequalität</b> und schnelle Reaktion auf Kundenwünsche – sehr kurze Entwicklungszyklen, aktive Kundeneinbindung.</div>
+      <div class="calc-acts"><button class="calc-toggle">Details anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="vm-sec"><span class="lbl">5 Kernwerte</span>Kommunikation, Einfachheit, Rückmeldung (Feedback), Mut, Respekt.</div>
+        <div class="vm-sec"><span class="lbl">Wichtige Techniken</span><ul><li><b>Paarprogrammierung</b> – zwei Entwickler arbeiten gleichzeitig am Code</li><li><b>Testgetriebene Entwicklung (TDD)</b> – Modultests vor dem Code schreiben</li><li><b>Kontinuierliche Integration (CI)</b> – Code-Änderungen laufend zusammenführen</li><li>Vermeidung von Code-Duplizierung; nur benötigte Funktionalität implementieren</li></ul>Qualitätssicherung durch kontinuierliche Tests.</div>
+        <div class="vm-sec"><span class="lbl">Vorteile</span><ul><li>Hohe Codequalität durch ständige Tests</li><li>Schnelle Reaktion auf Änderungen, Wissensverteilung im Team</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Nachteile</span><ul><li>Stark disziplinabhängig; Paarprogrammierung bindet Personal</li><li>Erfordert engagierten, ständig verfügbaren Kunden; skaliert schlecht für große Teams</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Wann sinnvoll?</span>Softwareprojekte mit <b>kleinen Teams</b> und <b>hoher Kundeneinbindung</b>.</div>
+        <div class="vm-sec bsp"><span class="lbl">Beispiel</span>Kleines Entwicklerteam baut iterativ ein Produkt mit täglichem Kundenkontakt und automatisierten Tests.</div>
+        <div class="vm-sec pr"><span class="lbl">Prüfungssicht</span>Praktiken (Pair Programming, TDD, CI) und die 5 Werte nennen können. Abgrenzung: XP regelt Entwicklungs-Praktiken, Scrum den Prozessrahmen.</div>
+      </div>
+    </div>
+
+    <!-- KANBAN -->
+    <div class="calc-card">
+      <div class="calc-h">Kanban <span class="vm-badge agil">agil</span></div>
+      <div class="calc-q vm-intro-line"><b>Grundidee:</b> Visualisierung des Arbeitsflusses über ein <b>Kanban-Board</b> – Aufgaben wandern durch Spalten (z. B. To-Do → In Arbeit → Erledigt). Ziel ist ein kontinuierlicher Fluss.</div>
+      <div class="calc-acts"><button class="calc-toggle">Details anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="vm-sec"><span class="lbl">Prinzipien</span><ul><li>Board macht alle Aufgaben und ihren Bearbeitungsstand <b>transparent</b></li><li><b>WIP-Limits</b> (Limits je Spalte) begrenzen parallele Aufgaben → kurze Durchlaufzeiten</li><li>Probleme/Engpässe werden sofort sichtbar</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Vorteile</span><ul><li>Hohe Transparenz, einfach einzuführen (kein Rollen-/Sprint-Zwang)</li><li>Kurze Durchlaufzeiten, jederzeit flexibel nachziehbar</li><li>Deckt Engpässe auf</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Nachteile</span><ul><li>Wenig feste Termine → kann ohne Disziplin „verschleppen“</li><li>Keine festen Rollen; ohne eingehaltene WIP-Limits wirkungslos</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Wann sinnvoll?</span>Kontinuierliche Aufgabenströme (Support, Wartung, Betrieb), Multiprojekt-Umfeld. Kombinierbar mit Scrum (Scrumban).</div>
+        <div class="vm-sec bsp"><span class="lbl">Beispiel</span>IT-Support-Team steuert eingehende Tickets über ein Board mit WIP-Limits.</div>
+        <div class="vm-sec pr"><span class="lbl">Prüfungssicht</span>Merkmale: „Board“, „Transparenz“, „WIP-Limits“, „kurze Durchlaufzeiten“. Kein Sprint-Zwang.</div>
+      </div>
+    </div>
+
+    <!-- DEVOPS -->
+    <div class="calc-card">
+      <div class="calc-h">DevOps-Ansatz <span class="vm-badge agil">agil</span></div>
+      <div class="calc-q vm-intro-line"><b>Grundidee:</b> Kein klassisches Phasenmodell, sondern ein <b>Kultur-/Arbeitsansatz</b>, der Entwicklung (Development) und IT-Betrieb (Operations) eng verzahnt, um Software schnell und zuverlässig auszuliefern.</div>
+      <div class="calc-acts"><button class="calc-toggle">Details anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="vm-sec"><span class="lbl">Prinzipien</span><ul><li>Durchgängige Automatisierung über <b>CI/CD-Pipelines</b> (Continuous Integration / Continuous Delivery)</li><li>Infrastruktur als Code, Monitoring, schnelle Feedback-Schleifen</li><li>Gemeinsame Verantwortung: „you build it, you run it“</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Vorteile</span><ul><li>Schnelle, häufige Releases</li><li>Weniger Reibung zwischen Entwicklung und Betrieb; hohe Automatisierung und Stabilität</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Nachteile</span><ul><li>Kulturwandel und Tooling-Aufwand nötig</li><li>Breite Kompetenzen erforderlich; Sicherheit früh mitdenken (DevSecOps)</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Wann sinnvoll?</span>Produkte mit häufigen Releases und Betrieb in eigener Verantwortung (Web-/Cloud-Dienste).</div>
+        <div class="vm-sec bsp"><span class="lbl">Beispiel</span>Web-Team liefert über eine automatisierte CI/CD-Pipeline mehrmals pro Woche neue Versionen aus.</div>
+        <div class="vm-sec pr"><span class="lbl">Prüfungssicht</span>In der Quelle nur als Stichwort genannt. Merken: Brücke zwischen Entwicklung und Betrieb, CI/CD, Automatisierung.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!--  VERGLEICH                                                            -->
+<!-- ===================================================================== -->
+<div id="vCompare" class="view sum">
+
+  <div class="h-sec"><span class="ico">📊</span> Modelle im Vergleich</div>
+  <p class="lead">Gegenüberstellung nach den wichtigsten Entscheidungsdimensionen:</p>
+  <div class="tbl-scroll">
+  <table class="ltbl">
+    <tr><th>Modell</th><th>Flexibilität</th><th>Doku-Last</th><th>Risiko-Handling</th><th>Eignung</th></tr>
+    <tr><td class="lg">Wasserfall</td><td>niedrig</td><td>hoch</td><td>spät erkannt</td><td>klare Anforderungen, festes Budget/Zeit</td></tr>
+    <tr><td class="lg">Erw. Wasserfall</td><td>niedrig–mittel</td><td>hoch</td><td>etwas besser (Rücksprünge)</td><td>Softwareprojekte mit klarer Basis</td></tr>
+    <tr><td class="lg">V-Modell</td><td>niedrig</td><td>sehr hoch</td><td>früh, durch Teststufen</td><td>QS-/dokuintensive, sicherheitskritische Projekte</td></tr>
+    <tr><td class="lg">V-Modell XT</td><td>mittel (Tailoring)</td><td>hoch (standardisiert)</td><td>über Entscheidungspunkte</td><td>große öffentliche Projekte, klare AG/AN</td></tr>
+    <tr><td class="lg">Spiralmodell</td><td>hoch</td><td>mittel–hoch</td><td>sehr gut (Risikoanalyse je Zyklus)</td><td>große, komplexe, unklare/risikoreiche Projekte</td></tr>
+    <tr><td class="lg">Scrum</td><td>sehr hoch</td><td>gering–mittel</td><td>laufend (Sprints/Review)</td><td>ändernde Anforderungen, innovative Produkte</td></tr>
+    <tr><td class="lg">XP</td><td>sehr hoch</td><td>gering</td><td>laufend (Tests/CI)</td><td>kleine Teams, hohe Kundeneinbindung, Qualitätsfokus</td></tr>
+    <tr><td class="lg">Kanban</td><td>hoch</td><td>gering</td><td>laufend sichtbar (Board)</td><td>kontinuierliche Aufgabenströme, Support/Betrieb</td></tr>
+    <tr><td class="lg">DevOps</td><td>hoch</td><td>gering–mittel</td><td>laufend (Monitoring/CI-CD)</td><td>häufige Releases, Dev + Betrieb verzahnt</td></tr>
+  </table>
+  </div>
+
+  <div class="h-sec"><span class="ico">🔁</span> Scrum: Rollen · Artefakte · Events</div>
+
+  <div class="h-sub">Rollen</div>
+  <div class="cardgrid c3">
+    <div class="ic"><h4>Product Owner</h4><p>Sammelt und <b>priorisiert</b> Anforderungen, Schnittstelle zu Kunde/Stakeholdern, verantwortet das Product Backlog.</p></div>
+    <div class="ic"><h4>Scrum Master</h4><p><b>Moderator</b>: achtet auf Einhaltung des Prozesses, beseitigt Hindernisse, schützt das Team.</p></div>
+    <div class="ic"><h4>Entwicklungsteam</h4><p><b>3–9</b> interdisziplinäre Mitglieder, selbstorganisiert; setzen das Sprint Backlog um.</p></div>
+  </div>
+
+  <div class="h-sub">Artefakte</div>
+  <div class="cardgrid c3">
+    <div class="ic"><h4>Product Backlog</h4><p>Liste <b>aller</b> bekannten Anforderungen/Ziele an das Produkt, vom Product Owner priorisiert.</p></div>
+    <div class="ic"><h4>Sprint Backlog</h4><p>Auswahl der Aufgaben/Ziele, die <b>im aktuellen Sprint</b> umgesetzt werden.</p></div>
+    <div class="ic"><h4>Increment</h4><p>Das am Sprint-Ende fertige, <b>lauffähige</b> Produktinkrement.</p></div>
+  </div>
+
+  <div class="h-sub">Events</div>
+  <div class="cardgrid">
+    <div class="ic"><h4>Sprint</h4><p>Kurzzyklus von max. <b>4 Wochen</b>; am Ende steht ein lauffähiges Increment.</p></div>
+    <div class="ic"><h4>Sprint Planning</h4><p>Auswahl und Planung der Sprint-Inhalte aus dem Product Backlog.</p></div>
+    <div class="ic"><h4>Daily Scrum</h4><p>Tägliches <b>15-Minuten</b>-Meeting zur Abstimmung des aktuellen Stands.</p></div>
+    <div class="ic"><h4>Sprint Review</h4><p>Präsentation des Increments, Feedback der Stakeholder.</p></div>
+    <div class="ic"><h4>Sprint Retrospektive</h4><p>Rückblick auf die <b>Zusammenarbeit/den Prozess</b> – kontinuierliche Verbesserung.</p></div>
+  </div>
+
+  <div class="callout tip"><span class="ci">💡</span><div><b>Eselsbrücke Scrum:</b> 3 Rollen · 3 Artefakte · 5 Events. Grundsätze: <b>Transparenz, Überprüfung, Anpassung</b>.</div></div>
+
+</div>
+
+<!-- ===================================================================== -->
+<!--  KARTEIKARTEN  (study.js)                                             -->
+<!-- ===================================================================== -->
+<div id="vCards" class="view">
+  <div class="chips" id="cardChips"></div>
+  <div class="bar">
+    <div class="pbar"><i id="pfill"></i></div>
+    <div class="ptxt">0% beherrscht</div>
+    <button class="tbtn" id="tShuffle">🔀 Mischen</button>
+    <button class="tbtn" id="tOpen">Nur offene</button>
+    <button class="tbtn" id="tReset">Zurücksetzen</button>
+  </div>
+  <div id="study" class="study"></div>
+</div>
+
+<!-- ===================================================================== -->
+<!--  QUIZ  (prüfungstypisch, je Aufgabe ein einklappbarer Lösungsblock)   -->
+<!-- ===================================================================== -->
+<div id="vQuiz" class="view">
+  <div class="calc">
+    <div class="calc-intro">Prüfungstypische Aufgaben. Erst selbst beantworten, dann <b>„Lösung anzeigen“</b> – ein Klick öffnet den kompletten Lösungsblock, standardmäßig zu.</div>
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 1 · Aussagen zuordnen</div>
+      <div class="calc-q">Ordne die Aussagen einem Modell zu (Wasserfall, Erweitertes Wasserfall, V-Modell, V-Modell XT, Spiralmodell):
+        <ol class="q-list">
+          <li>Lineares Vorgehen, fest definierte Phasen, keine nachträglichen Änderungen, hohe Planungssicherheit.</li>
+          <li>Lineares Vorgehen mit paralleler Testphase, frühe Fehlererkennung, starke QS, Änderungen schwer machbar.</li>
+          <li>Lineares Vorgehen, Iterationen (Rücksprünge) ausdrücklich vorgesehen, für Softwareprojekte geeignet.</li>
+          <li>Iteratives Vorgehen mit Risikoanalyse in jedem Zyklus; für große, komplexe Projekte mit unklaren Anforderungen.</li>
+          <li>Standard für öffentliche Projekte, extreme Tailorbarkeit, agile Prinzipien integrierbar, nicht benötigte Phasen weglassbar.</li>
+        </ol>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="step">1 → <b>Wasserfallmodell</b></div>
+        <div class="step">2 → <b>V-Modell</b></div>
+        <div class="step">3 → <b>Erweitertes Wasserfallmodell</b></div>
+        <div class="step">4 → <b>Spiralmodell</b></div>
+        <div class="step">5 → <b>V-Modell XT</b></div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 2 · Klassisch oder agil?</div>
+      <div class="calc-q">Passt die Beschreibung eher zu <b>klassischen</b> oder <b>agilen</b> Modellen?
+        <ol class="q-list" type="a">
+          <li>Klare Anforderungen, die sich während der Entwicklung kaum ändern.</li>
+          <li>Flexibel, Anpassungen der Anforderungen schnell umsetzbar.</li>
+          <li>Gut für innovative Produkte/Dienstleistungen, kurze Iterationen.</li>
+          <li>Hohe Planungssicherheit, fester Ablauf, starke Dokumentation von Anfang an.</li>
+        </ol>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="step">a) <b>klassisch</b></div>
+        <div class="step">b) <b>agil</b></div>
+        <div class="step">c) <b>agil</b></div>
+        <div class="step">d) <b>klassisch</b></div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 3 · Szenario → Modell</div>
+      <div class="calc-q">Wähle je ein passendes Modell und begründe kurz:
+        <ol class="q-list">
+          <li>Großes Behördenprojekt, viele Beteiligte, klare Rollen von AG/AN, sehr hohe Dokumentations- und Nachweispflicht.</li>
+          <li>Start-up entwickelt eine neue App, Anforderungen ändern sich ständig, Kunde eng eingebunden, alle 2–4 Wochen ein lauffähiger Zwischenstand.</li>
+          <li>Forschungsprojekt mit unklaren Anforderungen, hohe technische Risiken, Zielbild wird erst nach und nach klar.</li>
+          <li>Kleines internes Tool mit klarer Funktion, Anforderungen fertig beschrieben, Budget und Zeitfenster sehr streng.</li>
+        </ol>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="step">1 → <b>V-Modell XT</b> – öffentliches Großprojekt, klare AG/AN-Rollen, hohe Nachweispflicht, Tailoring.</div>
+        <div class="step">2 → <b>Scrum</b> – sich ändernde Anforderungen, enge Kundeneinbindung, alle 2–4 Wochen ein Inkrement (Sprint).</div>
+        <div class="step">3 → <b>Spiralmodell</b> – unklare Anforderungen + hohe Risiken, Risikoanalyse je Zyklus.</div>
+        <div class="step">4 → <b>Wasserfallmodell</b> – klare, fertige Anforderungen, festes Budget/Zeit.</div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 4 · Scrum-Begriffe einsetzen</div>
+      <div class="calc-q">Setze ein: Product Owner, Scrum Master, Entwicklungsteam, Product Backlog, Sprint Backlog, Daily Scrum, Sprint.
+        <ol class="q-list" type="a">
+          <li>Rolle, die Anforderungen sammelt, priorisiert und Schnittstelle zu Kunde/Stakeholdern ist: ___</li>
+          <li>Liste aller bekannten Anforderungen/Ziele an das Produkt: ___</li>
+          <li>Kurzzyklus (max. 4 Wochen), am Ende ein lauffähiges Inkrement: ___</li>
+          <li>Tägliches 15-Minuten-Meeting zur Abstimmung: ___</li>
+          <li>Rolle mit Moderatorfunktion, beseitigt Hindernisse: ___</li>
+          <li>Entwickler unterschiedlicher Fachrichtungen, 3–9 Mitglieder: ___</li>
+          <li>Aufgaben/Ziele, die konkret im aktuellen Zyklus umgesetzt werden: ___</li>
+        </ol>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="step">a) <b>Product Owner</b></div>
+        <div class="step">b) <b>Product Backlog</b></div>
+        <div class="step">c) <b>Sprint</b></div>
+        <div class="step">d) <b>Daily Scrum</b></div>
+        <div class="step">e) <b>Scrum Master</b></div>
+        <div class="step">f) <b>Entwicklungsteam</b></div>
+        <div class="step">g) <b>Sprint Backlog</b></div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 5 · Was zeichnet Kanban aus?</div>
+      <div class="calc-q">Formuliere 3–4 Stichpunkte.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <ul>
+          <li>Agile Vorgehensweise mit <b>Kanban-Board</b> – alle Aufgaben übersichtlich und transparent</li>
+          <li>Probleme/Engpässe werden leicht erkannt</li>
+          <li>Kurze Durchlaufzeiten, Bearbeitungsstand jederzeit ersichtlich</li>
+          <li>Parallele Aufgaben werden reduziert (z. B. durch <b>WIP-Limits</b> in den Spalten)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 6 · Vorteile klassisch vs. agil</div>
+      <div class="calc-q">Nenne je zwei Vorteile klassischer und agiler Vorgehensmodelle.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="vm-sec"><span class="lbl">Klassisch</span><ul><li>Klare Struktur, frühe Fehlererkennung</li><li>Durchgängige Dokumentation, hohe Planungssicherheit</li></ul></div>
+        <div class="vm-sec"><span class="lbl">Agil</span><ul><li>Kurze Entwicklungszyklen, aktive Kundeneinbindung, zeitnahe Umsetzung von Wünschen</li><li>Probleme schnell erkennbar, kurze Durchlaufzeiten, hohe Flexibilität</li></ul></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>FISI Lernplattform · Lernfeld 5 · Vorgehensmodelle · Fortschritt der Karteikarten wird lokal im Browser gespeichert</footer>
+</div>
+
+<script src="study.js"></script>
+<script>
+/* ===== KARTEIKARTEN-DATEN ===== */
+const CATS={
+  grund:{label:"Grundlagen",color:"#2de2e6"},
+  klass:{label:"Klassische Modelle",color:"#ffb43b"},
+  agil:{label:"Agile Modelle",color:"#9dff52"},
+  scrum:{label:"Scrum-Details",color:"#ff2a6d"}
+};
+
+const CARDS=[
+/* Grundlagen */
+{c:"grund",q:"Wozu dienen Vorgehensmodelle?",a:"Sie strukturieren Projekte durch Aufteilung in Phasen, Rollen und Ergebnisse: <b>Komplexitätsreduktion, Transparenz, bessere Kommunikation/Koordination, Planbarkeit/Risikominimierung, Qualitätssicherung und Standardisierung.</b>"},
+{c:"grund",q:"Klassisch vs. agil – der Kernunterschied?",a:"<b>Klassisch (plangetrieben):</b> alles möglichst vorab planen, sequenziell abarbeiten, klare/stabile Anforderungen. <b>Agil:</b> iterativ, flexibel, Änderungen erwünscht, enge Kundeneinbindung."},
+{c:"grund",q:"Was ist ein Meilenstein?",a:"Ein definierter <b>Entscheidungs-/Prüfpunkt</b> mit überprüfbarem Zwischenergebnis – ohne eigene Dauer. Erleichtert Steuerung und Kommunikation."},
+{c:"grund",q:"Wann wählt man ein klassisches Modell?",a:"Bei <b>klaren, stabilen Anforderungen</b>, festem Budget/Termin und hoher Dokumentations-/Nachweispflicht."},
+{c:"grund",q:"Wann wählt man ein agiles Modell?",a:"Bei <b>unklaren oder wechselnden Anforderungen</b>, enger Kundeneinbindung, dem Wunsch nach regelmäßigen Zwischenständen und bei Innovation."},
+{c:"grund",q:"Nenne die klassischen Vorgehensmodelle.",a:"<b>Wasserfallmodell, Erweitertes Wasserfallmodell, V-Modell, V-Modell XT, Spiralmodell.</b>"},
+{c:"grund",q:"Nenne die agilen Modelle/Ansätze.",a:"<b>Scrum, Extreme Programming (XP), Kanban, DevOps-Ansatz.</b>"},
+
+/* Klassische Modelle */
+{c:"klass",q:"Wasserfallmodell – Merkmale?",a:"<b>Linear/sequenziell</b>, fest definierte Phasen mit Start-/Endpunkt und Meilensteinen, <b>keine nachträglichen Änderungen</b>, parallele Dokumentation, <b>hohe Planungssicherheit</b>."},
+{c:"klass",q:"Welche Phasen hat das Wasserfallmodell?",a:"Anforderungsanalyse → Entwurf → Implementierung → Test → Betrieb/Wartung."},
+{c:"klass",q:"Wofür ist der Wasserfall (un)geeignet?",a:"<b>Geeignet</b> bei klaren Anforderungen, festem Budget/Zeit. <b>Eher ungeeignet</b> für (klassische) Softwareentwicklung, da Änderungen kaum möglich sind."},
+{c:"klass",q:"Was ist das Erweiterte Wasserfallmodell?",a:"Wasserfall mit <b>schrittweisen Rücksprüngen/Iterationen</b> zwischen Nachbarphasen → für Softwareprojekte geeignet, da Änderungen möglich sind."},
+{c:"klass",q:"V-Modell – Grundidee?",a:"V-Form: links <b>Entwurfsphasen</b> (steigende Detaillierung), rechts die zugeordneten <b>Testphasen</b>. Frühe Fehlererkennung, starke QS, durchgängige Doku; Änderungen schwer machbar."},
+{c:"klass",q:"Welche Teststufen kennt das V-Modell?",a:"<b>Komponententest, Integrationstest, Systemtest, Abnahmetest</b> – als Verifikation/Validierung den Entwurfsstufen gegenübergestellt."},
+{c:"klass",q:"V-Modell XT – was bedeutet XT?",a:"<b>Extreme Tailoring</b>: das Modell wird an das konkrete Projekt angepasst, nicht benötigte Phasen werden weggelassen. Iterationen und agile Prinzipien integrierbar."},
+{c:"klass",q:"V-Modell XT – typischer Einsatz?",a:"<b>Standard für öffentliche Projekte</b> mit definierten Rollen (AG/AN), Produkten und Vorlagen sowie hoher Nachweispflicht."},
+{c:"klass",q:"Spiralmodell – Grundidee?",a:"Iteratives Modell in <b>Zyklen</b>; im Zentrum jeder Windung steht die <b>Risikoanalyse</b>. Das Produkt wächst über Prototypen; Änderungen sind leicht machbar."},
+{c:"klass",q:"Spiralmodell – die vier Grundphasen je Zyklus?",a:"1) Ziele/Rahmenbedingungen, 2) Alternativen/Risikoanalyse, 3) Entwicklung/Test, 4) Auswertung &amp; Planung des nächsten Zyklus."},
+{c:"klass",q:"Spiralmodell – wofür geeignet?",a:"Für <b>große, komplexe Projekte mit unklaren Anforderungen</b> und hohen (technischen) Risiken."},
+
+/* Agile Modelle */
+{c:"agil",q:"Was kennzeichnet agile Modelle allgemein?",a:"<b>Iterativ, flexibel</b>, schnelle Anpassung an Änderungen, enge Kundeneinbindung, kurze Zyklen, lauffähige Zwischenstände."},
+{c:"agil",q:"Extreme Programming (XP) – Grundidee?",a:"Agile Methode mit <b>kurzen Zyklen</b>, aktiver Kundeneinbindung und Qualitätssicherung durch <b>kontinuierliche Tests</b>."},
+{c:"agil",q:"Welche 5 Kernwerte hat XP?",a:"<b>Kommunikation, Einfachheit, Rückmeldung (Feedback), Mut, Respekt.</b>"},
+{c:"agil",q:"Nenne wichtige XP-Techniken.",a:"<b>Paarprogrammierung</b>, <b>testgetriebene Entwicklung (TDD)</b>, <b>kontinuierliche Integration (CI)</b>, Vermeidung von Code-Duplizierung, nur benötigte Funktionalität."},
+{c:"agil",q:"XP – wofür geeignet?",a:"Softwareprojekte mit <b>kleinen Teams</b> und <b>hoher Kundeneinbindung</b>."},
+{c:"agil",q:"Kanban – Grundidee?",a:"Ein <b>Kanban-Board</b> macht alle Aufgaben und ihren Bearbeitungsstand transparent; Engpässe werden sofort sichtbar."},
+{c:"agil",q:"Wie begrenzt Kanban parallele Aufgaben?",a:"Durch <b>WIP-Limits</b> (Limits je Spalte) → kurze Durchlaufzeiten der Arbeitspakete."},
+{c:"agil",q:"DevOps-Ansatz – Grundidee?",a:"Enge Verzahnung von <b>Entwicklung (Dev) und Betrieb (Ops)</b> mit Automatisierung (CI/CD) für schnelle, zuverlässige und häufige Releases."},
+
+/* Scrum-Details */
+{c:"scrum",q:"Scrum – Grundidee?",a:"Agiles Rahmenwerk: Iteration in <b>Sprints</b> (max. 4 Wochen), je Sprint ein lauffähiges <b>Increment</b>. Grundsätze: <b>Transparenz, Überprüfung, Anpassung</b>."},
+{c:"scrum",q:"Welche drei Rollen gibt es in Scrum?",a:"<b>Product Owner, Scrum Master, Entwicklungsteam</b> (3–9 Mitglieder)."},
+{c:"scrum",q:"Aufgabe des Product Owners?",a:"Sammelt und <b>priorisiert</b> die Anforderungen, ist Schnittstelle zu Kunde/Stakeholdern und verantwortet das <b>Product Backlog</b>."},
+{c:"scrum",q:"Aufgabe des Scrum Masters?",a:"<b>Moderator</b>: achtet auf die Einhaltung des Prozesses, beseitigt Hindernisse und überwacht die Erledigung der Arbeitspakete."},
+{c:"scrum",q:"Wer ist das Entwicklungsteam?",a:"<b>3–9</b> selbstorganisierte Mitglieder unterschiedlicher Fachrichtungen, die das Sprint Backlog umsetzen."},
+{c:"scrum",q:"Product Backlog vs. Sprint Backlog?",a:"<b>Product Backlog:</b> alle bekannten Anforderungen/Ziele ans Produkt. <b>Sprint Backlog:</b> die Aufgaben/Ziele des aktuellen Sprints."},
+{c:"scrum",q:"Was ist das Daily Scrum?",a:"Ein <b>tägliches ~15-Minuten-Meeting</b>, um den aktuellen Stand im Team abzustimmen."},
+{c:"scrum",q:"Was ist ein Sprint?",a:"Ein <b>Kurzzyklus (max. 4 Wochen)</b>, an dessen Ende ein lauffähiges Produktinkrement steht."},
+{c:"scrum",q:"Scrum – wofür geeignet?",a:"Für <b>Softwareentwicklung</b>, innovative Produkte und Dienstleistungen mit sich ändernden Anforderungen."}
+];
+
+/* ===== TABS ===== */
+const views={Overview:"vOverview",Models:"vModels",Compare:"vCompare",Cards:"vCards",Quiz:"vQuiz"};
+function showTab(t){
+  Object.keys(views).forEach(k=>{
+    document.getElementById(views[k]).classList.toggle('on',k===t);
+    document.getElementById('t'+k).classList.toggle('on',k===t);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('tOverview').onclick=()=>showTab('Overview');
+document.getElementById('tModels').onclick=()=>showTab('Models');
+document.getElementById('tCompare').onclick=()=>showTab('Compare');
+document.getElementById('tCards').onclick=()=>{showTab('Cards');Study._rebuild();};
+document.getElementById('tQuiz').onclick=()=>showTab('Quiz');
+
+/* ===== AUFKLAPP-BLÖCKE (Modelle + Quiz) – ein Klick auf/zu ===== */
+document.querySelectorAll('.calc-toggle').forEach(tg=>{
+  const open=tg.textContent.trim();
+  const close=open.replace('anzeigen','verbergen');
+  tg.onclick=()=>{
+    const sol=tg.closest('.calc-card').querySelector('.calc-sol');
+    const shown=sol.classList.toggle('show');
+    tg.textContent=shown?close:open;
+  };
+});
+
+/* ===== KARTEIKARTEN (study.js) ===== */
+Study.init({ cards: CARDS, cats: CATS, key: "fisi_lf5_vm_v1" });
+</script>
+<script>
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
