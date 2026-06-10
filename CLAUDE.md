@@ -73,6 +73,10 @@ Diese zwei Standards gelten für **jede** Seite/Kachel/Modul. Bestehende Seiten 
 - **Ein** einklappbarer Block: **ein Klick öffnet die komplette Lösung, ein Klick schließt sie**. Kein mehrstufiges Aufklappen (kein Tipp→Teil→Komplett).
 - **Standardmäßig zugeklappt.**
 
+### 3. Flip-Karteikarten: keine durchscheinende Rückseite
+
+- Beide Kartenseiten MÜSSEN `backface-visibility:hidden` (inkl. `-webkit-`-Präfix) und einen voll deckenden Hintergrund (Alpha = 1) haben. NIEMALS halbtransparente Flächen (rgba mit Alpha<1, `var(--glass*)` o. Ä.) auf drehenden Kartenseiten verwenden – sonst scheint die gespiegelte Rückseite im Dunkelmodus durch. Gilt für JEDE Seite und JEDE eigene Inline-Engine, nicht nur die zentrale `.face`-Karte.
+
 ## Key conventions
 
 - **All content is inline**: Card data, question arrays, and page-specific JS live directly inside `<script>` tags in each HTML file — there are no separate JSON or JS data files.
