@@ -33,6 +33,7 @@ const ASSETS = [
   "./python_lab.html",
   "./content/erklaerung_datei_io.md",
   "./lf5_vorgehensmodelle.html",
+  "./struktogramme.html",
   "./lf4_it_sicherheit.html",
   "./lf_isms_grundschutz.html",
   "./lzk.html"

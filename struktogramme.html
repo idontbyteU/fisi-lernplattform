@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Struktogramme · FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<style>
+/* ===================================================================== */
+/*  Seiten-spezifisch – alle Farben ausschließlich über zentrale Vars    */
+/* ===================================================================== */
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.q-list{margin:.3rem 0 .3rem 1.3rem;padding:0}
+.q-list li{margin:.32rem 0;color:var(--read);line-height:1.55}
+.sg-sec{margin:.55rem 0}
+.sg-sec .lbl{display:block;font-family:var(--fmono);font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--cyan);margin-bottom:.18rem}
+.sg-sec.bsp .lbl{color:var(--amber)}
+.sg-sec.pr .lbl{color:var(--magenta)}
+.sg-sec ul{margin:.15rem 0 .15rem 1.15rem;padding:0}
+.sg-sec ul li{margin:.16rem 0;color:var(--read);line-height:1.5}
+
+/* Pseudocode-Block */
+.pc{background:var(--code-bg);border:1px solid var(--line);border-radius:9px;
+    font-family:var(--fmono);font-size:13px;line-height:1.55;color:var(--read);
+    padding:.7rem .85rem;margin:.45rem 0;overflow-x:auto;white-space:pre}
+.pc b{color:var(--cyan);font-weight:700}
+.pc .o{color:var(--magenta);font-weight:700}
+
+/* Inline-Code-Schnipsel */
+.kbd{font-family:var(--fmono);font-size:.92em;background:var(--code-bg);border:1px solid var(--line);
+     border-radius:5px;padding:.05em .4em;color:var(--cyan);white-space:nowrap}
+
+/* Baustein-Galerie */
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin:.6rem 0}
+.bcard{background:var(--glass);border:1px solid var(--line);border-radius:12px;padding:1rem 1.05rem;box-shadow:var(--shadow)}
+.bcard h4{margin:.1rem 0 .5rem;color:var(--ink);font-family:var(--fui);font-size:15.5px}
+.bcard p{color:var(--read);line-height:1.55;font-size:14px;margin:.5rem 0 .2rem}
+
+/* ===================================================================== */
+/*  STRUKTOGRAMM-RENDERER  (rein CSS, themesicher: nur --ink/--bg2/...)   */
+/* ===================================================================== */
+.sg{border:1.6px solid var(--ink);border-radius:5px;overflow:hidden;
+    font-family:var(--fmono);font-size:12.5px;line-height:1.35;
+    background:var(--card,var(--bg2));color:var(--ink);max-width:560px;margin:.5rem 0}
+.sg.sg-sm{max-width:330px}
+.sg.sg-md{max-width:430px}
+.sg.sg-center{margin-left:auto;margin-right:auto}
+
+/* generische Trennlinien zwischen aufeinanderfolgenden Elementen */
+.sg > *, .sg-col > *, .sg-loop-body > *{border-bottom:1.6px solid var(--ink)}
+.sg > *:last-child, .sg-col > *:last-child, .sg-loop-body > *:last-child{border-bottom:none}
+
+/* Anweisung / Ein-/Ausgabe */
+.sg-b{padding:7px 10px}
+.sg-empty{min-height:30px;color:var(--dim)}
+
+/* Verzweigung */
+.sg-if-h{position:relative;height:48px;border-bottom:1.6px solid var(--ink)}
+.sg-if-h svg{position:absolute;inset:0;width:100%;height:100%}
+.sg-if-h svg line{stroke:var(--ink);stroke-width:1.3;vector-effect:non-scaling-stroke}
+.sg-if-cond{position:absolute;top:4px;left:0;right:0;text-align:center;font-weight:600;padding:0 6px}
+.sg-if-y{position:absolute;bottom:3px;left:8px}
+.sg-if-n{position:absolute;bottom:3px;right:8px}
+.sg-if-body{display:flex;align-items:stretch}
+.sg-if-body > .sg-col{flex:1;min-width:0}
+.sg-if-body > .sg-col:first-child{border-right:1.6px solid var(--ink)}
+
+/* Schleifen */
+.sg-loop-h{padding:7px 10px;font-weight:600;border-bottom:1.6px solid var(--ink)}
+.sg-loop-body{margin-left:18px;border-left:1.6px solid var(--ink)}
+.sg-foot > .sg-loop-body{border-bottom:1.6px solid var(--ink)}
+.sg-foot > .sg-loop-h{border-bottom:none}
+
+/* Mehrfachauswahl */
+.sg-case-h{position:relative;height:48px;border-bottom:1.6px solid var(--ink)}
+.sg-case-h svg{position:absolute;inset:0;width:100%;height:100%}
+.sg-case-h svg line{stroke:var(--ink);stroke-width:1.3;vector-effect:non-scaling-stroke}
+.sg-case-var{position:absolute;top:4px;left:0;right:0;text-align:center;font-weight:600}
+.sg-case-body{display:flex;align-items:stretch}
+.sg-case-body > .sg-col{flex:1;min-width:0;border-right:1.6px solid var(--ink)}
+.sg-case-body > .sg-col:last-child{border-right:none}
+.sg-case-lbl{padding:5px 6px;text-align:center;font-weight:600;border-bottom:1.6px solid var(--ink)}
+
+/* Prozeduraufruf – Doppelstriche links & rechts */
+.sg-call{padding:7px 20px;position:relative;font-weight:600}
+.sg-call::before,.sg-call::after{content:"";position:absolute;top:0;bottom:0;border-left:1.6px solid var(--ink)}
+.sg-call::before{left:8px}
+.sg-call::after{right:8px}
+
+/* Bildunterschrift */
+.sg-cap{font-family:var(--fmono);font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin:.2rem 0 0}
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="index.html">← Übersicht</a>
+    <div>
+      <h1><span class="tag">LF 5</span>Struktogramme</h1>
+      <div class="sub">Nassi-Shneiderman · DIN 66261 · Bausteine · Pseudocode · Beispiele &amp; Übungen</div>
+    </div>
+    <div class="sp"></div>
+    <div class="tabs">
+      <button id="tOverview" class="on">Überblick</button>
+      <button id="tBausteine">Bausteine</button>
+      <button id="tBeispiele">Beispiele</button>
+      <button id="tCards">Karteikarten</button>
+      <button id="tQuiz">Übungen</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ===================================================================== -->
+<!--  ÜBERBLICK                                                             -->
+<!-- ===================================================================== -->
+<div id="vOverview" class="view on sum">
+
+  <div class="h-sec"><span class="ico">📐</span> Was ist ein Struktogramm?</div>
+  <p class="lead">Ein <b>Struktogramm</b> (auch <b>Nassi-Shneiderman-Diagramm</b>, NSD) stellt den <b>Ablauf eines Computerprogramms</b> grafisch auf dem Papier dar. Es wurde in den 1970er-Jahren von <b>Isaac Nassi</b> und <b>Ben Shneiderman</b> entwickelt, um Programmabläufe <b>ohne Sprunganweisungen</b> („GOTO“) sauber zu planen. Weil Programme immer komplexer und unübersichtlicher wurden, sollte die Logik wieder gründlich und sprungfrei geplant werden – man nennt das <b>strukturierte Programmierung</b>.</p>
+  <div class="callout tip"><span class="ci">🎯</span><div><b>Prüfungssicht:</b> Aus der Beschreibung einer betrieblichen Problemstellung ein korrektes Struktogramm entwickeln – oder ein gegebenes Struktogramm „lesen“ (Schreibtischtest) und das Ergebnis bestimmen. Genau das wird in vielen Abschlussprüfungen verlangt.</div></div>
+
+  <div class="h-sub">Eigenschaften &amp; Regeln</div>
+  <ul class="clean">
+    <li><b>Programmiersprachen-unabhängig:</b> Ein Struktogramm enthält <b>keine</b> sprachspezifische Befehlssyntax. Es muss so allgemein formuliert sein, dass sich die Logik als Codiervorschrift in <b>jede</b> Programmiersprache umsetzen lässt.</li>
+    <li><b>Genormt:</b> Die Grundelemente sind nach <b>DIN 66261</b> festgelegt.</li>
+    <li><b>Lückenlos &amp; sprungfrei:</b> Die Blöcke werden ohne Lücken ineinander geschachtelt – es gibt keine Pfeile und keine Sprünge.</li>
+    <li><b>Ein Eingang, ein Ausgang:</b> Jeder Block wird genau von oben betreten und unten verlassen.</li>
+  </ul>
+  <div class="callout merk"><span class="ci">📌</span><div><b>Abgrenzung:</b> In der professionellen Softwareentwicklung werden Struktogramme eher selten benutzt – dort dominieren <b>UML-Aktivitätsdiagramme</b>. In der Ausbildung dienen Struktogramme dazu, den Aufbau logischer Abläufe zu trainieren. Verwandt, aber <b>nicht</b> dasselbe: der <b>Programmablaufplan (PAP / Flussdiagramm)</b> nach DIN 66001 – dieser arbeitet mit Pfeilen und erlaubt damit auch Sprünge.</div></div>
+
+  <div class="h-sec"><span class="ico">🔁</span> E-V-A: das Grundmuster jedes Programms</div>
+  <p class="lead">Sehr viele Aufgaben folgen dem Schema <b>Eingabe → Verarbeitung → Ausgabe</b>. Daten werden eingelesen, verarbeitet (berechnet, geprüft, sortiert …) und anschließend ausgegeben. Die Anweisungen werden dabei in <b>zeitlicher Reihenfolge</b> von oben nach unten abgearbeitet.</p>
+  <div class="cardgrid c3">
+    <div class="ic"><h4>Eingabe</h4><p>Werte einlesen – z. B. über die Tastatur, aus einer Datei oder einem Array.</p></div>
+    <div class="ic"><h4>Verarbeitung</h4><p>Berechnen, vergleichen, wiederholen – hier steckt die eigentliche Programmlogik.</p></div>
+    <div class="ic"><h4>Ausgabe</h4><p>Ergebnis anzeigen, drucken oder speichern.</p></div>
+  </div>
+  <div class="callout tip"><span class="ci">💡</span><div><b>Deklaration vs. Initialisierung:</b> Das reine <b>Deklarieren</b> einer Variablen (Name + Datentyp benennen, wie es Java verlangt) ist <b>keine</b> logische Anweisung und kommt <b>nicht</b> ins Struktogramm. Die <b>Initialisierung</b> (eine Variable mit einem Anfangswert besetzen, z. B. <span class="kbd">Summe = 0</span>) ist dagegen eine logische Anweisung und <b>muss</b> auftauchen.</div></div>
+
+  <div class="h-sec"><span class="ico">📝</span> Pseudocode als Brücke</div>
+  <p class="lead"><b>Pseudocode</b> beschreibt denselben Ablauf wie ein Struktogramm, nur in Textform – mit natürlicher Sprache und Einrückungen statt mit Kästchen. Beides ist sprachunabhängig; das Struktogramm zeigt die <b>Schachtelung</b> sehr anschaulich, der Pseudocode lässt sich schnell tippen. Im Tab <b>Bausteine</b> steht zu jedem Element der passende Pseudocode daneben.</p>
+  <div class="pc"><b>EINGABE</b> radius
+flaeche <span class="o">←</span> radius * radius * 3.14
+<b>AUSGABE</b> flaeche</div>
+
+  <div class="h-sec"><span class="ico">🧱</span> Die Grundelemente auf einen Blick</div>
+  <p class="lead">Jeder Ablauf lässt sich aus wenigen genormten Bausteinen zusammensetzen. Details + Diagramm + Pseudocode im Tab <b>Bausteine</b>.</p>
+  <div class="tbl-scroll">
+  <table class="ltbl">
+    <tr><th>Baustein</th><th>Wofür?</th></tr>
+    <tr><td class="lg">Lineare Struktur (Sequenz)</td><td>Anweisungen nacheinander abarbeiten</td></tr>
+    <tr><td class="lg">Verzweigung</td><td>Zweiseitige Entscheidung (ja / nein)</td></tr>
+    <tr><td class="lg">Mehrfachauswahl (case)</td><td>Einen von mehreren Fällen anhand einer Variablen wählen</td></tr>
+    <tr><td class="lg">Kopfgesteuerte Schleife</td><td>Wiederholen, Bedingung wird <b>vorher</b> geprüft (ggf. 0 Durchläufe)</td></tr>
+    <tr><td class="lg">Fußgesteuerte Schleife</td><td>Wiederholen, Bedingung wird <b>nachher</b> geprüft (mind. 1 Durchlauf)</td></tr>
+    <tr><td class="lg">Zählergesteuerte Schleife</td><td>Feste Anzahl Durchläufe über eine Zählvariable</td></tr>
+    <tr><td class="lg">Prozeduraufruf</td><td>Aufruf einer Prozedur/Methode (Doppelstriche)</td></tr>
+  </table>
+  </div>
+
+</div>
+
+<!-- ===================================================================== -->
+<!--  BAUSTEINE                                                             -->
+<!-- ===================================================================== -->
+<div id="vBausteine" class="view sum">
+
+  <div class="h-sec"><span class="ico">🧱</span> Grundelemente nach DIN 66261</div>
+  <p class="lead">Zu jedem Baustein: das genormte Diagramm, eine Erklärung und der passende <b>Pseudocode</b>. Die Diagramme sind reine HTML/CSS-Bausteine und passen sich Hell- und Dunkelmodus automatisch an.</p>
+
+  <div class="bgrid">
+
+    <!-- LINEARE STRUKTUR -->
+    <div class="bcard">
+      <h4>1 · Lineare Struktur (Sequenz)</h4>
+      <div class="sg sg-sm">
+        <div class="sg-b">Anweisung 1</div>
+        <div class="sg-b">Anweisung 2</div>
+        <div class="sg-b">Anweisung 3</div>
+      </div>
+      <p>Jede Anweisung steht in einem eigenen rechteckigen Block. Sie werden <b>von oben nach unten</b> in zeitlicher Reihenfolge ausgeführt.</p>
+      <div class="pc">anweisung1
+anweisung2
+anweisung3</div>
+    </div>
+
+    <!-- VERZWEIGUNG -->
+    <div class="bcard">
+      <h4>2 · Verzweigung</h4>
+      <div class="sg sg-sm">
+        <div class="sg-if-h">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+          <span class="sg-if-cond">Bedingung</span>
+          <span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+        </div>
+        <div class="sg-if-body">
+          <div class="sg-col"><div class="sg-b">ja-Block</div></div>
+          <div class="sg-col"><div class="sg-b">nein-Block</div></div>
+        </div>
+      </div>
+      <p>Trifft die Bedingung zu, läuft der <b>ja</b>-Block, sonst der <b>nein</b>-Block. Jeder Zweig kann mehrere Anweisungen enthalten – oder (im nein-Fall) <b>leer</b> bleiben.</p>
+      <div class="pc"><b>WENN</b> bedingung <b>DANN</b>
+    ja-block
+<b>SONST</b>
+    nein-block
+<b>ENDE WENN</b></div>
+    </div>
+
+    <!-- MEHRFACHAUSWAHL -->
+    <div class="bcard">
+      <h4>3 · Mehrfachauswahl (case)</h4>
+      <div class="sg">
+        <div class="sg-case-h">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="100" x2="50" y2="0"/><line x1="100" y1="100" x2="50" y2="0"/><line x1="50" y1="0" x2="33" y2="100"/><line x1="50" y1="0" x2="66" y2="100"/></svg>
+          <span class="sg-case-var">Variable</span>
+        </div>
+        <div class="sg-case-body">
+          <div class="sg-col"><div class="sg-case-lbl">1</div><div class="sg-b">Block 1</div></div>
+          <div class="sg-col"><div class="sg-case-lbl">2</div><div class="sg-b">Block 2</div></div>
+          <div class="sg-col"><div class="sg-case-lbl">3</div><div class="sg-b">Block 3</div></div>
+          <div class="sg-col"><div class="sg-case-lbl">sonst</div><div class="sg-b">Default</div></div>
+        </div>
+      </div>
+      <p>Anhand des Werts einer Variablen (dem <b>switch</b>, meist eine ganze Zahl) wird <b>einer</b> von mehreren Blöcken ausgeführt. Trifft kein Fall zu, greift der <b>sonst/default</b>-Zweig (optional). Auch <b>switch-case-Konstrukt</b> genannt.</p>
+      <div class="pc"><b>FALLS</b> variable <b>IST</b>
+  1: block1
+  2: block2
+  3: block3
+  <b>SONST</b>: default
+<b>ENDE FALLS</b></div>
+    </div>
+
+    <!-- KOPFGESTEUERTE SCHLEIFE -->
+    <div class="bcard">
+      <h4>4 · Kopfgesteuerte Schleife</h4>
+      <div class="sg sg-sm">
+        <div class="sg-loop-h">so lange Bedingung wahr</div>
+        <div class="sg-loop-body"><div class="sg-b">Anweisungsblock</div></div>
+      </div>
+      <p>Die Bedingung wird <b>vor</b> jedem Durchlauf geprüft. Ist sie gleich zu Beginn nicht erfüllt, läuft der Block <b>gar nicht</b>. Vorsicht: bei nie falscher Bedingung → <b>Endlosschleife</b>.</p>
+      <div class="pc"><b>SOLANGE</b> bedingung <b>WIEDERHOLE</b>
+    anweisungsblock
+<b>ENDE SOLANGE</b></div>
+    </div>
+
+    <!-- FUSSGESTEUERTE SCHLEIFE -->
+    <div class="bcard">
+      <h4>5 · Fußgesteuerte Schleife</h4>
+      <div class="sg sg-sm">
+        <div class="sg-loop sg-foot">
+          <div class="sg-loop-body"><div class="sg-b">Anweisungsblock</div></div>
+          <div class="sg-loop-h">so lange Bedingung wahr</div>
+        </div>
+      </div>
+      <p>Die Bedingung wird erst <b>nach</b> dem Durchlauf geprüft – der Block läuft daher <b>mindestens einmal</b>. Ideal für Menüführungen (Menü soll auf jeden Fall einmal erscheinen).</p>
+      <div class="pc"><b>WIEDERHOLE</b>
+    anweisungsblock
+<b>SOLANGE</b> bedingung</div>
+    </div>
+
+    <!-- ZAEHLERGESTEUERTE SCHLEIFE -->
+    <div class="bcard">
+      <h4>6 · Zählergesteuerte Schleife</h4>
+      <div class="sg sg-sm">
+        <div class="sg-loop-h">für i = 1 bis n, Schrittweite 1</div>
+        <div class="sg-loop-body"><div class="sg-b">Anweisungsblock</div></div>
+      </div>
+      <p>Für eine <b>vorher bekannte</b> Anzahl von Durchläufen. Im Schleifenkopf stehen <b>Startwert</b>, <b>Endwert/Bedingung</b> und die <b>Veränderung</b> des Zählers. Schnellster Schleifentyp – wenn möglich Kopf-/Fußschleifen dadurch ersetzen.</p>
+      <div class="pc"><b>FÜR</b> i <b>VON</b> 1 <b>BIS</b> n <b>SCHRITT</b> 1
+    anweisungsblock
+<b>ENDE FÜR</b></div>
+    </div>
+
+    <!-- PROZEDURAUFRUF -->
+    <div class="bcard">
+      <h4>7 · Prozeduraufruf</h4>
+      <div class="sg sg-sm">
+        <div class="sg-b">vorbereiten</div>
+        <div class="sg-call">Prozedur ausführen</div>
+        <div class="sg-b">weiter</div>
+      </div>
+      <p>Der Aufruf einer <b>Prozedur/Methode</b>, die selbst aus vielen Anweisungen bestehen kann, wird durch die <b>Doppelstriche</b> an den Rändern des Blocks dargestellt.</p>
+      <div class="pc">vorbereiten
+<b>RUFE</b> prozedur()
+weiter</div>
+    </div>
+
+  </div>
+
+  <div class="h-sec"><span class="ico">⚖️</span> Welche Schleife wann?</div>
+  <div class="tbl-scroll">
+  <table class="ltbl">
+    <tr><th>Schleifentyp</th><th>Prüfung</th><th>Mindest&shy;durchläufe</th><th>Typisch für</th></tr>
+    <tr><td class="lg">Kopfgesteuert</td><td>vorher</td><td>0</td><td>„so lange …“, Abbruch evtl. sofort</td></tr>
+    <tr><td class="lg">Fußgesteuert</td><td>nachher</td><td>1</td><td>Menüs, Eingabe-Wiederholung</td></tr>
+    <tr><td class="lg">Zählergesteuert</td><td>über Zähler</td><td>0</td><td>Anzahl bekannt, Arrays durchlaufen</td></tr>
+  </table>
+  </div>
+
+</div>
+
+<!-- ===================================================================== -->
+<!--  BEISPIELE                                                             -->
+<!-- ===================================================================== -->
+<div id="vBeispiele" class="view">
+  <div class="calc">
+    <div class="calc-intro">Vollständig durchdachte Beispiele aus der Theorie – jeweils mit Struktogramm. Ein Klick auf <b>„Erklärung anzeigen“</b> öffnet die komplette Erläuterung (standardmäßig zu). Am Ende kannst du im Abschnitt <b>Schreibtischtest</b> selbst nachrechnen.</div>
+
+    <!-- LINEAR -->
+    <div class="calc-card">
+      <div class="calc-h">Linear · Kreisfläche berechnen (E-V-A)</div>
+      <div class="calc-q">Den Radius eines Kreises einlesen, die Fläche berechnen und ausgeben.
+        <div class="sg sg-sm">
+          <div class="sg-b">Eingabe Radius</div>
+          <div class="sg-b">F = Radius · Radius · 3.14</div>
+          <div class="sg-b">Ausgabe F</div>
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Erklärung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>Klassische <b>E-V-A-Situation</b>: Eingabe (Radius) → Verarbeitung (Fläche) → Ausgabe. Alle Anweisungen laufen in zeitlicher Reihenfolge. Wichtig: die <b>Variablennamen</b> müssen in allen Anweisungen konsistent verwendet werden.</p>
+      </div>
+    </div>
+
+    <!-- LINEAR 2 -->
+    <div class="calc-card">
+      <div class="calc-h">Linear · Produkt zweier Variablen</div>
+      <div class="calc-q">A = 5, B = 3, C = A · B – gib C aus.
+        <div class="sg sg-sm">
+          <div class="sg-b">A = 5</div>
+          <div class="sg-b">B = 3</div>
+          <div class="sg-b">C = A · B</div>
+          <div class="sg-b">Ausgabe C</div>
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Erklärung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>Ausgegeben wird <b>15</b>. Die <b>Deklaration</b> der Variablen (Datentyp) gehört nicht ins Struktogramm – die <b>Initialisierung</b> (A = 5, B = 3) hingegen schon, denn sie ist eine logische Anweisung.</p>
+      </div>
+    </div>
+
+    <!-- VERZWEIGUNG -->
+    <div class="calc-card">
+      <div class="calc-h">Verzweigung · Kaffeekochen (leerer nein-Zweig)</div>
+      <div class="calc-q">Filter einlegen, Pulver einfüllen, Wassertank prüfen (ggf. auffüllen), Maschine einschalten.
+        <div class="sg sg-md">
+          <div class="sg-b">Kaffeefilter einlegen</div>
+          <div class="sg-b">Kaffeepulver einfüllen</div>
+          <div class="sg-if-h">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+            <span class="sg-if-cond">Tank leer?</span><span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+          </div>
+          <div class="sg-if-body">
+            <div class="sg-col"><div class="sg-b">Wasser einfüllen</div></div>
+            <div class="sg-col"><div class="sg-b sg-empty"></div></div>
+          </div>
+          <div class="sg-b">Maschine einschalten</div>
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Erklärung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>Eine Verzweigung hat immer <b>zwei</b> mögliche Fälle (ja/nein). Hier bleibt der <b>nein-Zweig leer</b>: Ist noch Wasser im Tank, wird nichts getan und es geht direkt mit „Maschine einschalten“ weiter.</p>
+      </div>
+    </div>
+
+    <!-- VERZWEIGUNG VERSCHACHTELT -->
+    <div class="calc-card">
+      <div class="calc-h">Verzweigung · Rabatt (verschachtelt)</div>
+      <div class="calc-q">Über 100&nbsp;€ Umsatz 5&nbsp;% Rabatt, über 500&nbsp;€ sogar 10&nbsp;%. Rechnungsbetrag = Umsatz − Rabatt.
+        <div class="sg sg-md">
+          <div class="sg-b">Eingabe Umsatz</div>
+          <div class="sg-if-h">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+            <span class="sg-if-cond">Umsatz &gt; 100</span><span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+          </div>
+          <div class="sg-if-body">
+            <div class="sg-col">
+              <div class="sg-if-h">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+                <span class="sg-if-cond">Umsatz &gt; 500</span><span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+              </div>
+              <div class="sg-if-body">
+                <div class="sg-col"><div class="sg-b">Rabatt = 10 %</div></div>
+                <div class="sg-col"><div class="sg-b">Rabatt = 5 %</div></div>
+              </div>
+            </div>
+            <div class="sg-col"><div class="sg-b">Rabatt = 0</div></div>
+          </div>
+          <div class="sg-b">Rechnungsbetrag = Umsatz − Rabatt</div>
+          <div class="sg-b">Ausgabe Rechnungsbetrag</div>
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Erklärung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>Verzweigungen lassen sich <b>ineinander verschachteln</b>: Innerhalb des ja-Zweiges von „Umsatz &gt; 100“ folgt eine weitere Verzweigung „Umsatz &gt; 500“. So entstehen die drei Stufen 0 % / 5 % / 10 %. Wichtig ist die <b>Reihenfolge der Prüfung</b> (erst die gröbere, dann die feinere Schwelle).</p>
+      </div>
+    </div>
+
+    <!-- MEHRFACHAUSWAHL -->
+    <div class="calc-card">
+      <div class="calc-h">Mehrfachauswahl · Auswahlmenü</div>
+      <div class="calc-q">1 = Anzeigen, 2 = Ausdrucken, 3 = Neueingabe, 0 = Beenden.
+        <div class="sg">
+          <div class="sg-case-h">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="100" x2="50" y2="0"/><line x1="100" y1="100" x2="50" y2="0"/><line x1="50" y1="0" x2="25" y2="100"/><line x1="50" y1="0" x2="50" y2="100"/><line x1="50" y1="0" x2="75" y2="100"/></svg>
+            <span class="sg-case-var">Auswahlziffer</span>
+          </div>
+          <div class="sg-case-body">
+            <div class="sg-col"><div class="sg-case-lbl">1</div><div class="sg-b">anzeigen</div></div>
+            <div class="sg-col"><div class="sg-case-lbl">2</div><div class="sg-b">drucken</div></div>
+            <div class="sg-col"><div class="sg-case-lbl">3</div><div class="sg-b">neu eingeben</div></div>
+            <div class="sg-col"><div class="sg-case-lbl">0</div><div class="sg-b">beenden</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Erklärung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>Der <b>switch</b> (hier die Auswahlziffer) muss eine ganze Zahl sein. Je nach Wert wird genau <b>einer</b> der Fälle ausgeführt. Dieses Menü hat keinen default-Zweig – für unbekannte Eingaben würde sich ein <b>sonst</b>-Zweig mit Fehlermeldung anbieten.</p>
+      </div>
+    </div>
+
+    <!-- KOPFGESTEUERT -->
+    <div class="calc-card">
+      <div class="calc-h">Kopfgesteuerte Schleife · Summe bis &gt; 100</div>
+      <div class="calc-q">Zahlen 1, 2, 3 … aufaddieren, bis die Summe 100 überschreitet; dann die letzte Zahl ausgeben.
+        <div class="sg sg-md">
+          <div class="sg-b">Summe = 0</div>
+          <div class="sg-b">Zahl = 0</div>
+          <div class="sg-loop-h">so lange Summe &lt;= 100</div>
+          <div class="sg-loop-body">
+            <div class="sg-b">Zahl = Zahl + 1</div>
+            <div class="sg-b">Summe = Summe + Zahl</div>
+          </div>
+          <div class="sg-b">Ausgabe Zahl</div>
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Erklärung anzeigen</button></div>
+      <div class="calc-sol">
+        <p><b>Summe vor</b> der Schleife auf 0 setzen, sonst würde zu einem unbekannten Wert addiert. <b>Zahl wird vor</b> der Summenbildung erhöht – würde man sie danach erhöhen, wäre die ausgegebene Zahl am Ende um 1 zu hoch. Die Bedingung <span class="kbd">Summe &lt;= 100</span> entspricht „so lange Summe nicht größer als 100“.</p>
+      </div>
+    </div>
+
+    <!-- FUSSGESTEUERT -->
+    <div class="calc-card">
+      <div class="calc-h">Fußgesteuerte Schleife · Kapitalverdopplung</div>
+      <div class="calc-q">Kapital K mit Zinssatz p verzinsen: Wie viele Jahre bis sich K verdoppelt hat?
+        <div class="sg sg-md">
+          <div class="sg-b">Eingabe K</div>
+          <div class="sg-b">K1 = K</div>
+          <div class="sg-b">Eingabe p</div>
+          <div class="sg-b">Jahr = 0</div>
+          <div class="sg-loop sg-foot">
+            <div class="sg-loop-body">
+              <div class="sg-b">K1 = K1 · (1 + p / 100)</div>
+              <div class="sg-b">Jahr = Jahr + 1</div>
+            </div>
+            <div class="sg-loop-h">so lange K1 &lt; K · 2</div>
+          </div>
+          <div class="sg-b">Ausgabe Jahr</div>
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Erklärung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>Die <b>Hilfsvariable K1</b> trägt den jeweils aktuellen Kapitalwert; sie wird in der Bedingung mit dem Anfangswert <b>K</b> verglichen. Weil mind. einmal verzinst werden soll, passt die <b>fußgesteuerte</b> Schleife: zuerst rechnen, dann prüfen.</p>
+      </div>
+    </div>
+
+    <!-- ZAEHLER -->
+    <div class="calc-card">
+      <div class="calc-h">Zählergesteuerte Schleife · Summe 1…100</div>
+      <div class="calc-q">Summe aller Zahlen von 1 bis 100 berechnen und ausgeben.
+        <div class="sg sg-sm">
+          <div class="sg-b">Summe = 0</div>
+          <div class="sg-loop-h">für i = 1 bis 100, Schritt 1</div>
+          <div class="sg-loop-body"><div class="sg-b">Summe = Summe + i</div></div>
+          <div class="sg-b">Ausgabe Summe</div>
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Erklärung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>Da die Anzahl der Durchläufe (100) <b>vorher bekannt</b> ist, ist die Zählschleife ideal. In jedem Durchlauf wird der Zählerwert zur Summe addiert. Ergebnis: <b>5050</b>.</p>
+      </div>
+    </div>
+
+    <!-- ARRAY -->
+    <div class="calc-card">
+      <div class="calc-h">Array · größten Wert finden</div>
+      <div class="calc-q">Ein Array <span class="kbd">zahlen</span> mit 10 Integerwerten – das Maximum ermitteln.
+        <div class="sg sg-md">
+          <div class="sg-b">max = zahlen[0]</div>
+          <div class="sg-loop-h">für i = 1 bis zahlen.length − 1</div>
+          <div class="sg-loop-body">
+            <div class="sg-if-h">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+              <span class="sg-if-cond">zahlen[i] &gt; max</span><span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+            </div>
+            <div class="sg-if-body">
+              <div class="sg-col"><div class="sg-b">max = zahlen[i]</div></div>
+              <div class="sg-col"><div class="sg-b sg-empty"></div></div>
+            </div>
+          </div>
+          <div class="sg-b">Ausgabe max</div>
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Erklärung anzeigen</button></div>
+      <div class="calc-sol">
+        <p><b>max</b> wird mit dem <b>1. Array-Element</b> (Index 0) vorbelegt – nicht mit 0, denn das Array könnte nur negative Werte enthalten. Als Laufbedingung dient <span class="kbd">zahlen.length</span> (allgemeine Array-Größe). Die Zählschleife eignet sich besonders gut für die Arrayverarbeitung.</p>
+      </div>
+    </div>
+
+    <!-- DATEI -->
+    <div class="calc-card">
+      <div class="calc-h">Datei · durchschnittliche Teilnehmerzahl</div>
+      <div class="calc-q">Datei <span class="kbd">Veranstaltungen</span> (mit Feld „durchgeführt“) auswerten: durchschnittliche Teilnehmerzahl der durchgeführten Veranstaltungen.
+        <div class="sg sg-md">
+          <div class="sg-b">TGesamt = 0</div>
+          <div class="sg-b">AnzVeranst = 0</div>
+          <div class="sg-b">Datei öffnen</div>
+          <div class="sg-b">Datensatz lesen</div>
+          <div class="sg-loop-h">so lange nicht EOF</div>
+          <div class="sg-loop-body">
+            <div class="sg-if-h">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+              <span class="sg-if-cond">durchgeführt = True</span><span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+            </div>
+            <div class="sg-if-body">
+              <div class="sg-col">
+                <div class="sg-b">TGesamt = TGesamt + Teilnehmer</div>
+                <div class="sg-b">AnzVeranst = AnzVeranst + 1</div>
+              </div>
+              <div class="sg-col"><div class="sg-b sg-empty"></div></div>
+            </div>
+            <div class="sg-b">Datensatz lesen</div>
+          </div>
+          <div class="sg-b">TMittel = TGesamt / AnzVeranst</div>
+          <div class="sg-b">Datei schließen</div>
+          <div class="sg-b">Ausgabe TMittel</div>
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Erklärung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>Schema der <b>Dateiverarbeitung</b>: am Anfang <b>öffnen</b>, am Ende <b>schließen</b>. <b>Vor</b> der Schleife wird einmal gelesen, jeder weitere Lesevorgang steht <b>am Ende</b> der Schleife. Jeder Lesevorgang rückt den <b>Dateizeiger</b> einen Datensatz weiter; hinter dem letzten Satz steht das <b>Dateiendezeichen (EOF)</b>. Gelesen wird, <b>so lange EOF noch nicht erreicht</b> ist.</p>
+      </div>
+    </div>
+
+    <!-- SCHREIBTISCHTESTS -->
+    <div class="h-sec" style="margin-top:1.4rem"><span class="ico">🖊️</span> Schreibtischtest – selbst nachrechnen</div>
+    <div class="calc-intro">Beim <b>Schreibtischtest</b> notiert man die Anfangswerte der Variablen und verfolgt den Ablauf gedanklich Schritt für Schritt. Erst rechnen, dann die Lösung aufklappen.</div>
+
+    <div class="calc-card">
+      <div class="calc-h">ST 1 · Variablen-Spiel</div>
+      <div class="calc-q">Welcher Wert wird ausgegeben?
+        <div class="sg sg-sm">
+          <div class="sg-b">x = 2</div>
+          <div class="sg-b">y = 6</div>
+          <div class="sg-b">z = y − x</div>
+          <div class="sg-b">y = 4</div>
+          <div class="sg-b">z = z + y</div>
+          <div class="sg-b">Ausgabe z</div>
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="step">z = y − x = 6 − 2 = <b>4</b></div>
+        <div class="step">y wird auf 4 gesetzt</div>
+        <div class="step">z = z + y = 4 + 4 = <b>8</b></div>
+        <div class="res"><b>Ausgabe: 8</b></div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">ST 2 · Schleife mit zwei Variablen</div>
+      <div class="calc-q">Ermittle den Wert von a.
+        <div class="sg sg-sm">
+          <div class="sg-b">a = 10</div>
+          <div class="sg-b">b = 20</div>
+          <div class="sg-loop-h">so lange b &gt; 5</div>
+          <div class="sg-loop-body">
+            <div class="sg-b">b = b − 5</div>
+            <div class="sg-b">a = a + 2</div>
+          </div>
+          <div class="sg-b">Ausgabe a</div>
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="step">b=20&gt;5 → b=15, a=12</div>
+        <div class="step">b=15&gt;5 → b=10, a=14</div>
+        <div class="step">b=10&gt;5 → b=5, a=16</div>
+        <div class="step">b=5&gt;5? nein → Schleife endet</div>
+        <div class="res"><b>Ausgabe: a = 16</b></div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">ST 3 · Bedingung mit Summe</div>
+      <div class="calc-q">x = 1, y = 3. Welcher x-Wert wird ausgegeben?
+        <div class="sg sg-md">
+          <div class="sg-b">x = 1</div>
+          <div class="sg-b">y = 3</div>
+          <div class="sg-loop-h">so lange (x + y) &lt; 50</div>
+          <div class="sg-loop-body">
+            <div class="sg-b">Summe = x + y</div>
+            <div class="sg-b">x = x + 2</div>
+          </div>
+          <div class="sg-b">Ausgabe x</div>
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>y bleibt konstant 3, x wächst in 2er-Schritten (1, 3, 5, …). Die Schleife läuft, solange x + 3 &lt; 50, also x &lt; 47.</p>
+        <div class="step">… x = 45: 45+3 = 48 &lt; 50 → x = 47</div>
+        <div class="step">x = 47: 47+3 = 50 &lt; 50? nein → Schleife endet</div>
+        <div class="res"><b>Ausgabe: x = 47</b></div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">ST 4 · Die Falle der Kopfschleife</div>
+      <div class="calc-q">Welcher Wert für Summe wird ausgegeben?
+        <div class="sg sg-md">
+          <div class="sg-b">a = 1</div>
+          <div class="sg-b">Summe = 0</div>
+          <div class="sg-loop-h">so lange a &gt; 5</div>
+          <div class="sg-loop-body">
+            <div class="sg-b">Summe = Summe + a</div>
+            <div class="sg-if-h">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+              <span class="sg-if-cond">a &gt; 3</span><span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+            </div>
+            <div class="sg-if-body">
+              <div class="sg-col"><div class="sg-b">Summe = Summe + 1</div></div>
+              <div class="sg-col"><div class="sg-b sg-empty"></div></div>
+            </div>
+            <div class="sg-b">a = a + 1</div>
+          </div>
+          <div class="sg-b">Ausgabe Summe</div>
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>Die Schleife ist <b>kopfgesteuert</b> – die Bedingung <span class="kbd">a &gt; 5</span> wird <b>vor</b> dem ersten Durchlauf geprüft. Da a = 1 ist, ist sie sofort falsch: der Schleifenkörper läuft <b>kein einziges Mal</b>.</p>
+        <div class="res"><b>Ausgabe: Summe = 0</b></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!--  KARTEIKARTEN                                                          -->
+<!-- ===================================================================== -->
+<div id="vCards" class="view">
+  <div class="chips" id="cardChips"></div>
+  <div class="bar">
+    <div class="pbar"><i id="pfill"></i></div>
+    <div class="ptxt">0% beherrscht</div>
+    <button class="tbtn" id="tShuffle">🔀 Mischen</button>
+    <button class="tbtn" id="tOpen">Nur offene</button>
+    <button class="tbtn" id="tReset">Zurücksetzen</button>
+  </div>
+  <div id="study" class="study"></div>
+</div>
+
+<!-- ===================================================================== -->
+<!--  ÜBUNGEN (uebung_struktogramme_1.pdf)                                  -->
+<!-- ===================================================================== -->
+<div id="vQuiz" class="view">
+  <div class="calc">
+    <div class="calc-intro">Übungsaufgaben – erst selbst ein Struktogramm zeichnen, dann <b>„Lösung anzeigen“</b>. Ein Klick öffnet den kompletten Lösungsblock mit fertigem Struktogramm (standardmäßig zu).</div>
+
+    <!-- Ü1 -->
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 1 · Zahlen 1 bis 10 ausgeben</div>
+      <div class="calc-q">Die Zahlen 1 bis 10 sollen nacheinander ausgegeben werden.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>Die Anzahl der Durchläufe (10) ist bekannt → <b>Zählschleife</b>.</p>
+        <div class="sg sg-sm">
+          <div class="sg-loop-h">für i = 1 bis 10, Schritt 1</div>
+          <div class="sg-loop-body"><div class="sg-b">Ausgabe i</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ü2 -->
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 2 · Zahlen summieren bis 0</div>
+      <div class="calc-q">Der Benutzer gibt immer wieder Zahlen ein, die summiert werden. Bei Eingabe von <b>0</b> endet die Eingabe und die Summe wird ausgegeben.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>Es wird mindestens einmal eingelesen → <b>fußgesteuerte</b> Schleife, Abbruch bei Eingabe 0. (Das Aufaddieren der 0 verändert die Summe nicht.)</p>
+        <div class="sg sg-md">
+          <div class="sg-b">Summe = 0</div>
+          <div class="sg-loop sg-foot">
+            <div class="sg-loop-body">
+              <div class="sg-b">Eingabe zahl</div>
+              <div class="sg-b">Summe = Summe + zahl</div>
+            </div>
+            <div class="sg-loop-h">so lange zahl ≠ 0</div>
+          </div>
+          <div class="sg-b">Ausgabe Summe</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ü3 -->
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 3 · Größte von drei Zahlen</div>
+      <div class="calc-q">Lies drei Zahlen a, b, c ein und gib die <b>größte</b> der drei aus.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>Zwei <b>verschachtelte</b> Verzweigungen genügen.</p>
+        <div class="sg sg-md">
+          <div class="sg-b">Eingabe a, b, c</div>
+          <div class="sg-if-h">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+            <span class="sg-if-cond">a &gt; b</span><span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+          </div>
+          <div class="sg-if-body">
+            <div class="sg-col">
+              <div class="sg-if-h">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+                <span class="sg-if-cond">a &gt; c</span><span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+              </div>
+              <div class="sg-if-body">
+                <div class="sg-col"><div class="sg-b">max = a</div></div>
+                <div class="sg-col"><div class="sg-b">max = c</div></div>
+              </div>
+            </div>
+            <div class="sg-col">
+              <div class="sg-if-h">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+                <span class="sg-if-cond">b &gt; c</span><span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+              </div>
+              <div class="sg-if-body">
+                <div class="sg-col"><div class="sg-b">max = b</div></div>
+                <div class="sg-col"><div class="sg-b">max = c</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="sg-b">Ausgabe max</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ü4 -->
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 4 · Wahlberechtigung</div>
+      <div class="calc-q">Der Benutzer gibt sein Alter ein. Ab 18 → „Du darfst schon wählen!“, sonst „Du darfst leider noch nicht wählen!“.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>Eine einfache <b>Verzweigung</b>.</p>
+        <div class="sg sg-md">
+          <div class="sg-b">Eingabe alter</div>
+          <div class="sg-if-h">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+            <span class="sg-if-cond">alter &gt;= 18</span><span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+          </div>
+          <div class="sg-if-body">
+            <div class="sg-col"><div class="sg-b">Ausgabe „Du darfst schon wählen!“</div></div>
+            <div class="sg-col"><div class="sg-b">Ausgabe „Du darfst leider noch nicht wählen!“</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ü5 -->
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 5 · Akku-Ladestand in Prozent</div>
+      <div class="calc-q">Eingabe der Akku-Gesamtkapazität (Watt) und des aktuellen Ladestands (Watt). Berechne und gib den Ladestand in <b>Prozent</b> aus.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <p>Reine <b>E-V-A</b>-Aufgabe ohne Verzweigung oder Schleife.</p>
+        <div class="sg sg-md">
+          <div class="sg-b">Eingabe gesamt</div>
+          <div class="sg-b">Eingabe aktuell</div>
+          <div class="sg-b">prozent = aktuell / gesamt · 100</div>
+          <div class="sg-b">Ausgabe prozent</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ü6 -->
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 6 · Versandkosten – Fehler finden &amp; korrigieren</div>
+      <div class="calc-q">Smith &amp; Sons berechnet Versandpauschalen: <b>bis 20&nbsp;€ → 4,95&nbsp;€</b>, <b>bis 50&nbsp;€ → 2,95&nbsp;€</b>, <b>über 50&nbsp;€ → keine Versandkosten</b>. Eine Programmiererin hat dieses (fehlerhafte) Struktogramm entwickelt:
+        <div class="sg">
+          <div class="sg-b">Ausgabe „Geben Sie den Bestellwert ein.“</div>
+          <div class="sg-b">Einlesen: bestellwert</div>
+          <div class="sg-b">versandkosten = 999</div>
+          <div class="sg-if-h">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+            <span class="sg-if-cond">bestellwert &gt; 50</span><span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+          </div>
+          <div class="sg-if-body">
+            <div class="sg-col"><div class="sg-b">versandkosten = 0</div></div>
+            <div class="sg-col">
+              <div class="sg-if-h">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+                <span class="sg-if-cond">bestellwert &lt;= 50</span><span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+              </div>
+              <div class="sg-if-body">
+                <div class="sg-col"><div class="sg-b">versandkosten = 2,95</div></div>
+                <div class="sg-col"><div class="sg-b">versandkosten = 4,95</div></div>
+              </div>
+              <div class="sg-b">Ausgabe „Die Versandkosten betragen “ + versandkosten</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:.6rem">
+          <b>a)</b> Warum berechnet der Algorithmus manchmal falsche Versandkosten? (Beispiel nennen)<br>
+          <b>b)</b> In welchen Situationen erfolgt <b>keine</b> Ausgabe?<br>
+          <b>c)</b> Stelle den korrekten Algorithmus als Struktogramm dar.
+        </div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="sg-sec"><span class="lbl">a) Falsche Berechnung</span>
+          <p>Die innere Bedingung prüft <span class="kbd">bestellwert &lt;= 50</span> statt <span class="kbd">bestellwert &lt;= 20</span>. Im rechten Außenast ist bestellwert aber <b>immer</b> ≤ 50, die innere Bedingung also <b>immer wahr</b> → es werden stets 2,95&nbsp;€ gesetzt, der 4,95-&nbsp;€-Zweig (nein) ist <b>toter Code</b>.</p>
+          <p><b>Beispiel Bestellwert = 15&nbsp;€:</b> erwartet 4,95&nbsp;€ (bis 20&nbsp;€). Ablauf: 15&nbsp;&gt;&nbsp;50? nein → 15&nbsp;≤&nbsp;50? ja → versandkosten = 2,95&nbsp;€. <b>Falsch.</b></p>
+        </div>
+        <div class="sg-sec"><span class="lbl">b) Keine Ausgabe</span>
+          <p>Die Ausgabe-Zeile steht nur <b>innerhalb</b> des nein-Astes („bestellwert ≤ 50“). Bei <b>bestellwert &gt; 50</b> (versandkosten = 0) wird der ja-Ast durchlaufen – dort gibt es keine Ausgabe. Also: <b>für alle Bestellwerte über 50&nbsp;€ erfolgt keine Ausgabe.</b></p>
+        </div>
+        <div class="sg-sec"><span class="lbl">c) Korrektes Struktogramm</span>
+          <div class="sg">
+            <div class="sg-b">Ausgabe „Geben Sie den Bestellwert ein.“</div>
+            <div class="sg-b">Einlesen: bestellwert</div>
+            <div class="sg-if-h">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+              <span class="sg-if-cond">bestellwert &gt; 50</span><span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+            </div>
+            <div class="sg-if-body">
+              <div class="sg-col"><div class="sg-b">versandkosten = 0</div></div>
+              <div class="sg-col">
+                <div class="sg-if-h">
+                  <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="0" x2="50" y2="100"/><line x1="100" y1="0" x2="50" y2="100"/></svg>
+                  <span class="sg-if-cond">bestellwert &gt; 20</span><span class="sg-if-y">ja</span><span class="sg-if-n">nein</span>
+                </div>
+                <div class="sg-if-body">
+                  <div class="sg-col"><div class="sg-b">versandkosten = 2,95</div></div>
+                  <div class="sg-col"><div class="sg-b">versandkosten = 4,95</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="sg-b">Ausgabe „Die Versandkosten betragen “ + versandkosten</div>
+          </div>
+          <p style="margin-top:.5rem">Korrekturen: innere Schwelle auf <b>&gt; 20</b> geändert und die <b>Ausgabe ans Ende</b> gezogen (außerhalb beider Verzweigungen) – so läuft sie für <b>jeden</b> Bestellwert.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>FISI Lernplattform · Lernfeld 5 · Struktogramme · Fortschritt der Karteikarten wird lokal im Browser gespeichert</footer>
+</div>
+
+<script src="study.js"></script>
+<script>
+/* ===== KARTEIKARTEN-DATEN ===== */
+const CATS={
+  grund:{label:"Grundlagen",color:"#2de2e6"},
+  baust:{label:"Bausteine",color:"#ffb43b"},
+  schl:{label:"Schleifen",color:"#9dff52"},
+  anw:{label:"Anwendung",color:"#ff2a6d"}
+};
+
+const CARDS=[
+/* Grundlagen */
+{c:"grund",q:"Was ist ein Struktogramm?",a:"Eine grafische Darstellung des <b>Programmablaufs</b> aus genormten, ineinander geschachtelten Blöcken – <b>ohne Sprünge</b>. Auch <b>Nassi-Shneiderman-Diagramm (NSD)</b> genannt."},
+{c:"grund",q:"Wer hat das Struktogramm entwickelt – und wann?",a:"<b>Isaac Nassi</b> und <b>Ben Shneiderman</b> in den <b>1970er-Jahren</b>, um Programme ohne Sprunganweisungen (GOTO) zu planen → <b>strukturierte Programmierung</b>."},
+{c:"grund",q:"Nach welcher Norm sind die Grundelemente festgelegt?",a:"Nach <b>DIN 66261</b>."},
+{c:"grund",q:"Warum enthält ein Struktogramm keine konkrete Befehlssyntax?",a:"Es muss <b>programmiersprachen-unabhängig</b> sein, damit sich die Logik als Codiervorschrift in <b>jede</b> Sprache umsetzen lässt."},
+{c:"grund",q:"Wofür steht E-V-A?",a:"<b>Eingabe – Verarbeitung – Ausgabe</b>: das Grundmuster vieler Programme."},
+{c:"grund",q:"Deklaration oder Initialisierung – was kommt ins Struktogramm?",a:"Nur die <b>Initialisierung</b> (z. B. Summe = 0) – sie ist eine logische Anweisung. Die reine <b>Deklaration</b> (Datentyp benennen) ist keine logische Anweisung und entfällt."},
+{c:"grund",q:"Struktogramm vs. Programmablaufplan (PAP)?",a:"Das <b>Struktogramm</b> (DIN 66261) ist sprung-/pfeilfrei und lückenlos geschachtelt. Der <b>PAP/Flussdiagramm</b> (DIN 66001) arbeitet mit <b>Pfeilen</b> und erlaubt damit auch Sprünge."},
+{c:"grund",q:"Was ist ein Schreibtischtest?",a:"Den Ablauf gedanklich nachvollziehen: Anfangswerte notieren und bei jeder Änderung den alten Wert durchstreichen, den neuen darunter schreiben – am Ende steht das Ergebnis."},
+
+/* Bausteine */
+{c:"baust",q:"Nenne die Grundelemente eines Struktogramms.",a:"<b>Lineare Struktur</b>, <b>Verzweigung</b>, <b>Mehrfachauswahl (case)</b>, <b>kopf-/fuß-/zählergesteuerte Schleife</b> und <b>Prozeduraufruf</b>."},
+{c:"baust",q:"Wie viele Fälle hat eine Verzweigung?",a:"Genau <b>zwei</b> (ja / nein). Ein Zweig kann mehrere Anweisungen enthalten oder <b>leer</b> bleiben."},
+{c:"baust",q:"Was ist die Mehrfachauswahl (case)?",a:"Anhand des Werts einer Variablen (dem <b>switch</b>, i. d. R. eine ganze Zahl) wird genau <b>einer</b> von mehreren Blöcken ausgeführt; ein <b>default/sonst</b>-Zweig fängt nicht zugeordnete Werte ab."},
+{c:"baust",q:"Wie wird ein Prozeduraufruf dargestellt?",a:"Als Block mit <b>Doppelstrichen</b> an den seitlichen Rändern."},
+{c:"baust",q:"Wann nutzt man eine Mehrfachauswahl statt verschachtelter Verzweigungen?",a:"Wenn <b>eine</b> Variable über mehrere gleichrangige Fälle entscheidet (z. B. Menüpunkt, Note, Monat) – das ist übersichtlicher als viele geschachtelte if."},
+
+/* Schleifen */
+{c:"schl",q:"Kopfgesteuerte Schleife – Merkmal?",a:"Die Bedingung wird <b>vor</b> dem Durchlauf geprüft → ggf. <b>0 Durchläufe</b>. Stichwort: „so lange …“."},
+{c:"schl",q:"Fußgesteuerte Schleife – Merkmal?",a:"Die Bedingung wird <b>nach</b> dem Durchlauf geprüft → <b>mindestens 1 Durchlauf</b>. Ideal für Menüs."},
+{c:"schl",q:"Zählergesteuerte Schleife – Merkmal?",a:"Für eine <b>vorher bekannte</b> Anzahl von Durchläufen. Im Kopf: <b>Startwert</b>, <b>Endbedingung</b>, <b>Schrittweite</b>. Schnellster Schleifentyp."},
+{c:"schl",q:"Welche drei Angaben braucht der Kopf einer Zählschleife?",a:"<b>Startwert</b> des Zählers, die <b>Bedingung</b> (Endwert) und die <b>Veränderung</b> des Zählers je Durchlauf."},
+{c:"schl",q:"Wie vermeidet man eine Endlosschleife?",a:"Sicherstellen, dass die Abbruchbedingung im Körper <b>erreichbar</b> ist (z. B. Zähler erhöhen, Abbruchwert kann eintreten)."},
+{c:"schl",q:"Warum Summe vor der Schleife auf 0 setzen?",a:"Sonst wird zu einem <b>unbekannten Anfangswert</b> addiert und das Ergebnis ist falsch (Initialisierung!)."},
+
+/* Anwendung */
+{c:"anw",q:"Wie verarbeitet man ein Array nach dem Maximum?",a:"<b>max</b> mit dem <b>1. Element</b> (Index 0) vorbelegen (nicht 0!), dann mit einer Zählschleife über alle Elemente: wenn aktuelles Element &gt; max → max aktualisieren."},
+{c:"anw",q:"Warum max nicht mit 0 initialisieren?",a:"Das Array könnte <b>nur negative Werte</b> enthalten – dann bliebe 0 fälschlich das Maximum. Deshalb mit dem 1. Array-Element starten."},
+{c:"anw",q:"Schema der Dateiverarbeitung?",a:"Datei <b>öffnen</b> → einmal <b>lesen</b> → <b>so lange nicht EOF</b>: Datensatz verarbeiten, dann erneut lesen → Datei <b>schließen</b>."},
+{c:"anw",q:"Was bedeutet EOF?",a:"<b>End Of File</b> – das Dateiendezeichen hinter dem letzten Datensatz. Jeder Lesevorgang rückt den <b>Dateizeiger</b> einen Satz weiter."},
+{c:"anw",q:"Wohin gehört der Lesevorgang in einer Datei-Schleife?",a:"Einmal <b>vor</b> der Schleife (erster Satz) und erneut <b>am Ende</b> jedes Schleifendurchlaufs – nur so prüft die Kopfschleife korrekt auf EOF."},
+{c:"anw",q:"Mehrere Schwellen (z. B. Rabattstufen) – wie umsetzen?",a:"Durch <b>verschachtelte Verzweigungen</b>: erst die gröbere Schwelle prüfen, im passenden Zweig die feinere – Reihenfolge beachten."}
+];
+
+/* ===== TABS ===== */
+const views={Overview:"vOverview",Bausteine:"vBausteine",Beispiele:"vBeispiele",Cards:"vCards",Quiz:"vQuiz"};
+function showTab(t){
+  Object.keys(views).forEach(k=>{
+    document.getElementById(views[k]).classList.toggle('on',k===t);
+    document.getElementById('t'+k).classList.toggle('on',k===t);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('tOverview').onclick=()=>showTab('Overview');
+document.getElementById('tBausteine').onclick=()=>showTab('Bausteine');
+document.getElementById('tBeispiele').onclick=()=>showTab('Beispiele');
+document.getElementById('tCards').onclick=()=>{showTab('Cards');Study._rebuild();};
+document.getElementById('tQuiz').onclick=()=>showTab('Quiz');
+
+/* ===== AUFKLAPP-BLÖCKE (Beispiele + Übungen) – ein Klick auf/zu ===== */
+document.querySelectorAll('.calc-toggle').forEach(tg=>{
+  const open=tg.textContent.trim();
+  const close=open.replace('anzeigen','verbergen');
+  tg.onclick=()=>{
+    const sol=tg.closest('.calc-card').querySelector('.calc-sol');
+    const shown=sol.classList.toggle('show');
+    tg.textContent=shown?close:open;
+  };
+});
+
+/* ===== KARTEIKARTEN (study.js) ===== */
+Study.init({ cards: CARDS, cats: CATS, key: "fisi_struktogramme_v1" });
+</script>
+<script>
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
