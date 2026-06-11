@@ -724,8 +724,14 @@ html[data-theme="light"] .drw-body code{background:rgba(8,146,165,.10)}
   text-decoration:none;padding:7px 15px;border-radius:999px;transition:.15s;white-space:nowrap}
 .pyhub-seg a:hover{color:var(--ink)}
 .pyhub-seg a.on{background:var(--cyan);color:var(--bg)}
+/* Theme-Toggle (von theme.js eingehängt) sitzt rechts NEBEN den Pillen –
+   margin-left:auto an .pyhub-seg schiebt Pillen+Toggle gemeinsam nach rechts,
+   der gap:14px hält beide auseinander. Kein Overlap mit der floatenden Variante. */
+.pyhub .theme-tg{flex:0 0 auto}
 @media (max-width:560px){
-  .pyhub{gap:10px;padding:9px 13px}
-  .pyhub-seg{margin-left:0;width:100%;justify-content:center}
+  .pyhub{gap:10px 12px;padding:9px 13px}
+  /* Handy: Toggle in Zeile 1 oben rechts (order:2), Pillen volle Breite darunter (order:3) */
+  .pyhub .theme-tg{order:2;margin-left:auto}
+  .pyhub-seg{order:3;margin-left:0;width:100%;justify-content:center}
   .pyhub-seg a{flex:1;text-align:center;padding:8px 10px}
 }

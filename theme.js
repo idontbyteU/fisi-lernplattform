@@ -37,7 +37,7 @@
       b.className = "theme-tg theme-tg--auto";
       b.type = "button";
       b.title = "Hell/Dunkel umschalten";
-      var host = document.querySelector(".hdr-in, .labbar, .top-bar, .hdr, header");
+      var host = document.querySelector(".hdr-in, .pyhub, .labbar, .top-bar, .hdr, header");
       if (host) { host.appendChild(b); }
       else { b.className = "theme-tg theme-tg--float"; document.body.appendChild(b); }
       btns = [b];

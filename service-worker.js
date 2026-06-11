@@ -29,6 +29,7 @@ const ASSETS = [
   "./lf4_zusammenfassung.pdf",
   "./lf4_grundschutz_check_umsetzung.pdf",
   "./prio.html",
+  "./programmierung.html",
   "./python_byte.html",
   "./python_lab.html",
   "./content/erklaerung_datei_io.md",

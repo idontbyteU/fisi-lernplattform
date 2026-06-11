@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FISI//OS · Programmierung</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="index.html">&larr; FISI</a>
+    <div class="brand">
+      <span class="led"></span>
+      <div>
+        <h1>Programmierung</h1>
+        <p>Anwendungsentwicklung · Python · Modelle &amp; Entwurf</p>
+      </div>
+    </div>
+    <div class="sp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ===================================================================== -->
+  <!--  KACHEL-HUB im Startseiten-Stil. Neue Themen (z. B. SQL, UML) später   -->
+  <!--  einfach als weitere <a class="tile" …> ergänzen und in den Suchtags   -->
+  <!--  der Startseiten-Sammelkachel sowie in service-worker.js nachziehen.   -->
+  <!--  Bewusst KEINE leeren Platzhalter-Kacheln.                             -->
+  <!-- ===================================================================== -->
+  <div class="sek"><h2>Themen</h2><div class="sl"></div></div>
+  <div class="grid">
+    <a class="tile" data-lf="5" style="--i:0" href="python_byte.html" data-tags="python byte lab pyodide editor referenz übungen aufgaben debugging pseudocode verzweigung schleifen listen bubblesort visuell code labor lf5">
+      <span class="ic">🐍</span><h3>Python</h3>
+      <p>Referenz &amp; Übungen plus interaktives Labor (echtes Python im Browser) – beides umschaltbar im Python-Hub.</p>
+      <span class="meta st-ok"><span class="dot"></span>Referenz · Labor · 16+ Aufgaben</span>
+    </a>
+    <a class="tile" data-lf="5" style="--i:1" href="lf5_vorgehensmodelle.html" data-tags="lf5 vorgehensmodelle anwendungsentwicklung wasserfall v-modell vmodell xt spiralmodell scrum kanban extreme programming xp devops agil klassisch plangetrieben sprint backlog projektmanagement">
+      <span class="ic">🔄</span><h3>Vorgehensmodelle</h3>
+      <p>Klassisch vs. agil: Wasserfall, V-Modell (XT), Spiralmodell, Scrum, XP, Kanban – mit Vergleich, Karteikarten &amp; Quiz.</p>
+      <span class="meta st-ok"><span class="dot"></span>5 Tabs · 34 Karten · 6 Quiz-Aufgaben</span>
+    </a>
+    <a class="tile" data-lf="5" style="--i:2" href="struktogramme.html" data-tags="lf5 struktogramme nassi shneiderman din 66261 pseudocode programmablaufplan pap verzweigung schleife kopfgesteuert fußgesteuert zählergesteuert mehrfachauswahl case sequenz schreibtischtest algorithmus eva array datei eof anwendungsentwicklung">
+      <span class="ic">📐</span><h3>Struktogramme</h3>
+      <p>Nassi-Shneiderman nach DIN 66261: Bausteine, Pseudocode, durchgerechnete Beispiele, Schreibtischtests &amp; Übungen.</p>
+      <span class="meta st-ok"><span class="dot"></span>5 Tabs · 25 Karten · 6 Übungen</span>
+    </a>
+  </div>
+
+  <footer>FISI//OS · <span>idontbyteU/fisi-lernplattform</span></footer>
+</div>
+
+<script>
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
