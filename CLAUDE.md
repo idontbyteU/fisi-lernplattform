@@ -93,3 +93,12 @@ Lange Konzept-Erklärungen öffnen in einem opaken Drawer im Vordergrund, standa
 - **No external dependencies at runtime**: Google Fonts are the only CDN resource. Everything else is local.
 - **New pages must be registered** in `service-worker.js` `ASSETS` array, otherwise they won't be available offline.
 - **Cyberpunk UI conventions**: Use `<div class="scan"></div>` as the first child of `<body>` (scanline overlay). Header uses `.hdr` > `.hdr-in` with a `.back` link and optional `.tabs` or `.mode` switcher. All pages link back to `index.html`.
+
+## Git / Commits (Windows / PowerShell)
+
+Diese Umgebung läuft unter **Windows mit PowerShell**. Commit-Nachrichten **IMMER** auf eine der beiden folgenden Arten erstellen:
+
+- **Einzeiliger Betreff:** `git commit -m "betreff"` (eine einfache, in Anführungszeichen gesetzte Zeile).
+- **Mehrzeilige Beschreibung:** Text vorher in eine **temporäre Datei** schreiben und mit `git commit -F <datei>` committen (Datei danach löschen).
+
+**NICHT verwenden:** Here-Strings (`@'…'@` / `@"…"@`) oder `$(printf …)`-Konstruktionen als Commit-Nachricht. Diese werden je nach Shell falsch interpretiert und erzeugen einen **kaputten Betreff (z. B. nur `@`)**. Wenn eine ausführliche, strukturierte Nachricht nötig ist, führt der Weg über `-F <datei>` — nicht über verschachtelte Shell-Expansion.
