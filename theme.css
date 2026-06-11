@@ -705,3 +705,27 @@ html[data-theme="light"] .drw-body code{background:rgba(8,146,165,.10)}
 
 /* Beim Drucken ausblenden */
 @media print{.drw-root{display:none !important}}
+
+/* ===================================================================== */
+/*  PYTHON-HUB · geteilter Umschalter „Referenz & Übungen" ↔ „Labor"      */
+/*  Eine Kachel/ein Thema, Tiefe über diese Unter-Navigation. Liegt hier  */
+/*  zentral, damit python_byte.html und python_lab.html identisch wirken. */
+/*  Nur kanonische Variablen -> hell + dunkel automatisch.                */
+/* ===================================================================== */
+.pyhub{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:10px 18px;background:var(--glass2);border-bottom:1px solid var(--line)}
+.pyhub-home{flex:0 0 auto;font-family:var(--fmono);font-size:12px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--muted);text-decoration:none}
+.pyhub-home:hover{color:var(--cyan)}
+.pyhub-brand{font-family:var(--fdisp);font-weight:800;font-size:16px;color:var(--ink);letter-spacing:.3px}
+.pyhub-seg{display:inline-flex;gap:4px;margin-left:auto;background:var(--bg2);
+  border:1px solid var(--line);border-radius:999px;padding:3px}
+.pyhub-seg a{font-family:var(--fui);font-size:13px;font-weight:700;color:var(--muted);
+  text-decoration:none;padding:7px 15px;border-radius:999px;transition:.15s;white-space:nowrap}
+.pyhub-seg a:hover{color:var(--ink)}
+.pyhub-seg a.on{background:var(--cyan);color:var(--bg)}
+@media (max-width:560px){
+  .pyhub{gap:10px;padding:9px 13px}
+  .pyhub-seg{margin-left:0;width:100%;justify-content:center}
+  .pyhub-seg a{flex:1;text-align:center;padding:8px 10px}
+}
