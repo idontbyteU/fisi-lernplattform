@@ -108,6 +108,45 @@
   .codeblock .str{color:var(--sx-str)}.codeblock .num{color:var(--sx-num)}
   .codeblock .cm{color:var(--sx-cm);font-style:italic}
 
+  /* ---- Beispiel-/Worked-Example-Sektion (Datei-I/O u. a.) ----
+     Aufbau pro Beispiel: .lab-card.bsp-card  ->  .bsp-h (Titel + Tag),
+     optional .bsp-steps, eine .codeblock, dann EIN <details class="bsp-exp">
+     (Ein-Klick, Standard zu). Weitere .py-Beispiele = einfach weitere bsp-card. */
+  .bsp-sec-head{font-family:var(--fdisp);font-size:12.5px;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--lab-accent);margin:30px 2px 4px;
+    display:flex;align-items:center;gap:12px}
+  .bsp-sec-head::after{content:"";flex:1;height:1px;background:var(--lab-line)}
+  .bsp-sec-sub{color:var(--lab-muted);font-size:14px;line-height:1.7;margin:0 2px 16px}
+  .bsp-card .bsp-h{font-family:var(--fdisp);font-size:16.5px;font-weight:700;color:var(--lab-ink);
+    margin-bottom:10px;display:flex;flex-wrap:wrap;align-items:center;gap:9px;letter-spacing:.2px}
+  .bsp-tag{font-family:var(--fmono);font-size:10.5px;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--lab-accent2);border:1px solid var(--lab-line2);
+    border-radius:6px;padding:2px 8px;white-space:nowrap}
+  .bsp-tag.is-read{color:var(--lab-accent)}
+  .bsp-steps{margin:8px 0 4px;padding-left:22px;color:var(--lab-read);font-size:15px;line-height:1.85}
+  .bsp-steps li{margin-bottom:6px}
+  .bsp-cap{font-family:var(--fmono);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--lab-dim);margin:14px 0 -4px}
+  /* Ein-Klick-Block (Erklärung/Lösung), Standard zugeklappt */
+  .bsp-exp{margin:16px 0 2px;border:1px solid var(--lab-line);border-radius:11px;
+    background:var(--lab-panel2);overflow:hidden}
+  .bsp-exp>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;
+    padding:13px 16px;font-family:var(--fui);font-size:14.5px;font-weight:700;
+    color:var(--lab-read);user-select:none}
+  .bsp-exp>summary::-webkit-details-marker{display:none}
+  .bsp-exp>summary:hover{color:var(--lab-accent)}
+  .bsp-exp>summary::after{content:"▸ aufklappen";margin-left:auto;font-family:var(--fmono);
+    font-size:11.5px;font-weight:400;letter-spacing:.04em;color:var(--lab-dim)}
+  .bsp-exp[open]>summary::after{content:"▾ zuklappen"}
+  .bsp-exp[open]>summary{border-bottom:1px solid var(--lab-line)}
+  .bsp-body{padding:6px 18px 18px}
+  .bsp-body h4{font-family:var(--fui);font-size:13.5px;font-weight:700;color:var(--lab-accent);
+    margin:18px 0 6px;letter-spacing:.02em}
+  .bsp-body h4:first-child{margin-top:10px}
+  .bsp-body ul{margin:6px 0 10px;padding-left:20px;color:var(--lab-read);font-size:14.5px;line-height:1.8}
+  .bsp-body li{margin-bottom:5px}
+  .bsp-body p{color:var(--lab-read);font-size:14.5px;line-height:1.75;margin:8px 0}
+
   /* Hinweis-/Merk-Boxen */
   .note{border-left:3px solid var(--lab-accent2);background:rgba(139,155,255,.08);
     border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0;font-size:14.5px;
@@ -940,6 +979,158 @@ print("Summe 1 bis 10:", summe)
        das zeilenweise Lesen und die typischen Stolperfallen Schritt für Schritt erklärt.</p>
     <button class="btn btn-ghost" data-erkl="content/erklaerung_datei_io.md"
       data-erkl-title="Dateien lesen &amp; schreiben">📖 Erklärung: Dateien lesen/schreiben</button>
+  </div>
+
+  <!-- ===================== BEISPIELE · DATEI-I/O ===================== -->
+  <div class="bsp-sec-head">📂 Beispiele zum Mitlesen · Datei-I/O</div>
+  <p class="bsp-sec-sub">Komplette Programme aus dem Unterricht – einmal Schritt für Schritt erklärt.
+     Kein Auto-Check (die Ausgabe ist teils zufällig); lies den Code, klapp die Erklärung auf und
+     probiere es danach im Code-Labor selbst.</p>
+
+  <!-- Beispiel 1: Zufallszahlen schreiben & Zeile lesen (WORKED EXAMPLE) -->
+  <div class="lab-card bsp-card">
+    <div class="bsp-h">Beispiel: 100.000 Zufallszahlen schreiben &amp; eine bestimmte Zeile lesen
+      <span class="bsp-tag is-read">Zum Lesen</span></div>
+    <p>Schreibt 100.000 Zufallszahlen (je 5 pro Zeile) in eine Datei und liest danach gezielt
+       die 2389. Zeile wieder ein.</p>
+    <div class="codeblock"><span class="kw">import</span> random
+<span class="cm"># Schreiben</span>
+file = <span class="fn">open</span>(<span class="str">"zufallszahlen.txt"</span>,<span class="str">"w"</span>, encoding=<span class="str">"utf-8"</span>)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>,<span class="num">100001</span>):
+    file.<span class="fn">write</span>(<span class="fn">str</span>(random.<span class="fn">randint</span>(<span class="num">0</span>,<span class="num">999</span>)))
+    <span class="kw">if</span> i%<span class="num">5</span>==<span class="num">0</span>:
+        file.<span class="fn">write</span>(<span class="str">"\n"</span>)
+    <span class="kw">else</span>:
+        file.<span class="fn">write</span>(<span class="str">"\t"</span>)
+file.<span class="fn">close</span>()
+
+<span class="cm"># Lesen</span>
+file = <span class="fn">open</span>(<span class="str">"zufallszahlen.txt"</span>,<span class="str">"r"</span>,encoding=<span class="str">"utf-8"</span>)
+c=<span class="num">0</span>  <span class="cm"># Zeilenzähler</span>
+<span class="kw">for</span> z <span class="kw">in</span> file:
+    c=c+<span class="num">1</span>
+    <span class="kw">if</span> c==<span class="num">2389</span>: 
+        <span class="fn">print</span>(z)
+        <span class="kw">break</span>
+file.<span class="fn">close</span>()</div>
+
+    <details class="bsp-exp">
+      <summary>📖 Erklärung – Zeile für Zeile</summary>
+      <div class="bsp-body">
+        <h4>— Schreiben —</h4>
+        <ul>
+          <li><code>open("…","w", encoding="utf-8")</code>: öffnet/erstellt die Datei zum <strong>Schreiben</strong>. <code>"w"</code> = write, überschreibt eine vorhandene Datei. <code>encoding</code> legt die Zeichenkodierung fest.</li>
+          <li><code>range(1, 100001)</code>: zählt <code>i</code> von 1 bis 100000 (die 100001 ist ausgeschlossen).</li>
+          <li><code>file.write(str(random.randint(0,999)))</code>: schreibt eine Zufallszahl 0–999. <code>str(...)</code> ist <strong>Pflicht</strong> – <code>write()</code> nimmt nur Text, keine Zahlen.</li>
+          <li><code>if i%5==0:</code> → <code>"\n"</code>, sonst <code>"\t"</code>: nach jeder 5. Zahl ein Zeilenumbruch, sonst ein Tab → 5 Zahlen pro Zeile, 20.000 Zeilen.</li>
+          <li><code>file.close()</code>: schließt die Datei und schreibt den Puffer endgültig auf die Platte.</li>
+        </ul>
+        <h4>— Lesen —</h4>
+        <ul>
+          <li><code>open("…","r")</code>: <code>"r"</code> = read, zum Lesen.</li>
+          <li><code>for z in file:</code> geht die Datei <strong>Zeile für Zeile</strong> durch (<code>z</code> = eine ganze Zeile inkl. <code>\n</code>). Lädt nicht die ganze Datei in den Speicher – wichtig bei großen Dateien.</li>
+          <li><code>c</code> zählt die Zeilen; bei <code>c==2389</code> wird die 2389. Zeile ausgegeben und mit <code>break</code> abgebrochen.</li>
+        </ul>
+        <h4>— Typischer Fehler —</h4>
+        <ul>
+          <li><code>write()</code> mit einer Zahl statt <code>str(zahl)</code> → <code>TypeError</code>.</li>
+          <li><code>"w"</code> überschreibt; zum Anhängen <code>"a"</code> nehmen.</li>
+          <li><code>print(z)</code> erzeugt eine Leerzeile extra, weil <code>z</code> schon ein <code>\n</code> enthält → <code>print(z, end="")</code> oder <code>z.strip()</code>.</li>
+        </ul>
+        <h4>— Merksatz —</h4>
+        <ul>
+          <li>Besser als manuelles <code>open</code>/<code>close</code>: <code>with open(...) as file:</code> – schließt automatisch, auch bei Fehlern.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- Beispiel 2: Planetentabelle formatieren & als CSV (GEFÜHRTE ÜBUNG) -->
+  <div class="lab-card bsp-card">
+    <div class="bsp-h">Workshop: Planetentabelle formatieren &amp; als CSV speichern
+      <span class="bsp-tag">Geführte Übung</span></div>
+    <p>Acht Planeten-Datensätze sollen als saubere Tabelle ausgegeben und in <code>planeten.csv</code>
+       gespeichert werden. <strong>Endziel</strong> ist genau diese Ausgabe:</p>
+    <p class="bsp-cap">Endziel – so soll die Ausgabe aussehen</p>
+    <div class="codeblock">| Name     |Entf.Sonne(AE)|Radius(km)| Monde |
+|----------+--------------|----------|-------|
+| Merkur   |         0.39 |     2440 |    0  |
+| Venus    |         0.72 |     6052 |    0  |
+| Erde     |         1.00 |     6378 |    1  |
+| Mars     |         1.52 |     3397 |    2  |
+| Jupiter  |         5.20 |    71493 |   79  |
+| Saturn   |         9.54 |    60267 |   82  |
+| Uranus   |        19.19 |    25559 |   27  |
+| Neptun   |        30.07 |    24764 |   14  |</div>
+    <p>Deine Aufgaben (in <code>planeten.py</code>):</p>
+    <ol class="bsp-steps">
+      <li>Definiere für jeden Planeten eine Liste <code>[Name, Entf.Sonne(AE), Radius(km), Monde]</code> – z.&nbsp;B. <code>merkur = ['Merkur', 0.39, 2440, 0]</code>.</li>
+      <li>Lege eine Liste <code>planetentabelle</code> an und füge alle Planeten nacheinander mit <code>planetentabelle.append(…)</code> hinzu.</li>
+      <li>Gib die Tabelle in einer Schleife aus: <code>for p in planetentabelle: print(p[0], p[1], p[2], p[3])</code>.</li>
+      <li>Bring die Spalten mit einem <strong>f-String</strong> in Form – Breite, Ausrichtung und <code>"|"</code>-Spaltentrenner. (Start: <code>print(f"{p[0]:7}   {p[1]:12}    {p[2]:8}    {p[3]:3}")</code>, dann anpassen.)</li>
+      <li>Ergänze die <strong>Überschriftzeile</strong> über der Tabelle.</li>
+      <li>Schreibe die <code>planetentabelle</code> in eine CSV-Datei <code>planeten.csv</code>.</li>
+    </ol>
+
+    <details class="bsp-exp">
+      <summary>✅ Komplette Lösung anzeigen (planeten.py)</summary>
+      <div class="bsp-body">
+        <div class="codeblock"><span class="kw">import</span> csv
+
+<span class="cm"># 1. Planeten-Datensätze: [Name, Entf.Sonne(AE), Radius(km), Monde]</span>
+merkur = [<span class="str">'Merkur'</span>, <span class="num">0.39</span>, <span class="num">2440</span>, <span class="num">0</span>]
+venus  = [<span class="str">'Venus'</span>, <span class="num">0.72</span>, <span class="num">6052</span>, <span class="num">0</span>]
+erde   = [<span class="str">'Erde'</span>, <span class="num">1.0</span>, <span class="num">6378</span>, <span class="num">1</span>]
+mars   = [<span class="str">'Mars'</span>, <span class="num">1.52</span>, <span class="num">3397</span>, <span class="num">2</span>]
+jupi   = [<span class="str">'Jupiter'</span>, <span class="num">5.2</span>, <span class="num">71493</span>, <span class="num">79</span>]
+saturn = [<span class="str">'Saturn'</span>, <span class="num">9.54</span>, <span class="num">60267</span>, <span class="num">82</span>]
+uranus = [<span class="str">'Uranus'</span>, <span class="num">19.19</span>, <span class="num">25559</span>, <span class="num">27</span>]
+neptun = [<span class="str">'Neptun'</span>, <span class="num">30.07</span>, <span class="num">24764</span>, <span class="num">14</span>]
+
+<span class="cm"># 2. Alle Datensätze in eine Tabelle einsammeln</span>
+planetentabelle = []
+planetentabelle.<span class="fn">append</span>(merkur)
+planetentabelle.<span class="fn">append</span>(venus)
+planetentabelle.<span class="fn">append</span>(erde)
+planetentabelle.<span class="fn">append</span>(mars)
+planetentabelle.<span class="fn">append</span>(jupi)
+planetentabelle.<span class="fn">append</span>(saturn)
+planetentabelle.<span class="fn">append</span>(uranus)
+planetentabelle.<span class="fn">append</span>(neptun)
+
+<span class="cm"># 5. Überschrift + Trennlinie</span>
+kopf  = <span class="str">f"| {'Name':&lt;9}|{'Entf.Sonne(AE)':^14}|{'Radius(km)':^10}|{'Monde':^7}|"</span>
+trenn = <span class="str">"|"</span> + <span class="str">"-"</span>*<span class="num">10</span> + <span class="str">"+"</span> + <span class="str">"-"</span>*<span class="num">14</span> + <span class="str">"|"</span> + <span class="str">"-"</span>*<span class="num">10</span> + <span class="str">"|"</span> + <span class="str">"-"</span>*<span class="num">7</span> + <span class="str">"|"</span>
+<span class="fn">print</span>(kopf)
+<span class="fn">print</span>(trenn)
+
+<span class="cm"># 3.+4. Tabelle formatiert ausgeben (f-String mit Breite/Ausrichtung)</span>
+<span class="kw">for</span> p <span class="kw">in</span> planetentabelle:
+    <span class="fn">print</span>(<span class="str">f"| {p[0]:&lt;9}|{p[1]:&gt;13.2f} |{p[2]:&gt;9} |{p[3]:&gt;5}  |"</span>)
+
+<span class="cm"># 6. In CSV-Datei schreiben</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"planeten.csv"</span>, <span class="str">"w"</span>, newline=<span class="str">""</span>, encoding=<span class="str">"utf-8"</span>) <span class="kw">as</span> datei:
+    writer = csv.<span class="fn">writer</span>(datei, delimiter=<span class="str">";"</span>)
+    writer.<span class="fn">writerow</span>([<span class="str">"Name"</span>, <span class="str">"Entf.Sonne(AE)"</span>, <span class="str">"Radius(km)"</span>, <span class="str">"Monde"</span>])
+    <span class="kw">for</span> p <span class="kw">in</span> planetentabelle:
+        writer.<span class="fn">writerow</span>(p)
+<span class="fn">print</span>(<span class="str">"\nGespeichert in planeten.csv"</span>)</div>
+        <h4>f-String-Formatierung (Schritt 4)</h4>
+        <ul>
+          <li><strong>Breite:</strong> die Zahl hinter dem Doppelpunkt reserviert Platz, z.&nbsp;B. <code>{p[0]:9}</code> = 9 Zeichen breit. So stehen die Spalten sauber untereinander.</li>
+          <li><strong>Ausrichtung:</strong> <code>&lt;</code> = linksbündig (für Text wie den Namen), <code>&gt;</code> = rechtsbündig (für Zahlen), <code>^</code> = zentriert (hier für die Überschriften).</li>
+          <li><strong>Nachkommastellen:</strong> <code>:.2f</code> erzwingt genau 2 Stellen → aus <code>1.0</code> wird <code>1.00</code>. Kombiniert mit Breite: <code>{p[1]:&gt;13.2f}</code> = rechtsbündig, 13 breit, 2 Nachkommastellen.</li>
+          <li>Die <code>"|"</code> zwischen den Platzhaltern sind einfache Trennzeichen, die als Text mitgedruckt werden.</li>
+        </ul>
+        <h4>CSV-Teil (Schritt 6)</h4>
+        <ul>
+          <li>Das <code>csv</code>-Modul übernimmt das korrekte Trennen/Escapen – man muss die Spalten nicht selbst per <code>";"</code> zusammenbauen.</li>
+          <li><code>open(..., newline="", encoding="utf-8")</code>: <code>newline=""</code> ist beim CSV-Schreiben Pflicht, sonst entstehen unter Windows leere Zeilen zwischen den Datensätzen.</li>
+          <li><code>writer.writerow(liste)</code> schreibt eine ganze Liste als eine Zeile. Zuerst die Kopfzeile, dann in der Schleife jeden Planeten.</li>
+          <li>Ergebnis – <code>planeten.csv</code>:<br><code>Name;Entf.Sonne(AE);Radius(km);Monde</code><br><code>Merkur;0.39;2440;0</code> … usw.</li>
+        </ul>
+      </div>
+    </details>
   </div>
 </div>
 
