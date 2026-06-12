@@ -1,0 +1,11 @@
+# Generierte Ausgaben der Python-Übungsskripte (nicht ins Git)
+autos.csv
+planeten.csv
+zufallszahlen.txt
+Planetentabelle.csv
+
+# falls in content/ erzeugt
+content/autos.csv
+content/planeten.csv
+content/zufallszahlen.txt
+content/Planetentabelle.csv
