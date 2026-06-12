@@ -1132,6 +1132,461 @@ trenn = <span class="str">"|"</span> + <span class="str">"-"</span>*<span class=
       </div>
     </details>
   </div>
+
+  <!-- ===================== BEISPIELE · LISTEN ===================== -->
+  <div class="bsp-sec-head">📋 Beispiele zum Mitlesen · Listen</div>
+  <p class="bsp-sec-sub">Echte Übungs-Skripte aus dem Unterricht – einmal Schritt für Schritt erklärt.
+     Lies den Code, klapp die Erklärung auf und probier es danach im Code-Labor selbst.</p>
+
+  <!-- Beispiel L1: Listen-Werkzeugkasten (Übung 13 Liste &amp; Set) -->
+  <div class="lab-card bsp-card">
+    <div class="bsp-h">Listen-Werkzeugkasten: verdoppeln, drehen, filtern, Duplikate raus
+      <span class="bsp-tag is-read">Zum Lesen</span></div>
+    <p>Sechs kleine Funktionen, die je eine Liste verarbeiten und eine <strong>neue</strong> Liste
+       (oder einen Wahrheitswert) zurückgeben – die typischen Listen-Aufgaben in einer Datei.</p>
+    <div class="codeblock"><span class="kw">def</span> <span class="fn">verdoppeln</span>(liste):
+    liste2=[]
+    <span class="kw">for</span> z <span class="kw">in</span> liste:
+        liste2.<span class="fn">append</span>(<span class="num">2</span>*z)
+    <span class="kw">return</span> liste2
+
+<span class="kw">def</span> <span class="fn">rrotate</span>(liste, n):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+        temp=liste.<span class="fn">pop</span>()
+        liste.<span class="fn">insert</span>(<span class="num">0</span>,temp)
+    <span class="kw">return</span> liste
+
+<span class="kw">def</span> <span class="fn">to_strings</span>(liste):
+    liste2=[]
+    <span class="kw">for</span> z <span class="kw">in</span> liste:
+        liste2.<span class="fn">append</span>(<span class="fn">str</span>(z))
+    <span class="kw">return</span> liste2
+
+<span class="kw">def</span> <span class="fn">over_mean</span>(liste):
+    mean=<span class="fn">sum</span>(liste)/<span class="fn">len</span>(liste)  <span class="cm"># Mittelwert</span>
+    liste2=[]
+    <span class="kw">for</span> z <span class="kw">in</span> liste:
+        <span class="kw">if</span> z&gt;mean: liste2.<span class="fn">append</span>(z)
+    <span class="kw">return</span> liste2
+
+<span class="kw">def</span> <span class="fn">is_sorted</span>(liste):
+    <span class="kw">return</span> (liste == <span class="fn">sorted</span>(liste))  <span class="cm"># Boolescher Wert</span>
+
+<span class="kw">def</span> <span class="fn">unique</span>(liste):
+    <span class="kw">return</span> <span class="fn">list</span>(<span class="fn">set</span>(liste))  <span class="cm"># Umwandlung in Set, anschließend Umwandlung Liste</span>
+
+<span class="cm">#print(verdoppeln([1,3,5]))</span>
+<span class="cm">#print(rotate([1,2,3,4,5],2))</span>
+<span class="cm">#print(to_strings([1,True,3.5]))</span>
+<span class="cm">#print(over_mean([1,3,4,5,6,7,8,9,10,11,12]))</span>
+<span class="cm">#print(is_sorted([1,3,4,5,6,7,8,9,10,11,12]))</span>
+<span class="fn">print</span>(<span class="fn">unique</span>([<span class="num">1</span>,<span class="num">1</span>,<span class="num">1</span>,<span class="num">1</span>,<span class="num">2</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>,<span class="num">5</span>,<span class="num">5</span>,<span class="num">6</span>]))</div>
+
+    <details class="bsp-exp">
+      <summary>📖 Erklärung – was jede Funktion macht</summary>
+      <div class="bsp-body">
+        <h4>— Verständnis —</h4>
+        <ul>
+          <li><code>verdoppeln</code>: legt eine leere Liste <code>liste2</code> an und hängt jeden Wert <strong>verdoppelt</strong> an. Das Muster „leere Liste → in der Schleife <code>append</code>“ ist die Grundtechnik schlechthin.</li>
+          <li><code>rrotate(liste, n)</code>: dreht die Liste <code>n</code>-mal nach rechts. <code>pop()</code> nimmt das letzte Element heraus, <code>insert(0, …)</code> setzt es vorne wieder ein.</li>
+          <li><code>to_strings</code>: wandelt jeden Wert mit <code>str(z)</code> in Text um – aus <code>[1, True, 3.5]</code> wird <code>['1', 'True', '3.5']</code>.</li>
+          <li><code>over_mean</code>: berechnet den Mittelwert (<code>sum/len</code>) und behält nur die Werte, die <strong>größer</strong> sind.</li>
+          <li><code>is_sorted</code>: vergleicht die Liste mit ihrer sortierten Kopie <code>sorted(liste)</code>. Sind beide gleich, war sie schon sortiert → <code>True</code>/<code>False</code>.</li>
+          <li><code>unique</code>: <code>set(liste)</code> wirft alle Duplikate raus (ein Set kennt jeden Wert nur einmal), <code>list(...)</code> macht wieder eine Liste daraus.</li>
+        </ul>
+        <h4>— Typischer Fehler —</h4>
+        <ul>
+          <li><code>rrotate</code> mit <code>n</code> größer als die Listenlänge oder bei leerer Liste → <code>pop()</code> auf leerer Liste wirft <code>IndexError</code>.</li>
+          <li><code>set</code> ist <strong>ungeordnet</strong>: nach <code>unique</code> kann die Reihenfolge anders sein. Soll die Reihenfolge erhalten bleiben, braucht es einen anderen Weg (z.&nbsp;B. <code>dict.fromkeys</code>).</li>
+          <li>Die meisten Funktionen geben eine <strong>neue</strong> Liste zurück – nur <code>rrotate</code> verändert die übergebene Liste direkt (<code>pop</code>/<code>insert</code>). Beides mischen verwirrt schnell.</li>
+        </ul>
+        <h4>— Merksatz —</h4>
+        <ul>
+          <li>Liste umbauen = „leere Liste anlegen, in der <code>for</code>-Schleife <code>append</code>, am Ende <code>return</code>“. <code>set()</code> ist der Express-Weg, um Duplikate loszuwerden.</li>
+        </ul>
+        <p class="bsp-cap">Variante mit List-Comprehension (kürzer)</p>
+        <div class="codeblock"><span class="cm"># dasselbe wie verdoppeln, in einer Zeile:</span>
+<span class="kw">def</span> <span class="fn">verdoppeln</span>(lst):
+    <span class="kw">return</span> [x*<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> lst]</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- ===================== BEISPIELE · DATEIEN & CSV ===================== -->
+  <div class="bsp-sec-head">📑 Beispiele zum Mitlesen · Dateien &amp; CSV</div>
+  <p class="bsp-sec-sub">Werte dauerhaft speichern und wieder einlesen. Achte besonders auf den Modus:
+     <code>"w"</code> schreiben (überschreibt), <code>"a"</code> anhängen, <code>"r"</code> lesen (Datei muss existieren).</p>
+
+  <!-- Beispiel D1: CSV schreiben & formatiert wieder einlesen (autos.csv) -->
+  <div class="lab-card bsp-card">
+    <div class="bsp-h">CSV schreiben &amp; formatiert wieder einlesen (Autos)
+      <span class="bsp-tag is-read">Zum Lesen</span></div>
+    <p>Schreibt eine Liste von Autos mit dem <code>csv</code>-Modul in <code>autos.csv</code> und liest
+       sie danach wieder ein – inklusive sauberer Tabellen-Ausgabe. Das Programm erstellt seine Datei
+       selbst, du brauchst also keine fremde Datei.</p>
+    <div class="codeblock"><span class="kw">import</span> csv
+überschrift=[<span class="str">"Automarke"</span>, <span class="str">"Verkaufszahl"</span>]
+liste=[[<span class="str">"VW"</span>,<span class="num">1000</span>],[<span class="str">"BMW"</span>,<span class="num">2000</span>],[<span class="str">"Opel"</span>,<span class="num">500</span>],[<span class="str">"Aston Martin"</span>,<span class="num">250</span>],[<span class="str">"Käsewagen"</span>,<span class="num">1000</span>]]
+
+datei = <span class="fn">open</span>(<span class="str">"autos.csv"</span>,<span class="str">"w"</span>,encoding=<span class="str">"utf-8"</span>) <span class="cm"># Datei erzeugen</span>
+writer = csv.<span class="fn">writer</span>(datei, delimiter=<span class="str">";"</span>,lineterminator=<span class="str">"\n"</span>,quoting=csv.QUOTE_NONNUMERIC)   <span class="cm"># Writer Objekt</span>
+writer.<span class="fn">writerow</span>(überschrift)
+writer.<span class="fn">writerows</span>(liste)                        <span class="cm"># Daten schreiben</span>
+datei.<span class="fn">close</span>()                                  <span class="cm"># Datei schließen</span>
+
+datei = <span class="fn">open</span>(<span class="str">"autos.csv"</span>,<span class="str">"r"</span>,encoding=<span class="str">"utf-8"</span>) <span class="cm"># Datei lesen</span>
+reader = csv.<span class="fn">reader</span>(datei, delimiter=<span class="str">";"</span>,lineterminator=<span class="str">"\n"</span>,quoting=csv.QUOTE_NONNUMERIC)   <span class="cm"># Reader Objekt</span>
+ü = <span class="fn">next</span>(reader) <span class="cm"># Überschrift auslesen wegen Konvertierung</span>
+<span class="kw">for</span> z <span class="kw">in</span> reader:
+    z[<span class="num">1</span>]=<span class="fn">int</span>(z[<span class="num">1</span>])  <span class="cm"># Umwandlung 2. Spalte in int</span>
+    <span class="fn">print</span>(<span class="str">f"{z[0]:15} {z[1]:6}"</span>) <span class="cm"># Tabellendarstellung</span>
+datei.<span class="fn">close</span>()</div>
+
+    <details class="bsp-exp">
+      <summary>📖 Erklärung – Schreiben &amp; Lesen mit dem csv-Modul</summary>
+      <div class="bsp-body">
+        <h4>— Verständnis —</h4>
+        <ul>
+          <li><code>open("autos.csv","w")</code>: <code>"w"</code> = write, erstellt die Datei (oder überschreibt sie). Mit <code>csv.writer(...)</code> bekommst du ein Objekt, das Listen korrekt als CSV-Zeilen schreibt.</li>
+          <li><code>delimiter=";"</code>: Spalten werden durch <strong>Semikolon</strong> getrennt (in Deutschland üblich, weil das Komma als Dezimaltrennzeichen gebraucht wird).</li>
+          <li><code>writerow</code> schreibt <strong>eine</strong> Liste als Zeile (hier die Überschrift), <code>writerows</code> schreibt gleich <strong>mehrere</strong> Zeilen (die ganze Auto-Liste).</li>
+          <li>Beim Lesen: <code>next(reader)</code> holt die erste Zeile (Überschrift) separat heraus, damit sie nicht mit den Datenzeilen vermischt wird.</li>
+          <li><code>z[1]=int(z[1])</code>: aus der CSV kommt alles als <strong>Text</strong> zurück – die Verkaufszahl wird erst mit <code>int(...)</code> wieder zur Zahl.</li>
+          <li><code>f"{z[0]:15} {z[1]:6}"</code>: f-String mit Spaltenbreite – <code>:15</code> = 15 Zeichen breit fürs Markenfeld, <code>:6</code> = 6 für die Zahl, so steht die Tabelle sauber untereinander.</li>
+        </ul>
+        <h4>— Typischer Fehler —</h4>
+        <ul>
+          <li>Die <code>next(reader)</code>-Zeile vergessen → die Überschrift „Automarke;Verkaufszahl“ landet in der Schleife und <code>int("Verkaufszahl")</code> wirft einen <code>ValueError</code>.</li>
+          <li><code>"w"</code> überschreibt die Datei jedes Mal komplett. Sollen Daten erhalten bleiben und nur ergänzt werden → Modus <code>"a"</code> (anhängen).</li>
+          <li><code>close()</code> vergessen → im schlimmsten Fall sind noch nicht alle Daten geschrieben. Sauberer ist <code>with open(...) as datei:</code> – schließt automatisch.</li>
+        </ul>
+        <h4>— Merksatz —</h4>
+        <ul>
+          <li>CSV schreiben = <code>writer.writerow(s)</code>, CSV lesen = <code>for zeile in reader</code>. Alles, was aus der Datei kommt, ist erst mal <strong>Text</strong> – Zahlen selbst mit <code>int()</code>/<code>float()</code> zurückwandeln.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- Beispiel D2: CSV einlesen & filtern (Teilnehmerliste, EXTERNE Datei) -->
+  <div class="lab-card bsp-card">
+    <div class="bsp-h">CSV einlesen &amp; filtern: Teilnehmerliste
+      <span class="bsp-tag is-read">Zum Lesen</span></div>
+    <p>Liest eine <strong>vorhandene</strong> Datei <code>teilnehmer.csv</code> ein und gibt erst alle
+       Teilnehmer im Kurs „Python Grundlagen“, dann alle insgesamt aus.</p>
+    <div class="note warn"><strong>Wichtig – <code>"r"</code> heißt lesen:</strong> Dieses Programm
+       <strong>erstellt keine</strong> Datei. <code>teilnehmer.csv</code> muss vorher im selben Ordner
+       liegen, sonst gibt es einen <code>FileNotFoundError</code>. Lege dazu die Beispiel-Datei unten an.</div>
+    <p class="bsp-cap">Beispiel-Datei teilnehmer.csv (Spalten: Name ; Kürzel ; Kurs)</p>
+    <div class="codeblock">Name;Kuerzel;Kurs
+Anna Berg;AB;Python Grundlagen
+Tim Klar;TK;Python Grundlagen
+Lena Voss;LV;Netzwerktechnik
+Jonas Funk;JF;Python Grundlagen
+Mara Eich;ME;Datenbanken</div>
+    <div class="codeblock"><span class="kw">import</span> csv
+
+do = <span class="fn">open</span>(<span class="str">"teilnehmer.csv"</span>,<span class="str">"r"</span>,encoding=<span class="str">"utf-8"</span>)
+reader=csv.<span class="fn">reader</span>(do,delimiter=<span class="str">";"</span>)
+ü=<span class="fn">next</span>(reader)
+tnliste=<span class="fn">list</span>(reader)  <span class="cm"># Kopie des reader als Liste</span>
+do.<span class="fn">close</span>()
+c = <span class="num">0</span>
+<span class="kw">for</span> t <span class="kw">in</span> tnliste:
+    <span class="kw">if</span> t[<span class="num">2</span>]==<span class="str">"Python Grundlagen"</span>:
+        <span class="fn">print</span>(<span class="str">f"{t[1]:6} {t[0]:10} - {t[2]}"</span>)
+        c+=<span class="num">1</span>
+<span class="fn">print</span>(<span class="str">"Anzahl Teilnehmer:"</span>,c)
+
+<span class="fn">print</span>()
+c=<span class="num">0</span>
+<span class="kw">for</span> t <span class="kw">in</span> tnliste:
+    <span class="fn">print</span>(<span class="str">f"{t[1]:6} {t[0]:10} - {t[2]}"</span>)
+    c+=<span class="num">1</span>
+<span class="fn">print</span>(<span class="str">"Anzahl Teilnehmer:"</span>,c)</div>
+
+    <details class="bsp-exp">
+      <summary>📖 Erklärung – einlesen, in Liste kopieren, filtern</summary>
+      <div class="bsp-body">
+        <h4>— Verständnis —</h4>
+        <ul>
+          <li><code>open("teilnehmer.csv","r")</code>: <code>"r"</code> = read, öffnet eine <strong>bestehende</strong> Datei nur zum Lesen.</li>
+          <li><code>next(reader)</code> holt die Kopfzeile heraus und legt sie in <code>ü</code> ab – so stört die Überschrift später nicht.</li>
+          <li><code>tnliste = list(reader)</code>: macht aus dem Reader eine <strong>echte Liste</strong>. Wichtig, weil man einen Reader nur <strong>einmal</strong> durchlaufen kann – als Liste kann man ihn zweimal benutzen (einmal gefiltert, einmal komplett).</li>
+          <li>Die Spalten: <code>t[0]</code> = Name, <code>t[1]</code> = Kürzel, <code>t[2]</code> = Kurs. <code>if t[2]=="Python Grundlagen"</code> behält nur die passenden Zeilen.</li>
+          <li><code>c</code> zählt die Treffer. <code>f"{t[1]:6} {t[0]:10} - {t[2]}"</code> richtet die Spalten mit fester Breite aus.</li>
+        </ul>
+        <h4>— Typischer Fehler —</h4>
+        <ul>
+          <li>Datei nicht vorhanden / falscher Ordner → <code>FileNotFoundError</code>. Beim Öffnen über <code>file://</code> findet der Browser keine Datei – über lokalen Server / im echten Python ausführen.</li>
+          <li>Den Reader zweimal durchlaufen wollen, <strong>ohne</strong> ihn vorher in eine Liste zu kopieren → der zweite <code>for</code> läuft ins Leere (gibt nichts aus).</li>
+          <li>Falscher <code>delimiter</code> (Komma statt Semikolon) → alles landet in <code>t[0]</code> und <code>t[2]</code> gibt einen <code>IndexError</code>.</li>
+        </ul>
+        <h4>— Merksatz —</h4>
+        <ul>
+          <li><code>"r"</code> liest nur und braucht eine vorhandene Datei. Einen Reader, den du mehrfach brauchst, sofort mit <code>list(reader)</code> festhalten.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- Beispiel D3: Textdatei lesen & umgewandelt schreiben (Umlaute) -->
+  <div class="lab-card bsp-card">
+    <div class="bsp-h">Textdatei zeilenweise lesen &amp; umgewandelt speichern (Umlaute → ae/oe/ue)
+      <span class="bsp-tag is-read">Zum Lesen</span></div>
+    <p>Liest eine Textdatei Zeile für Zeile, ersetzt mit einer Funktion alle Umlaute und schreibt
+       das Ergebnis in eine zweite Datei – ein klassischer „lesen, umformen, schreiben“-Ablauf.</p>
+    <div class="note warn"><strong><code>"r"</code> heißt lesen:</strong> <code>Programmierer-Gedicht.txt</code>
+       muss vorher existieren. Lege z.&nbsp;B. diese Datei an:</div>
+    <p class="bsp-cap">Beispiel-Datei Programmierer-Gedicht.txt</p>
+    <div class="codeblock">Über Nacht läuft mein Skript,
+schöne Schleifen, größter Spaß –
+groß und fleißig, süß und fix,
+Ärger? Nö, das macht doch was!</div>
+    <div class="codeblock"><span class="kw">def</span> <span class="fn">no_umlaute</span>(s):
+    s=s.<span class="fn">replace</span>(<span class="str">"ä"</span>,<span class="str">"ae"</span>) <span class="cm"># Ersetze Umlaute im String</span>
+    s=s.<span class="fn">replace</span>(<span class="str">"Ä"</span>,<span class="str">"Ae"</span>)
+    s=s.<span class="fn">replace</span>(<span class="str">"ö"</span>,<span class="str">"oe"</span>)
+    s=s.<span class="fn">replace</span>(<span class="str">"Ö"</span>,<span class="str">"Oe"</span>)
+    s=s.<span class="fn">replace</span>(<span class="str">"ü"</span>,<span class="str">"ue"</span>)
+    s=s.<span class="fn">replace</span>(<span class="str">"Ü"</span>,<span class="str">"Ue"</span>)
+    s=s.<span class="fn">replace</span>(<span class="str">"ß"</span>,<span class="str">"ss"</span>)
+    <span class="kw">return</span> s
+
+do =  <span class="fn">open</span>(<span class="str">"Programmierer-Gedicht.txt"</span>,<span class="str">"r"</span>,encoding=<span class="str">"UTF-8"</span>)  <span class="cm"># Lesevorgang</span>
+do2 = <span class="fn">open</span>(<span class="str">"Programmierer-Gedicht2.txt"</span>,<span class="str">"w"</span>,encoding=<span class="str">"UTF-8"</span>)<span class="cm"># Schreibvorgang</span>
+<span class="kw">for</span> z <span class="kw">in</span> do:
+   do2.<span class="fn">write</span>(<span class="fn">no_umlaute</span>(z)) <span class="cm"># Schreiben in konvertierte Datei</span>
+do.<span class="fn">close</span>()
+do2.<span class="fn">close</span>()</div>
+
+    <details class="bsp-exp">
+      <summary>📖 Erklärung – lesen, umformen, schreiben</summary>
+      <div class="bsp-body">
+        <h4>— Verständnis —</h4>
+        <ul>
+          <li><code>no_umlaute(s)</code> nimmt einen Text und ersetzt mit <code>s.replace(alt, neu)</code> nacheinander jeden Umlaut. Jede Ersetzung erzeugt einen neuen String, der wieder in <code>s</code> gespeichert wird.</li>
+          <li>Zwei Dateien <strong>gleichzeitig</strong> offen: <code>do</code> zum Lesen (<code>"r"</code>), <code>do2</code> zum Schreiben (<code>"w"</code>).</li>
+          <li><code>for z in do:</code> geht die Eingabedatei Zeile für Zeile durch; jede Zeile wird umgewandelt und sofort in die Ausgabedatei geschrieben.</li>
+          <li>Am Ende werden <strong>beide</strong> Dateien mit <code>close()</code> geschlossen.</li>
+        </ul>
+        <h4>— Typischer Fehler —</h4>
+        <ul>
+          <li><code>replace</code> verändert den String <strong>nicht an Ort und Stelle</strong> – das Ergebnis muss man zuweisen (<code>s = s.replace(...)</code>). Ohne Zuweisung passiert nichts.</li>
+          <li>Reihenfolge bei <code>ß</code>/Groß-Klein beachten: erst <code>"Ä"</code> dann <code>"ä"</code> ist egal, aber wer nur <code>"ae"</code> klein ersetzt, vergisst „Ärger“ am Satzanfang.</li>
+          <li>Falsches <code>encoding</code> → Umlaute kommen als kryptische Zeichen an. Beim Lesen und Schreiben dasselbe <code>encoding="utf-8"</code> verwenden.</li>
+        </ul>
+        <h4>— Merksatz —</h4>
+        <ul>
+          <li>String-Methoden geben einen <strong>neuen</strong> String zurück – immer zuweisen. „Lesen, umformen, schreiben“ braucht zwei offene Dateien und am Ende zwei <code>close()</code>.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- Beispiel D4: An eine Datei anhängen mit "a" + Zeitstempel -->
+  <div class="lab-card bsp-card">
+    <div class="bsp-h">An eine Datei anhängen (<code>"a"</code>) – Login-Protokoll mit Uhrzeit
+      <span class="bsp-tag is-read">Zum Lesen</span></div>
+    <p>Hängt bei jedem Lauf einen neuen Eintrag (Uhrzeit + Name) <strong>ans Ende</strong> einer Datei
+       und liest danach die ganze Datei wieder aus – wie ein einfaches Protokoll.</p>
+    <div class="note"><strong>Hinweis:</strong> Braucht eine Eingabe über <code>input(...)</code>. Im
+       Code-Labor erscheint dafür ein Eingabefeld. <code>test2.txt</code> wird beim ersten Lauf
+       automatisch angelegt.</div>
+    <div class="codeblock"><span class="kw">import</span> time
+
+e = <span class="fn">input</span>(<span class="str">"Name&gt;"</span>)
+do = <span class="fn">open</span>(<span class="str">"test2.txt"</span>,<span class="str">"a"</span>,encoding=<span class="str">"utf-8"</span>)  <span class="cm"># Datei öffnen zum Anhängen</span>
+do.<span class="fn">write</span>(time.<span class="fn">ctime</span>())  <span class="cm"># Uhrzeit schreiben</span>
+do.<span class="fn">write</span>(<span class="str">" - Benutzername:"</span>+e+<span class="str">"\n"</span>) <span class="cm"># Benutzereingabe schreiben</span>
+do.<span class="fn">close</span>()  <span class="cm"># Datei schließen</span>
+<span class="fn">print</span>(<span class="str">"Uhrzeit in Datei geschrieben"</span>)
+
+
+do = <span class="fn">open</span>(<span class="str">"test2.txt"</span>,<span class="str">"r"</span>)
+<span class="kw">for</span> z <span class="kw">in</span> do:
+    <span class="fn">print</span>(z,end=<span class="str">""</span>)
+do.<span class="fn">close</span>()</div>
+
+    <details class="bsp-exp">
+      <summary>📖 Erklärung – der Modus "a" (append)</summary>
+      <div class="bsp-body">
+        <h4>— Verständnis —</h4>
+        <ul>
+          <li><code>open("test2.txt","a")</code>: <code>"a"</code> = append, <strong>hängt</strong> hinten an. Anders als <code>"w"</code> wird nichts überschrieben – alte Einträge bleiben erhalten.</li>
+          <li><code>time.ctime()</code> liefert die aktuelle Uhrzeit als lesbaren Text.</li>
+          <li><code>do.write(" - Benutzername:"+e+"\n")</code>: Texte werden mit <code>+</code> aneinandergehängt, das <code>"\n"</code> am Ende sorgt für eine neue Zeile pro Eintrag.</li>
+          <li>Der zweite Teil öffnet die Datei mit <code>"r"</code> und gibt jede Zeile aus – <code>end=""</code> verhindert die doppelte Leerzeile (die Zeile bringt ihr <code>\n</code> schon mit).</li>
+        </ul>
+        <h4>— Typischer Fehler —</h4>
+        <ul>
+          <li><code>"w"</code> statt <code>"a"</code> → jeder Lauf <strong>löscht</strong> die vorherigen Einträge. Für ein Protokoll ist das falsch.</li>
+          <li>Das <code>"\n"</code> vergessen → alle Einträge kleben in einer einzigen langen Zeile.</li>
+          <li><code>write</code> nimmt nur Text. Eine Zahl müsste erst mit <code>str(...)</code> umgewandelt werden (hier sind alle Teile schon Text).</li>
+        </ul>
+        <h4>— Merksatz —</h4>
+        <ul>
+          <li><code>"w"</code> = neu &amp; überschreiben, <code>"a"</code> = hinten anhängen, <code>"r"</code> = nur lesen. Jede Protokollzeile endet mit <code>"\n"</code>.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- ===================== BEISPIELE · FUNKTIONEN & LOGIK ===================== -->
+  <div class="bsp-sec-head">🛠️ Beispiele zum Mitlesen · Funktionen &amp; Logik</div>
+  <p class="bsp-sec-sub">Eigene Funktionen, Verzweigungen und Fehlerbehandlung – die Bausteine, aus denen
+     größere Programme entstehen.</p>
+
+  <!-- Beispiel F1: Primzahltest + Produkt aller Primzahlen < 1000 -->
+  <div class="lab-card bsp-card">
+    <div class="bsp-h">Primzahltest als Funktion + Produkt aller Primzahlen unter 1000
+      <span class="bsp-tag is-read">Zum Lesen</span></div>
+    <p>Eine Funktion <code>primetest(z)</code> prüft, ob <code>z</code> eine Primzahl ist; das
+       Hauptprogramm multipliziert alle Primzahlen unter 1000.</p>
+    <div class="codeblock"><span class="kw">def</span> <span class="fn">primetest</span>(z):
+    prime = <span class="kw">True</span>
+    <span class="kw">if</span> z &lt;= <span class="num">1</span>:
+        prime = <span class="kw">False</span>
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">2</span>, <span class="fn">int</span>(z**<span class="num">0.5</span>) + <span class="num">1</span>):
+        <span class="kw">if</span> z % i == <span class="num">0</span>:
+            prime = <span class="kw">False</span>
+            <span class="kw">break</span>  <span class="cm"># Optimierung: Sobald ein Teiler gefunden wurde, können wir abbrechen</span>
+    <span class="kw">return</span> prime
+
+<span class="cm"># Hauptprogramm</span>
+produkt = <span class="num">1</span>
+
+<span class="cm"># Schleife für alle Zahlen unter 1000 (von 2 bis 999)</span>
+<span class="kw">for</span> z <span class="kw">in</span> <span class="fn">range</span>(<span class="num">2</span>, <span class="num">1000</span>):
+    <span class="kw">if</span> <span class="fn">primetest</span>(z):
+        produkt *= z
+
+<span class="fn">print</span>(<span class="str">f"Das Produkt aller Primzahlen unter 1000 ist:\n{produkt}"</span>)</div>
+
+    <details class="bsp-exp">
+      <summary>📖 Erklärung – wie der Primzahltest funktioniert</summary>
+      <div class="bsp-body">
+        <h4>— Verständnis —</h4>
+        <ul>
+          <li>Annahme „<code>prime = True</code>“, dann wird versucht, sie zu widerlegen. Findet sich ein Teiler, ist es keine Primzahl mehr.</li>
+          <li><code>range(2, int(z**0.5)+1)</code>: man muss nur bis zur <strong>Wurzel</strong> von <code>z</code> testen – größere Teiler hätten einen kleineren Partner, den man schon gefunden hätte. Das spart enorm viel.</li>
+          <li><code>if z % i == 0</code>: Rest 0 heißt „<code>i</code> teilt <code>z</code> glatt“ → kein Primzahl. <code>break</code> bricht sofort ab (Optimierung).</li>
+          <li>Im Hauptprogramm sammelt <code>produkt *= z</code> das laufende Produkt – startet bei <code>1</code> (nicht 0, sonst bliebe alles 0).</li>
+        </ul>
+        <h4>— Typischer Fehler —</h4>
+        <ul>
+          <li><code>range(2, int(z**0.5))</code> <strong>ohne</strong> <code>+1</code> → bei Quadratzahlen wie 9 oder 25 wird der entscheidende Teiler übersehen, sie gelten fälschlich als prim.</li>
+          <li><code>produkt = 0</code> als Startwert → das Produkt bleibt für immer 0. Bei Multiplikation ist <code>1</code> der neutrale Startwert.</li>
+          <li>1 und 0 sind keine Primzahlen – die Abfrage <code>if z &lt;= 1</code> fängt das ab.</li>
+        </ul>
+        <h4>— Merksatz —</h4>
+        <ul>
+          <li>Primzahltest = „bis zur Wurzel prüfen, ob ein Teiler den Rest 0 ergibt“. Produkt aufsammeln startet bei <code>1</code>, Summe bei <code>0</code>.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- Beispiel F2: Rabatt – verschachteltes if vs. if/elif/else -->
+  <div class="lab-card bsp-card">
+    <div class="bsp-h">Rabatt berechnen: verschachteltes <code>if</code> vs. <code>if/elif/else</code>
+      <span class="bsp-tag is-read">Zum Lesen</span></div>
+    <p>Dieselbe Rabatt-Regel auf zwei Arten: einmal mit verschachtelten <code>if</code>-Blöcken,
+       einmal kompakt mit <code>elif</code>. Beide liefern dasselbe Ergebnis.</p>
+    <div class="codeblock"><span class="cm"># Variante 1: verschachteltes if</span>
+umsatz = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Umsatz eingeben: "</span>))
+<span class="kw">if</span> umsatz &gt; <span class="num">100</span>:
+    <span class="kw">if</span> umsatz &gt; <span class="num">500</span>:
+        rabatt = <span class="num">10</span>
+    <span class="kw">else</span>:
+        rabatt = <span class="num">5</span>
+<span class="kw">else</span>:
+    rabatt = <span class="num">0</span>
+rechnungsbetrag = umsatz - rabatt
+<span class="fn">print</span>(<span class="str">"Rechnungsbetrag:"</span>, rechnungsbetrag)
+
+<span class="cm"># Variante 2: if / elif / else (kompakter, gleiche Logik)</span>
+umsatz = <span class="fn">float</span>(<span class="fn">input</span>(<span class="str">"Umsatz eingeben: "</span>))
+<span class="kw">if</span> umsatz &gt; <span class="num">500</span>:
+    rabatt = <span class="num">10</span>
+<span class="kw">elif</span> umsatz &gt; <span class="num">100</span>:
+    rabatt = <span class="num">5</span>
+<span class="kw">else</span>:
+    rabatt = <span class="num">0</span>
+rechnungsbetrag = umsatz - rabatt
+<span class="fn">print</span>(<span class="str">"Rechnungsbetrag:"</span>, rechnungsbetrag)</div>
+
+    <details class="bsp-exp">
+      <summary>📖 Erklärung – und warum match/case hier NICHT passt</summary>
+      <div class="bsp-body">
+        <h4>— Verständnis —</h4>
+        <ul>
+          <li><strong>Variante 1</strong> denkt in Stufen: „Ist der Umsatz überhaupt über 100? Wenn ja, ist er sogar über 500?“ Der innere <code>if</code> läuft nur, wenn der äußere wahr ist.</li>
+          <li><strong>Variante 2</strong> prüft von oben nach unten und nimmt die <strong>erste</strong> wahre Bedingung. Deshalb muss <code>&gt; 500</code> <strong>vor</strong> <code>&gt; 100</code> stehen – sonst würde 600 schon bei <code>&gt; 100</code> hängenbleiben.</li>
+          <li>Beide ergeben dieselben Rabatte (0 / 5 / 10) – <code>elif</code> ist nur die kürzere, besser lesbare Form.</li>
+        </ul>
+        <h4>— Typischer Fehler —</h4>
+        <ul>
+          <li><strong>Tabs und Leerzeichen mischen.</strong> Die Original-Datei aus dem Unterricht hatte genau das und hätte einen <code>TabError</code> geworfen. Tipp: durchgängig <strong>4 Leerzeichen</strong> pro Ebene, nie mischen.</li>
+          <li>Bei <code>elif</code> die Reihenfolge vertauschen (<code>&gt; 100</code> zuerst) → der höhere Rabatt wird nie erreicht.</li>
+          <li><code>input()</code> liefert Text – ohne <code>float(...)</code> würde <code>umsatz &gt; 100</code> Text mit Zahl vergleichen und scheitern.</li>
+          <li><strong><code>match/case</code> passt hier nicht:</strong> <code>match</code> vergleicht auf <strong>genaue Werte</strong>, nicht auf „größer als“. Ein <code>case 1 if umsatz &gt; 500</code> trifft nur zu, wenn <code>umsatz</code> exakt <code>1</code> <em>und</em> größer 500 ist – also nie. Für Bereichsgrenzen ist <code>if/elif/else</code> richtig.</li>
+        </ul>
+        <h4>— Merksatz —</h4>
+        <ul>
+          <li>Bereiche („größer als“) prüft man mit <code>if/elif/else</code> – von der <strong>strengsten</strong> Bedingung nach unten. <code>match/case</code> ist für feste Einzelwerte, nicht für Schwellen.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- Beispiel F3: Fehlerbehandlung mit try/except -->
+  <div class="lab-card bsp-card">
+    <div class="bsp-h">Fehler abfangen mit <code>try / except</code> (Division &amp; Eingabeprüfung)
+      <span class="bsp-tag is-read">Zum Lesen</span></div>
+    <p>Zeigt zwei Klassiker: eine Division, die bei 0 schiefgeht, und eine Eingabe-Schleife, die so
+       lange fragt, bis eine gültige Zahl kommt – ohne dass das Programm abstürzt.</p>
+    <div class="note"><strong>Hinweis:</strong> Der zweite Teil braucht eine Eingabe über
+       <code>input(...)</code> (Eingabefeld im Code-Labor).</div>
+    <div class="codeblock"><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(-<span class="num">5</span>,<span class="num">6</span>):
+    <span class="kw">try</span>:
+        <span class="fn">print</span>(i,<span class="num">1</span>/i)
+    <span class="kw">except</span> Exception <span class="kw">as</span> fehler:
+        <span class="fn">print</span>(<span class="str">"Was komisches ist passiert, und zwar:"</span>, fehler)
+
+
+<span class="kw">while</span> <span class="kw">True</span>:
+    <span class="kw">try</span>:
+        e = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Bitte eine ganze Zahl &gt; 0 eingeben&gt;"</span>))
+        <span class="kw">break</span>  <span class="cm"># Schleife abbrechen wenn Eingabe keinen Fehler hat</span>
+    <span class="kw">except</span> Exception <span class="kw">as</span> fehler:
+        <span class="fn">print</span>(<span class="str">"Bitte keinen Blödsinn eingeben!"</span>,fehler)
+
+<span class="fn">print</span>(e)</div>
+
+    <details class="bsp-exp">
+      <summary>📖 Erklärung – try/except als Sicherheitsnetz</summary>
+      <div class="bsp-body">
+        <h4>— Verständnis —</h4>
+        <ul>
+          <li><code>try:</code> enthält den Code, der schiefgehen <strong>könnte</strong>. Tritt ein Fehler auf, springt Python sofort in den <code>except</code>-Block, statt abzustürzen.</li>
+          <li>Im ersten Teil ist bei <code>i == 0</code> die Division <code>1/i</code> nicht erlaubt (<code>ZeroDivisionError</code>) – das wird abgefangen und als Meldung ausgegeben, die Schleife läuft weiter.</li>
+          <li><code>as fehler</code> fängt das Fehler-Objekt ein, damit man es ausgeben kann (z.&nbsp;B. „division by zero“).</li>
+          <li>Im zweiten Teil läuft <code>while True</code> endlos – erst eine gültige Zahl löst <code>break</code> aus. Bei Buchstaben wirft <code>int(...)</code> einen <code>ValueError</code>, der abgefangen wird → es wird erneut gefragt.</li>
+        </ul>
+        <h4>— Typischer Fehler —</h4>
+        <ul>
+          <li>Den ganzen Code in <strong>einen</strong> riesigen <code>try</code> packen – dann weiß man nicht, welche Zeile den Fehler ausgelöst hat. Lieber eng um die kritische Stelle.</li>
+          <li><code>break</code> im <code>except</code> statt im <code>try</code> → die Schleife bricht auch bei Falscheingabe ab. Der <code>break</code> gehört genau dorthin, wo die Eingabe geklappt hat.</li>
+          <li>Pauschal alles mit <code>except Exception</code> zu schlucken versteckt echte Programmierfehler. Wenn man weiß, was schiefgehen kann, gezielter fangen (z.&nbsp;B. <code>except ValueError</code>).</li>
+        </ul>
+        <h4>— Merksatz —</h4>
+        <ul>
+          <li><code>try</code> = „versuch es“, <code>except</code> = „falls es knallt, mach stattdessen das“. <code>while True</code> + <code>try/except</code> + <code>break</code> ist das Standardmuster für robuste Eingaben.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
 </div>
 
   </main><!-- /.lab-main -->
