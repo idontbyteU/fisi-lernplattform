@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON · Datenformat &amp; Python · FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<style>
+/* Nur seiten-spezifische Kleinigkeiten – alle Farben über die zentralen Paletten-Variablen */
+.jcode{display:block;font-family:var(--fmono);background:var(--code-bg);border:1px solid var(--line);
+  border-radius:8px;padding:.8rem 1rem;margin:.7rem 0;font-size:14px;line-height:1.75;color:var(--read);
+  white-space:pre;overflow-x:auto;tab-size:2;-webkit-overflow-scrolling:touch}
+.jcode .k{color:var(--cyan)}            /* Schlüssel */
+.jcode .s{color:var(--amber)}           /* String-Wert */
+.jcode .n{color:var(--purple)}          /* Zahl */
+.jcode .b{color:var(--ok);font-weight:700}/* boolean / null */
+.jcode .c{color:var(--dim);font-style:italic} /* Annotation (kein echtes JSON) */
+.jcode .fn{color:var(--cyan)}           /* Python-Funktion */
+.jcode .kw{color:var(--magenta)}        /* Python-Keyword */
+.json-pair{font-family:var(--fmono);font-size:13.5px}
+.q-list{margin:.3rem 0 .3rem 1.3rem;padding:0}
+.q-list li{margin:.3rem 0;color:var(--read);line-height:1.55}
+.calc-sol ul{margin:.15rem 0 .15rem 1.15rem;padding:0}
+.calc-sol ul li{margin:.16rem 0;color:var(--read);line-height:1.5}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.calc-sol table td .mono{font-family:var(--fmono);color:var(--cyan)}
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="index.html">← Übersicht</a>
+    <div>
+      <h1><span class="tag">DEV</span>JSON</h1>
+      <div class="sub">JavaScript Object Notation · Datenformat · Python json-Modul</div>
+    </div>
+    <div class="sp"></div>
+    <div class="tabs">
+      <button id="tOverview" class="on">Überblick</button>
+      <button id="tSyntax">Syntax</button>
+      <button id="tPython">Python</button>
+      <button id="tCards">Karteikarten</button>
+      <button id="tQuiz">Quiz</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ===================================================================== -->
+<!--  ÜBERBLICK                                                             -->
+<!-- ===================================================================== -->
+<div id="vOverview" class="view on sum">
+
+  <div class="h-sec"><span class="ico">📦</span> Was ist JSON?</div>
+  <p class="lead"><b>JSON</b> (JavaScript Object Notation) ist ein <b>leichtgewichtiges, textbasiertes Datenformat</b>, um strukturierte Daten zu <b>speichern</b> und zwischen Programmen <b>auszutauschen</b>. Es ist für Menschen gut lesbar und für Maschinen leicht zu verarbeiten. Der Name kommt aus JavaScript – JSON ist aber <b>sprachunabhängig</b> und wird von praktisch jeder Programmiersprache verstanden.</p>
+  <div class="callout tip"><span class="ci">🎯</span><div><b>Kernidee:</b> JSON ist einfach <b>Text</b>, der eine Struktur aus <b>Objekten</b> (Schlüssel→Wert) und <b>Arrays</b> (Listen) beschreibt. Ein Programm wandelt diesen Text in seine eigenen Datenstrukturen um – und wieder zurück.</div></div>
+
+  <div class="h-sub">Wofür wird JSON benutzt?</div>
+  <div class="cardgrid c3">
+    <div class="ic"><h4>Web-APIs</h4><p>REST-Schnittstellen senden und empfangen Daten fast immer als JSON (z. B. die Antwort eines Wetter- oder Login-Dienstes).</p></div>
+    <div class="ic"><h4>Konfiguration</h4><p>Einstellungsdateien wie <span class="json-pair">package.json</span>, <span class="json-pair">manifest.json</span> oder VS-Code-Settings sind JSON.</p></div>
+    <div class="ic"><h4>Speichern &amp; Austausch</h4><p>Daten dauerhaft ablegen oder zwischen Systemen übertragen – kompakt, eindeutig, plattformneutral.</p></div>
+    <div class="ic"><h4>Browser-Speicher</h4><p><span class="json-pair">localStorage</span> speichert nur Text – Objekte werden als JSON abgelegt (genau wie in dieser Lernplattform).</p></div>
+    <div class="ic"><h4>NoSQL-Datenbanken</h4><p>Dokumenten-Datenbanken (z. B. MongoDB) speichern Datensätze in JSON-ähnlicher Form.</p></div>
+    <div class="ic"><h4>Logs &amp; Messaging</h4><p>Strukturierte Logdaten und Nachrichten zwischen Diensten werden häufig als JSON-Zeilen übertragen.</p></div>
+  </div>
+
+  <div class="h-sec"><span class="ico">🧱</span> Die zwei Bausteine</div>
+  <p class="lead">Aus genau zwei Strukturen lässt sich jede JSON-Datei zusammensetzen – beliebig ineinander verschachtelt:</p>
+  <div class="cardgrid">
+    <div class="ic"><h4>Objekt &nbsp;{ }</h4><p>Eine <b>ungeordnete</b> Sammlung von <b>Schlüssel-Wert-Paaren</b>, getrennt durch Komma. Schlüssel sind immer Strings in doppelten Anführungszeichen.<br><span class="json-pair">{"name": "Max", "alter": 20}</span></p></div>
+    <div class="ic"><h4>Array &nbsp;[ ]</h4><p>Eine <b>geordnete Liste</b> von Werten, getrennt durch Komma. Die Werte dürfen unterschiedliche Typen haben.<br><span class="json-pair">["rot", "grün", 3, true]</span></p></div>
+  </div>
+
+  <div class="h-sub">Erlaubte Datentypen (Werte)</div>
+  <ul class="clean">
+    <li><b>string</b> – Text in doppelten Anführungszeichen: <span class="json-pair">"Hallo"</span></li>
+    <li><b>number</b> – Ganz- oder Kommazahl, ohne Anführungszeichen: <span class="json-pair">42</span>, <span class="json-pair">3.14</span>, <span class="json-pair">-7</span></li>
+    <li><b>boolean</b> – Wahrheitswert, klein geschrieben: <span class="json-pair">true</span> / <span class="json-pair">false</span></li>
+    <li><b>null</b> – „kein Wert“, klein geschrieben: <span class="json-pair">null</span></li>
+    <li><b>object</b> – ein weiteres <span class="json-pair">{ … }</span> (Verschachtelung)</li>
+    <li><b>array</b> – eine weitere <span class="json-pair">[ … ]</span> (Verschachtelung)</li>
+  </ul>
+  <div class="callout merk"><span class="ci">📌</span><div><b>Merksatz:</b> JSON = <b>Text</b> aus <b>Objekten {}</b> und <b>Arrays []</b>. Werte sind <b>string · number · boolean · null · object · array</b> – mehr gibt es nicht.</div></div>
+
+</div>
+
+<!-- ===================================================================== -->
+<!--  SYNTAX                                                                -->
+<!-- ===================================================================== -->
+<div id="vSyntax" class="view sum">
+
+  <div class="h-sec"><span class="ico">✍️</span> Syntax im Detail</div>
+  <p class="lead">Ein vollständiges Beispiel mit allen Datentypen und Verschachtelung:</p>
+  <div class="jcode"><span class="p">{</span>
+  <span class="k">"name"</span>: <span class="s">"Max Mustermann"</span>,        <span class="c">// string</span>
+  <span class="k">"alter"</span>: <span class="n">20</span>,                     <span class="c">// number</span>
+  <span class="k">"azubi"</span>: <span class="b">true</span>,                   <span class="c">// boolean</span>
+  <span class="k">"abschluss"</span>: <span class="b">null</span>,              <span class="c">// null = noch kein Wert</span>
+  <span class="k">"hobbys"</span>: <span class="p">[</span><span class="s">"Lesen"</span>, <span class="s">"Coden"</span><span class="p">]</span>,    <span class="c">// array</span>
+  <span class="k">"adresse"</span>: <span class="p">{</span>                    <span class="c">// verschachteltes object</span>
+    <span class="k">"stadt"</span>: <span class="s">"Berlin"</span>,
+    <span class="k">"plz"</span>: <span class="s">"10115"</span>
+  <span class="p">}</span>
+<span class="p">}</span></div>
+  <p class="lead json-pair" style="color:var(--dim)">Hinweis: Die <span style="color:var(--dim)">// Kommentare</span> oben dienen nur der Erklärung – <b>echtes JSON kennt keine Kommentare!</b></p>
+
+  <div class="h-sub">Die festen Regeln</div>
+  <dl class="deflist">
+    <div><dt>Doppelte Quotes</dt><dd>Strings <b>und</b> Schlüssel stehen immer in <b>doppelten</b> Anführungszeichen <span class="json-pair">"…"</span> – niemals einfache <span class="json-pair">'…'</span>.</dd></div>
+    <div><dt>Schlüssel = String</dt><dd>Jeder Schlüssel in einem Objekt ist ein String: <span class="json-pair">"alter": 20</span> – nicht <span class="json-pair">alter: 20</span>.</dd></div>
+    <div><dt>Komma trennt</dt><dd>Paare und Listenelemente werden mit Komma getrennt – aber <b>kein Komma nach dem letzten</b> Element.</dd></div>
+    <div><dt>Kleinschreibung</dt><dd><span class="json-pair">true</span>, <span class="json-pair">false</span>, <span class="json-pair">null</span> werden <b>klein</b> geschrieben und stehen <b>ohne</b> Anführungszeichen.</dd></div>
+    <div><dt>Keine Kommentare</dt><dd>JSON erlaubt <b>keine</b> Kommentare (<span class="json-pair">//</span> oder <span class="json-pair">/* */</span>) und keine Funktionen.</dd></div>
+    <div><dt>Zahlen pur</dt><dd>Zahlen stehen ohne Anführungszeichen. <span class="json-pair">"20"</span> ist ein String, <span class="json-pair">20</span> eine Zahl – ein Unterschied!</dd></div>
+  </dl>
+
+  <div class="h-sec"><span class="ico">🚫</span> Typische Fehler</div>
+  <div class="callout warn"><span class="ci">⚠️</span><div><b>Diese drei Fehler kosten in der Prüfung Punkte:</b></div></div>
+  <div class="grp">
+    <div class="row"><span class="lbl" style="background:var(--magenta)">1 · Quotes</span> Einfache statt doppelter Anführungszeichen. <span class="json-pair">{'name': 'Max'}</span> ist <b>ungültig</b> → <span class="json-pair">{"name": "Max"}</span>.</div>
+    <div class="row"><span class="lbl" style="background:var(--amber)">2 · Trailing Comma</span> Komma nach dem letzten Element. <span class="json-pair">{"a": 1, "b": 2,}</span> ist <b>ungültig</b> → das letzte Komma muss weg.</div>
+    <div class="row"><span class="lbl" style="background:var(--cyan)">3 · Falsche Literale</span> Python-Schreibweise im JSON: <span class="json-pair">True</span>/<span class="json-pair">False</span>/<span class="json-pair">None</span> statt <span class="json-pair">true</span>/<span class="json-pair">false</span>/<span class="json-pair">null</span>.</div>
+  </div>
+  <div class="callout tip"><span class="ci">💡</span><div><b>Prüf-Trick:</b> Gültiges JSON erkennst du an <b>doppelten Quotes überall</b>, <b>keinem Komma am Ende</b> und <b>kleinem</b> <span class="json-pair">true/false/null</span>.</div></div>
+
+</div>
+
+<!-- ===================================================================== -->
+<!--  PYTHON                                                                -->
+<!-- ===================================================================== -->
+<div id="vPython" class="view sum">
+
+  <div class="h-sec"><span class="ico">🐍</span> JSON ↔ Python: das <span class="json-pair">json</span>-Modul</div>
+  <p class="lead">Python bringt das Modul <span class="json-pair">json</span> von Haus aus mit. Es wandelt JSON-Text in Python-Objekte um (<b>parsen</b>) und Python-Objekte zurück in JSON-Text (<b>serialisieren</b>).</p>
+  <div class="jcode"><span class="kw">import</span> json
+
+<span class="c"># --- String  ->  Python  (parsen) ---</span>
+text = <span class="s">'{"name": "Max", "alter": 20, "azubi": true}'</span>
+daten = json.<span class="fn">loads</span>(text)        <span class="c"># daten ist jetzt ein dict</span>
+<span class="fn">print</span>(daten[<span class="s">"name"</span>])           <span class="c"># Max</span>
+
+<span class="c"># --- Python  ->  String  (serialisieren) ---</span>
+person = {<span class="s">"name"</span>: <span class="s">"Anna"</span>, <span class="s">"azubi"</span>: <span class="b">True</span>}
+text = json.<span class="fn">dumps</span>(person)        <span class="c"># '{"name": "Anna", "azubi": true}'</span>
+
+<span class="c"># --- Datei lesen / schreiben ---</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="s">"daten.json"</span>, <span class="s">"w"</span>, encoding=<span class="s">"utf-8"</span>) <span class="kw">as</span> f:
+    json.<span class="fn">dump</span>(person, f)          <span class="c"># Python -> Datei</span>
+
+<span class="kw">with</span> <span class="fn">open</span>(<span class="s">"daten.json"</span>, <span class="s">"r"</span>, encoding=<span class="s">"utf-8"</span>) <span class="kw">as</span> f:
+    daten = json.<span class="fn">load</span>(f)            <span class="c"># Datei -> Python</span></div>
+
+  <div class="h-sub">Die vier Funktionen – das „s“ ist der Trick</div>
+  <dl class="deflist">
+    <div><dt>json.loads()</dt><dd><b>load string:</b> JSON-<b>Text</b> → Python-Objekt. (s = string)</dd></div>
+    <div><dt>json.dumps()</dt><dd><b>dump string:</b> Python-Objekt → JSON-<b>Text</b>. (s = string)</dd></div>
+    <div><dt>json.load()</dt><dd>JSON aus einer <b>Datei</b> → Python-Objekt. (ohne s = Datei)</dd></div>
+    <div><dt>json.dump()</dt><dd>Python-Objekt → JSON in eine <b>Datei</b>. (ohne s = Datei)</dd></div>
+  </dl>
+  <div class="callout merk"><span class="ci">📌</span><div><b>Merksatz:</b> <b>load</b> = hereinladen (JSON→Python), <b>dump</b> = rauswerfen (Python→JSON). Das <b>„s“ steht für string</b> – mit „s“ geht es über einen Text, ohne „s“ über eine Datei.</div></div>
+
+  <div class="h-sub">So werden die Typen umgewandelt</div>
+  <div class="tbl-scroll">
+  <table class="ltbl">
+    <tr><th>JSON</th><th>Python</th></tr>
+    <tr><td class="lg">object &nbsp;<span class="json-pair">{}</span></td><td><span class="json-pair">dict</span></td></tr>
+    <tr><td class="lg">array &nbsp;<span class="json-pair">[]</span></td><td><span class="json-pair">list</span></td></tr>
+    <tr><td class="lg">string</td><td><span class="json-pair">str</span></td></tr>
+    <tr><td class="lg">number (ganz)</td><td><span class="json-pair">int</span></td></tr>
+    <tr><td class="lg">number (komma)</td><td><span class="json-pair">float</span></td></tr>
+    <tr><td class="lg">true / false</td><td><span class="json-pair">True / False</span></td></tr>
+    <tr><td class="lg">null</td><td><span class="json-pair">None</span></td></tr>
+  </table>
+  </div>
+  <div class="callout warn"><span class="ci">⚠️</span><div><b>Stolperfalle:</b> Beim Übersetzen tauschen sich <b>true↔True</b>, <b>false↔False</b> und <b>null↔None</b>. Schreibst du im JSON-Text aus Versehen <span class="json-pair">True</span> oder <span class="json-pair">None</span>, ist es <b>kein gültiges JSON</b> und <span class="json-pair">json.loads</span> wirft einen Fehler.</div></div>
+
+  <div class="h-sec"><span class="ico">🔌</span> JSON in unserer Lernplattform</div>
+  <p class="lead">Diese Plattform ist ein gutes Live-Beispiel: Der <b>Lernfortschritt</b> der Karteikarten wird im Browser unter <span class="json-pair">localStorage</span> gespeichert. Aber <b>localStorage kann nur Text (Strings)</b> – kein Objekt. Deshalb wird genau die JSON-Brücke gebaut:</p>
+  <div class="jcode"><span class="c">// Objekt -> JSON-Text -> speichern</span>
+<span class="kw">const</span> fortschritt = { gemeistert: [<span class="s">"q1"</span>, <span class="s">"q5"</span>], stand: <span class="n">42</span> };
+localStorage.<span class="fn">setItem</span>(<span class="s">"fisi_json_v1"</span>, JSON.<span class="fn">stringify</span>(fortschritt));
+
+<span class="c">// laden -> JSON-Text -> Objekt</span>
+<span class="kw">const</span> roh = localStorage.<span class="fn">getItem</span>(<span class="s">"fisi_json_v1"</span>);   <span class="c">// ein String</span>
+<span class="kw">const</span> daten = JSON.<span class="fn">parse</span>(roh);                       <span class="c">// wieder ein Objekt</span></div>
+  <p class="lead">In JavaScript heißen die beiden Funktionen <span class="json-pair">JSON.stringify()</span> (Objekt → Text, wie Pythons <span class="json-pair">dumps</span>) und <span class="json-pair">JSON.parse()</span> (Text → Objekt, wie Pythons <span class="json-pair">loads</span>). Auch die <b>Karteikarten- und Quiz-Daten</b> in unseren Modulen sind nichts anderes als solche Objekt-/Array-Strukturen – also gelebtes JSON.</p>
+  <div class="callout tip"><span class="ci">💡</span><div><b>Brücke zur Prüfung:</b> Egal ob Python (<span class="json-pair">json.dumps/loads</span>) oder JavaScript (<span class="json-pair">JSON.stringify/parse</span>) – das Prinzip ist identisch: <b>Objekt ⇄ Text</b>. JSON ist die gemeinsame Sprache dazwischen.</div></div>
+
+</div>
+
+<!-- ===================================================================== -->
+<!--  KARTEIKARTEN  (study.js)                                             -->
+<!-- ===================================================================== -->
+<div id="vCards" class="view">
+  <div class="chips" id="cardChips"></div>
+  <div class="bar">
+    <div class="pbar"><i id="pfill"></i></div>
+    <div class="ptxt">0% beherrscht</div>
+    <button class="tbtn" id="tShuffle">🔀 Mischen</button>
+    <button class="tbtn" id="tOpen">Nur offene</button>
+    <button class="tbtn" id="tReset">Zurücksetzen</button>
+  </div>
+  <div id="study" class="study"></div>
+</div>
+
+<!-- ===================================================================== -->
+<!--  QUIZ                                                                  -->
+<!-- ===================================================================== -->
+<div id="vQuiz" class="view">
+  <div class="calc">
+    <div class="calc-intro">Prüfungstypische Aufgaben. Erst selbst beantworten, dann <b>„Lösung anzeigen“</b> – ein Klick öffnet den kompletten Lösungsblock, standardmäßig zu.</div>
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 1 · Gültig oder ungültig?</div>
+      <div class="calc-q">Ist das gültiges JSON? Wenn nein, was ist falsch?
+        <ol class="q-list" type="a">
+          <li><span class="json-pair">{'name': 'Max'}</span></li>
+          <li><span class="json-pair">{"alter": 20, "azubi": True}</span></li>
+          <li><span class="json-pair">{"a": 1, "b": 2,}</span></li>
+          <li><span class="json-pair">{"farben": ["rot", "grün", "blau"]}</span></li>
+        </ol>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="step">a) <b>ungültig</b> – einfache statt doppelter Anführungszeichen → <span class="json-pair">{"name": "Max"}</span></div>
+        <div class="step">b) <b>ungültig</b> – <span class="json-pair">True</span> (Python) statt <span class="json-pair">true</span> (JSON)</div>
+        <div class="step">c) <b>ungültig</b> – Komma nach dem letzten Element (trailing comma)</div>
+        <div class="step">d) <b>gültig</b> ✔ – Objekt mit einem Array aus Strings</div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 2 · JSON → Python-Typ</div>
+      <div class="calc-q">Welcher Python-Datentyp entsteht beim Parsen aus dem JSON-Wert?
+        <ol class="q-list" type="a">
+          <li><span class="json-pair">{"x": 1}</span></li>
+          <li><span class="json-pair">[1, 2, 3]</span></li>
+          <li><span class="json-pair">"hallo"</span></li>
+          <li><span class="json-pair">true</span></li>
+          <li><span class="json-pair">null</span></li>
+          <li><span class="json-pair">3.14</span></li>
+        </ol>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="step">a) <b>dict</b></div>
+        <div class="step">b) <b>list</b></div>
+        <div class="step">c) <b>str</b></div>
+        <div class="step">d) <b>True</b> (bool)</div>
+        <div class="step">e) <b>None</b></div>
+        <div class="step">f) <b>float</b></div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 3 · Welche json-Funktion?</div>
+      <div class="calc-q">Wähle die passende Funktion: <span class="json-pair">json.loads</span>, <span class="json-pair">json.dumps</span>, <span class="json-pair">json.load</span> oder <span class="json-pair">json.dump</span>.
+        <ol class="q-list" type="a">
+          <li>Ein dict als JSON-Text in einer Variablen speichern.</li>
+          <li>Den Inhalt einer <span class="json-pair">.json</span>-Datei in ein dict einlesen.</li>
+          <li>Einen JSON-String aus einer API-Antwort in Python-Objekte umwandeln.</li>
+          <li>Ein dict direkt in eine <span class="json-pair">.json</span>-Datei schreiben.</li>
+        </ol>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="step">a) <b>json.dumps</b> (Python → String)</div>
+        <div class="step">b) <b>json.load</b> (Datei → Python)</div>
+        <div class="step">c) <b>json.loads</b> (String → Python)</div>
+        <div class="step">d) <b>json.dump</b> (Python → Datei)</div>
+        <div class="step">Merke: <b>„s“ = string</b>, ohne „s“ = Datei.</div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 4 · Fehler finden &amp; korrigieren</div>
+      <div class="calc-q">Finde alle Fehler in diesem JSON und schreibe es korrekt:
+        <div class="jcode">{
+  'titel': "FISI Lernplattform",
+  "module": 12,
+  "online": True,
+  "themen": ["LF1", "LF2", "LF3",]
+}</div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="step">Fehler 1: <span class="json-pair">'titel'</span> → doppelte Quotes: <span class="json-pair">"titel"</span></div>
+        <div class="step">Fehler 2: <span class="json-pair">True</span> → <span class="json-pair">true</span></div>
+        <div class="step">Fehler 3: Komma nach <span class="json-pair">"LF3"</span> entfernen (trailing comma)</div>
+        <div class="jcode">{
+  <span class="k">"titel"</span>: <span class="s">"FISI Lernplattform"</span>,
+  <span class="k">"module"</span>: <span class="n">12</span>,
+  <span class="k">"online"</span>: <span class="b">true</span>,
+  <span class="k">"themen"</span>: [<span class="s">"LF1"</span>, <span class="s">"LF2"</span>, <span class="s">"LF3"</span>]
+}</div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 5 · localStorage &amp; JSON</div>
+      <div class="calc-q">Warum muss man ein Objekt vor dem Speichern in <span class="json-pair">localStorage</span> erst durch <span class="json-pair">JSON.stringify()</span> schicken – und beim Laden durch <span class="json-pair">JSON.parse()</span>?</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <ul>
+          <li><span class="json-pair">localStorage</span> kann <b>nur Strings</b> speichern, keine Objekte/Arrays.</li>
+          <li><span class="json-pair">JSON.stringify(obj)</span> macht aus dem Objekt einen <b>JSON-Text</b>, der sich speichern lässt.</li>
+          <li>Beim Laden kommt wieder ein <b>String</b> zurück – <span class="json-pair">JSON.parse(text)</span> baut daraus das <b>Objekt</b> zurück.</li>
+          <li>Ohne <span class="json-pair">parse</span> hätte man nur einen Text und könnte nicht mit <span class="json-pair">.eigenschaft</span> zugreifen.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 6 · JSON in eigenen Worten</div>
+      <div class="calc-q">Erkläre in 2–3 Sätzen, was JSON ist und wofür man es braucht.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="step">JSON ist ein <b>textbasiertes, sprachunabhängiges Datenformat</b>, das Daten als <b>Objekte (Schlüssel-Wert)</b> und <b>Arrays (Listen)</b> beschreibt.</div>
+        <div class="step">Es ist menschenlesbar und wird genutzt, um Daten zu <b>speichern</b> und zwischen Programmen/Systemen <b>auszutauschen</b> – z. B. bei Web-APIs, Konfigurationsdateien und im Browser-Speicher.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>FISI Lernplattform · Programmierung · JSON · Fortschritt der Karteikarten wird lokal im Browser gespeichert</footer>
+</div>
+
+<script src="study.js"></script>
+<script>
+/* ===== KARTEIKARTEN-DATEN ===== */
+const CATS={
+  grund:{label:"Grundlagen",color:"#2de2e6"},
+  syntax:{label:"Syntax & Datentypen",color:"#ffb43b"},
+  python:{label:"Python & Code",color:"#9dff52"},
+  fehler:{label:"Typische Fehler",color:"#ff2a6d"}
+};
+
+const CARDS=[
+/* Grundlagen */
+{c:"grund",q:"Wofür steht die Abkürzung JSON?",a:"<b>JavaScript Object Notation.</b>"},
+{c:"grund",q:"Was ist JSON?",a:"Ein <b>leichtgewichtiges, textbasiertes Datenformat</b> zum Speichern und Austauschen strukturierter Daten – menschenlesbar und sprachunabhängig."},
+{c:"grund",q:"Ist JSON an JavaScript gebunden?",a:"Nein. Der Name stammt aus JavaScript, JSON ist aber <b>sprachunabhängig</b> und wird von praktisch jeder Sprache (Python, Java, C#, …) verstanden."},
+{c:"grund",q:"Wofür wird JSON typischerweise verwendet?",a:"<b>Web-APIs</b> (REST), <b>Konfigurationsdateien</b> (z. B. package.json), <b>Datenaustausch/-speicherung</b> und der <b>Browser-Speicher</b> (localStorage)."},
+{c:"grund",q:"Aus welchen zwei Strukturen besteht JSON?",a:"<b>Objekt</b> <code>{ }</code> (Schlüssel-Wert-Paare) und <b>Array</b> <code>[ ]</code> (geordnete Liste). Beide beliebig verschachtelbar."},
+{c:"grund",q:"Objekt {} vs. Array [] – der Unterschied?",a:"<b>Objekt {}:</b> ungeordnete <b>Schlüssel-Wert-Paare</b>. <b>Array []:</b> <b>geordnete Liste</b> von Werten."},
+
+/* Syntax & Datentypen */
+{c:"syntax",q:"Welche Datentypen kennt JSON?",a:"<b>string, number, boolean, null, object, array</b> – mehr nicht."},
+{c:"syntax",q:"Welche Anführungszeichen sind in JSON erlaubt?",a:"Nur <b>doppelte</b> Anführungszeichen <code>\"…\"</code> – niemals einfache <code>'…'</code>."},
+{c:"syntax",q:"Müssen Schlüssel in Anführungszeichen stehen?",a:"Ja, <b>jeder Schlüssel</b> ist ein String in doppelten Quotes: <code>\"alter\": 20</code>."},
+{c:"syntax",q:"Wie schreibt man Wahrheitswerte und „kein Wert“?",a:"<b>klein</b> und ohne Anführungszeichen: <code>true</code>, <code>false</code>, <code>null</code>."},
+{c:"syntax",q:"Darf nach dem letzten Element ein Komma stehen?",a:"<b>Nein.</b> Ein <b>trailing comma</b> macht das JSON ungültig."},
+{c:"syntax",q:"Sind Kommentare in JSON erlaubt?",a:"<b>Nein.</b> JSON kennt weder <code>//</code> noch <code>/* */</code> und keine Funktionen."},
+{c:"syntax",q:'Unterschied zwischen "20" und 20?',a:"<code>\"20\"</code> ist ein <b>String</b> (Text), <code>20</code> ist eine <b>number</b> (Zahl). Zahlen stehen ohne Anführungszeichen."},
+
+/* Python & Code */
+{c:"python",q:"Welches Modul nutzt Python für JSON?",a:"Das eingebaute Modul <code>json</code> – <code>import json</code>."},
+{c:"python",q:"json.loads() vs. json.dumps()?",a:"<b>loads:</b> JSON-<b>String</b> → Python-Objekt. <b>dumps:</b> Python-Objekt → JSON-<b>String</b>. Das <b>„s“ = string</b>."},
+{c:"python",q:"json.load() vs. json.dump()?",a:"<b>load:</b> JSON aus einer <b>Datei</b> → Python. <b>dump:</b> Python → JSON in eine <b>Datei</b>. (ohne „s“ = Datei)"},
+{c:"python",q:"Wie merkt man sich load/dump und das „s“?",a:"<b>load</b> = hereinladen (JSON→Python), <b>dump</b> = rauswerfen (Python→JSON). <b>Mit „s“</b> über einen String, <b>ohne „s“</b> über eine Datei."},
+{c:"python",q:"Ein JSON-Objekt {} wird in Python zu …?",a:"einem <b>dict</b>. (Ein JSON-Array [] wird zu einer <b>list</b>.)"},
+{c:"python",q:"Wie werden true / false / null in Python?",a:"<code>true→True</code>, <code>false→False</code>, <code>null→None</code>."},
+{c:"python",q:"Wie heißen die JSON-Funktionen in JavaScript?",a:"<code>JSON.stringify()</code> (Objekt→Text, wie Pythons dumps) und <code>JSON.parse()</code> (Text→Objekt, wie Pythons loads)."},
+{c:"python",q:"Warum braucht localStorage JSON?",a:"<code>localStorage</code> speichert <b>nur Strings</b>. Objekte werden mit <code>JSON.stringify()</code> in Text umgewandelt und beim Laden mit <code>JSON.parse()</code> zurückverwandelt."},
+
+/* Typische Fehler */
+{c:"fehler",q:"Was ist der häufigste JSON-Fehler?",a:"<b>Einfache statt doppelter</b> Anführungszeichen: <code>{'a':1}</code> ist ungültig → <code>{\"a\":1}</code>."},
+{c:"fehler",q:"Was ist am Ende einer Liste/Objekts verboten?",a:"Ein <b>Komma nach dem letzten Element</b> (trailing comma): <code>[1,2,]</code> ist ungültig."},
+{c:"fehler",q:"Welcher Fehler passiert oft beim Übergang von Python zu JSON?",a:"Python-Literale im JSON-Text: <code>True/False/None</code> statt <code>true/false/null</code> → kein gültiges JSON."}
+];
+
+/* ===== TABS ===== */
+const views={Overview:"vOverview",Syntax:"vSyntax",Python:"vPython",Cards:"vCards",Quiz:"vQuiz"};
+function showTab(t){
+  Object.keys(views).forEach(k=>{
+    document.getElementById(views[k]).classList.toggle('on',k===t);
+    document.getElementById('t'+k).classList.toggle('on',k===t);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('tOverview').onclick=()=>showTab('Overview');
+document.getElementById('tSyntax').onclick=()=>showTab('Syntax');
+document.getElementById('tPython').onclick=()=>showTab('Python');
+document.getElementById('tCards').onclick=()=>{showTab('Cards');Study._rebuild();};
+document.getElementById('tQuiz').onclick=()=>showTab('Quiz');
+
+/* ===== AUFKLAPP-BLÖCKE (Quiz) – ein Klick auf/zu ===== */
+document.querySelectorAll('.calc-toggle').forEach(tg=>{
+  const open=tg.textContent.trim();
+  const close=open.replace('anzeigen','verbergen');
+  tg.onclick=()=>{
+    const sol=tg.closest('.calc-card').querySelector('.calc-sol');
+    const shown=sol.classList.toggle('show');
+    tg.textContent=shown?close:open;
+  };
+});
+
+/* ===== KARTEIKARTEN (study.js) ===== */
+Study.init({ cards: CARDS, cats: CATS, key: "fisi_json_v1" });
+</script>
+<script>
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>

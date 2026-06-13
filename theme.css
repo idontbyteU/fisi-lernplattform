@@ -352,6 +352,18 @@ details[open] summary{background:rgba(45,226,230,.1);color:var(--cyan)}
 html[data-theme="light"] .gloss .pop{background:#ffffff;color:#16202b;border-color:var(--cyan);box-shadow:0 6px 24px rgba(30,50,80,.18)}
 html[data-theme="light"] .gloss .pop::after{border-top-color:var(--cyan)}
 
+/* Hell-Theme: Callout-Boxen lesbar machen. Die Basis-Definitionen nutzen helle
+   Pastell-Textfarben für den Dunkelmodus (z. B. merk #dcf3bf) – auf hellem Grund
+   unlesbar. Hier dunkle Schrift auf softem Tint, zentral für ALLE .sum-Seiten. */
+html[data-theme="light"] .sum .callout{background:#fff8ec;border-color:#f0d9a8;color:#6b5320}
+html[data-theme="light"] .sum .callout b{color:#9a6f12}
+html[data-theme="light"] .sum .callout.tip{background:#e7f6f8;border-color:#b8e0e6;color:#0c5560}
+html[data-theme="light"] .sum .callout.tip b{color:var(--cyan)}
+html[data-theme="light"] .sum .callout.warn{background:#fdeaf1;border-color:#f2bed0;color:#8a1438}
+html[data-theme="light"] .sum .callout.warn b{color:var(--magenta)}
+html[data-theme="light"] .sum .callout.merk{background:#ebf6e3;border-color:#c3e1a9;color:#2f5618}
+html[data-theme="light"] .sum .callout.merk b{color:#2e7d32}
+
 /* Vertiefungs-Links */
 .detail-links{margin-top:1.6rem;padding-top:1rem;border-top:1px dashed var(--line)}
 .detail-links .dl-title{font-family:var(--fmono);font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:.6rem}

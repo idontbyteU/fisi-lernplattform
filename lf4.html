@@ -106,6 +106,19 @@ html[data-theme="light"] details.chap>summary{background:#f4f7fa}
 /* Hell-Modus aktiv → Button wirkt dunkel (Vorschau "Dunkel") */
 html[data-theme="light"] .theme-tg{background:#0c0c1a;color:#f3fbff;border-color:rgba(45,226,230,.4)}
 html[data-theme="light"] .theme-tg:hover{border-color:var(--cyan)}
+
+/* ===== Glossar: inline-fließende Erklärung statt schwebendem Popover =====
+   Das zentrale .gloss .pop ist absolut positioniert (bottom:135%) und legte sich
+   in den langen Zusammenfassungs-Zeilen falsch verankert ÜBER den Karteninhalt.
+   Hier auf einen normal fließenden, voll deckenden Block umgestellt: er schiebt
+   den folgenden Text nach unten (kein Überlappen), Höhe ergibt sich aus dem Inhalt
+   (min-height via Padding), in Hell UND Dunkel klar lesbar. */
+.gloss .pop{position:static;transform:none;left:auto;right:auto;bottom:auto;top:auto;
+  width:auto;max-width:42rem;margin:.4rem 0 .55rem;box-shadow:none;z-index:auto;
+  background:#11182e;border:1px solid var(--cyan);border-left:3px solid var(--cyan);
+  border-radius:6px;color:var(--read);font-size:14px;line-height:1.5;padding:.5rem .7rem}
+.gloss .pop::after{display:none}              /* Sprechblasen-Pfeil entfällt im Fluss */
+html[data-theme="light"] .gloss .pop{background:#eef6f7;color:#1f2c38;border-color:var(--cyan)}
 </style>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#070710">
