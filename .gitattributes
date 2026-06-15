@@ -1,0 +1,3 @@
+# Binärdateien nie per autocrlf anfassen (verhindert beschädigte PDFs/DOCX)
+*.pdf binary
+*.docx binary

@@ -25,6 +25,25 @@
 .calc-sol ul li{margin:.16rem 0;color:var(--read);line-height:1.5}
 .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .calc-sol table td .mono{font-family:var(--fmono);color:var(--cyan)}
+/* === „Zeichen für Zeichen“ – Aufschlüsselung pro Stufe === */
+.zfz{margin:.55rem 0}
+.zfz .zfz-badge{font-family:var(--fmono);font-size:12px;letter-spacing:.5px;padding:2px 9px;border-radius:3px;color:#04121a;font-weight:700;flex:0 0 auto}
+.zfz.s1 .zfz-badge{background:var(--ok)}
+.zfz.s2 .zfz-badge{background:var(--cyan)}
+.zfz.s3 .zfz-badge{background:var(--amber)}
+.zfz.s4 .zfz-badge{background:var(--magenta)}
+.zfz-body{padding:.7rem .8rem .85rem}
+.zfz-cap{font-family:var(--fmono);font-size:12px;letter-spacing:.7px;text-transform:uppercase;color:var(--cyan);margin:.55rem 0 .2rem}
+.zfz-cap:first-child{margin-top:0}
+.zfz-break{display:grid;gap:6px;margin:.35rem 0 .1rem}
+.zfz-row{display:grid;grid-template-columns:minmax(6em,max-content) 1fr;background:var(--glass);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.zfz-code{font-family:var(--fmono);font-size:13.5px;line-height:1.6;background:var(--code-bg);color:var(--read);padding:.5rem .75rem;white-space:pre;overflow-x:auto}
+.zfz-code .k{color:var(--cyan)}.zfz-code .s{color:var(--amber)}.zfz-code .n{color:var(--purple)}.zfz-code .b{color:var(--ok);font-weight:700}
+.zfz-note{font-size:14.5px;line-height:1.6;color:var(--read);padding:.5rem .8rem}
+.zfz-note::before{content:"→";color:var(--cyan);font-family:var(--fmono);font-weight:700;margin-right:.5rem}
+.zfz-note b{color:var(--ink)}
+.zfz-note code{font-family:var(--fmono);font-size:.92em;background:var(--code-bg);border:1px solid var(--line);border-radius:4px;padding:.05rem .32rem;color:var(--read)}
+@media(max-width:560px){.zfz-row{grid-template-columns:1fr}.zfz-code{border-bottom:1px solid var(--line)}}
 </style>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#070710">
@@ -46,6 +65,7 @@
     <div class="tabs">
       <button id="tOverview" class="on">Überblick</button>
       <button id="tSyntax">Syntax</button>
+      <button id="tChars">Zeichen für Zeichen</button>
       <button id="tPython">Python</button>
       <button id="tCards">Karteikarten</button>
       <button id="tQuiz">Quiz</button>
@@ -132,6 +152,108 @@
     <div class="row"><span class="lbl" style="background:var(--cyan)">3 · Falsche Literale</span> Python-Schreibweise im JSON: <span class="json-pair">True</span>/<span class="json-pair">False</span>/<span class="json-pair">None</span> statt <span class="json-pair">true</span>/<span class="json-pair">false</span>/<span class="json-pair">null</span>.</div>
   </div>
   <div class="callout tip"><span class="ci">💡</span><div><b>Prüf-Trick:</b> Gültiges JSON erkennst du an <b>doppelten Quotes überall</b>, <b>keinem Komma am Ende</b> und <b>kleinem</b> <span class="json-pair">true/false/null</span>.</div></div>
+
+</div>
+
+<!-- ===================================================================== -->
+<!--  ZEICHEN FÜR ZEICHEN                                                   -->
+<!-- ===================================================================== -->
+<div id="vChars" class="view sum">
+
+  <div class="h-sec"><span class="ico">🔬</span> JSON Zeichen für Zeichen</div>
+  <p class="lead">Hier wird JSON <b>komplett seziert</b>: jede Klammer, jedes Anführungszeichen, jeder Doppelpunkt und jedes Komma wird erklärt – dazu jeder <b>Schlüssel</b> und <b>Wert</b> samt <b>Datentyp</b>. Vier Stufen, gestaffelt von ganz einfach bis verschachtelt. Jede Stufe ist ein eigener Block: <b>ein Klick öffnet ihn, ein Klick schließt ihn</b> (standardmäßig zu).</p>
+  <div class="callout tip"><span class="ci">🧭</span><div><b>So liest du die Aufschlüsselung:</b> Oben steht das <b>echte JSON</b>, darunter wird es Zeile für Zeile erklärt (Zeichen <b style="color:var(--cyan)">→</b> Bedeutung). <b>Wichtig:</b> Die Erklärungen stehen <b>neben</b> dem JSON – <b>niemals darin</b>, denn <b>echtes JSON kennt keine Kommentare</b>.</div></div>
+  <div class="chain"><span>1 · Struktur</span><span>2 · Typen</span><span>3 · Listen</span><span>4 · Verschachtelung</span></div>
+
+  <!-- ---- Stufe 1: ein String-Paar ---- -->
+  <details class="zfz s1">
+    <summary><span class="zfz-badge">Stufe 1</span><span>Einfaches Objekt – ein String-Paar</span><span class="ar">▸</span></summary>
+    <div class="zfz-body">
+      <div class="zfz-cap">Das JSON</div>
+      <div class="jcode">{
+  <span class="k">"name"</span>: <span class="s">"Lisa"</span>
+}</div>
+      <div class="zfz-cap">Zeile für Zeile</div>
+      <div class="zfz-break">
+        <div class="zfz-row"><div class="zfz-code">{</div><div class="zfz-note"><b>öffnet ein JSON-Objekt</b> – ab hier kommen Schlüssel-Wert-Paare.</div></div>
+        <div class="zfz-row"><div class="zfz-code">  <span class="k">"name"</span>: <span class="s">"Lisa"</span></div><div class="zfz-note"><b>Schlüssel</b> <code>"name"</code> in doppelten Anführungszeichen (Pflicht). Der <code>:</code> <b>trennt Schlüssel und Wert</b>. Der Wert <code>"Lisa"</code> steht in Anführungszeichen → Typ <b>String</b> (Text). <b>Kein Komma</b>, weil es das einzige (= letzte) Paar ist.</div></div>
+        <div class="zfz-row"><div class="zfz-code">}</div><div class="zfz-note"><b>schließt das Objekt</b> wieder.</div></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- ---- Stufe 2: mehrere Typen ---- -->
+  <details class="zfz s2">
+    <summary><span class="zfz-badge">Stufe 2</span><span>Mehrere Paare – String, Zahl, Boolean</span><span class="ar">▸</span></summary>
+    <div class="zfz-body">
+      <div class="zfz-cap">Das JSON</div>
+      <div class="jcode">{
+  <span class="k">"name"</span>: <span class="s">"Lisa"</span>,
+  <span class="k">"alter"</span>: <span class="n">17</span>,
+  <span class="k">"azubi"</span>: <span class="b">true</span>
+}</div>
+      <div class="zfz-cap">Zeile für Zeile</div>
+      <div class="zfz-break">
+        <div class="zfz-row"><div class="zfz-code">{</div><div class="zfz-note"><b>öffnet das Objekt.</b></div></div>
+        <div class="zfz-row"><div class="zfz-code">  <span class="k">"name"</span>: <span class="s">"Lisa"</span>,</div><div class="zfz-note">Schlüssel <code>"name"</code>, der <code>:</code> trennt, Wert <code>"Lisa"</code> = <b>String</b>. Das <code>,</code> am Zeilenende <b>trennt dieses Paar vom nächsten</b> – es folgt noch eins.</div></div>
+        <div class="zfz-row"><div class="zfz-code">  <span class="k">"alter"</span>: <span class="n">17</span>,</div><div class="zfz-note">Schlüssel <code>"alter"</code>; Wert <code>17</code> steht <b>ohne</b> Anführungszeichen → Typ <b>number</b> (Zahl). Wieder ein <code>,</code>, weil noch ein Paar folgt.</div></div>
+        <div class="zfz-row"><div class="zfz-code">  <span class="k">"azubi"</span>: <span class="b">true</span></div><div class="zfz-note">Schlüssel <code>"azubi"</code>; Wert <code>true</code> klein und ohne Anführungszeichen → Typ <b>boolean</b> (nur <code>true</code>/<code>false</code>). <b>Kein Komma</b> – letztes Paar.</div></div>
+        <div class="zfz-row"><div class="zfz-code">}</div><div class="zfz-note"><b>schließt das Objekt.</b></div></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- ---- Stufe 3: Array als Wert ---- -->
+  <details class="zfz s3">
+    <summary><span class="zfz-badge">Stufe 3</span><span>Objekt mit einem Array als Wert</span><span class="ar">▸</span></summary>
+    <div class="zfz-body">
+      <div class="zfz-cap">Das JSON</div>
+      <div class="jcode">{
+  <span class="k">"name"</span>: <span class="s">"Lisa"</span>,
+  <span class="k">"hobbys"</span>: [<span class="s">"Lesen"</span>, <span class="s">"Coden"</span>, <span class="s">"Klettern"</span>]
+}</div>
+      <div class="zfz-cap">Zeile für Zeile</div>
+      <div class="zfz-break">
+        <div class="zfz-row"><div class="zfz-code">{</div><div class="zfz-note"><b>öffnet das Objekt.</b></div></div>
+        <div class="zfz-row"><div class="zfz-code">  <span class="k">"name"</span>: <span class="s">"Lisa"</span>,</div><div class="zfz-note">Schlüssel <code>"name"</code>, <code>:</code> trennt, Wert <code>"Lisa"</code> = <b>String</b>; das <code>,</code> kündigt ein weiteres Paar an.</div></div>
+        <div class="zfz-row"><div class="zfz-code">  <span class="k">"hobbys"</span>: [<span class="s">"Lesen"</span>, <span class="s">"Coden"</span>, <span class="s">"Klettern"</span>]</div><div class="zfz-note">Schlüssel <code>"hobbys"</code>; <code>:</code> trennt; der Wert ist ein <b>Array</b> (geordnete Liste). Das <code>[</code> <b>öffnet die Liste</b>, darin drei <b>String</b>-Elemente, jeweils durch <code>,</code> getrennt, das <code>]</code> <b>schließt die Liste</b>. <b>Kein Komma</b> nach <code>]</code> – letztes Paar.</div></div>
+        <div class="zfz-row"><div class="zfz-code">}</div><div class="zfz-note"><b>schließt das Objekt.</b></div></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- ---- Stufe 4: verschachteltes Objekt (realistisch) ---- -->
+  <details class="zfz s4">
+    <summary><span class="zfz-badge">Stufe 4</span><span>Verschachteltes Objekt – realistisches Beispiel</span><span class="ar">▸</span></summary>
+    <div class="zfz-body">
+      <div class="zfz-cap">Das JSON</div>
+      <div class="jcode">{
+  <span class="k">"kursId"</span>: <span class="n">7</span>,
+  <span class="k">"titel"</span>: <span class="s">"Python Grundlagen"</span>,
+  <span class="k">"aktiv"</span>: <span class="b">true</span>,
+  <span class="k">"dozent"</span>: {
+    <span class="k">"name"</span>: <span class="s">"Frau Berg"</span>,
+    <span class="k">"email"</span>: <span class="s">"berg@schule.de"</span>
+  },
+  <span class="k">"themen"</span>: [<span class="s">"Variablen"</span>, <span class="s">"Schleifen"</span>]
+}</div>
+      <div class="zfz-cap">Zeile für Zeile</div>
+      <div class="zfz-break">
+        <div class="zfz-row"><div class="zfz-code">{</div><div class="zfz-note"><b>öffnet das äußere Objekt</b> – den ganzen Kurs-Datensatz.</div></div>
+        <div class="zfz-row"><div class="zfz-code">  <span class="k">"kursId"</span>: <span class="n">7</span>,</div><div class="zfz-note">Schlüssel <code>"kursId"</code>; <code>:</code> trennt; Wert <code>7</code> = <b>number</b>; <code>,</code> → weiteres Paar folgt.</div></div>
+        <div class="zfz-row"><div class="zfz-code">  <span class="k">"titel"</span>: <span class="s">"Python Grundlagen"</span>,</div><div class="zfz-note">Schlüssel <code>"titel"</code>; Wert in Anführungszeichen = <b>String</b>; <code>,</code> → es geht weiter.</div></div>
+        <div class="zfz-row"><div class="zfz-code">  <span class="k">"aktiv"</span>: <span class="b">true</span>,</div><div class="zfz-note">Schlüssel <code>"aktiv"</code>; Wert <code>true</code> = <b>boolean</b>; <code>,</code> → es geht weiter.</div></div>
+        <div class="zfz-row"><div class="zfz-code">  <span class="k">"dozent"</span>: {</div><div class="zfz-note">Schlüssel <code>"dozent"</code>; <code>:</code> trennt; der Wert ist ein <b>verschachteltes Objekt</b> – das <code>{</code> öffnet ein neues Objekt <b>innerhalb</b> des äußeren.</div></div>
+        <div class="zfz-row"><div class="zfz-code">    <span class="k">"name"</span>: <span class="s">"Frau Berg"</span>,</div><div class="zfz-note"><b>Im inneren Objekt:</b> Schlüssel <code>"name"</code>, Wert = <b>String</b>; <code>,</code> → noch ein Paar im inneren Objekt.</div></div>
+        <div class="zfz-row"><div class="zfz-code">    <span class="k">"email"</span>: <span class="s">"berg@schule.de"</span></div><div class="zfz-note">Schlüssel <code>"email"</code>, Wert = <b>String</b>. <b>Kein Komma</b> – letztes Paar des <b>inneren</b> Objekts.</div></div>
+        <div class="zfz-row"><div class="zfz-code">  },</div><div class="zfz-note">Das <code>}</code> <b>schließt das innere Objekt</b>. Das <code>,</code> danach trennt das Paar <code>"dozent"</code> vom nächsten Paar des <b>äußeren</b> Objekts.</div></div>
+        <div class="zfz-row"><div class="zfz-code">  <span class="k">"themen"</span>: [<span class="s">"Variablen"</span>, <span class="s">"Schleifen"</span>]</div><div class="zfz-note">Schlüssel <code>"themen"</code>; Wert = <b>Array</b> aus zwei Strings (<code>[</code> öffnet, <code>,</code> trennt, <code>]</code> schließt). <b>Kein Komma</b> – letztes Paar des äußeren Objekts.</div></div>
+        <div class="zfz-row"><div class="zfz-code">}</div><div class="zfz-note"><b>schließt das äußere Objekt.</b></div></div>
+      </div>
+    </div>
+  </details>
+
+  <div class="callout merk"><span class="ci">📌</span><div><b>Roter Faden:</b> erst die <b>Struktur</b> (<code>{ }</code> und <code>"…"</code>), dann die <b>Typen</b> (String, Zahl, Boolean), dann <b>Listen</b> (<code>[ ]</code>) und zuletzt die <b>Verschachtelung</b> (Objekt im Objekt). Genau in dieser Reihenfolge sind die vier Stufen aufgebaut.</div></div>
 
 </div>
 
@@ -381,7 +503,7 @@ const CARDS=[
 ];
 
 /* ===== TABS ===== */
-const views={Overview:"vOverview",Syntax:"vSyntax",Python:"vPython",Cards:"vCards",Quiz:"vQuiz"};
+const views={Overview:"vOverview",Syntax:"vSyntax",Chars:"vChars",Python:"vPython",Cards:"vCards",Quiz:"vQuiz"};
 function showTab(t){
   Object.keys(views).forEach(k=>{
     document.getElementById(views[k]).classList.toggle('on',k===t);
@@ -391,6 +513,7 @@ function showTab(t){
 }
 document.getElementById('tOverview').onclick=()=>showTab('Overview');
 document.getElementById('tSyntax').onclick=()=>showTab('Syntax');
+document.getElementById('tChars').onclick=()=>showTab('Chars');
 document.getElementById('tPython').onclick=()=>showTab('Python');
 document.getElementById('tCards').onclick=()=>{showTab('Cards');Study._rebuild();};
 document.getElementById('tQuiz').onclick=()=>showTab('Quiz');

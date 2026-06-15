@@ -32,6 +32,7 @@ const ASSETS = [
   "./programmierung.html",
   "./python_byte.html",
   "./python_lab.html",
+  "./Python_Befehlsreferenz.pdf",
   "./content/erklaerung_datei_io.md",
   "./lf5_vorgehensmodelle.html",
   "./struktogramme.html",
