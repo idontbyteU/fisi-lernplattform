@@ -100,11 +100,11 @@
 
     <div class="g"><h4>Ereignis <span class="abk">Event</span></h4><p>Etwas, das <b>eintritt</b> und den Ablauf ausloest, unterbricht oder beendet - gezeichnet als <b>Kreis</b>. Drei Grundtypen: <b>Start</b> (duenner Kreis), <b>Zwischen</b> (Doppelkreis), <b>Ende</b> (dicker Kreis).</p></div>
 
-    <div class="g"><h4>Message-Start <span class="abk">Nachrichtenstart</span></h4><p>Ein Start-Ereignis, das <b>durch eine eingehende Nachricht</b> ausgeloest wird - duenner Kreis mit <b>Briefumschlag</b>. Typisch fuer Prozesse, die eine Bestellung oder Anfrage von aussen entgegennehmen.</p></div>
+    <div class="g"><h4>Message Event <span class="abk">Nachricht</span></h4><p>Ereignis-Typ mit <b>Briefumschlag</b>: eine <b>Nachricht trifft ein</b> oder wird gesendet. Kann als Start-, Zwischen- oder Endevent vorkommen (z. B. eine Bestellung als Message-Startevent).</p></div>
 
-    <div class="g"><h4>Zwischenereignis <span class="abk">Intermediate</span></h4><p>Tritt <b>waehrend des Ablaufs</b> ein - also zwischen Start und Ende - und ist als <b>Doppelkreis</b> gezeichnet. Kann den Fluss z. B. verzoegern, eine Nachricht melden oder einfach einen Zwischenstand markieren.</p></div>
+    <div class="g"><h4>Timer Event <span class="abk">Uhr</span></h4><p>Ereignis-Typ mit <b>Uhr</b>: der Ablauf <b>wartet auf Zeit</b> - einen Zeitpunkt oder eine Dauer (z. B. 'nach 5 Arbeitstagen'). Meist als Zwischenereignis.</p></div>
 
-    <div class="g"><h4>Timer-Zwischenereignis <span class="abk">Timer</span></h4><p>Ein Zwischenereignis, das <b>auf Zeit wartet</b> - Doppelkreis mit <b>Uhr-Symbol</b>. Steht fuer einen Zeitpunkt oder eine Dauer, z. B. 'am Monatsende' oder '3 Tage warten'.</p></div>
+    <div class="g"><h4>Exception Event <span class="abk">Fehler</span></h4><p>Ereignis-Typ mit <b>Blitz</b>: ein <b>Fehler/eine Ausnahme</b> tritt ein und unterbricht den normalen Ablauf.</p></div>
 
     <div class="g"><h4>Aktivitaet <span class="abk">Task</span></h4><p>Eine <b>Taetigkeit/Arbeit</b>, die im Prozess verrichtet wird - <b>abgerundetes Rechteck</b>. Beschriftung moeglichst als <b>Verb + Objekt</b> (z.&nbsp;B. &bdquo;Antrag pruefen&ldquo;).</p></div>
 
@@ -112,11 +112,15 @@
 
     <div class="g"><h4>Gateway XOR <span class="abk">exklusiv</span></h4><p>Verzweigung, bei der <b>genau ein</b> Pfad genommen wird (Entweder-oder) - <b>Raute</b>, oft mit <b>X</b>. Typische Frage am Gateway, z.&nbsp;B. &bdquo;Genehmigt?&ldquo; mit den Ausgaengen ja/nein.</p></div>
 
+    <div class="g"><h4>Gateway OR <span class="abk">inklusiv</span></h4><p>Verzweigung, bei der <b>mindestens ein</b> Pfad gewaehlt wird - von einem bis zu allen - <b>Raute</b> mit <b>Kreis (O)</b>.</p></div>
+
     <div class="g"><h4>Gateway AND <span class="abk">parallel</span></h4><p>Verzweigung, bei der <b>alle</b> Pfade <b>gleichzeitig</b> ausgefuehrt werden (Und) - <b>Raute</b> mit <b>Plus (+)</b>. Wird mit einem zweiten AND-Gateway wieder <b>zusammengefuehrt</b> (synchronisiert).</p></div>
 
     <div class="g"><h4>Sequenzfluss <span class="abk">Reihenfolge</span></h4><p><b>Durchgezogener Pfeil</b> - verbindet Flussobjekte <b>innerhalb desselben Pools</b> und legt die <b>Reihenfolge</b> fest.</p></div>
 
     <div class="g"><h4>Nachrichtenfluss <span class="abk">Message</span></h4><p><b>Gestrichelter Pfeil</b> mit offener Pfeilspitze - zeigt den Austausch einer <b>Nachricht zwischen zwei Pools</b> (Beteiligten), nicht innerhalb eines Pools.</p></div>
+
+    <div class="g"><h4>Datenobjekt <span class="abk">Artefakt</span></h4><p>Ein <b>Artefakt</b> (Blatt mit umgeknickter Ecke), das die im Prozess <b>verwendeten Daten/Dokumente</b> abbildet (z. B. 'Antrag', 'Lieferschein'). Verbindet sich ueber eine Assoziation, nicht ueber den Sequenzfluss.</p></div>
 
     <div class="g"><h4>Pool / Lane <span class="abk">Swimlane</span></h4><p><b>Pool</b> = ein <b>Beteiligter</b> (z.&nbsp;B. Unternehmen, Kunde). <b>Lane</b> = eine <b>Rolle/Abteilung</b> innerhalb eines Pools (z.&nbsp;B. Verkauf, Lager). Sie zeigen die <b>Zustaendigkeit</b> &bdquo;wer macht was&ldquo;.</p></div>
 
@@ -138,62 +142,76 @@
     <li>Jeder Prozess <b>beginnt und endet mit einem Ereignis</b> (Kreis) - nie mit einer Aktivitaet oder einem Gateway.</li>
     <li>Ein <b>Gateway trifft keine Entscheidung</b>, es <b>bildet die Verzweigung ab</b>. Die Bedingung steht am Pfad, die Logik passiert in den Aktivitaeten davor.</li>
     <li>Der <b>Sequenzfluss bleibt im Pool</b>. Ueber Pool-Grenzen hinweg verbindet <b>nur der Nachrichtenfluss</b> (gestrichelt).</li>
-    <li><b>XOR = genau ein Pfad</b> (entweder/oder), <b>AND = alle Pfade gleichzeitig</b> (und).</li>
+    <li><b>XOR (exklusiv) = genau ein Pfad</b>, <b>OR (inklusiv) = mindestens einer</b> (eins bis alle), <b>AND (parallel) = alle gleichzeitig</b>.</li>
   </ul>
 
-  <div class="h-sub">Ereignisse (Kreise)</div>
-  <p class="cyc"><b>Lebenszyklus:</b> Start <span class="ar">-&gt;</span> Zwischen <span class="ar">-&gt;</span> Ende. Message-Start und Timer sind nur <b>Varianten</b> davon (gleiche Form, zusaetzliches Symbol).</p>
+  <div class="h-sub">Ereignisse - der Rahmen (wann im Ablauf?)</div>
+  <p class="cyc"><b>Der Rahmen sagt, WO im Ablauf:</b> duenn = Start <span class="ar">-&gt;</span> doppelt = Zwischen <span class="ar">-&gt;</span> dick = Ende.</p>
   <div class="symgrid">
 
     <div class="sym">
-      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Start-Ereignis">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Startevent">
         <circle cx="70" cy="45" r="27" fill="none" stroke="currentColor" stroke-width="2.5"/>
       </svg></div>
-      <h4>Start-Ereignis <span class="abk">Start</span></h4>
-      <p><b>Duenner, einfacher Kreis.</b> Markiert den <b>Beginn</b> des Prozesses. Pro Pool genau ein Startpunkt, von dem der Ablauf nach rechts losgeht.</p>
+      <h4>Startevent <span class="abk">Start</span></h4>
+      <p><b>Duenner, einfacher Kreis.</b> Markiert den <b>Beginn</b> des Prozesses, von dem der Ablauf nach rechts losgeht.</p>
     </div>
 
     <div class="sym">
-      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Message-Start-Ereignis">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Intermediate Event">
+        <circle cx="70" cy="45" r="27" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="70" cy="45" r="21" fill="none" stroke="currentColor" stroke-width="2.5"/>
+      </svg></div>
+      <h4>Intermediate Event <span class="abk">Zwischen</span></h4>
+      <p><b>Doppelkreis.</b> Steht <b>mitten im Ablauf</b> (zwischen Start und Ende) - z. B. um zu warten oder eine Nachricht zu melden.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Endevent">
+        <circle cx="70" cy="45" r="26" fill="none" stroke="currentColor" stroke-width="5"/>
+      </svg></div>
+      <h4>Endevent <span class="abk">Ende</span></h4>
+      <p><b>Dicker, fetter Kreis.</b> Markiert das <b>Ende</b> eines Pfades. Ein Prozess darf mehrere Enden haben.</p>
+    </div>
+
+  </div>
+
+  <div class="h-sub">Ereignis-Typen - das Innensymbol (was loest aus?)</div>
+  <p class="cyc"><b>Das Innensymbol sagt, WAS:</b> jeder Typ kann als Start-, Zwischen- oder Endevent vorkommen - einfach mit dem passenden Rahmen kombinieren.</p>
+  <div class="symgrid">
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Message Event">
         <circle cx="70" cy="45" r="27" fill="none" stroke="currentColor" stroke-width="2.5"/>
         <rect x="56" y="37" width="28" height="18" rx="1.5" fill="none" stroke="var(--bpmn-ac)" stroke-width="2"/>
         <path d="M56.5 38 L70 47.5 L83.5 38" fill="none" stroke="var(--bpmn-ac)" stroke-width="2"/>
       </svg></div>
-      <h4>Message-Start <span class="abk">Nachricht</span></h4>
-      <p>Duenner Kreis mit <b>Briefumschlag</b>. Der Prozess startet, weil eine <b>Nachricht eintrifft</b> (z. B. eine Bestellung oder Anfrage von aussen).</p>
+      <h4>Message Event <span class="abk">Nachricht</span></h4>
+      <p>Kreis mit <b>Briefumschlag</b>. Eine <b>Nachricht trifft ein</b> oder wird gesendet (z. B. eine Bestellung als Message-Startevent).</p>
     </div>
 
     <div class="sym">
-      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Zwischenereignis">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Timer Event">
         <circle cx="70" cy="45" r="27" fill="none" stroke="currentColor" stroke-width="2.5"/>
-        <circle cx="70" cy="45" r="21" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="70" cy="45" r="13" fill="none" stroke="var(--bpmn-ac)" stroke-width="1.8"/>
+        <line x1="70" y1="33.5" x2="70" y2="36.5" stroke="var(--bpmn-ac)" stroke-width="1.6"/>
+        <line x1="70" y1="53.5" x2="70" y2="56.5" stroke="var(--bpmn-ac)" stroke-width="1.6"/>
+        <line x1="58.5" y1="45" x2="61.5" y2="45" stroke="var(--bpmn-ac)" stroke-width="1.6"/>
+        <line x1="78.5" y1="45" x2="81.5" y2="45" stroke="var(--bpmn-ac)" stroke-width="1.6"/>
+        <line x1="70" y1="45" x2="70" y2="36" stroke="var(--bpmn-ac)" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="70" y1="45" x2="77" y2="48" stroke="var(--bpmn-ac)" stroke-width="1.8" stroke-linecap="round"/>
       </svg></div>
-      <h4>Zwischenereignis <span class="abk">Intermediate</span></h4>
-      <p><b>Doppelkreis.</b> Steht <b>mitten im Ablauf</b> (zwischen Start und Ende) - z. B. um zu warten, eine Nachricht zu melden oder einen Zwischenstand zu markieren.</p>
+      <h4>Timer Event <span class="abk">Uhr</span></h4>
+      <p>Kreis mit <b>Uhr</b>. Der Ablauf <b>wartet auf Zeit</b> - einen Zeitpunkt oder eine Dauer, z. B. 'nach 5 Arbeitstagen'.</p>
     </div>
 
     <div class="sym">
-      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Timer-Zwischenereignis">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Exception Event">
         <circle cx="70" cy="45" r="27" fill="none" stroke="currentColor" stroke-width="2.5"/>
-        <circle cx="70" cy="45" r="21" fill="none" stroke="currentColor" stroke-width="2.5"/>
-        <circle cx="70" cy="45" r="12.5" fill="none" stroke="var(--bpmn-ac)" stroke-width="1.8"/>
-        <line x1="70" y1="35.5" x2="70" y2="38" stroke="var(--bpmn-ac)" stroke-width="1.6"/>
-        <line x1="70" y1="52" x2="70" y2="54.5" stroke="var(--bpmn-ac)" stroke-width="1.6"/>
-        <line x1="60.5" y1="45" x2="63" y2="45" stroke="var(--bpmn-ac)" stroke-width="1.6"/>
-        <line x1="77" y1="45" x2="79.5" y2="45" stroke="var(--bpmn-ac)" stroke-width="1.6"/>
-        <line x1="70" y1="45" x2="70" y2="37.5" stroke="var(--bpmn-ac)" stroke-width="1.8" stroke-linecap="round"/>
-        <line x1="70" y1="45" x2="76.5" y2="48" stroke="var(--bpmn-ac)" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M76 32 L63 47 L71 47 L64 58" fill="none" stroke="var(--bpmn-ac)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
       </svg></div>
-      <h4>Timer-Zwischenereignis <span class="abk">Timer</span></h4>
-      <p>Doppelkreis mit <b>Uhr</b>. Der Ablauf <b>wartet auf Zeit</b> - einen Zeitpunkt oder eine Dauer, z. B. 'am Monatsende' oder '3 Tage warten'.</p>
-    </div>
-
-    <div class="sym">
-      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="End-Ereignis">
-        <circle cx="70" cy="45" r="26" fill="none" stroke="currentColor" stroke-width="5"/>
-      </svg></div>
-      <h4>End-Ereignis <span class="abk">Ende</span></h4>
-      <p><b>Dicker, fetter Kreis.</b> Markiert das <b>Ende</b> eines Pfades. Ein Prozess darf mehrere Enden haben (z. B. je Ausgang eines Gateways).</p>
+      <h4>Exception Event <span class="abk">Fehler</span></h4>
+      <p>Kreis mit <b>Blitz</b>. Ein <b>Fehler/eine Ausnahme</b> tritt ein und unterbricht den normalen Ablauf.</p>
     </div>
 
   </div>
@@ -202,11 +220,11 @@
   <div class="symgrid">
 
     <div class="sym">
-      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Aktivitaet oder Task">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Task oder Aufgabe">
         <rect x="18" y="27" width="104" height="36" rx="8" fill="none" stroke="currentColor" stroke-width="2.5"/>
-        <text x="70" y="49.5" text-anchor="middle" font-size="13">Antrag pruefen</text>
+        <text x="70" y="49.5" text-anchor="middle" font-size="13">Angaben pruefen</text>
       </svg></div>
-      <h4>Aktivitaet <span class="abk">Task</span></h4>
+      <h4>Task / Aufgabe <span class="abk">Aktivitaet</span></h4>
       <p><b>Abgerundetes Rechteck</b> mit Beschriftung als <b>Verb + Objekt</b>. Eine konkrete Taetigkeit, die im Prozess verrichtet wird.</p>
     </div>
 
@@ -233,8 +251,17 @@
         <line x1="57" y1="32" x2="83" y2="58" stroke="var(--bpmn-ac)" stroke-width="3" stroke-linecap="round"/>
         <line x1="83" y1="32" x2="57" y2="58" stroke="var(--bpmn-ac)" stroke-width="3" stroke-linecap="round"/>
       </svg></div>
-      <h4>Exklusives Gateway <span class="abk">XOR</span></h4>
+      <h4>XOR / Exklusiv <span class="abk">entweder-oder</span></h4>
       <p>Raute mit <b>X</b>. Es wird <b>genau ein</b> Pfad genommen (entweder/oder). Steht meist an einer Ja/Nein-Frage wie 'Genehmigt?'.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Inklusives Gateway OR">
+        <polygon points="70,12 118,45 70,78 22,45" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="70" cy="45" r="13" fill="none" stroke="var(--bpmn-ac)" stroke-width="3"/>
+      </svg></div>
+      <h4>OR / Inklusiv <span class="abk">eins bis alle</span></h4>
+      <p>Raute mit <b>Kreis (O)</b>. Es wird <b>mindestens ein</b> Pfad gewaehlt - von einem bis zu allen.</p>
     </div>
 
     <div class="sym">
@@ -243,7 +270,7 @@
         <line x1="70" y1="27" x2="70" y2="63" stroke="var(--bpmn-ac)" stroke-width="3.4" stroke-linecap="round"/>
         <line x1="52" y1="45" x2="88" y2="45" stroke="var(--bpmn-ac)" stroke-width="3.4" stroke-linecap="round"/>
       </svg></div>
-      <h4>Paralleles Gateway <span class="abk">AND</span></h4>
+      <h4>AND / Parallel <span class="abk">und</span></h4>
       <p>Raute mit <b>Plus (+)</b>. <b>Alle</b> Pfade laufen <b>gleichzeitig</b> (und). Wird mit einem zweiten AND-Gateway wieder zusammengefuehrt (synchronisiert).</p>
     </div>
 
@@ -258,7 +285,7 @@
         <polygon points="122,45 103,37 103,53" fill="currentColor"/>
       </svg></div>
       <h4>Sequenzfluss <span class="abk">Reihenfolge</span></h4>
-      <p><b>Durchgezogener Pfeil</b> mit <b>voller Spitze</b>. Legt die Reihenfolge fest und verbindet Objekte <b>innerhalb desselben Pools</b>.</p>
+      <p><b>Durchgezogener Pfeil</b> mit <b>voller Spitze</b>. Verbindet Flussobjekte und legt die Reihenfolge fest - <b>nur innerhalb eines Pools</b>.</p>
     </div>
 
     <div class="sym">
@@ -268,7 +295,21 @@
         <path d="M122 45 L105 37.5 M122 45 L105 52.5" fill="none" stroke="currentColor" stroke-width="2.5"/>
       </svg></div>
       <h4>Nachrichtenfluss <span class="abk">Message</span></h4>
-      <p><b>Gestrichelter Pfeil</b> mit <b>offener Spitze</b> (und Kreis am Anfang). Zeigt eine Nachricht <b>zwischen zwei Pools</b> - nie innerhalb eines Pools.</p>
+      <p><b>Gestrichelter Pfeil</b> mit <b>offener Spitze</b> (Kreis am Anfang). Verbindet Prozesse <b>ueber Poolgrenzen hinweg</b> - nie innerhalb eines Pools.</p>
+    </div>
+
+  </div>
+
+  <div class="h-sub">Artefakte (Daten)</div>
+  <div class="symgrid">
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Datenobjekt">
+        <path d="M54 18 L78 18 L88 28 L88 72 L54 72 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M78 18 L78 28 L88 28" fill="none" stroke="var(--bpmn-ac)" stroke-width="2" stroke-linejoin="round"/>
+      </svg></div>
+      <h4>Datenobjekt <span class="abk">Daten</span></h4>
+      <p><b>Blatt mit umgeknickter Ecke.</b> Ein Artefakt, das die im Prozess <b>verwendeten Daten/Dokumente</b> abbildet (z. B. 'Antrag', 'Lieferschein').</p>
     </div>
 
   </div>
@@ -285,13 +326,13 @@
         <text x="80" y="33" text-anchor="middle" font-size="11">Verkauf</text>
         <text x="80" y="64" text-anchor="middle" font-size="11">Lager</text>
       </svg></div>
-      <h4>Pool / Lane <span class="abk">Swimlane</span></h4>
-      <p><b>Pool</b> = ein <b>Beteiligter</b> (Unternehmen, Kunde). <b>Lanes</b> = <b>Rollen/Abteilungen</b> darin. Sie zeigen, <b>wer was macht</b>.</p>
+      <h4>Pool mit Lanes <span class="abk">Swimlane</span></h4>
+      <p><b>Pool</b> = ein <b>Beteiligter</b> (definiert die Prozessgrenzen). <b>Lanes</b> = <b>Rollen/Abteilungen</b> darin. Sie zeigen, <b>wer was macht</b>.</p>
     </div>
 
   </div>
 
-  <div class="callout merk"><span class="ci">📌</span><div><b>Pruefungstrick:</b> Erst die <b>Form</b> erkennen (Kreis = Ereignis, Rechteck = Aktivitaet, Raute = Gateway), dann das <b>innere Zeichen</b> (Briefumschlag, Uhr, X, +) fuer den Untertyp. Pfeile zuletzt: <b>durchgezogen</b> im Pool, <b>gestrichelt</b> zwischen Pools.</div></div>
+  <div class="callout merk"><span class="ci">📌</span><div><b>Pruefungstrick:</b> Bei Ereignissen erst den <b>Rahmen</b> lesen (duenn/doppelt/dick = Start/Zwischen/Ende), dann das <b>Innensymbol</b> (Umschlag/Uhr/Blitz). Bei Gateways die <b>Raute</b>, dann das Zeichen (X/Kreis/+). Pfeile zuletzt: <b>durchgezogen</b> im Pool, <b>gestrichelt</b> zwischen Pools.</div></div>
 
 </div>
 
@@ -330,30 +371,34 @@
 
 <script src="study.js"></script>
 <script>
-/* ===== KARTEIKARTEN-DATEN: NUR Notation, 15 Karten ===== */
+/* ===== KARTEIKARTEN-DATEN: NUR Notation, nach IHK-Legende (bpmn_epk.pdf) ===== */
 const CATS={
   grund:{label:"Grundlagen",color:"#b66bff"},
   ereig:{label:"Ereignisse",color:"#2de2e6"},
   aktiv:{label:"Aktivitaeten",color:"#9dff52"},
   gate:{label:"Gateways",color:"#ffb43b"},
-  fluss:{label:"Fluss & Pools",color:"#ff2a6d"}
+  fluss:{label:"Fluss & Pools",color:"#ff2a6d"},
+  arte:{label:"Artefakte",color:"#6ea8ff"}
 };
 const CARDS=[
-  {c:"grund",q:"Wofuer steht die Abkuerzung BPMN?",a:"<b>Business Process Model and Notation</b> - eine standardisierte grafische Sprache zur Darstellung von Geschaeftsprozessen (aktuell Version 2.0)."},
-  {c:"grund",q:"Womit beginnt und endet jeder BPMN-Prozess?",a:"Mit einem <b>Ereignis</b> (Kreis): einem <b>Start-Ereignis</b> am Anfang und einem <b>End-Ereignis</b> am Ende - nie mit einer Aktivitaet oder einem Gateway."},
-  {c:"ereig",q:"Wie wird ein <b>Start-Ereignis</b> gezeichnet?",a:"Als <b>duenner, einfacher Kreis</b> (eine duenne Linie). Markiert den Beginn des Ablaufs."},
-  {c:"ereig",q:"Wie wird ein <b>End-Ereignis</b> gezeichnet?",a:"Als <b>dicker, fetter Kreis</b> (dicke Linie). Markiert das Ende eines Pfades; ein Prozess darf mehrere Enden haben."},
-  {c:"ereig",q:"Wie sieht ein <b>Zwischenereignis</b> aus und wo steht es?",a:"Als <b>Doppelkreis</b> (zwei duenne Linien). Es steht <b>mitten im Ablauf</b>, also zwischen Start und Ende."},
-  {c:"ereig",q:"Woran erkennst du ein <b>Message-Start-Ereignis</b>?",a:"Duenner Kreis mit einem <b>Briefumschlag</b>. Der Prozess startet, weil eine <b>Nachricht eintrifft</b> (z. B. eine Bestellung von aussen)."},
-  {c:"ereig",q:"Woran erkennst du ein <b>Timer-Zwischenereignis</b>?",a:"Doppelkreis mit einem <b>Uhr-Symbol</b>. Der Ablauf <b>wartet auf Zeit</b> - einen Zeitpunkt oder eine Dauer (z. B. '3 Tage warten')."},
-  {c:"aktiv",q:"Wie wird eine <b>Aktivitaet (Task)</b> gezeichnet und beschriftet?",a:"Als <b>abgerundetes Rechteck</b>, beschriftet als <b>Verb + Objekt</b> (z. B. 'Antrag pruefen')."},
+  {c:"grund",q:"Wofuer steht die Abkuerzung BPMN?",a:"<b>Business Process Model and Notation</b> (in der IHK-Vorlage: Business Process Modelling Notation) - eine standardisierte grafische Sprache zur Darstellung von Geschaeftsprozessen (Version 2.0)."},
+  {c:"grund",q:"Aus welchen vier Element-Gruppen besteht BPMN?",a:"<b>Flussobjekte</b> (Ereignis, Aktivitaet, Gateway), <b>Verbindungsobjekte</b> (Sequenz-, Nachrichtenfluss), <b>Artefakte</b> (z. B. Datenobjekt) und <b>Swimlanes</b> (Pool/Lane)."},
+  {c:"grund",q:"Womit beginnt und endet jeder BPMN-Prozess?",a:"Mit einem <b>Ereignis</b> (Kreis): einem <b>Startevent</b> am Anfang und einem <b>Endevent</b> am Ende - nie mit einer Aktivitaet oder einem Gateway."},
+  {c:"ereig",q:"Wie unterscheidest du Start-, Zwischen- und Endevent am <b>Rahmen</b>?",a:"<b>Startevent</b> = duenner einfacher Kreis, <b>Intermediate/Zwischen</b> = Doppelkreis, <b>Endevent</b> = dicker Kreis."},
+  {c:"ereig",q:"Was sagt das <b>Innensymbol</b> eines Events aus - und welche gibt es?",a:"Den <b>Typ/Ausloeser</b>. Wichtig: <b>Message</b> (Briefumschlag), <b>Timer</b> (Uhr), <b>Exception/Fehler</b> (Blitz). Jeder Typ kann als Start-, Zwischen- oder Endevent vorkommen."},
+  {c:"ereig",q:"Was ist ein <b>Message Event</b>?",a:"Kreis mit <b>Briefumschlag</b> - eine <b>Nachricht</b> trifft ein oder wird gesendet (z. B. eine Bestellung als Message-Startevent)."},
+  {c:"ereig",q:"Was ist ein <b>Timer Event</b>?",a:"Kreis mit <b>Uhr</b> - der Ablauf <b>wartet auf Zeit</b> (Zeitpunkt oder Dauer, z. B. 'nach 5 Arbeitstagen')."},
+  {c:"ereig",q:"Was ist ein <b>Exception Event</b>?",a:"Kreis mit <b>Blitz</b> - ein <b>Fehler/eine Ausnahme</b> tritt ein und unterbricht den normalen Ablauf."},
+  {c:"aktiv",q:"Wie wird eine <b>Aktivitaet (Task/Aufgabe)</b> gezeichnet und beschriftet?",a:"Als <b>abgerundetes Rechteck</b>, beschriftet als <b>Verb + Objekt</b> (z. B. 'Angaben pruefen')."},
   {c:"aktiv",q:"Woran erkennst du einen <b>Teilprozess</b>?",a:"Abgerundetes Rechteck mit einem kleinen <b>Plus (+)</b> am unteren Rand. Er fasst mehrere Schritte <b>zugeklappt</b> zusammen."},
-  {c:"gate",q:"Welche Form haben <b>Gateways</b> und wozu dienen sie?",a:"Eine <b>Raute</b>. Sie bilden eine <b>Verzweigung</b> des Ablaufs ab (Pfade aufteilen und wieder zusammenfuehren)."},
-  {c:"gate",q:"Was bedeutet ein <b>XOR-Gateway</b> (Raute mit X)?",a:"<b>Exklusiv</b>: es wird <b>genau ein</b> Pfad genommen (entweder/oder) - z. B. an einer Ja/Nein-Frage."},
-  {c:"gate",q:"Was bedeutet ein <b>AND-Gateway</b> (Raute mit +)?",a:"<b>Parallel</b>: <b>alle</b> Pfade laufen <b>gleichzeitig</b> (und). Sie werden mit einem zweiten AND-Gateway wieder zusammengefuehrt (synchronisiert)."},
+  {c:"gate",q:"Welche Form haben <b>Gateways</b> und wozu dienen sie?",a:"Eine <b>Raute</b>; sie bilden die <b>Verzweigung</b> ab. <b>Merke:</b> mehrere Teilablaeufe werden mit der <b>gleichen</b> Gateway-Art zusammengefuehrt, mit der sie aufgeteilt wurden."},
+  {c:"gate",q:"Was bedeutet ein <b>XOR / Exklusiv</b>-Gateway (Raute mit X)?",a:"Es wird <b>genau ein</b> Pfad gewaehlt (entweder/oder) - z. B. an einer Ja/Nein-Frage."},
+  {c:"gate",q:"Was bedeutet ein <b>OR / Inklusiv</b>-Gateway (Raute mit Kreis)?",a:"Es wird <b>mindestens ein</b> Pfad gewaehlt - von einem bis zu allen."},
+  {c:"gate",q:"Was bedeutet ein <b>AND / Parallel</b>-Gateway (Raute mit +)?",a:"<b>Alle</b> Pfade laufen <b>gleichzeitig</b> (und). Sie werden mit einem zweiten AND-Gateway wieder zusammengefuehrt (synchronisiert)."},
   {c:"gate",q:"Trifft ein Gateway die Entscheidung im Prozess?",a:"<b>Nein.</b> Ein Gateway <b>bildet nur die Verzweigung ab</b>. Die Bedingung steht am Pfad; entschieden bzw. berechnet wird in den <b>Aktivitaeten davor</b>."},
-  {c:"fluss",q:"<b>Sequenzfluss</b> vs. <b>Nachrichtenfluss</b> - Aussehen und Einsatz?",a:"<b>Sequenzfluss</b>: durchgezogener Pfeil mit voller Spitze, <b>innerhalb eines Pools</b>. <b>Nachrichtenfluss</b>: gestrichelter Pfeil mit offener Spitze, <b>nur zwischen Pools</b>."},
-  {c:"fluss",q:"Was ist der Unterschied zwischen <b>Pool</b> und <b>Lane</b>?",a:"<b>Pool</b> = ein <b>Beteiligter</b> (z. B. Unternehmen, Kunde). <b>Lane</b> = eine <b>Rolle/Abteilung</b> innerhalb des Pools. Sie zeigen, <b>wer was macht</b>."}
+  {c:"fluss",q:"<b>Sequenzfluss</b> vs. <b>Nachrichtenfluss</b> - Aussehen und Einsatz?",a:"<b>Sequenzfluss</b>: durchgezogener Pfeil, <b>nur innerhalb eines Pools</b>. <b>Nachrichtenfluss</b>: gestrichelter Pfeil mit offener Spitze, <b>ueber Poolgrenzen hinweg</b>."},
+  {c:"fluss",q:"Was ist der Unterschied zwischen <b>Pool</b> und <b>Lane</b>?",a:"<b>Pool</b> = ein <b>Beteiligter</b> (definiert die Prozessgrenzen, Kommunikation zwischen Pools moeglich). <b>Lane</b> = eine <b>Rolle/Abteilung</b> im Pool (Zustaendigkeit fuer Aktivitaeten)."},
+  {c:"arte",q:"Was ist ein <b>Datenobjekt</b> und wie sieht es aus?",a:"Ein <b>Artefakt</b> (Blatt mit umgeknickter Ecke), das die im Prozess <b>verwendeten Daten/Dokumente</b> abbildet (z. B. 'Antrag', 'Lieferschein')."}
 ];
 
 /* ===== TABS ===== */
@@ -383,7 +428,7 @@ document.querySelectorAll('.calc-toggle').forEach(tg=>{
 });
 
 /* ===== KARTEIKARTEN (study.js) ===== */
-Study.init({ cards: CARDS, cats: CATS, key: "fisi_lf5_bpmn_v1" });
+Study.init({ cards: CARDS, cats: CATS, key: "fisi_lf5_bpmn_v2" });
 </script>
 <script>
 /* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
