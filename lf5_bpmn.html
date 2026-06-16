@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernfeld 5 &middot; BPMN 2.0 &middot; FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<script src="drawer.js"></script>
+<style>
+/* ===== Nur BPMN-spezifische Kleinigkeiten - alle Farben ueber zentrale Paletten-Variablen ===== */
+:root, html[data-theme="light"]{ --bpmn-ac: var(--purple); }
+
+/* Akzent dieser Seite = LF5 (lila/pastell), statt Cyan */
+.bpmn-ac{ color: var(--bpmn-ac); }
+.hdr .tag{ background: var(--bpmn-ac); border-color: var(--bpmn-ac); }
+
+/* Glossar als Begriffsraster */
+.gloss{ display:grid; grid-template-columns:1fr; gap:.55rem; margin:.4rem 0 .2rem; }
+@media(min-width:640px){ .gloss{ grid-template-columns:1fr 1fr; } }
+.gloss .g{ border:1px solid var(--line); border-radius:10px; padding:.7rem .8rem; background:var(--glass2); }
+.gloss .g h4{ margin:0 0 .25rem; font-family:var(--fui); font-size:1rem; color:var(--ink); display:flex; align-items:baseline; gap:.4rem; flex-wrap:wrap; }
+.gloss .g h4 .abk{ font-family:var(--fmono); font-size:11.5px; letter-spacing:.4px; color:var(--bpmn-ac); border:1px solid var(--line); border-radius:99px; padding:1px 7px; }
+.gloss .g p{ margin:0; color:var(--read); line-height:1.5; font-size:.92rem; }
+
+/* Querscrollbare Bereiche (Diagramme/Tabellen) */
+.tbl-scroll, .svg-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.q-list{ margin:.3rem 0 .3rem 1.3rem; padding:0; }
+.q-list li{ margin:.3rem 0; color:var(--read); line-height:1.55; }
+
+/* Symbol-Lernhilfe: eine Kachel je Symbol */
+.symgrid{ display:grid; grid-template-columns:1fr; gap:.7rem; margin:.5rem 0 1.1rem; }
+@media(min-width:560px){ .symgrid{ grid-template-columns:1fr 1fr; } }
+@media(min-width:960px){ .symgrid{ grid-template-columns:1fr 1fr 1fr; } }
+.sym{ border:1px solid var(--line); border-radius:12px; padding:.75rem; background:var(--glass2); display:flex; flex-direction:column; gap:.55rem; }
+.sym .svgbox{ display:flex; align-items:center; justify-content:center; min-height:104px; background:var(--bg2); border:1px solid var(--line); border-radius:10px; padding:.6rem .5rem; }
+.sym .svgbox svg{ width:100%; height:auto; max-height:92px; color:var(--ink); }
+.sym .svgbox svg text{ fill:var(--ink); font-family:var(--fui); }
+.sym h4{ margin:0; font-family:var(--fui); font-size:1rem; color:var(--ink); display:flex; align-items:baseline; gap:.45rem; flex-wrap:wrap; }
+.sym h4 .abk{ font-family:var(--fmono); font-size:11px; letter-spacing:.3px; color:var(--bpmn-ac); border:1px solid var(--line); border-radius:99px; padding:1px 7px; white-space:nowrap; }
+.sym p{ margin:0; color:var(--read); font-size:.9rem; line-height:1.5; }
+.cyc{ margin:.1rem 0 .6rem; color:var(--muted); font-size:.9rem; line-height:1.5; }
+.cyc .ar{ color:var(--bpmn-ac); font-family:var(--fmono); padding:0 .15rem; }
+
+/* Notations-Regeln (IHK-Didaktik) */
+.rules{ list-style:none; margin:.4rem 0 .2rem; padding:0; display:grid; grid-template-columns:1fr; gap:.5rem; }
+@media(min-width:640px){ .rules{ grid-template-columns:1fr 1fr; } }
+.rules li{ border:1px solid var(--line); border-left:3px solid var(--bpmn-ac); border-radius:8px; padding:.6rem .75rem; background:var(--glass2); color:var(--read); line-height:1.5; font-size:.92rem; }
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="index.html">&larr; Uebersicht</a>
+    <div>
+      <h1><span class="tag">LF 5</span>BPMN 2.0</h1>
+      <div class="sub">Geschaeftsprozesse modellieren &middot; IHK-Notation &middot; seit 2025 AP1-relevant</div>
+    </div>
+    <div class="sp"></div>
+    <div class="tabs">
+      <button id="tOverview" class="on">Ueberblick</button>
+      <button id="tSymbols">Symbole</button>
+      <button id="tExample">Beispiel</button>
+      <button id="tEx">Uebungen</button>
+      <button id="tCards">Karteikarten</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ===================================================================== -->
+<!--  (a) + (b)  UEBERBLICK: Kurz-Erklaerung + Glossar                      -->
+<!-- ===================================================================== -->
+<div id="vOverview" class="view on sum">
+
+  <div class="h-sec"><span class="ico">🧭</span> Was ist BPMN?</div>
+  <p class="lead"><b>BPMN</b> (englisch <b>B</b>usiness <b>P</b>rocess <b>M</b>odel and <b>N</b>otation, frueher &bdquo;Business Process Modelling Notation&ldquo;) ist eine <b>standardisierte, grafische Sprache</b>, um Geschaeftsprozesse darzustellen. Ein BPMN-Diagramm liest sich wie ein Satz <b>von links nach rechts</b>: Es beginnt mit einem <b>Start-Ereignis</b>, folgt dem Ablauf ueber <b>Aktivitaeten</b> und <b>Verzweigungen (Gateways)</b> und endet mit einem <b>End-Ereignis</b>.</p>
+  <div class="callout tip"><span class="ci">🎯</span><div><b>Pruefungsrelevanz:</b> BPMN ist <b>seit 2025 Teil der AP1</b> (an die Stelle von u.&nbsp;a. SQL, RAID, Struktogrammen und PAP). Gefragt ist vor allem die <b>IHK-Notation</b>: einen beschriebenen Prozess <b>auf Papier zeichnen</b> bzw. ein <b>Lueckendiagramm vervollstaendigen</b>.</div></div>
+
+  <div class="h-sub">Wozu BPMN?</div>
+  <div class="cardgrid c3">
+    <div class="ic"><h4>Visualisieren</h4><p>Macht komplexe Ablaeufe verstaendlich und nachvollziehbar - eine gemeinsame Sicht fuer alle Beteiligten.</p></div>
+    <div class="ic"><h4>Gemeinsame Sprache</h4><p>Eine einheitliche Notation fuer Fachabteilung, IT und Management reduziert Missverstaendnisse.</p></div>
+    <div class="ic"><h4>Automatisieren</h4><p>Saubere Modelle lassen sich direkt in Workflow-/Prozess-Systeme uebernehmen.</p></div>
+  </div>
+
+  <div class="h-sec"><span class="ico">📖</span> Glossar - die wichtigsten Begriffe</div>
+  <p class="lead">Die Kernbausteine, die in (fast) jeder Aufgabe vorkommen. Die gezeichneten Symbole dazu findest du im Tab <b>Symbole</b>.</p>
+  <div class="gloss">
+
+    <div class="g"><h4>BPMN <span class="abk">Notation</span></h4><p>Business Process Model and Notation - die grafische Sprache selbst. Aktuell in Version <b>2.0</b>. Beschreibt <b>einen</b> Prozess pro Diagramm.</p></div>
+
+    <div class="g"><h4>Ereignis <span class="abk">Event</span></h4><p>Etwas, das <b>eintritt</b> und den Ablauf ausloest, unterbricht oder beendet - gezeichnet als <b>Kreis</b>. Drei Grundtypen: <b>Start</b> (duenner Kreis), <b>Zwischen</b> (Doppelkreis), <b>Ende</b> (dicker Kreis).</p></div>
+
+    <div class="g"><h4>Message-Start <span class="abk">Nachrichtenstart</span></h4><p>Ein Start-Ereignis, das <b>durch eine eingehende Nachricht</b> ausgeloest wird - duenner Kreis mit <b>Briefumschlag</b>. Typisch fuer Prozesse, die eine Bestellung oder Anfrage von aussen entgegennehmen.</p></div>
+
+    <div class="g"><h4>Zwischenereignis <span class="abk">Intermediate</span></h4><p>Tritt <b>waehrend des Ablaufs</b> ein - also zwischen Start und Ende - und ist als <b>Doppelkreis</b> gezeichnet. Kann den Fluss z. B. verzoegern, eine Nachricht melden oder einfach einen Zwischenstand markieren.</p></div>
+
+    <div class="g"><h4>Timer-Zwischenereignis <span class="abk">Timer</span></h4><p>Ein Zwischenereignis, das <b>auf Zeit wartet</b> - Doppelkreis mit <b>Uhr-Symbol</b>. Steht fuer einen Zeitpunkt oder eine Dauer, z. B. 'am Monatsende' oder '3 Tage warten'.</p></div>
+
+    <div class="g"><h4>Aktivitaet <span class="abk">Task</span></h4><p>Eine <b>Taetigkeit/Arbeit</b>, die im Prozess verrichtet wird - <b>abgerundetes Rechteck</b>. Beschriftung moeglichst als <b>Verb + Objekt</b> (z.&nbsp;B. &bdquo;Antrag pruefen&ldquo;).</p></div>
+
+    <div class="g"><h4>Teilprozess <span class="abk">Sub-Process</span></h4><p>Eine Aktivitaet, die selbst aus mehreren Schritten besteht und <b>zusammengeklappt</b> dargestellt wird - abgerundetes Rechteck mit kleinem <b>Plus (+)</b> am unteren Rand.</p></div>
+
+    <div class="g"><h4>Gateway XOR <span class="abk">exklusiv</span></h4><p>Verzweigung, bei der <b>genau ein</b> Pfad genommen wird (Entweder-oder) - <b>Raute</b>, oft mit <b>X</b>. Typische Frage am Gateway, z.&nbsp;B. &bdquo;Genehmigt?&ldquo; mit den Ausgaengen ja/nein.</p></div>
+
+    <div class="g"><h4>Gateway AND <span class="abk">parallel</span></h4><p>Verzweigung, bei der <b>alle</b> Pfade <b>gleichzeitig</b> ausgefuehrt werden (Und) - <b>Raute</b> mit <b>Plus (+)</b>. Wird mit einem zweiten AND-Gateway wieder <b>zusammengefuehrt</b> (synchronisiert).</p></div>
+
+    <div class="g"><h4>Sequenzfluss <span class="abk">Reihenfolge</span></h4><p><b>Durchgezogener Pfeil</b> - verbindet Flussobjekte <b>innerhalb desselben Pools</b> und legt die <b>Reihenfolge</b> fest.</p></div>
+
+    <div class="g"><h4>Nachrichtenfluss <span class="abk">Message</span></h4><p><b>Gestrichelter Pfeil</b> mit offener Pfeilspitze - zeigt den Austausch einer <b>Nachricht zwischen zwei Pools</b> (Beteiligten), nicht innerhalb eines Pools.</p></div>
+
+    <div class="g"><h4>Pool / Lane <span class="abk">Swimlane</span></h4><p><b>Pool</b> = ein <b>Beteiligter</b> (z.&nbsp;B. Unternehmen, Kunde). <b>Lane</b> = eine <b>Rolle/Abteilung</b> innerhalb eines Pools (z.&nbsp;B. Verkauf, Lager). Sie zeigen die <b>Zustaendigkeit</b> &bdquo;wer macht was&ldquo;.</p></div>
+
+  </div>
+
+  <div class="callout merk"><span class="ci">📌</span><div><b>Merke fuer die IHK-Notation:</b> innerhalb eines Pools <b>durchgezogene</b> Pfeile (Sequenz), zwischen Pools <b>gestrichelte</b> Pfeile (Nachricht). Gateways immer <b>paarweise</b> denken: was per XOR/AND <b>aufgeteilt</b> wird, mit demselben Gateway-Typ wieder <b>zusammenfuehren</b>.</div></div>
+
+</div>
+
+<!-- ===================================================================== -->
+<!--  (c)  SYMBOLE  - folgt in der naechsten Runde                          -->
+<!-- ===================================================================== -->
+<div id="vSymbols" class="view sum">
+  <div class="h-sec"><span class="ico">🧩</span> Symbol-Lernhilfe</div>
+  <p class="lead">Das <b>IHK-Kernset</b> - genau die Symbole, die du fuer die AP1 zeichnen koennen musst. Die <b>Form</b> traegt die Bedeutung: der besondere Teil eines Symbols ist hier <span class="bpmn-ac"><b>farbig</b></span> hervorgehoben.</p>
+
+  <div class="h-sub">Regeln der Notation</div>
+  <ul class="rules">
+    <li>Jeder Prozess <b>beginnt und endet mit einem Ereignis</b> (Kreis) - nie mit einer Aktivitaet oder einem Gateway.</li>
+    <li>Ein <b>Gateway trifft keine Entscheidung</b>, es <b>bildet die Verzweigung ab</b>. Die Bedingung steht am Pfad, die Logik passiert in den Aktivitaeten davor.</li>
+    <li>Der <b>Sequenzfluss bleibt im Pool</b>. Ueber Pool-Grenzen hinweg verbindet <b>nur der Nachrichtenfluss</b> (gestrichelt).</li>
+    <li><b>XOR = genau ein Pfad</b> (entweder/oder), <b>AND = alle Pfade gleichzeitig</b> (und).</li>
+  </ul>
+
+  <div class="h-sub">Ereignisse (Kreise)</div>
+  <p class="cyc"><b>Lebenszyklus:</b> Start <span class="ar">-&gt;</span> Zwischen <span class="ar">-&gt;</span> Ende. Message-Start und Timer sind nur <b>Varianten</b> davon (gleiche Form, zusaetzliches Symbol).</p>
+  <div class="symgrid">
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Start-Ereignis">
+        <circle cx="70" cy="45" r="27" fill="none" stroke="currentColor" stroke-width="2.5"/>
+      </svg></div>
+      <h4>Start-Ereignis <span class="abk">Start</span></h4>
+      <p><b>Duenner, einfacher Kreis.</b> Markiert den <b>Beginn</b> des Prozesses. Pro Pool genau ein Startpunkt, von dem der Ablauf nach rechts losgeht.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Message-Start-Ereignis">
+        <circle cx="70" cy="45" r="27" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <rect x="56" y="37" width="28" height="18" rx="1.5" fill="none" stroke="var(--bpmn-ac)" stroke-width="2"/>
+        <path d="M56.5 38 L70 47.5 L83.5 38" fill="none" stroke="var(--bpmn-ac)" stroke-width="2"/>
+      </svg></div>
+      <h4>Message-Start <span class="abk">Nachricht</span></h4>
+      <p>Duenner Kreis mit <b>Briefumschlag</b>. Der Prozess startet, weil eine <b>Nachricht eintrifft</b> (z. B. eine Bestellung oder Anfrage von aussen).</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Zwischenereignis">
+        <circle cx="70" cy="45" r="27" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="70" cy="45" r="21" fill="none" stroke="currentColor" stroke-width="2.5"/>
+      </svg></div>
+      <h4>Zwischenereignis <span class="abk">Intermediate</span></h4>
+      <p><b>Doppelkreis.</b> Steht <b>mitten im Ablauf</b> (zwischen Start und Ende) - z. B. um zu warten, eine Nachricht zu melden oder einen Zwischenstand zu markieren.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Timer-Zwischenereignis">
+        <circle cx="70" cy="45" r="27" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="70" cy="45" r="21" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="70" cy="45" r="12.5" fill="none" stroke="var(--bpmn-ac)" stroke-width="1.8"/>
+        <line x1="70" y1="35.5" x2="70" y2="38" stroke="var(--bpmn-ac)" stroke-width="1.6"/>
+        <line x1="70" y1="52" x2="70" y2="54.5" stroke="var(--bpmn-ac)" stroke-width="1.6"/>
+        <line x1="60.5" y1="45" x2="63" y2="45" stroke="var(--bpmn-ac)" stroke-width="1.6"/>
+        <line x1="77" y1="45" x2="79.5" y2="45" stroke="var(--bpmn-ac)" stroke-width="1.6"/>
+        <line x1="70" y1="45" x2="70" y2="37.5" stroke="var(--bpmn-ac)" stroke-width="1.8" stroke-linecap="round"/>
+        <line x1="70" y1="45" x2="76.5" y2="48" stroke="var(--bpmn-ac)" stroke-width="1.8" stroke-linecap="round"/>
+      </svg></div>
+      <h4>Timer-Zwischenereignis <span class="abk">Timer</span></h4>
+      <p>Doppelkreis mit <b>Uhr</b>. Der Ablauf <b>wartet auf Zeit</b> - einen Zeitpunkt oder eine Dauer, z. B. 'am Monatsende' oder '3 Tage warten'.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="End-Ereignis">
+        <circle cx="70" cy="45" r="26" fill="none" stroke="currentColor" stroke-width="5"/>
+      </svg></div>
+      <h4>End-Ereignis <span class="abk">Ende</span></h4>
+      <p><b>Dicker, fetter Kreis.</b> Markiert das <b>Ende</b> eines Pfades. Ein Prozess darf mehrere Enden haben (z. B. je Ausgang eines Gateways).</p>
+    </div>
+
+  </div>
+
+  <div class="h-sub">Aktivitaeten (abgerundete Rechtecke)</div>
+  <div class="symgrid">
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Aktivitaet oder Task">
+        <rect x="18" y="27" width="104" height="36" rx="8" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <text x="70" y="49.5" text-anchor="middle" font-size="13">Antrag pruefen</text>
+      </svg></div>
+      <h4>Aktivitaet <span class="abk">Task</span></h4>
+      <p><b>Abgerundetes Rechteck</b> mit Beschriftung als <b>Verb + Objekt</b>. Eine konkrete Taetigkeit, die im Prozess verrichtet wird.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Teilprozess">
+        <rect x="18" y="23" width="104" height="44" rx="8" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <text x="70" y="42" text-anchor="middle" font-size="13">Bestellung</text>
+        <rect x="63" y="51" width="14" height="14" rx="1.5" fill="none" stroke="var(--bpmn-ac)" stroke-width="1.8"/>
+        <line x1="70" y1="53.5" x2="70" y2="62.5" stroke="var(--bpmn-ac)" stroke-width="1.8"/>
+        <line x1="65.5" y1="58" x2="74.5" y2="58" stroke="var(--bpmn-ac)" stroke-width="1.8"/>
+      </svg></div>
+      <h4>Teilprozess <span class="abk">Sub-Process</span></h4>
+      <p>Abgerundetes Rechteck mit <b>Plus (+)</b> am unteren Rand. Eine Aktivitaet, die selbst aus mehreren Schritten besteht und <b>zugeklappt</b> dargestellt wird.</p>
+    </div>
+
+  </div>
+
+  <div class="h-sub">Gateways (Rauten)</div>
+  <div class="symgrid">
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Exklusives Gateway XOR">
+        <polygon points="70,12 118,45 70,78 22,45" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <line x1="57" y1="32" x2="83" y2="58" stroke="var(--bpmn-ac)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="83" y1="32" x2="57" y2="58" stroke="var(--bpmn-ac)" stroke-width="3" stroke-linecap="round"/>
+      </svg></div>
+      <h4>Exklusives Gateway <span class="abk">XOR</span></h4>
+      <p>Raute mit <b>X</b>. Es wird <b>genau ein</b> Pfad genommen (entweder/oder). Steht meist an einer Ja/Nein-Frage wie 'Genehmigt?'.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Paralleles Gateway AND">
+        <polygon points="70,12 118,45 70,78 22,45" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <line x1="70" y1="27" x2="70" y2="63" stroke="var(--bpmn-ac)" stroke-width="3.4" stroke-linecap="round"/>
+        <line x1="52" y1="45" x2="88" y2="45" stroke="var(--bpmn-ac)" stroke-width="3.4" stroke-linecap="round"/>
+      </svg></div>
+      <h4>Paralleles Gateway <span class="abk">AND</span></h4>
+      <p>Raute mit <b>Plus (+)</b>. <b>Alle</b> Pfade laufen <b>gleichzeitig</b> (und). Wird mit einem zweiten AND-Gateway wieder zusammengefuehrt (synchronisiert).</p>
+    </div>
+
+  </div>
+
+  <div class="h-sub">Verbindungen (Pfeile)</div>
+  <div class="symgrid">
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Sequenzfluss">
+        <line x1="16" y1="45" x2="104" y2="45" stroke="currentColor" stroke-width="2.5"/>
+        <polygon points="122,45 103,37 103,53" fill="currentColor"/>
+      </svg></div>
+      <h4>Sequenzfluss <span class="abk">Reihenfolge</span></h4>
+      <p><b>Durchgezogener Pfeil</b> mit <b>voller Spitze</b>. Legt die Reihenfolge fest und verbindet Objekte <b>innerhalb desselben Pools</b>.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Nachrichtenfluss">
+        <circle cx="17" cy="45" r="4.5" fill="var(--bg2)" stroke="currentColor" stroke-width="2"/>
+        <line x1="22.5" y1="45" x2="104" y2="45" stroke="currentColor" stroke-width="2.5" stroke-dasharray="7 5"/>
+        <path d="M122 45 L105 37.5 M122 45 L105 52.5" fill="none" stroke="currentColor" stroke-width="2.5"/>
+      </svg></div>
+      <h4>Nachrichtenfluss <span class="abk">Message</span></h4>
+      <p><b>Gestrichelter Pfeil</b> mit <b>offener Spitze</b> (und Kreis am Anfang). Zeigt eine Nachricht <b>zwischen zwei Pools</b> - nie innerhalb eines Pools.</p>
+    </div>
+
+  </div>
+
+  <div class="h-sub">Organisation (Zustaendigkeit)</div>
+  <div class="symgrid">
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Pool mit Lanes">
+        <rect x="10" y="14" width="120" height="62" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+        <line x1="30" y1="14" x2="30" y2="76" stroke="currentColor" stroke-width="2"/>
+        <line x1="30" y1="45" x2="130" y2="45" stroke="currentColor" stroke-width="2"/>
+        <text x="20" y="45" text-anchor="middle" font-size="11" transform="rotate(-90 20 45)">Pool</text>
+        <text x="80" y="33" text-anchor="middle" font-size="11">Verkauf</text>
+        <text x="80" y="64" text-anchor="middle" font-size="11">Lager</text>
+      </svg></div>
+      <h4>Pool / Lane <span class="abk">Swimlane</span></h4>
+      <p><b>Pool</b> = ein <b>Beteiligter</b> (Unternehmen, Kunde). <b>Lanes</b> = <b>Rollen/Abteilungen</b> darin. Sie zeigen, <b>wer was macht</b>.</p>
+    </div>
+
+  </div>
+
+  <div class="callout merk"><span class="ci">📌</span><div><b>Pruefungstrick:</b> Erst die <b>Form</b> erkennen (Kreis = Ereignis, Rechteck = Aktivitaet, Raute = Gateway), dann das <b>innere Zeichen</b> (Briefumschlag, Uhr, X, +) fuer den Untertyp. Pfeile zuletzt: <b>durchgezogen</b> im Pool, <b>gestrichelt</b> zwischen Pools.</div></div>
+
+</div>
+
+<!-- ===================================================================== -->
+<!--  (d)  BEISPIELMODELL  - folgt                                          -->
+<!-- ===================================================================== -->
+<div id="vExample" class="view sum">
+  <div class="h-sec"><span class="ico">🗺️</span> Beispielmodell</div>
+  <p class="lead" style="color:var(--muted)">Durchgezeichnete Beispieldiagramme (Auftragsbearbeitung und Stellenausschreibung) sind <b>in Vorbereitung</b> und kommen als Naechstes in dieses Modul.</p>
+</div>
+
+<!-- ===================================================================== -->
+<!--  (e)  UEBUNGEN  - folgt                                                -->
+<!-- ===================================================================== -->
+<div id="vEx" class="view">
+  <div class="calc"><div class="calc-intro" style="color:var(--muted)">Uebungsaufgaben mit einklappbarer Komplettloesung sind <b>in Vorbereitung</b>. Bis dahin kannst du die Notation ueber den Tab <b>Karteikarten</b> trainieren.</div></div>
+</div>
+
+<!-- ===================================================================== -->
+<!--  (f)  KARTEIKARTEN  (study.js)  - Daten folgen                         -->
+<!-- ===================================================================== -->
+<div id="vCards" class="view">
+  <div class="chips" id="cardChips"></div>
+  <div class="bar">
+    <div class="pbar"><i id="pfill"></i></div>
+    <div class="ptxt">0% beherrscht</div>
+    <button class="tbtn" id="tShuffle">🔀 Mischen</button>
+    <button class="tbtn" id="tOpen">Nur offene</button>
+    <button class="tbtn" id="tReset">Zuruecksetzen</button>
+  </div>
+  <div id="study" class="study"></div>
+</div>
+
+<footer>FISI Lernplattform &middot; Lernfeld 5 &middot; BPMN 2.0 &middot; Fortschritt der Karteikarten wird lokal im Browser gespeichert</footer>
+</div>
+
+<script src="study.js"></script>
+<script>
+/* ===== KARTEIKARTEN-DATEN: NUR Notation, 15 Karten ===== */
+const CATS={
+  grund:{label:"Grundlagen",color:"#b66bff"},
+  ereig:{label:"Ereignisse",color:"#2de2e6"},
+  aktiv:{label:"Aktivitaeten",color:"#9dff52"},
+  gate:{label:"Gateways",color:"#ffb43b"},
+  fluss:{label:"Fluss & Pools",color:"#ff2a6d"}
+};
+const CARDS=[
+  {c:"grund",q:"Wofuer steht die Abkuerzung BPMN?",a:"<b>Business Process Model and Notation</b> - eine standardisierte grafische Sprache zur Darstellung von Geschaeftsprozessen (aktuell Version 2.0)."},
+  {c:"grund",q:"Womit beginnt und endet jeder BPMN-Prozess?",a:"Mit einem <b>Ereignis</b> (Kreis): einem <b>Start-Ereignis</b> am Anfang und einem <b>End-Ereignis</b> am Ende - nie mit einer Aktivitaet oder einem Gateway."},
+  {c:"ereig",q:"Wie wird ein <b>Start-Ereignis</b> gezeichnet?",a:"Als <b>duenner, einfacher Kreis</b> (eine duenne Linie). Markiert den Beginn des Ablaufs."},
+  {c:"ereig",q:"Wie wird ein <b>End-Ereignis</b> gezeichnet?",a:"Als <b>dicker, fetter Kreis</b> (dicke Linie). Markiert das Ende eines Pfades; ein Prozess darf mehrere Enden haben."},
+  {c:"ereig",q:"Wie sieht ein <b>Zwischenereignis</b> aus und wo steht es?",a:"Als <b>Doppelkreis</b> (zwei duenne Linien). Es steht <b>mitten im Ablauf</b>, also zwischen Start und Ende."},
+  {c:"ereig",q:"Woran erkennst du ein <b>Message-Start-Ereignis</b>?",a:"Duenner Kreis mit einem <b>Briefumschlag</b>. Der Prozess startet, weil eine <b>Nachricht eintrifft</b> (z. B. eine Bestellung von aussen)."},
+  {c:"ereig",q:"Woran erkennst du ein <b>Timer-Zwischenereignis</b>?",a:"Doppelkreis mit einem <b>Uhr-Symbol</b>. Der Ablauf <b>wartet auf Zeit</b> - einen Zeitpunkt oder eine Dauer (z. B. '3 Tage warten')."},
+  {c:"aktiv",q:"Wie wird eine <b>Aktivitaet (Task)</b> gezeichnet und beschriftet?",a:"Als <b>abgerundetes Rechteck</b>, beschriftet als <b>Verb + Objekt</b> (z. B. 'Antrag pruefen')."},
+  {c:"aktiv",q:"Woran erkennst du einen <b>Teilprozess</b>?",a:"Abgerundetes Rechteck mit einem kleinen <b>Plus (+)</b> am unteren Rand. Er fasst mehrere Schritte <b>zugeklappt</b> zusammen."},
+  {c:"gate",q:"Welche Form haben <b>Gateways</b> und wozu dienen sie?",a:"Eine <b>Raute</b>. Sie bilden eine <b>Verzweigung</b> des Ablaufs ab (Pfade aufteilen und wieder zusammenfuehren)."},
+  {c:"gate",q:"Was bedeutet ein <b>XOR-Gateway</b> (Raute mit X)?",a:"<b>Exklusiv</b>: es wird <b>genau ein</b> Pfad genommen (entweder/oder) - z. B. an einer Ja/Nein-Frage."},
+  {c:"gate",q:"Was bedeutet ein <b>AND-Gateway</b> (Raute mit +)?",a:"<b>Parallel</b>: <b>alle</b> Pfade laufen <b>gleichzeitig</b> (und). Sie werden mit einem zweiten AND-Gateway wieder zusammengefuehrt (synchronisiert)."},
+  {c:"gate",q:"Trifft ein Gateway die Entscheidung im Prozess?",a:"<b>Nein.</b> Ein Gateway <b>bildet nur die Verzweigung ab</b>. Die Bedingung steht am Pfad; entschieden bzw. berechnet wird in den <b>Aktivitaeten davor</b>."},
+  {c:"fluss",q:"<b>Sequenzfluss</b> vs. <b>Nachrichtenfluss</b> - Aussehen und Einsatz?",a:"<b>Sequenzfluss</b>: durchgezogener Pfeil mit voller Spitze, <b>innerhalb eines Pools</b>. <b>Nachrichtenfluss</b>: gestrichelter Pfeil mit offener Spitze, <b>nur zwischen Pools</b>."},
+  {c:"fluss",q:"Was ist der Unterschied zwischen <b>Pool</b> und <b>Lane</b>?",a:"<b>Pool</b> = ein <b>Beteiligter</b> (z. B. Unternehmen, Kunde). <b>Lane</b> = eine <b>Rolle/Abteilung</b> innerhalb des Pools. Sie zeigen, <b>wer was macht</b>."}
+];
+
+/* ===== TABS ===== */
+const views={Overview:"vOverview",Symbols:"vSymbols",Example:"vExample",Ex:"vEx",Cards:"vCards"};
+function showTab(t){
+  Object.keys(views).forEach(k=>{
+    document.getElementById(views[k]).classList.toggle('on',k===t);
+    document.getElementById('t'+k).classList.toggle('on',k===t);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('tOverview').onclick=()=>showTab('Overview');
+document.getElementById('tSymbols').onclick=()=>showTab('Symbols');
+document.getElementById('tExample').onclick=()=>showTab('Example');
+document.getElementById('tEx').onclick=()=>showTab('Ex');
+document.getElementById('tCards').onclick=()=>{showTab('Cards');Study._rebuild();};
+
+/* ===== AUFKLAPP-BLOECKE (Uebungen/Quiz) - ein Klick auf/zu ===== */
+document.querySelectorAll('.calc-toggle').forEach(tg=>{
+  const open=tg.textContent.trim();
+  const close=open.replace('anzeigen','verbergen');
+  tg.onclick=()=>{
+    const sol=tg.closest('.calc-card').querySelector('.calc-sol');
+    const shown=sol.classList.toggle('show');
+    tg.textContent=shown?close:open;
+  };
+});
+
+/* ===== KARTEIKARTEN (study.js) ===== */
+Study.init({ cards: CARDS, cats: CATS, key: "fisi_lf5_bpmn_v1" });
+</script>
+<script>
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
