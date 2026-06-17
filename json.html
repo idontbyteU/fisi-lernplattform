@@ -25,6 +25,13 @@
 .calc-sol ul li{margin:.16rem 0;color:var(--read);line-height:1.5}
 .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .calc-sol table td .mono{font-family:var(--fmono);color:var(--cyan)}
+/* === Praxis-Aufgaben: zusaetzlicher Hinweis-Button + Hinweis-Box === */
+.calc-htoggle{font-family:var(--fui);font-size:13.5px;font-weight:700;border-radius:8px;padding:9px 15px;cursor:pointer;border:1px solid var(--line);transition:.15s;letter-spacing:.02em;background:transparent;color:var(--read)}
+.calc-htoggle:hover{border-color:var(--amber);color:var(--amber)}
+.calc-hint{display:none;margin-top:.85rem;border-left:3px solid var(--amber);background:rgba(255,180,59,.07);border-radius:6px;padding:.65rem .85rem;font-size:15px;line-height:1.65;color:var(--read)}
+.calc-hint.show{display:block}
+.calc-hint b{color:var(--ink)}
+html[data-theme="light"] .calc-hint{background:#fff8ec}
 /* === „Zeichen für Zeichen“ – Aufschlüsselung pro Stufe === */
 .zfz{margin:.55rem 0}
 .zfz .zfz-badge{font-family:var(--fmono);font-size:12px;letter-spacing:.5px;padding:2px 9px;border-radius:3px;color:#04121a;font-weight:700;flex:0 0 auto}
@@ -67,6 +74,7 @@
       <button id="tSyntax">Syntax</button>
       <button id="tChars">Zeichen für Zeichen</button>
       <button id="tPython">Python</button>
+      <button id="tPraxis">Praxis</button>
       <button id="tCards">Karteikarten</button>
       <button id="tQuiz">Quiz</button>
     </div>
@@ -321,6 +329,138 @@ localStorage.<span class="fn">setItem</span>(<span class="s">"fisi_json_v1"</spa
 </div>
 
 <!-- ===================================================================== -->
+<!--  PRAXIS  (Programmier-Aufgaben)                                       -->
+<!-- ===================================================================== -->
+<div id="vPraxis" class="view sum">
+  <div class="h-sec"><span class="ico">🛠️</span> Praxis: dict in eine JSON-Datei schreiben</div>
+  <p class="lead">Drei aufeinander aufbauende Programmier-Aufgaben mit dem <span class="json-pair">json</span>-Modul. Erst selbst in IDLE / VS&nbsp;Code loesen, dann <b>Hinweis</b> oder <b>Loesung anzeigen</b> - ein Klick oeffnet die komplette Loesung samt Erklaerung.</p>
+  <div class="calc">
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 1 · dict erweitern und in Datei schreiben</div>
+      <div class="calc-q">Gegeben ist ein dict <span class="json-pair">einwohner</span> mit <b>Stadt -&gt; Einwohnerzahl</b>.
+        <ol class="q-list" type="a">
+          <li>Ergaenze die Stadt <b>Bonn</b> mit <b>350000</b> Einwohnern.</li>
+          <li>Schreibe das komplette dict mit <span class="json-pair">json.dump</span> in die Datei <span class="json-pair">einwohnerdatei.json</span> - gut lesbar eingerueckt (<span class="json-pair">indent=10</span>), <span class="json-pair">encoding="utf-8"</span>.</li>
+        </ol>
+      </div>
+      <div class="calc-acts">
+        <button class="calc-htoggle">Hinweis anzeigen</button>
+        <button class="calc-toggle">Loesung anzeigen</button>
+      </div>
+      <div class="calc-hint">
+        <b>Neuer Eintrag:</b> Eine Zuweisung an einen noch <b>nicht vorhandenen</b> Schluessel legt ihn an: <span class="json-pair">einwohner["Bonn"] = 350000</span>.<br>
+        <b>Schreiben:</b> Datei mit <span class="json-pair">open(name, "w", encoding="utf-8")</span> oeffnen, dann <span class="json-pair">json.dump(obj, datei, indent=10)</span> und am Ende <span class="json-pair">datei.close()</span>.
+      </div>
+      <div class="calc-sol">
+        <div class="step"><b>Loesung</b> (komplettes Programm):</div>
+        <div class="jcode"><span class="kw">import</span> json
+
+einwohner = {
+  <span class="s">"Berlin"</span>: <span class="n">3669491</span>,
+  <span class="s">"Hamburg"</span>: <span class="n">1847253</span>,
+  <span class="s">"Muenchen"</span>: <span class="n">1484226</span>,
+  <span class="s">"Koeln"</span>: <span class="n">1087863</span>,
+  <span class="s">"Frankfurt aM"</span>: <span class="n">763380</span>,
+  <span class="s">"Stuttgart"</span>: <span class="n">635911</span>,
+  <span class="s">"Duesseldorf"</span>: <span class="n">621877</span>,
+  <span class="s">"Leipzig"</span>: <span class="n">593145</span>,
+  <span class="s">"Dortmund"</span>: <span class="n">588250</span>,
+  <span class="s">"Essen"</span>: <span class="n">582760</span>,
+  <span class="s">"Bremen"</span>: <span class="n">567559</span>,
+  <span class="s">"Dresden"</span>: <span class="n">556780</span>,
+  <span class="s">"Hannover"</span>: <span class="n">536925</span>,
+  <span class="s">"Nuernberg"</span>: <span class="n">518370</span>
+}
+einwohner[<span class="s">"Bonn"</span>] = <span class="n">350000</span>          <span class="c"># neuen Schluessel-Wert ergaenzen</span>
+
+do = <span class="fn">open</span>(<span class="s">"einwohnerdatei.json"</span>, <span class="s">"w"</span>, encoding=<span class="s">"utf-8"</span>)
+json.<span class="fn">dump</span>(einwohner, do, indent=<span class="n">10</span>)   <span class="c"># Python-dict -&gt; JSON-Datei, Einzug 10 Zeichen</span>
+do.<span class="fn">close</span>()</div>
+        <div class="callout tip"><span class="ci">💡</span><div><b>Verstaendnis:</b> <span class="json-pair">json.dump</span> (ohne "s") schreibt das Python-Objekt direkt in die <b>geoeffnete Datei</b>. Das dict wird dabei zu einem JSON-<b>object</b>; <span class="json-pair">indent=10</span> rueckt jede Ebene um 10 Zeichen ein und macht die Datei gut lesbar.</div></div>
+        <div class="callout warn"><span class="ci">⚠️</span><div><b>Typischer Fehler:</b> <span class="json-pair">json.dumps</span> (mit "s") verwechseln - das gibt nur einen <b>String zurueck</b> und schreibt <b>nichts</b> in die Datei. Ebenso haeufig: die Datei nicht mit <span class="json-pair">.close()</span> schliessen, dann landen die Daten evtl. nicht vollstaendig auf der Platte.</div></div>
+        <div class="callout merk"><span class="ci">📌</span><div><b>Merksatz:</b> <b>dump ohne "s" = Datei.</b> Ablauf immer <span class="json-pair">open -&gt; dump -&gt; close</span> (oder ein <span class="json-pair">with</span>-Block, der automatisch schliesst).</div></div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 2 · verschachteltes dict (Liste als Wert)</div>
+      <div class="calc-q">Lege ein dict <span class="json-pair">tn1</span> fuer <b>einen Teilnehmer</b> an mit den Schluesseln <span class="json-pair">name</span> (Text), <span class="json-pair">Alter</span> (Zahl) und <span class="json-pair">hobbies</span>.
+        <ol class="q-list" type="a">
+          <li>Der Wert von <span class="json-pair">hobbies</span> ist eine <b>Liste</b> aus mehreren Hobbys.</li>
+          <li>Schreibe das dict mit <span class="json-pair">json.dump</span> in die Datei <span class="json-pair">teilnehmer.json</span> (<span class="json-pair">indent=10</span>, <span class="json-pair">encoding="utf-8"</span>).</li>
+        </ol>
+      </div>
+      <div class="calc-acts">
+        <button class="calc-htoggle">Hinweis anzeigen</button>
+        <button class="calc-toggle">Loesung anzeigen</button>
+      </div>
+      <div class="calc-hint">
+        <b>Liste als Wert:</b> Ein dict-Wert darf selbst eine Liste sein: <span class="json-pair">"hobbies": ["Fussball", "Schach"]</span>. Die Liste steht in eckigen Klammern <span class="json-pair">[ ]</span>, die einzelnen Hobbys als Strings mit Komma getrennt.<br>
+        <b>Schreiben:</b> wie gehabt <span class="json-pair">open(name, "w", encoding="utf-8")</span>, dann <span class="json-pair">json.dump(tn1, datei, indent=10)</span>, dann <span class="json-pair">datei.close()</span>.
+      </div>
+      <div class="calc-sol">
+        <div class="step"><b>Loesung</b> (komplettes Programm):</div>
+        <div class="jcode"><span class="kw">import</span> json
+
+tn1 = {<span class="s">"name"</span>: <span class="s">"Otto Meier"</span>,
+       <span class="s">"Alter"</span>: <span class="n">32</span>,
+       <span class="s">"hobbies"</span>: [<span class="s">"Fussball"</span>, <span class="s">"Schach"</span>, <span class="s">"Chillen"</span>]}
+
+do = <span class="fn">open</span>(<span class="s">"teilnehmer.json"</span>, <span class="s">"w"</span>, encoding=<span class="s">"utf-8"</span>)
+json.<span class="fn">dump</span>(tn1, do, indent=<span class="n">10</span>)   <span class="c"># dict mit Liste -&gt; JSON-Datei</span>
+do.<span class="fn">close</span>()</div>
+        <div class="callout tip"><span class="ci">💡</span><div><b>Verstaendnis:</b> Ein dict-Wert kann selbst eine <b>Liste</b> (oder ein weiteres dict) sein - so entsteht eine <b>verschachtelte</b> Struktur. Beim Schreiben wird die Python-Liste zu einem JSON-<b>array</b> <span class="json-pair">[ ]</span>; <span class="json-pair">json.dump</span> arbeitet sich rekursiv durch die ganze Verschachtelung.</div></div>
+        <div class="callout warn"><span class="ci">⚠️</span><div><b>Typischer Fehler:</b> Die Hobbys als <b>einen</b> String schreiben (<span class="json-pair">"Fussball, Schach"</span>) statt als Liste - dann ist es <b>keine</b> Liste, sondern nur ein langer Text. Eckige Klammern <span class="json-pair">[ ]</span> nicht vergessen.</div></div>
+        <div class="callout merk"><span class="ci">📌</span><div><b>Merksatz:</b> dict-Werte duerfen selbst <b>Listen oder dicts</b> sein - beliebig tief verschachtelbar. <b>Liste -&gt; JSON-array <span class="json-pair">[ ]</span></b>, dict -&gt; JSON-object <span class="json-pair">{ }</span>.</div></div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Aufgabe 3 · Liste von dicts (Tabelle)</div>
+      <div class="calc-q">Speichere zwei IT-Geraete - jedes mit den Schluesseln <span class="json-pair">geraet</span>, <span class="json-pair">hersteller</span>, <span class="json-pair">preis</span>, <span class="json-pair">defekt</span>.
+        <ol class="q-list" type="a">
+          <li>Lege das erste Geraet als dict an und schreibe es einzeln in <span class="json-pair">geraet.json</span> (<span class="json-pair">indent=4</span>).</li>
+          <li>Lege ein zweites Geraet an, fasse <b>beide</b> in einer <b>Liste</b> <span class="json-pair">geraete</span> zusammen (= Tabelle) und schreibe die Liste in <span class="json-pair">geraete.json</span> (<span class="json-pair">indent=4</span>).</li>
+        </ol>
+      </div>
+      <div class="calc-acts">
+        <button class="calc-htoggle">Hinweis anzeigen</button>
+        <button class="calc-toggle">Loesung anzeigen</button>
+      </div>
+      <div class="calc-hint">
+        <b>Tabelle:</b> Eine <b>Liste von dicts</b> <span class="json-pair">[geraet, geraet2]</span> ist die typische Tabellen-Struktur - jedes dict ist eine <b>Zeile</b>, die gleichen Schluessel sind die <b>Spalten</b>.<br>
+        <b>Booleans:</b> <span class="json-pair">True</span>/<span class="json-pair">False</span> in Python werden im JSON automatisch zu <span class="json-pair">true</span>/<span class="json-pair">false</span>. <span class="json-pair">indent=4</span> = 4 Zeichen Einzug.
+      </div>
+      <div class="calc-sol">
+        <div class="step"><b>Loesung</b> (komplettes Programm):</div>
+        <div class="jcode"><span class="kw">import</span> json
+
+<span class="c"># 1. Dictionary fuer ein IT-Geraet</span>
+geraet = {<span class="s">"geraet"</span>: <span class="s">"Notebook"</span>, <span class="s">"hersteller"</span>: <span class="s">"Dell"</span>, <span class="s">"preis"</span>: <span class="n">899.99</span>, <span class="s">"defekt"</span>: <span class="b">True</span>}
+
+<span class="c"># 2. einzelnes Dictionary in Datei schreiben</span>
+datei = <span class="fn">open</span>(<span class="s">"geraet.json"</span>, <span class="s">"w"</span>, encoding=<span class="s">"utf-8"</span>)
+json.<span class="fn">dump</span>(geraet, datei, indent=<span class="n">4</span>)     <span class="c"># dict -&gt; JSON (indent = lesbar)</span>
+datei.<span class="fn">close</span>()
+
+<span class="c"># 3. zweites Geraet, beide als Liste speichern</span>
+geraet2 = {<span class="s">"geraet"</span>: <span class="s">"Drucker"</span>, <span class="s">"hersteller"</span>: <span class="s">"HP"</span>, <span class="s">"preis"</span>: <span class="n">149.50</span>, <span class="s">"defekt"</span>: <span class="b">False</span>}
+geraete = [geraet, geraet2]            <span class="c"># Liste von Dictionaries = Tabelle</span>
+
+datei = <span class="fn">open</span>(<span class="s">"geraete.json"</span>, <span class="s">"w"</span>, encoding=<span class="s">"utf-8"</span>)
+json.<span class="fn">dump</span>(geraete, datei, indent=<span class="n">4</span>)
+datei.<span class="fn">close</span>()</div>
+        <div class="callout tip"><span class="ci">💡</span><div><b>Verstaendnis:</b> Eine <b>Liste von dicts</b> ist die Standard-Form fuer eine <b>Tabelle</b>: jedes dict = ein Datensatz (Zeile), die gleichen Schluessel = Spalten. <span class="json-pair">json.dump</span> schreibt die ganze Liste als JSON-<b>array von objects</b>.</div></div>
+        <div class="callout warn"><span class="ci">⚠️</span><div><b>Typischer Fehler:</b> Statt einer Liste die dicts <b>addieren</b> (<span class="json-pair">geraet + geraet2</span>) - das geht nicht. Richtig ist die eckige Klammer: <span class="json-pair">[geraet, geraet2]</span>. Und: dieselbe Datei nach <span class="json-pair">.close()</span> fuer den zweiten Schreibvorgang <b>neu oeffnen</b>.</div></div>
+        <div class="callout merk"><span class="ci">📌</span><div><b>Merksatz:</b> <b>Liste von dicts = Tabelle.</b> <span class="json-pair">json.dump</span> schreibt beliebig verschachtelte Strukturen (dict / list / Zahl / String / bool) in einem Rutsch.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================================================================== -->
 <!--  KARTEIKARTEN  (study.js)                                             -->
 <!-- ===================================================================== -->
 <div id="vCards" class="view">
@@ -503,7 +643,7 @@ const CARDS=[
 ];
 
 /* ===== TABS ===== */
-const views={Overview:"vOverview",Syntax:"vSyntax",Chars:"vChars",Python:"vPython",Cards:"vCards",Quiz:"vQuiz"};
+const views={Overview:"vOverview",Syntax:"vSyntax",Chars:"vChars",Python:"vPython",Praxis:"vPraxis",Cards:"vCards",Quiz:"vQuiz"};
 function showTab(t){
   Object.keys(views).forEach(k=>{
     document.getElementById(views[k]).classList.toggle('on',k===t);
@@ -515,16 +655,28 @@ document.getElementById('tOverview').onclick=()=>showTab('Overview');
 document.getElementById('tSyntax').onclick=()=>showTab('Syntax');
 document.getElementById('tChars').onclick=()=>showTab('Chars');
 document.getElementById('tPython').onclick=()=>showTab('Python');
+document.getElementById('tPraxis').onclick=()=>showTab('Praxis');
 document.getElementById('tCards').onclick=()=>{showTab('Cards');Study._rebuild();};
 document.getElementById('tQuiz').onclick=()=>showTab('Quiz');
 
-/* ===== AUFKLAPP-BLÖCKE (Quiz) – ein Klick auf/zu ===== */
+/* ===== AUFKLAPP-BLOECKE (Quiz + Praxis-Loesung) - ein Klick auf/zu ===== */
 document.querySelectorAll('.calc-toggle').forEach(tg=>{
   const open=tg.textContent.trim();
   const close=open.replace('anzeigen','verbergen');
   tg.onclick=()=>{
     const sol=tg.closest('.calc-card').querySelector('.calc-sol');
     const shown=sol.classList.toggle('show');
+    tg.textContent=shown?close:open;
+  };
+});
+
+/* ===== HINWEIS-BLOECKE (Praxis) - ein Klick auf/zu ===== */
+document.querySelectorAll('.calc-htoggle').forEach(tg=>{
+  const open=tg.textContent.trim();
+  const close=open.replace('anzeigen','verbergen');
+  tg.onclick=()=>{
+    const hint=tg.closest('.calc-card').querySelector('.calc-hint');
+    const shown=hint.classList.toggle('show');
     tg.textContent=shown?close:open;
   };
 });
