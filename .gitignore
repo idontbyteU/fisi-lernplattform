@@ -9,3 +9,12 @@ content/autos.csv
 content/planeten.csv
 content/zufallszahlen.txt
 content/Planetentabelle.csv
+
+# Versehentlich in content/ gelandeter USB-/Backup-Dump (persoenliche Dateien, ~11 GB) - NICHT ins Git
+content/intenso Kopie/
+
+# Arbeitsmaterial fuer Claude Code - nicht ins Git
+content/
+.claude/
+geraet.json
+geraete.json
