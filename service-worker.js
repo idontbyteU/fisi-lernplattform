@@ -9,7 +9,7 @@
 /*  Private Einzelnutzung: kein manuelles Hochzählen einer Versionsnr.   */
 /*  nötig – der Cache wird ohnehin bei jedem Online-Abruf erneuert.      */
 /* ===================================================================== */
-const CACHE = "fisi-os";              // fester Name reicht bei Network-first
+const CACHE = "fisi-os-v2";           // bei Network-first unkritisch; erhoeht fuer lf3_usv.html
 const ASSETS = [
   "./",
   "./index.html",
@@ -24,6 +24,7 @@ const ASSETS = [
   "./lf2.html",
   "./lf3.html",
   "./lf3_ipv6.html",
+  "./lf3_usv.html",
   "./lf4.html",
   "./lf4_grundschutz_uebung.html",
   "./lf4_zusammenfassung.pdf",

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USV &amp; Stromversorgung &middot; LF3 &middot; FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<style>
+/* ===== Nur USV-spezifische Kleinigkeiten - alle Farben ueber zentrale Paletten-Variablen ===== */
+:root, html[data-theme="light"]{ --usv-ac: var(--amber); }
+
+/* Akzent dieser Seite = LF3 (amber), passend zum LF3-Hauptmodul */
+.hdr .tag{ background: var(--usv-ac); border-color: var(--usv-ac); }
+
+/* Formel-Liste im aufklappbaren Block */
+.fmls{ display:grid; grid-template-columns:1fr; gap:.5rem; padding:.7rem .8rem .85rem }
+.fml{ display:flex; flex-wrap:wrap; gap:.3rem .6rem; align-items:baseline;
+  border:1px solid var(--line); border-left:3px solid var(--usv-ac); border-radius:8px;
+  padding:.55rem .75rem; background:var(--glass2) }
+.fml .lhs{ font-family:var(--fui); font-weight:700; color:var(--ink); min-width:190px }
+.fml .rhs{ font-family:var(--fmono); font-size:14.5px; color:var(--read) }
+.fml .note{ flex-basis:100%; font-size:13px; color:var(--muted) }
+
+/* Aufgaben-Karten */
+.task{ border:1px solid var(--line); border-radius:12px; padding:.9rem 1rem 1rem;
+  margin:.8rem 0; background:var(--glass2) }
+.task .tnum{ font-family:var(--fmono); font-size:12px; letter-spacing:.7px; text-transform:uppercase;
+  color:var(--usv-ac) }
+.task h3{ font-family:var(--fui); font-size:1.05rem; margin:.15rem 0 .5rem; color:var(--ink) }
+.task .tq{ color:var(--read); line-height:1.6; margin:0 0 .3rem }
+.task .tq b{ color:var(--ink) }
+.task details{ margin-top:.7rem }
+.task .sol{ padding:.7rem .85rem }
+.task .step{ display:flex; gap:.55rem; align-items:flex-start; padding:.35rem 0;
+  border-bottom:1px dashed var(--line); color:var(--read); line-height:1.55; font-size:.95rem }
+.task .step:last-of-type{ border-bottom:none }
+.task .step .b{ font-family:var(--fmono); color:var(--usv-ac); flex:0 0 auto }
+.task .res{ margin-top:.6rem; padding:.55rem .75rem; border-radius:8px;
+  background:rgba(255,180,59,.1); border:1px solid rgba(255,180,59,.32);
+  font-family:var(--fui); font-weight:700; color:var(--ink) }
+.task.todo{ border-style:dashed; opacity:.92 }
+.task .pending{ display:inline-block; font-family:var(--fmono); font-size:12px; letter-spacing:.5px;
+  text-transform:uppercase; color:var(--warn); border:1px solid var(--warn); border-radius:99px;
+  padding:2px 9px; margin-bottom:.4rem }
+.task .frag{ margin-top:.5rem; font-size:.9rem; color:var(--muted) }
+.mono{ font-family:var(--fmono) }
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="lf3.html">&larr; Lernfeld 3</a>
+    <div>
+      <h1><span class="tag">LF 3</span>USV &amp; Stromversorgung</h1>
+      <div class="sub">Unterbrechungsfreie Stromversorgung &middot; Rechenaufgaben &middot; Verf&uuml;gbarkeit</div>
+    </div>
+    <div class="sp"></div>
+    <div class="tabs">
+      <button id="tCalc" class="on">Rechenaufgaben</button>
+      <button id="tCards">Karteikarten</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ===================================================================== -->
+<!--  RECHENAUFGABEN                                                       -->
+<!-- ===================================================================== -->
+<div id="vCalc" class="view on sum">
+
+  <div class="h-sec"><span class="ico">⚡</span> USV-Rechenaufgaben</div>
+  <p class="lead">Typische IHK-Aufgaben rund um <b>Last, Akkukapazit&auml;t, Autonomiezeit, Schein-/Wirkleistung</b> und <b>Verf&uuml;gbarkeit</b>. Jede Aufgabe hat eine eigene, einklappbare Komplettl&ouml;sung mit Rechenweg.</p>
+
+  <!-- FORMEL-KACHEL: aufklappbar, standardmaessig ZU -->
+  <details>
+    <summary>📐 Formeln (aufklappen)<span class="ar">▸</span></summary>
+    <div class="fmls">
+      <div class="fml"><span class="lhs">Wirkleistung gesamt P</span><span class="rhs">= Summe aller Ger&auml;tewatt [W]</span></div>
+      <div class="fml"><span class="lhs">Scheinleistung S</span><span class="rhs">= P / cos&nbsp;φ&nbsp;&nbsp;[VA]</span></div>
+      <div class="fml"><span class="lhs">Stromst&auml;rke I</span><span class="rhs">= S / U&nbsp;&nbsp;[A]</span></div>
+      <div class="fml"><span class="lhs">Akkukapazit&auml;t [Wh]</span><span class="rhs">= Spannung U [V] × Kapazit&auml;t [Ah]</span></div>
+      <div class="fml"><span class="lhs">Nutzbare Kapazit&auml;t</span><span class="rhs">= Gesamtkapazit&auml;t × (1 − Entladegrenze)</span></div>
+      <div class="fml"><span class="lhs">Autonomiezeit [h]</span><span class="rhs">= nutzbare Kapazit&auml;t [Wh] / Last [W]</span><span class="note">× 60 = Minuten</span></div>
+      <div class="fml"><span class="lhs">Verf&uuml;gbarkeit [%]</span><span class="rhs">= (Gesamtzeit − Ausfallzeit) / Gesamtzeit × 100</span></div>
+    </div>
+  </details>
+
+  <!-- AUFGABE 1 -->
+  <div class="task">
+    <div class="tnum">Aufgabe 1</div>
+    <h3>Passende USV-Gr&ouml;&szlig;e dimensionieren</h3>
+    <p class="tq">2 Router à 50 W und 5 Standrechner à 400 W. Gesucht ist eine passende USV-Gr&ouml;&szlig;e f&uuml;r <b>20 Minuten</b> &Uuml;berbr&uuml;ckung, mit einem <b>Puffer von 30 %</b>.</p>
+    <details>
+      <summary>L&ouml;sung anzeigen<span class="ar">▸</span></summary>
+      <div class="sol">
+        <div class="step"><span class="b">1</span><span>Gesamtlast: 2×50 + 5×400 = <b>2100 W</b></span></div>
+        <div class="step"><span class="b">2</span><span>Energiebedarf 20 Min: 2100 W × 20/60 = <b>700 Wh</b></span></div>
+        <div class="step"><span class="b">3</span><span>Mit 30 % Reserve: 700 Wh / 0,7 = <b>1000 Wh</b></span></div>
+        <div class="res">→ USV mit mind. 1000 Wh</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- AUFGABE 2 (Platzhalter) -->
+  <div class="task todo">
+    <div class="tnum">Aufgabe 2</div>
+    <span class="pending">Aufgabe folgt</span>
+    <p class="tq">Inhalt wird nachgeliefert.</p>
+  </div>
+
+  <!-- AUFGABE 3 (Platzhalter) -->
+  <div class="task todo">
+    <div class="tnum">Aufgabe 3</div>
+    <span class="pending">Aufgabe folgt</span>
+    <p class="tq">Inhalt wird nachgeliefert.</p>
+  </div>
+
+  <!-- AUFGABE 4 -->
+  <div class="task">
+    <div class="tnum">Aufgabe 4</div>
+    <h3>Maximale Ger&auml;tezahl an einer USV</h3>
+    <p class="tq">Eine USV mit <b>800 Wh</b> darf bis <b>30 %</b> entladen werden. Wie viele Ger&auml;te à <b>250 W</b> d&uuml;rfen max. angeschlossen werden, wenn ca. <b>15 Min</b> &uuml;berbr&uuml;ckt werden sollen?</p>
+    <details>
+      <summary>L&ouml;sung anzeigen<span class="ar">▸</span></summary>
+      <div class="sol">
+        <div class="step"><span class="b">1</span><span>Nutzbar: 800 Wh × 0,7 = <b>560 Wh</b></span></div>
+        <div class="step"><span class="b">2</span><span>Energie pro Ger&auml;t in 15 Min: 250 W × 0,25 h = <b>62,5 Wh</b></span></div>
+        <div class="step"><span class="b">3</span><span>560 / 62,5 = 8,96</span></div>
+        <div class="res">→ 8 Ger&auml;te</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- AUFGABE 5 -->
+  <div class="task">
+    <div class="tnum">Aufgabe 5</div>
+    <h3>Scheinleistung im Rechenzentrum</h3>
+    <p class="tq">Rechenzentrum mit <b>20 Servern à 1250 W</b> Wirkleistung. Berechne die gesamte <b>Scheinleistung</b> bei einem Leistungsfaktor von <b>0,8</b>.</p>
+    <details>
+      <summary>L&ouml;sung anzeigen<span class="ar">▸</span></summary>
+      <div class="sol">
+        <div class="step"><span class="b">1</span><span>20 × 1250 W = <b>25.000 W</b></span></div>
+        <div class="step"><span class="b">2</span><span>S = 25.000 / 0,8 = <b>31.250 VA</b></span></div>
+        <div class="res">→ S = 31.250 VA</div>
+        <div class="step"><span class="b">i</span><span>Bei cos&nbsp;φ &lt; 1 ist die Scheinleistung gr&ouml;&szlig;er als die Wirkleistung.</span></div>
+      </div>
+    </details>
+  </div>
+
+  <!-- AUFGABE 6 -->
+  <div class="task">
+    <div class="tnum">Aufgabe 6</div>
+    <h3>Stromst&auml;rke aus Scheinleistung</h3>
+    <p class="tq">Wie gro&szlig; ist die <b>Stromst&auml;rke</b> bei <b>U = 230 V</b> und einer Scheinleistung von <b>19.780 VA</b>?</p>
+    <details>
+      <summary>L&ouml;sung anzeigen<span class="ar">▸</span></summary>
+      <div class="sol">
+        <div class="step"><span class="b">1</span><span>I = 19.780 VA / 230 V = <b>86 A</b></span></div>
+        <div class="res">→ I = 86 A</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- AUFGABE 7 -->
+  <div class="task">
+    <div class="tnum">Aufgabe 7</div>
+    <h3>Autonomiezeit &amp; Verf&uuml;gbarkeit (Racks)</h3>
+    <p class="tq">Rechenzentrum mit <b>4 Racks à 2,75 kW</b>. USV mit <b>15 kVA</b>, Blei-S&auml;ure-Akku mit <b>6 kWh</b> Kapazit&auml;t.</p>
+    <ul class="clean">
+      <li><b>a)</b> Autonomiezeit in vollen Minuten bei 100 % geladenem Akku?</li>
+      <li><b>b)</b> Wie &auml;ndert sich die Haltedauer, wenn ein Rack abgeschaltet wird?</li>
+      <li><b>c)</b> In 365 Tagen 4 St&ouml;rungen mit Ausfallzeiten 2 h, 4 h, 6 h, 8 h. Verf&uuml;gbarkeit der USV in diesem Zeitraum berechnen.</li>
+    </ul>
+    <details>
+      <summary>L&ouml;sung anzeigen<span class="ar">▸</span></summary>
+      <div class="sol">
+        <div class="step"><span class="b">a</span><span>Last: 4 × 2750 W = 11.000 W; 6000 Wh / 11.000 W = 0,54 h = 0,54 × 60 = 32,4 → <b>32 Minuten</b></span></div>
+        <div class="step"><span class="b">b</span><span>Last: 3 × 2750 W = 8250 W; 6000 / 8250 = 0,72 h = 0,72 × 60 = 43,6 → <b>43 Minuten</b> (l&auml;nger, da weniger Last)</span></div>
+        <div class="step"><span class="b">c</span><span>Gesamtausfall: 2+4+6+8 = 20 h; Gesamtzeit: 365 × 24 = 8760 h; (8760 − 20) / 8760 = 0,9977 → <b>99,77 %</b></span></div>
+        <div class="res">→ a) 32 Min · b) 43 Min · c) 99,77 %</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- AUFGABE 8 -->
+  <div class="task">
+    <div class="tnum">Aufgabe 8</div>
+    <h3>Autonomiezeit mit Akkubank</h3>
+    <p class="tq">2 Disk-Arrays à <b>360 VA</b> an einer Online-USV. <b>24 Akkus à 12 V / 3,6 Ah</b>. Betrieb bis Restladung <b>35 %</b>. Autonomiezeit bei 100 % geladenen Akkus?</p>
+    <details>
+      <summary>L&ouml;sung anzeigen<span class="ar">▸</span></summary>
+      <div class="sol">
+        <div class="step"><span class="b">1</span><span>Last: 2 × 360 VA = <b>720 VA</b></span></div>
+        <div class="step"><span class="b">2</span><span>Akkukapazit&auml;t: 24 × 12 V × 3,6 Ah = <b>1036,8 Wh</b></span></div>
+        <div class="step"><span class="b">3</span><span>Nutzbar bis 35 % Rest: 1036,8 × 0,65 = <b>673,92 Wh</b></span></div>
+        <div class="step"><span class="b">4</span><span>673,92 / 720 = 0,936 h × 60 = 56,16 → <b>56 Minuten</b></span></div>
+        <div class="res">→ 56 Minuten</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- AUFGABE 9 (Platzhalter) -->
+  <div class="task todo">
+    <div class="tnum">Aufgabe 9</div>
+    <span class="pending">Aufgabe folgt</span>
+    <p class="tq">Aufgabe im Scan unvollst&auml;ndig &ndash; vollst&auml;ndiger Text wird nachgeliefert.</p>
+    <p class="frag">Bekanntes Fragment der Teilrechnung: <span class="mono">100/60 × 3 = 5 % + 30 % = 35 %</span>.</p>
+  </div>
+
+</div>
+
+<!-- ===================================================================== -->
+<!--  KARTEIKARTEN  (study.js) - dieselben USV-Konzeptkarten wie in lf3.html -->
+<!-- ===================================================================== -->
+<div id="vCards" class="view">
+  <p class="lead" style="margin-top:.6rem">Die <b>USV-Konzeptkarten</b> aus Lernfeld 3 &ndash; zum schnellen Wiederholen direkt neben den Rechenaufgaben.</p>
+  <div class="chips" id="cardChips"></div>
+  <div class="bar">
+    <div class="pbar"><i id="pfill"></i></div>
+    <div class="ptxt">0% beherrscht</div>
+    <button class="tbtn" id="tShuffle">🔀 Mischen</button>
+    <button class="tbtn" id="tOpen">Nur offene</button>
+    <button class="tbtn" id="tReset">Zur&uuml;cksetzen</button>
+  </div>
+  <div id="study" class="study"></div>
+</div>
+
+<footer>FISI Lernplattform &middot; Lernfeld 3 &middot; USV &amp; Stromversorgung &middot; Fortschritt der Karteikarten wird lokal im Browser gespeichert</footer>
+</div>
+
+<script src="study.js"></script>
+<script>
+/* ===== KARTEIKARTEN: identische USV-Karten & Kategorie wie in lf3.html ===== */
+const CATS={
+  usv:{label:"USV & Verfügbarkeit",color:"#b66bff"}
+};
+const CARDS=[
+  {c:"usv",q:"Wozu dient eine USV?",a:"Eine <b>unterbrechungsfreie Stromversorgung</b> überbrückt Stromausfälle und gleicht (je nach Klasse) Schwankungen aus, um Datenverlust und Hardwareschäden zu verhindern."},
+  {c:"usv",q:"Aus welchen drei Hauptkomponenten besteht eine USV?",a:"<b>Batterie</b> (Energiespeicher), <b>Gleichrichter</b> (Wechsel- → Gleichstrom, lädt Akku) und <b>Wechselrichter</b> (Gleich- → Wechselstrom für die Geräte)."},
+  {c:"usv",q:"USV-Klasse 1 (VFI / Online-USV)?",a:"<b>Maximaler Schutz</b>: gleicht Spannungs- UND Frequenzschwankungen aus, keine Umschaltzeit (Dauerwandler). Für Server/Datacenter. Wirkungsgrad ~90 %."},
+  {c:"usv",q:"USV-Klasse 2 (VI / Line-Interactive)?",a:"Schützt vor Netzausfall und <b>Spannungsschwankungen</b> über einen Spannungsregler. Wirkungsgrad 95–98 %. Für einzelne Systeme/Netzwerke/TK-Anlagen."},
+  {c:"usv",q:"USV-Klasse 3 (VFD / Offline-/Standby-USV)?",a:"<b>Einfachste USV</b>: schützt nur vor <b>totalem Netzausfall</b>, gleicht keine Schwankungen aus. Beim Ausfall übernimmt der Akku (kurze Umschaltzeit). Für unkritische/günstige Geräte."},
+  {c:"usv",q:"Welche USV-Klasse für hochsensible Server?",a:"<b>Klasse 1 (VFI / Online)</b> – wegen Dauerwandlerprinzip und fehlender Umschaltzeit der zuverlässigste Schutz."},
+  {c:"usv",q:"Was bedeutet Hochverfügbarkeit?",a:"Ein System bleibt mit <b>sehr geringer Ausfallzeit</b> verfügbar – meist als Verfügbarkeit in % angegeben (z. B. 99,9 %), erreicht durch Redundanz (RAID, USV, Cluster)."},
+  {c:"usv",q:"Was ist Redundanz im Verfügbarkeitskontext?",a:"Das <b>bewusste Mehrfach-Vorhalten</b> kritischer Komponenten (Netzteile, Platten, Leitungen), damit beim Ausfall einer Komponente der Betrieb weiterläuft."}
+];
+CARDS.forEach((c,i)=>c.id="c"+i);
+
+/* ===== TABS ===== */
+const views={Calc:"vCalc",Cards:"vCards"};
+function showTab(t){
+  Object.keys(views).forEach(k=>{
+    document.getElementById(views[k]).classList.toggle('on',k===t);
+    document.getElementById('t'+k).classList.toggle('on',k===t);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('tCalc').onclick=()=>showTab('Calc');
+document.getElementById('tCards').onclick=()=>{showTab('Cards');Study._rebuild();};
+
+/* ===== KARTEIKARTEN (study.js) ===== */
+Study.init({ cards: CARDS, cats: CATS, key: "fisi_lf3_usv_v1" });
+
+/* ===== PWA ===== */
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});}
+</script>
+</body>
+</html>
