@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernfeld 5 &middot; UML-Diagramme &middot; FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<style>
+/* ===== Nur UML-spezifische Kleinigkeiten - alle Farben ueber zentrale Paletten-Variablen ===== */
+:root, html[data-theme="light"]{ --uml-ac: var(--purple); }
+
+/* Akzent dieser Seite = LF5 (lila), statt Cyan */
+.uml-ac{ color: var(--uml-ac); }
+.hdr .tag{ background: var(--uml-ac); }
+.tabs{ flex-wrap:wrap; }
+
+/* Glossar / Diagrammtyp-Raster */
+.gloss{ display:grid; grid-template-columns:1fr; gap:.55rem; margin:.4rem 0 .2rem; }
+@media(min-width:640px){ .gloss{ grid-template-columns:1fr 1fr; } }
+.gloss .g{ border:1px solid var(--line); border-radius:10px; padding:.7rem .8rem; background:var(--glass2); }
+.gloss .g h4{ margin:0 0 .25rem; font-family:var(--fui); font-size:1rem; color:var(--ink); display:flex; align-items:baseline; gap:.4rem; flex-wrap:wrap; }
+.gloss .g h4 .abk{ font-family:var(--fmono); font-size:11.5px; letter-spacing:.4px; color:var(--uml-ac); border:1px solid var(--line); border-radius:99px; padding:1px 7px; }
+.gloss .g p{ margin:0; color:var(--read); line-height:1.5; font-size:.92rem; }
+
+/* Symbol-Lernhilfe: eine Kachel je Symbol */
+.symgrid{ display:grid; grid-template-columns:1fr; gap:.7rem; margin:.5rem 0 1.1rem; }
+@media(min-width:560px){ .symgrid{ grid-template-columns:1fr 1fr; } }
+@media(min-width:960px){ .symgrid{ grid-template-columns:1fr 1fr 1fr; } }
+.sym{ border:1px solid var(--line); border-radius:12px; padding:.75rem; background:var(--glass2); display:flex; flex-direction:column; gap:.55rem; }
+.sym .svgbox{ display:flex; align-items:center; justify-content:center; min-height:104px; background:var(--bg2); border:1px solid var(--line); border-radius:10px; padding:.6rem .5rem; }
+.sym .svgbox svg{ width:100%; height:auto; max-height:96px; color:var(--ink); }
+.sym .svgbox svg text{ fill:var(--ink); font-family:var(--fui); }
+.sym h4{ margin:0; font-family:var(--fui); font-size:1rem; color:var(--ink); display:flex; align-items:baseline; gap:.45rem; flex-wrap:wrap; }
+.sym h4 .abk{ font-family:var(--fmono); font-size:11px; letter-spacing:.3px; color:var(--uml-ac); border:1px solid var(--line); border-radius:99px; padding:1px 7px; white-space:nowrap; }
+.sym p{ margin:0; color:var(--read); font-size:.9rem; line-height:1.5; }
+.sym p b{ color:var(--ink); }
+
+/* Notations-Regeln */
+.rules{ list-style:none; margin:.4rem 0 .2rem; padding:0; display:grid; grid-template-columns:1fr; gap:.5rem; }
+@media(min-width:640px){ .rules{ grid-template-columns:1fr 1fr; } }
+.rules li{ border:1px solid var(--line); border-left:3px solid var(--uml-ac); border-radius:8px; padding:.6rem .75rem; background:var(--glass2); color:var(--read); line-height:1.5; font-size:.92rem; }
+.rules li b{ color:var(--ink); }
+
+/* Beispiel- und Loesungsbilder: weisses "Blatt" damit es in beiden Modi sauber wirkt */
+.dimg{ display:block; width:100%; height:auto; background:#fff; border:1px solid var(--line); border-radius:10px; padding:.7rem; margin:.4rem 0 .25rem; }
+.dcap{ font-family:var(--fmono); font-size:12px; color:var(--dim); letter-spacing:.3px; margin:.1rem 0 .7rem; }
+.scroll-x{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+/* Aufzaehlung in Aufgabentexten */
+.q-list{ margin:.3rem 0 .3rem 1.3rem; padding:0; }
+.q-list li{ margin:.3rem 0; color:var(--read); line-height:1.55; }
+.mono{ font-family:var(--fmono); color:var(--uml-ac); }
+
+/* Syntax-Block (Klassendiagramm) */
+.syntax{ display:grid; grid-template-columns:1fr; gap:.5rem; margin:.5rem 0 .3rem; }
+@media(min-width:640px){ .syntax{ grid-template-columns:1fr 1fr; } }
+.syntax .s{ border:1px solid var(--line); border-radius:8px; padding:.6rem .75rem; background:var(--glass2); }
+.syntax .s h5{ margin:0 0 .3rem; font-family:var(--fmono); font-size:12px; letter-spacing:.6px; text-transform:uppercase; color:var(--uml-ac); }
+.syntax .s code{ font-family:var(--fmono); font-size:13px; color:var(--read); display:block; line-height:1.6; white-space:pre-wrap; }
+.syntax .s code b{ color:var(--ink); }
+
+/* Punkteschema (aus offiziellen Loesungen) */
+.pts{ list-style:none; margin:.5rem 0 .2rem; padding:0; display:grid; gap:.3rem; }
+.pts li{ display:flex; justify-content:space-between; gap:1rem; font-size:13.5px; border-bottom:1px dashed var(--line); padding:.2rem 0; color:var(--read); }
+.pts li span:last-child{ font-family:var(--fmono); color:var(--uml-ac); white-space:nowrap; }
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="programmierung.html">&larr; Programmierung</a>
+    <div>
+      <h1><span class="tag">LF 5</span>UML-Diagramme</h1>
+      <div class="sub">Systeme modellieren &middot; IHK-Notation 2024 &middot; AP1-relevant</div>
+    </div>
+    <div class="sp"></div>
+    <div class="tabs">
+      <button id="tOverview" class="on">Ueberblick</button>
+      <button id="tUseCase">Use-Case</button>
+      <button id="tActivity">Aktivitaet</button>
+      <button id="tState">Zustand</button>
+      <button id="tClass">Klasse</button>
+      <button id="tSequence">Sequenz</button>
+      <button id="tCards">Karteikarten</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ===================================================================== -->
+<!--  UEBERBLICK                                                            -->
+<!-- ===================================================================== -->
+<div id="vOverview" class="view on sum">
+
+  <div class="h-sec"><span class="ico">🧭</span> Was ist UML?</div>
+  <p class="lead"><b>UML</b> (englisch <b>U</b>nified <b>M</b>odeling <b>L</b>anguage) ist eine <b>standardisierte, grafische Sprache</b>, um Software und Systeme zu modellieren - <b>bevor</b> man sie programmiert. Statt Text beschreibt man Anforderungen, Abläufe und Strukturen mit genormten Symbolen, die alle Beteiligten (Fachabteilung, Entwicklung, Kunde) gleich verstehen.</p>
+  <div class="callout tip"><span class="ci">🎯</span><div><b>Prüfungsrelevanz:</b> UML-Diagramme gehören in der <b>AP1</b> zum Lernfeld <b>Anwendungsentwicklung</b>. Typische Aufgabe: einen beschriebenen Sachverhalt <b>als Diagramm zeichnen</b> oder ein <b>Lückendiagramm vervollständigen</b>. Dieses Modul nutzt durchgehend die <b>IHK-Notation 2024</b> als Maßstab.</div></div>
+
+  <div class="h-sub">Struktur- vs. Verhaltensdiagramme</div>
+  <p class="lead" style="font-size:16px">UML teilt sich in zwei Familien: <b>Strukturdiagramme</b> zeigen den <b>statischen Aufbau</b> (woraus besteht das System), <b>Verhaltensdiagramme</b> zeigen die <b>Dynamik</b> (was passiert, in welcher Reihenfolge).</p>
+  <div class="cardgrid c2">
+    <div class="ic"><h4>🏗️ Struktur (statisch)</h4><p><b>Klassendiagramm</b> - der Bauplan: Klassen, ihre Attribute/Methoden und ihre Beziehungen zueinander.</p></div>
+    <div class="ic"><h4>⚙️ Verhalten (dynamisch)</h4><p><b>Use-Case, Aktivität, Zustand, Sequenz</b> - Anforderungen, Abläufe, Reaktionen und Nachrichtenaustausch über die Zeit.</p></div>
+  </div>
+
+  <div class="h-sec"><span class="ico">🗂️</span> Die fünf Diagrammtypen dieses Moduls</div>
+  <p class="lead">Jeder Tab oben enthält die <b>komplette Notation</b> für einen Diagrammtyp, dazu (wo vorhanden) durchgezeichnete Beispiele und Übungen mit Lösung.</p>
+  <div class="gloss">
+    <div class="g"><h4>Anwendungsfalldiagramm <span class="abk">Use-Case</span></h4><p><b>Was</b> soll das System können - aus Sicht der Nutzer (Akteure). Funktionen als Ovale, Beziehungen <b>«include»/«extend»</b>. Blendet das <i>Wie</i> bewusst aus.</p></div>
+    <div class="g"><h4>Aktivitätsdiagramm <span class="abk">Activity</span></h4><p><b>Wie</b> läuft ein Prozess ab? Abläufe mit Aktionen, Verzweigungen, Parallelität und Schwimmbahnen - ähnlich einem Flussdiagramm.</p></div>
+    <div class="g"><h4>Zustandsdiagramm <span class="abk">State</span></h4><p><b>Wie reagiert</b> ein Objekt? Zustände und Übergänge, ausgelöst durch Ereignisse. Ideal für Benutzeroberflächen, Automaten, Statusmodelle.</p></div>
+    <div class="g"><h4>Klassendiagramm <span class="abk">Class</span></h4><p><b>Woraus besteht</b> das System? Klassen mit Attributen/Methoden und Beziehungen (Vererbung, Assoziation, Aggregation, Komposition).</p></div>
+    <div class="g"><h4>Sequenzdiagramm <span class="abk">Sequence</span></h4><p><b>Wer schickt wem wann</b> welche Nachricht? Zeitlicher Ablauf entlang von Lebenslinien, synchron/asynchron.</p></div>
+    <div class="g"><h4>Pfeil-Cheatsheet <span class="abk">Merke</span></h4><p>Die <b>Pfeilspitze</b> trägt die Bedeutung. Im Use-Case und Klassendiagramm steckt der häufigste Fehler in der <b>Pfeilrichtung</b> - jeder Tab erklärt sie explizit.</p></div>
+  </div>
+
+  <div class="callout merk"><span class="ci">📌</span><div><b>Lesetrick für alle UML-Pfeile:</b> Lies den Pfeil als Satz <b>vom Anfang zur Spitze</b> und setze den Stereotyp/die Bedeutung dazwischen. Beispiel Use-Case: „<b>Tür öffnen</b> «include» <b>Berechtigung prüfen</b>" - der Pfeil zeigt also vom Basis-Anwendungsfall auf das eingebundene Verhalten.</div></div>
+
+</div>
+
+<!-- ===================================================================== -->
+<!--  USE-CASE                                                              -->
+<!-- ===================================================================== -->
+<div id="vUseCase" class="view sum">
+
+  <div class="h-sec"><span class="ico">👤</span> Anwendungsfalldiagramm (Use-Case)</div>
+  <p class="lead">Zeigt, <b>was</b> ein System aus Sicht seiner Nutzer leisten soll. <b>Akteure</b> (außerhalb des Systems) lösen <b>Anwendungsfälle</b> (Funktionen, innerhalb der Systemgrenze) aus. Das <i>Wie</i> der Umsetzung bleibt bewusst offen.</p>
+
+  <div class="h-sub">Komplette Notation</div>
+  <div class="symgrid">
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Akteur">
+        <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+          <circle cx="70" cy="22" r="9"/><line x1="70" y1="31" x2="70" y2="57"/>
+          <line x1="52" y1="41" x2="88" y2="41"/><line x1="70" y1="57" x2="56" y2="76"/><line x1="70" y1="57" x2="84" y2="76"/>
+        </g></svg></div>
+      <h4>Akteur <span class="abk">Actor</span></h4>
+      <p><b>Strichmännchen.</b> Ein Mensch oder ein <b>externes System</b>, das mit dem System interagiert - steht <b>außerhalb</b> der Systemgrenze.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Anwendungsfall">
+        <ellipse cx="70" cy="45" rx="60" ry="26" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <text x="70" y="49" text-anchor="middle" font-size="12">Tür öffnen</text></svg></div>
+      <h4>Anwendungsfall <span class="abk">Use-Case</span></h4>
+      <p><b>Oval</b> mit einer <b>Funktion</b> des Systems, beschriftet als Verb + Objekt (z. B. „Tür öffnen").</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Systemgrenze">
+        <rect x="22" y="14" width="98" height="62" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <text x="30" y="28" font-size="11">System</text>
+        <ellipse cx="78" cy="48" rx="30" ry="15" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></div>
+      <h4>Systemgrenze <span class="abk">Boundary</span></h4>
+      <p><b>Rechteck</b> um alle Anwendungsfälle. Trennt, <b>was zum System gehört</b> (innen), von den Akteuren (außen).</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Assoziation">
+        <line x1="14" y1="45" x2="126" y2="45" stroke="currentColor" stroke-width="2.4"/></svg></div>
+      <h4>Assoziation <span class="abk">nutzt</span></h4>
+      <p><b>Durchgezogene Linie</b> (ohne Pfeilspitze) zwischen Akteur und Anwendungsfall: „der Akteur <b>nutzt</b> diese Funktion".</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Akteur-Generalisierung">
+        <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <line x1="70" y1="34" x2="70" y2="60"/>
+        </g>
+        <polygon points="70,14 61,34 79,34" fill="var(--bg2)" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+        <text x="70" y="78" text-anchor="middle" font-size="10">Spezial → Basis</text></svg></div>
+      <h4>Generalisierung <span class="abk">ist ein</span></h4>
+      <p><b>Linie mit leerem Dreieck</b> zur Oberklasse. „Admin <b>ist ein</b> Mitarbeiter" - der Spezialakteur erbt alle Anwendungsfälle des Basisakteurs. Spitze zeigt zum <b>Basisakteur</b>.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="include-Beziehung">
+        <line x1="12" y1="50" x2="104" y2="50" stroke="currentColor" stroke-width="2.2" stroke-dasharray="7 5"/>
+        <path d="M124 50 L106 42 M124 50 L106 58" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <text x="58" y="38" text-anchor="middle" font-size="12" fill="var(--uml-ac)">«include»</text></svg></div>
+      <h4>«include» <span class="abk">Pflicht</span></h4>
+      <p><b>Gestrichelter Pfeil, offene Spitze</b>, vom <b>Basis-UC zum eingebundenen UC</b>. Der Basisfall bindet ihn <b>immer</b> ein (ausgelagertes Pflicht-Verhalten).</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="extend-Beziehung">
+        <line x1="12" y1="50" x2="104" y2="50" stroke="currentColor" stroke-width="2.2" stroke-dasharray="7 5"/>
+        <path d="M124 50 L106 42 M124 50 L106 58" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <text x="58" y="38" text-anchor="middle" font-size="12" fill="var(--uml-ac)">«extend»</text></svg></div>
+      <h4>«extend» <span class="abk">optional</span></h4>
+      <p><b>Gestrichelter Pfeil, offene Spitze</b>, vom <b>erweiternden UC zum Basis-UC</b> - also <b>andersherum</b> als bei include. Das Verhalten kommt nur <b>unter einer Bedingung</b> hinzu.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Notiz mit Bedingung">
+        <path d="M34 16 L92 16 L106 30 L106 74 L34 74 Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+        <path d="M92 16 L92 30 L106 30" fill="none" stroke="currentColor" stroke-width="2"/>
+        <text x="42" y="42" font-size="9.5">Condition:</text><text x="42" y="55" font-size="9.5">{bedingung}</text>
+        <text x="42" y="68" font-size="9.5">ext. point: …</text></svg></div>
+      <h4>Notiz / Extension-Point <span class="abk">Bedingung</span></h4>
+      <p><b>Blatt mit Eselsohr.</b> Hängt an einer «extend»-Beziehung und nennt die <b>Bedingung</b> und den <b>Erweiterungspunkt</b> (z. B. „EP: Anmeldung").</p>
+    </div>
+
+  </div>
+
+  <div class="h-sub">Notations-Regeln</div>
+  <ul class="rules">
+    <li><b>Akteure stehen außen</b>, alle Anwendungsfälle <b>innerhalb</b> der Systemgrenze.</li>
+    <li>Zwischen Akteur und Anwendungsfall steht eine <b>Assoziation</b> (Linie ohne Pfeil).</li>
+    <li><b>«include»</b>: Pfeil vom <b>Basis-UC</b> weg zum eingebundenen UC. Eselsbrücke: „<b>Basis</b> braucht <b>immer</b> dieses Stück".</li>
+    <li><b>«extend»</b>: Pfeil <b>zum Basis-UC hin</b>. Eselsbrücke: „Sonderfall <b>erweitert</b> den Basisfall - aber nur manchmal".</li>
+    <li><b>Generalisierung</b> (leeres Dreieck) gibt es zwischen <b>Akteuren</b> und zwischen <b>Anwendungsfällen</b> - 'ist eine Art von'.</li>
+    <li>IHK-Schreibweisen <b>«include»/«includes»</b> und <b>«extend»/«extends»</b> meinen dasselbe.</li>
+  </ul>
+
+  <div class="callout warn"><span class="ci">⚠️</span><div><b>Klassiker-Fehler:</b> die <b>«extend»-Pfeilrichtung</b> verkehrt herum zeichnen. Merke: Der Pfeil zeigt <b>auf den Anwendungsfall, der erweitert wird</b> (den Basisfall) - nicht auf die Erweiterung.</div></div>
+
+  <div class="h-sub">Durchgezeichnetes Beispiel · Schlüsselsystem</div>
+  <p class="lead" style="font-size:16px">Mitarbeiter können <b>Tür öffnen</b> und <b>Tür schließen</b> - beides bindet immer eine <b>Berechtigungsprüfung</b> ein («include»). Der <b>Administrator</b> ist ein Mitarbeiter (Generalisierung) und kann zusätzlich <b>Türschlösser programmieren</b> (ebenfalls mit Berechtigungsprüfung).</p>
+  <div class="scroll-x"><img class="dimg" src="img/uml/ex_uc_schluesselsystem.png" alt="Use-Case-Diagramm Schlüsselsystem: Mitarbeiter und Administrator mit include-Berechtigungsprüfung"></div>
+  <div class="dcap">Quelle: IHK-Übung „Schlüsselsystem" · «includes» = Pflicht-Teilverhalten, Admin erbt von Mitarbeiter.</div>
+
+  <div class="h-sec"><span class="ico">✍️</span> Übungen mit Lösung</div>
+  <p class="calc-intro" style="margin-bottom:.3rem">Erst selbst auf Papier zeichnen, dann die <b>Lösung</b> aufdecken - ein Klick öffnet die komplette Musterlösung samt offiziellem Punkteschema.</p>
+  <div class="calc">
+
+    <div class="calc-card">
+      <div class="calc-h">Übung 1 · Gebäudemanagement (Sensoren)</div>
+      <div class="calc-q">Erstelle ein Anwendungsfalldiagramm:
+        <ul class="q-list">
+          <li>Für <b>Wartungsmitarbeiter</b> fallen <b>Wartungen und Kalibrierungen</b> der Sensoren an. Für die Wartung ist ein <b>Login</b> erforderlich, falls dieser noch nicht erfolgt ist.</li>
+          <li><b>Administratoren</b> können Sensordaten <b>auswerten</b>. Dazu müssen in jedem Fall <b>Sensordaten gelesen</b> werden. Falls noch nicht erfolgt, ist für die Auswertung ein <b>Login</b> erforderlich.</li>
+          <li><b>Jeder Mitarbeiter</b> kann die Sensordaten <b>auslesen</b>.</li>
+        </ul>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="scroll-x"><img class="dimg" src="img/uml/sol_uc_gebaeudemanagement.png" alt="Musterlösung Gebäudemanagement"></div>
+        <div class="step"><b>Akteure:</b> <b>Mitarbeiter</b> (Basisakteur); <b>Wartung</b> und <b>Admin</b> sind davon <b>abgeleitet</b> (Generalisierung „ist ein Mitarbeiter").</div>
+        <div class="step"><b>Beziehungen:</b> Mitarbeiter → „Sensordaten lesen". „Sensordaten auswerten" <b>«include»</b> „Sensordaten lesen" (Auswerten setzt Lesen voraus). „Sensor kalibrieren" und „Sensordaten auswerten" werden je per <b>«extend»</b> um „Login" ergänzt (EP: Anmeldung, nur falls noch nicht eingeloggt).</div>
+        <ul class="pts">
+          <li><span>Je Anwendungsfall</span><span>0,5</span></li>
+          <li><span>Je Extension-Punkt</span><span>0,5</span></li>
+          <li><span>Je include/extend-Beziehung</span><span>0,5</span></li>
+          <li><span>Akteure Admin &amp; Wartung von Mitarbeiter abgeleitet</span><span>2</span></li>
+          <li><span>Je richtige Zuordnung Akteur–Use-Case</span><span>0,5</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Übung 2 · E-Service-Plattform Aktionärsversammlung</div>
+      <div class="calc-q">Erstelle ein Anwendungsfalldiagramm:
+        <ul class="q-list">
+          <li><b>Mitarbeiter</b> können eine Aktionärsversammlung <b>einrichten</b> und Aktionäre <b>einladen</b>. Beim Einladen wird eine <b>Einladungsmail versendet</b>. Außerdem können sie eine <b>Übersicht zum Status</b> der Einladungen einsehen.</li>
+          <li><b>Aktionäre</b> können ihre Einladung <b>abrufen</b> und sich für eine Versammlung <b>registrieren</b>. Ist der Aktionär eingeladen, wird bei der Registrierung ein <b>Zugangscode erzeugt</b>.</li>
+          <li>Aktionäre können <b>Dokumente einsehen</b>. Sind diese nicht öffentlich, muss der <b>Zugangscode eingegeben</b> werden.</li>
+        </ul>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="scroll-x"><img class="dimg" src="img/uml/sol_uc_aktionaersversammlung.png" alt="Musterlösung Aktionärsversammlung"></div>
+        <div class="step"><b>Mitarbeiter</b> → Versammlung einrichten, Aktionäre einladen, Übersicht Status. „Aktionäre einladen" <b>«include»</b> „Einladungsmail versenden" (passiert immer).</div>
+        <div class="step"><b>Aktionär</b> → Einladung abrufen, für Versammlung registrieren, Einsicht Dokumente. „Zugangscode erzeugen" <b>«extend»</b> „registrieren" (Bedingung: wenn Aktionär eingeladen). „Zugangscode eingeben" <b>«extend»</b> „Einsicht Dokumente" (Bedingung: wenn Dokument nicht öffentlich).</div>
+        <ul class="pts">
+          <li><span>Je Akteur mit passender Rolle</span><span>1</span></li>
+          <li><span>Je Anwendungsfall</span><span>1</span></li>
+          <li><span>Je include-/extend-Beziehung</span><span>1</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Übung 3 · Internetpräsenz „Krake AG" (Buchen &amp; Reservieren)</div>
+      <div class="calc-q">Erstelle ein Anwendungsfalldiagramm:
+        <ul class="q-list">
+          <li><b>Alle Besucher</b> können allgemeine <b>Informationen abrufen</b> (Leistungs-/Produktportfolio, AGB).</li>
+          <li>Ein <b>Kunde</b> kann <b>Reservierungsanfragen stellen</b> sowie <b>buchen</b> und <b>stornieren</b>.</li>
+          <li>Von einem <b>Neukunden</b> werden zunächst die <b>Kundendaten erfasst</b>. Für Buchung und Stornierung muss sich der Kunde <b>einloggen</b>.</li>
+        </ul>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="scroll-x"><img class="dimg" src="img/uml/sol_uc_krake.png" alt="Musterlösung Krake AG Buchen und reservieren"></div>
+        <div class="step"><b>Akteure:</b> <b>Besucher</b> (Basis) und <b>Kunde</b> (ist ein Besucher → Generalisierung).</div>
+        <div class="step"><b>Beziehungen:</b> „Buchen" <b>«extend»</b> „Kundendaten erfassen" (Condition: Kunde nicht vorhanden, EP: Neukunde). „Buchen" und „Reservierung stornieren" je <b>«include»</b> „Log-in" (Login ist Pflicht).</div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Übung 4 · Helferlein e.V. (Webanwendung)</div>
+      <div class="calc-q">Erstelle ein Anwendungsfalldiagramm:
+        <ul class="q-list">
+          <li><b>Mitglieder</b> können ihre <b>persönlichen Daten verwalten</b> (Login falls nötig) und eine <b>Dienstleistung buchen</b>; dazu müssen sie in jedem Fall <b>Terminvorschläge abrufen</b> (Login für die Buchung nötig).</li>
+          <li>Ein <b>Administrator</b> ist ein Mitglied, das zusätzlich <b>Dienstleistungsarten verwalten</b> kann (Login falls nötig).</li>
+          <li>Ein <b>Gast</b> kann <b>Terminvorschläge abrufen</b> und sich <b>als Mitglied registrieren</b>.</li>
+        </ul>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="scroll-x"><img class="dimg" src="img/uml/sol_uc_helferlein.png" alt="Musterlösung Helferlein e.V."></div>
+        <div class="step"><b>Akteur-Vererbung:</b> Gast ← Mitglied ← Admin (jeder erbt die Anwendungsfälle des Basisakteurs).</div>
+        <div class="step"><b>Beziehungen:</b> „Dienstleistung buchen" <b>«include»</b> „Terminvorschläge abrufen". „Dienstleistung buchen", „Mitgliederdaten verwalten" und „Dienstleistungsarten verwalten" werden je per <b>«extend»</b> um „Login" ergänzt (EP: Anmeldung).</div>
+        <ul class="pts">
+          <li><span>Je Akteur</span><span>1</span></li>
+          <li><span>Vererbung zwischen den Akteuren</span><span>3</span></li>
+          <li><span>Je Anwendungsfall</span><span>1</span></li>
+          <li><span>Je extend-Beziehung</span><span>2</span></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!--  AKTIVITAET                                                           -->
+<!-- ===================================================================== -->
+<div id="vActivity" class="view sum">
+
+  <div class="h-sec"><span class="ico">🔀</span> Aktivitätsdiagramm (Activity)</div>
+  <p class="lead">Zeigt, <b>wie</b> ein Prozess abläuft - die Reihenfolge von <b>Aktionen</b>, <b>Verzweigungen</b> (Entscheidungen) und <b>parallele</b> Abläufe. Es präzisiert die internen Abläufe hinter einem Anwendungsfall und ähnelt einem Fluss-/Programmablaufplan.</p>
+
+  <div class="h-sub">Komplette Notation</div>
+  <div class="symgrid">
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Startknoten">
+        <circle cx="70" cy="40" r="13" fill="currentColor"/>
+        <line x1="70" y1="53" x2="70" y2="74" stroke="currentColor" stroke-width="2.4"/>
+        <polygon points="70,80 64,68 76,68" fill="currentColor"/></svg></div>
+      <h4>Startknoten <span class="abk">Start</span></h4>
+      <p><b>Gefüllter Kreis.</b> Der eindeutige <b>Beginn</b> des Ablaufs; ein Pfeil führt zur ersten Aktion.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Endknoten">
+        <circle cx="70" cy="45" r="16" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="70" cy="45" r="8" fill="currentColor"/></svg></div>
+      <h4>Endknoten <span class="abk">Ende</span></h4>
+      <p><b>Gefüllter Kreis mit Ring.</b> Beendet die <b>gesamte Aktivität</b>. Es darf <b>mehrere</b> Endknoten geben.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Ablaufende">
+        <circle cx="70" cy="45" r="16" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <line x1="60" y1="35" x2="80" y2="55" stroke="currentColor" stroke-width="2.5"/>
+        <line x1="80" y1="35" x2="60" y2="55" stroke="currentColor" stroke-width="2.5"/></svg></div>
+      <h4>Ablaufende <span class="abk">Flow Final</span></h4>
+      <p><b>Kreis mit X.</b> Beendet <b>nur den aktuellen Fluss</b> - andere parallele Flüsse laufen weiter.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Aktion">
+        <rect x="22" y="28" width="96" height="34" rx="10" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <text x="70" y="49" text-anchor="middle" font-size="13">Zahlung prüfen</text></svg></div>
+      <h4>Aktion <span class="abk">Aktivität</span></h4>
+      <p><b>Abgerundetes Rechteck.</b> Ein Arbeitsschritt im Ablauf. <b>Pro Aktion genau ein Pfeil hinein und einer hinaus.</b></p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Kante">
+        <line x1="16" y1="45" x2="106" y2="45" stroke="currentColor" stroke-width="2.4"/>
+        <polygon points="124,45 104,37 104,53" fill="currentColor"/></svg></div>
+      <h4>Kante <span class="abk">Kontrollfluss</span></h4>
+      <p><b>Pfeil</b> mit voller Spitze. Gibt die <b>Richtung des Kontrollflusses</b> zwischen den Aktionen an.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Entscheidung">
+        <polygon points="70,14 96,40 70,66 44,40" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <line x1="44" y1="40" x2="18" y2="40" stroke="currentColor" stroke-width="2"/><polygon points="14,40 26,35 26,45" fill="currentColor"/>
+        <line x1="96" y1="40" x2="122" y2="40" stroke="currentColor" stroke-width="2"/><polygon points="126,40 114,35 114,45" fill="currentColor"/>
+        <text x="30" y="30" font-size="9" fill="var(--uml-ac)">[ja]</text><text x="104" y="30" font-size="9" fill="var(--uml-ac)">[nein]</text></svg></div>
+      <h4>Entscheidung <span class="abk">Verzweigung</span></h4>
+      <p><b>Raute</b> - ein Weg hinein, mehrere hinaus. An jedem Ausgang steht eine <b>eindeutige Bedingung</b> in eckigen Klammern. Es geht <b>nur ein</b> Weg weiter.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Zusammenführung">
+        <polygon points="70,24 96,50 70,76 44,50" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <line x1="20" y1="30" x2="52" y2="44" stroke="currentColor" stroke-width="2"/><polygon points="56,46 44,43 47,53" fill="currentColor"/>
+        <line x1="120" y1="30" x2="88" y2="44" stroke="currentColor" stroke-width="2"/><polygon points="84,46 96,43 93,53" fill="currentColor"/>
+        <line x1="70" y1="76" x2="70" y2="88" stroke="currentColor" stroke-width="2"/></svg></div>
+      <h4>Zusammenführung <span class="abk">Merge</span></h4>
+      <p><b>Raute</b> - mehrere Wege hinein, einer hinaus. Führt alternative Wege wieder zusammen (z. B. nach einer Schleife). <b>Keine</b> Synchronisation.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Teilung">
+        <line x1="70" y1="14" x2="70" y2="26" stroke="currentColor" stroke-width="2"/><polygon points="70,30 64,18 76,18" fill="currentColor"/>
+        <rect x="34" y="32" width="72" height="6" rx="1" fill="currentColor"/>
+        <line x1="48" y1="38" x2="48" y2="62" stroke="currentColor" stroke-width="2"/><polygon points="48,68 42,56 54,56" fill="currentColor"/>
+        <line x1="92" y1="38" x2="92" y2="62" stroke="currentColor" stroke-width="2"/><polygon points="92,68 86,56 98,56" fill="currentColor"/></svg></div>
+      <h4>Teilung <span class="abk">Fork / Splitting</span></h4>
+      <p><b>Dicker Balken</b> - ein Weg hinein, mehrere hinaus. Alle Wege laufen ab da <b>gleichzeitig (parallel)</b>.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Synchronisation">
+        <line x1="48" y1="14" x2="48" y2="38" stroke="currentColor" stroke-width="2"/><polygon points="48,44 42,32 54,32" fill="currentColor"/>
+        <line x1="92" y1="14" x2="92" y2="38" stroke="currentColor" stroke-width="2"/><polygon points="92,44 86,32 98,32" fill="currentColor"/>
+        <rect x="34" y="46" width="72" height="6" rx="1" fill="currentColor"/>
+        <line x1="70" y1="52" x2="70" y2="64" stroke="currentColor" stroke-width="2"/><polygon points="70,70 64,58 76,58" fill="currentColor"/></svg></div>
+      <h4>Synchronisation <span class="abk">Join</span></h4>
+      <p><b>Dicker Balken</b> - mehrere parallele Wege hinein, einer hinaus. Es geht <b>erst weiter, wenn alle</b> Wege fertig sind.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Schwimmbahnen">
+        <rect x="14" y="14" width="112" height="62" fill="none" stroke="currentColor" stroke-width="2"/>
+        <line x1="70" y1="14" x2="70" y2="76" stroke="currentColor" stroke-width="2"/>
+        <line x1="14" y1="28" x2="126" y2="28" stroke="currentColor" stroke-width="1.5"/>
+        <text x="42" y="24" text-anchor="middle" font-size="10">Kunde</text>
+        <text x="98" y="24" text-anchor="middle" font-size="10">System</text></svg></div>
+      <h4>Schwimmbahnen <span class="abk">Swimlanes</span></h4>
+      <p><b>Spalten/Zeilen.</b> Ordnen jede Aktion einem <b>Verantwortungsbereich</b> zu (Akteur/System) - 'wer macht was'.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Konnektor">
+        <rect x="14" y="36" width="40" height="18" rx="8" fill="none" stroke="currentColor" stroke-width="2"/>
+        <line x1="54" y1="45" x2="78" y2="45" stroke="currentColor" stroke-width="2"/><polygon points="84,45 74,40 74,50" fill="currentColor"/>
+        <circle cx="100" cy="45" r="13" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <text x="100" y="49" text-anchor="middle" font-size="12" fill="var(--uml-ac)">A</text></svg></div>
+      <h4>Konnektor <span class="abk">Verbinder</span></h4>
+      <p><b>Kreis mit Buchstabe.</b> Verbindet zwei Stellen, ohne eine Linie quer durchs Diagramm zu ziehen - zwei Konnektoren mit gleichem Buchstaben gehören zusammen.</p>
+    </div>
+
+  </div>
+
+  <div class="h-sub">Notations-Regeln</div>
+  <ul class="rules">
+    <li>Zu/von einer <b>Aktion</b> führt <b>immer nur ein Pfeil</b>. Mehrere Wege gehen über <b>Raute</b> oder <b>Balken</b>.</li>
+    <li><b>Raute = Entscheidung</b> (genau ein Weg, mit Bedingung). <b>Balken = parallel</b> (alle Wege gleichzeitig).</li>
+    <li>Jede <b>Bedingung</b> steht in <b>[eckigen Klammern]</b> am wegführenden Pfeil und muss eindeutig sein.</li>
+    <li>Was per <b>Teilung</b> (Fork) aufgespalten wird, sollte per <b>Synchronisation</b> (Join) wieder zusammengeführt werden.</li>
+    <li>Zu einem <b>Endknoten</b> dürfen - anders als bei Aktionen - <b>mehrere</b> Pfeile führen.</li>
+    <li><b>Endknoten</b> (Auge) = alles beenden; <b>Ablaufende</b> (X) = nur diesen Fluss; <b>Abbruch</b> über das X-Symbol.</li>
+  </ul>
+
+  <div class="h-sub">Durchgezeichnetes Beispiel · Raumbuchung</div>
+  <p class="lead" style="font-size:16px">Ein Kunde stellt eine <b>Anfrage</b> (Zeitraum) - bei Verfügbarkeit beschreibt er die <b>Anforderungen</b>, die <b>parallel</b> geprüft werden (Raumbedarf ‖ Ressourcen). Aus der Synchronisation entsteht ein <b>Angebot</b>, das angenommen oder modifiziert wird. Die Notiz-Kästen erklären Raute, Synchronisationsbalken und die drei Endpunkt-Typen.</p>
+  <div class="scroll-x"><img class="dimg" src="img/uml/ex_act_raumbuchung.png" alt="Aktivitätsdiagramm Raumbuchung mit Schwimmbahnen Kunde/Bildungsträger, Verzweigung, Parallelisierung"></div>
+  <div class="dcap">Quelle: Lehrmaterial „Das Aktivitätsdiagramm" · Schwimmbahnen + Verzweigung + Parallelisierung in einem Modell.</div>
+
+  <div class="h-sec"><span class="ico">✍️</span> Übungen mit Lösung</div>
+  <p class="calc-intro" style="margin-bottom:.3rem">Erst selbst zeichnen, dann die komplette Musterlösung aufdecken.</p>
+  <div class="calc">
+
+    <div class="calc-card">
+      <div class="calc-h">Übung 1 · Größte von drei Zahlen</div>
+      <div class="calc-q">Es werden <b>3 Zahlen</b> eingegeben; als Ergebnis soll der <b>größte</b> Wert ausgegeben werden. Modelliere diesen Algorithmus als Aktivitätsdiagramm.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="scroll-x"><img class="dimg" src="img/uml/sol_act_max3zahlen.png" alt="Musterlösung Größte von drei Zahlen"></div>
+        <div class="step"><b>Idee:</b> nach der Eingabe verschachtelte <b>Verzweigungen</b>: erst <span class="mono">[zahl1 &gt; zahl2]</span> vs. <span class="mono">[zahl1 &lt;= zahl2]</span>, in jedem Zweig erneut gegen zahl3 prüfen. Die vier Ausgabe-Aktionen laufen am Ende über Zusammenführungen zum Endknoten.</div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Übung 2 · Facharbeiterausbildung (Lückendiagramm)</div>
+      <div class="calc-q">Trage die Buchstaben der Aktivitäten/Bedingungen in das vorgegebene Diagramm ein:
+        <div class="calc-given">A Ausbildung starten · B Ausbildung beenden · C Lehrgänge besuchen · D nicht bestanden · E Schule besuchen · F Prüfung ablegen · G Facharbeiterzeugnis erhalten · H Versuche ≥ 3 · I zu Hause lernen · J bestanden · K Versuche &lt; 3 · L Ausbildung nicht erfolgreich absolviert · M In Ausbildungsfirma arbeiten</div>
+      </div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="scroll-x"><img class="dimg" src="img/uml/sol_act_facharbeiter.png" alt="Musterlösung Facharbeiterausbildung"></div>
+        <div class="step"><b>Ablauf:</b> <b>A</b> (Start) → Teilung → parallel <b>C, E, I, M</b> → Synchronisation → <b>F</b> (Prüfung). Verzweigung: <b>[J] bestanden</b> → <b>G</b> → <b>B</b> (Ende); <b>[D] nicht bestanden</b> → Verzweigung <b>[K] Versuche &lt; 3</b> → zurück zu <b>F</b>; <b>[H] Versuche ≥ 3</b> → <b>L</b> → <b>B</b>.</div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Übung 3 · Geldautomat (Geld abheben)</div>
+      <div class="calc-q">Modelliere den Prozess „Geld holen" mit Schwimmbahnen <b>Kunde</b> / <b>Geldautomat</b>: Karte eingeben → prüfen (ungültig → einziehen &amp; Abbruch) → PIN eingeben → prüfen (falsch → einziehen &amp; Abbruch, kein mehrfaches Eingeben) → Geldbetrag → Kontostand aktualisieren &amp; Karte ausgeben → Karte entnehmen → Geld ausgeben → Geld entnehmen → Ende.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="scroll-x"><img class="dimg" src="img/uml/sol_act_geldautomat.png" alt="Musterlösung Geldautomat"></div>
+        <div class="step"><b>Wichtig:</b> bei <b>[Karte ungültig]</b> und <b>[PIN falsch]</b> jeweils „Karte einziehen" → <b>Ablaufende (X)</b> = Abbruch. „Kontostand aktualisieren" und „Karte ausgeben" laufen <b>parallel</b> (Teilung/Synchronisation).</div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Übung 4 · Onlineshop-Bestellvorgang</div>
+      <div class="calc-q">Schwimmbahnen <b>Kunde</b> / <b>Onlineshop</b>. Der Kunde kann beliebig viele Artikel ansehen und in den Warenkorb legen (oder abbrechen), geht dann zur Kasse. Ein registrierter Kunde loggt sich ein, alternativ Bestellung als Gast (Adresse eingeben). Nach Wahl der Zahlungsart wird der Kaufauftrag erteilt; der Shop bestätigt, erstellt <b>parallel</b> Rechnung und verpackt die Ware, dann wird versendet.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="scroll-x"><img class="dimg" src="img/uml/sol_act_onlineshop.png" alt="Musterlösung Onlineshop-Bestellvorgang"></div>
+        <div class="step"><b>Schleifen:</b> „Artikel ansehen" <span class="mono">[weiter]/[ausgesucht]</span> und „Warenkorb" <span class="mono">[weiter]/[fertig]</span>. <b>Verzweigung</b> <span class="mono">[registriert]</span> → Einloggen / <span class="mono">[else]</span> → Als Gast bestellen. Am Ende <b>Teilung</b>: „Rechnung erstellen" ‖ „Ware verpacken" → Synchronisation → „Ware versenden".</div>
+        <ul class="pts">
+          <li><span>Je Aktivität</span><span>1</span></li>
+          <li><span>Je Entscheidung inkl. Beschriftung</span><span>2</span></li>
+          <li><span>Je Zusammenführung</span><span>1</span></li>
+          <li><span>Teilung / Synchronisation</span><span>je 1</span></li>
+          <li><span>Start-/Endknoten / Verteilung auf Schwimmbahnen</span><span>je 1</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Übung 5 · Einladung zur Aktionärsversammlung</div>
+      <div class="calc-q">Schwimmbahnen <b>Mitarbeiter</b> / <b>Aktionär</b> / <b>System</b>. Der Mitarbeiter versendet die Einladung <b>parallel per Post und über die E-Service-Plattform</b>. Hat der Aktionär E-Service-Zugang, meldet er sich an und wählt virtuelle oder Präsenzteilnahme; sonst sendet er die Anmeldung per Post (vom Mitarbeiter erfasst). Bei Präsenz reserviert das System einen Platz und versendet Platzkarte + Tagesordnung; bei virtueller Teilnahme die Zugangsdaten + Tagesordnung.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="scroll-x"><img class="dimg" src="img/uml/sol_act_aktionaersversammlung.png" alt="Musterlösung Einladung Aktionärsversammlung"></div>
+        <div class="step"><b>Parallelisierung</b> beim Versand (Post ‖ E-Service). <b>Verzweigungen</b>: <span class="mono">[E-Service-Nutzer]/[kein E-Service-Nutzer]</span> und <span class="mono">[Präsenzteilnahme]/[virtuelle Teilnahme]</span>.</div>
+        <ul class="pts">
+          <li><span>Je Aktivität an der korrekten Stelle</span><span>1</span></li>
+          <li><span>Je Verzweigung</span><span>2</span></li>
+          <li><span>Parallelisierung</span><span>2</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Übung 6 · Kundenportal-Bestellung</div>
+      <div class="calc-q">Ein Kunde meldet sich an (bei Misserfolg erneut). Nach erfolgreicher Anmeldung gibt er eine Bestellung auf; <b>parallel</b> werden Zahlung und Lagerbestand geprüft. Sind beide Prüfungen erfolgreich, wird verpackt &amp; versendet. Schlägt eine fehl, wird der Kunde benachrichtigt und gefragt, ob er es erneut versucht (ja → neue Bestellung, nein → Ende).</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="scroll-x"><img class="dimg" src="img/uml/sol_act_kundenportal.png" alt="Musterlösung Kundenportal-Bestellung"></div>
+        <div class="step"><b>Zwei Schleifen</b> (Anmeldung wiederholen, neue Bestellung) über <b>Zusammenführungs-Rauten</b>; die parallele Prüfung „Zahlung prüfen ‖ Lagerbestand prüfen" über <b>Teilung/Synchronisation</b>.</div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Übung 7 · Yachthafen – Liegeplatz mieten</div>
+      <div class="calc-q">Schwimmbahnen <b>Kunde</b> / <b>Liegeplatz-Verwaltungs-App</b>. Der Kunde fragt die Liegeplatzliste an, die App zeigt sie; er wählt einen Platz, die App prüft die Verfügbarkeit. Ist der Platz nicht verfügbar, wählt er einen neuen; sonst gibt er seine Daten ein und sendet sie. Nach dem Speichern wird <b>gleichzeitig</b> eine Bestätigungsmail verschickt und die Verfügbarkeit aktualisiert, dann endet der Prozess.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="scroll-x"><img class="dimg" src="img/uml/sol_act_yachthafen.png" alt="Musterlösung Yachthafen Liegeplatz mieten"></div>
+        <div class="step"><b>Schleife</b> über die Verfügbarkeits-Verzweigung <span class="mono">[nicht verfügbar]</span> → zurück zur Auswahl; <span class="mono">[verfügbar]</span> → Daten. Am Ende <b>Teilung/Synchronisation</b>: „Mail schicken" ‖ „Verfügbarkeit aktualisieren".</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!--  ZUSTAND                                                              -->
+<!-- ===================================================================== -->
+<div id="vState" class="view sum">
+
+  <div class="h-sec"><span class="ico">🚦</span> Zustandsdiagramm (State)</div>
+  <p class="lead">Zeigt, <b>wie ein Objekt reagiert</b>: seine möglichen <b>Zustände</b> und die <b>Übergänge</b> (Transitionen) dazwischen, die durch <b>Ereignisse</b> ausgelöst werden. Während ein Aktivitätsdiagramm die <i>Aktionen</i> betont, betont das Zustandsdiagramm die <i>Reaktionen</i> - ideal für Oberflächen, Automaten und Statusmodelle.</p>
+
+  <div class="h-sub">Komplette Notation</div>
+  <div class="symgrid">
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Anfangszustand">
+        <circle cx="70" cy="40" r="13" fill="currentColor"/>
+        <line x1="70" y1="53" x2="70" y2="74" stroke="currentColor" stroke-width="2.4"/>
+        <polygon points="70,80 64,68 76,68" fill="currentColor"/></svg></div>
+      <h4>Anfangszustand <span class="abk">Start</span></h4>
+      <p><b>Gefüllter Kreis.</b> Der Startpunkt; ein Pfeil führt in den ersten (oft Ruhe-)Zustand.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Endzustand">
+        <circle cx="70" cy="45" r="16" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="70" cy="45" r="8" fill="currentColor"/></svg></div>
+      <h4>Endzustand <span class="abk">Ende</span></h4>
+      <p><b>Gefüllter Kreis mit Ring.</b> Das Objekt hat seinen Lebenszyklus beendet.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Zustand">
+        <rect x="30" y="30" width="80" height="30" rx="12" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <text x="70" y="49" text-anchor="middle" font-size="13">frei</text></svg></div>
+      <h4>Zustand <span class="abk">State</span></h4>
+      <p><b>Abgerundetes Rechteck</b> mit einer <b>Situation im Leben</b> des Objekts (z. B. „frei", „gesperrt").</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Zustand mit Aktionen">
+        <rect x="20" y="10" width="100" height="72" rx="10" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <text x="70" y="25" text-anchor="middle" font-size="12">Zustand</text>
+        <line x1="20" y1="31" x2="120" y2="31" stroke="currentColor" stroke-width="1.5"/>
+        <text x="27" y="45" font-size="10">entry / aktion</text>
+        <text x="27" y="59" font-size="10">do / aktion</text>
+        <text x="27" y="73" font-size="10">exit / aktion</text></svg></div>
+      <h4>Zustand mit Aktionen <span class="abk">entry/do/exit</span></h4>
+      <p><b>entry/</b> beim Betreten, <b>do/</b> während des Verbleibs, <b>exit/</b> beim Verlassen. Zusätzlich Reaktionen als <b>ereignis/aktion</b>.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Transition">
+        <line x1="14" y1="45" x2="106" y2="45" stroke="currentColor" stroke-width="2.4"/>
+        <polygon points="124,45 104,37 104,53" fill="currentColor"/>
+        <text x="66" y="36" text-anchor="middle" font-size="10" fill="var(--uml-ac)">ereignis [bed.] / aktion</text></svg></div>
+      <h4>Transition <span class="abk">Übergang</span></h4>
+      <p><b>Gerichteter Pfeil</b> zwischen zwei Zuständen, beschriftet mit <b>ereignis [bedingung] / aktion</b>. Quelle und Ziel dürfen identisch sein (Selbstübergang).</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Verzweigung">
+        <polygon points="70,20 86,40 70,60 54,40" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <line x1="70" y1="8" x2="70" y2="20" stroke="currentColor" stroke-width="2"/>
+        <line x1="54" y1="40" x2="22" y2="40" stroke="currentColor" stroke-width="2"/><polygon points="18,40 30,35 30,45" fill="currentColor"/>
+        <line x1="86" y1="40" x2="118" y2="40" stroke="currentColor" stroke-width="2"/><polygon points="122,40 110,35 110,45" fill="currentColor"/>
+        <text x="34" y="30" font-size="8.5" fill="var(--uml-ac)">[Bed. A]</text><text x="106" y="30" font-size="8.5" fill="var(--uml-ac)">[Bed. B]</text></svg></div>
+      <h4>Verzweigung <span class="abk">Branch</span></h4>
+      <p><b>Raute</b> - je nach <b>Bedingung</b> wird ein anderer Zielzustand angenommen.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Zeitübergang">
+        <line x1="14" y1="45" x2="106" y2="45" stroke="currentColor" stroke-width="2.4"/>
+        <polygon points="124,45 104,37 104,53" fill="currentColor"/>
+        <text x="62" y="36" text-anchor="middle" font-size="11" fill="var(--uml-ac)">after(Zeitdauer)</text></svg></div>
+      <h4>Zeitübergang <span class="abk">after()</span></h4>
+      <p><b>Transition mit <span class="mono">after(Zeitdauer)</span></b> - der Übergang erfolgt automatisch nach Ablauf einer Zeitspanne.</p>
+    </div>
+
+  </div>
+
+  <div class="h-sub">Notations-Regeln</div>
+  <ul class="rules">
+    <li>Genau <b>ein Anfangszustand</b>; oft sinnvoll ist ein <b>Ruhezustand</b>, in den das Objekt nach Start/Reset zurückkehrt.</li>
+    <li>Eine <b>Transition</b> wird durch ein <b>Ereignis</b> ausgelöst; die <b>Bedingung</b> [guard] muss erfüllt sein, die <b>Aktion</b> wird ausgeführt.</li>
+    <li>Das Objekt kann ein Ereignis <b>ignorieren</b> oder darauf <b>reagieren</b> (Zustand wechseln und/oder Aktion ausführen).</li>
+    <li><b>Quell- und Zielzustand</b> dürfen identisch sein (Selbstübergang).</li>
+    <li>Beschriftung der Transition: <b>ereignis [bedingung] / aktion</b> - alle drei Teile sind optional.</li>
+  </ul>
+
+  <div class="h-sub">Durchgezeichnetes Beispiel · Raumbelegung</div>
+  <p class="lead" style="font-size:16px">Ein Raum ist nach dem Anlegen <b>frei</b>. Er kann <b>gesperrt</b> werden (und die Sperrung wieder aufgehoben), oder per Anfrage in den Zustand <b>angefragt</b> wechseln. Angefragte Räume werden <b>storniert</b> (zurück zu frei) oder <b>gebucht</b>; nach der Veranstaltung wird der gebuchte Raum wieder freigegeben.</p>
+  <div class="scroll-x"><img class="dimg" src="img/uml/ex_state_raumbelegung.png" alt="Zustandsdiagramm Raumbelegung: frei, gesperrt, angefragt, gebucht"></div>
+  <div class="dcap">Quelle: Lehrmaterial „Zustandsdiagramm" · Transitionen beschriftet mit dem auslösenden Ereignis.</div>
+
+  <div class="h-sec"><span class="ico">✍️</span> Übungen mit Lösung</div>
+  <div class="calc">
+
+    <div class="calc-card">
+      <div class="calc-h">Übung 1 · Ampel der „BesucherApp"</div>
+      <div class="calc-q">Eine Ampel zeigt die Auslastung an: <b>Grün</b> = unter 50 %, <b>Orange</b> = 50 % bis 80 %, <b>Rot</b> = über 80 %. Die Ampel wird anhand der Auslastung <b>regelmäßig aktualisiert</b>. Erstelle ein Zustandsdiagramm.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="scroll-x"><img class="dimg" src="img/uml/sol_state_ampel.png" alt="Musterlösung Ampel BesucherApp"></div>
+        <div class="step"><b>Zustände:</b> Grün, Orange, Rot. <b>Transitionen</b> beim Ereignis „aktualisieren" mit Guards: <span class="mono">[Auslastung &lt; 50 %]</span> → Grün, <span class="mono">[50–80 %]</span> → Orange, <span class="mono">[&gt; 80 %]</span> → Rot. <b>Selbstübergänge</b> (gleiche Stufe bleibt) sind optional und werden nicht bepunktet.</div>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Übung 2 · Lichtsteuerung (Flur-Controller)</div>
+      <div class="calc-q">Der Controller kennt die Zustände <b>wartend</b>, <b>auto</b>, <b>manuell</b>, <b>zeitgesteuert</b>. Initial <b>wartend</b> (Licht aus). Sensoren erkennen Personen → <b>auto</b> (Licht an). Keine Personen mehr im Zustand auto → <b>zeitgesteuert</b>. Innerhalb der Zeitspanne wieder Personen → zurück zu <b>auto</b>; sonst → <b>wartend</b> (Licht aus). Im Zustand auto kann eine Person das Licht manuell einschalten → <b>manuell</b>. Im Zustand manuell kann das Licht von einer Person ausgeschaltet werden → <b>wartend</b>; werden keine Personen mehr erfasst → <b>zeitgesteuert</b>.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="callout"><span class="ci">ℹ️</span><div><b>Hinweis:</b> Für diese Aufgabe liegt <b>kein offizieller Lösungsschlüssel</b> im Material vor - die folgende Lösung ist selbst erarbeitet und nach dem Aufgabentext aufgebaut.</div></div>
+        <div class="step"><b>Zustände &amp; Transitionen</b> (Trigger / Aktion):</div>
+        <ul class="q-list">
+          <li>Start → <b>wartend</b> (entry / Licht aus)</li>
+          <li><b>wartend</b> — Person erkannt → <b>auto</b> (entry / Licht an)</li>
+          <li><b>auto</b> — keine Person → <b>zeitgesteuert</b></li>
+          <li><b>auto</b> — manuell eingeschaltet → <b>manuell</b> (entry / Licht an)</li>
+          <li><b>zeitgesteuert</b> — Person erkannt [innerhalb Zeitspanne] → <b>auto</b></li>
+          <li><b>zeitgesteuert</b> — Zeit abgelaufen / keine Person → <b>wartend</b> (entry / Licht aus)</li>
+          <li><b>manuell</b> — manuell ausgeschaltet → <b>wartend</b> (entry / Licht aus)</li>
+          <li><b>manuell</b> — keine Person mehr erfasst → <b>zeitgesteuert</b></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-h">Übung 3 · Auslastung der Bahnen</div>
+      <div class="calc-q">Zustände <b>leer</b>, <b>niedrig</b>, <b>normal</b>, <b>hoch</b>. Bei Fahrtbeginn bzw. wenn alle ausgestiegen sind (0 %) ist die Bahn <b>leer</b>; eine leere Bahn kann die Fahrt beenden (Endzustand). Beim Verlassen jeder Haltestelle wird beim Ereignis <b>Abfahrt</b> die Auslastung geprüft: <b>niedrig</b> = bis 30 %, <b>normal</b> = über 30 % und unter 70 %, <b>hoch</b> = ab 70 %. Übergänge zwischen leer und normal bzw. hoch werden zur Vereinfachung nicht berücksichtigt.</div>
+      <div class="calc-acts"><button class="calc-toggle">Lösung anzeigen</button></div>
+      <div class="calc-sol">
+        <div class="callout"><span class="ci">ℹ️</span><div><b>Hinweis:</b> Für diese Aufgabe liegt <b>kein offizieller Lösungsschlüssel</b> im Material vor - die folgende Lösung ist selbst erarbeitet.</div></div>
+        <div class="step"><b>Zustände &amp; Transitionen</b> (Ereignis <span class="mono">Abfahrt</span> mit Guard):</div>
+        <ul class="q-list">
+          <li>Start → <b>leer</b></li>
+          <li><b>leer</b> — Abfahrt [Auslastung = 0 %] → <b>leer</b> (bleibt); <b>leer</b> — keine Auslastung → <b>Endzustand</b> (Fahrt beenden)</li>
+          <li>von <b>leer</b>: Abfahrt [bis 30 %] → <b>niedrig</b></li>
+          <li><b>niedrig</b> — Abfahrt [über 30 % und unter 70 %] → <b>normal</b>; Abfahrt [ab 70 %] → <b>hoch</b>; Abfahrt [= 0 %] → <b>leer</b></li>
+          <li><b>normal</b> ⇄ <b>hoch</b> über Abfahrt mit den jeweiligen Guards; aus <b>normal</b>/<b>hoch</b> bei [bis 30 %] → <b>niedrig</b></li>
+        </ul>
+        <div class="callout tip"><span class="ci">💡</span><div>Schlüssel ist, dass <b>jede</b> Transition durch das Ereignis <b>Abfahrt</b> mit einem eindeutigen <b>Guard</b> ([Prozentbereich]) ausgelöst wird.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!--  KLASSE                                                               -->
+<!-- ===================================================================== -->
+<div id="vClass" class="view sum">
+
+  <div class="h-sec"><span class="ico">🏗️</span> Klassendiagramm (Class)</div>
+  <p class="lead">Das wichtigste <b>Strukturdiagramm</b>: es zeigt den <b>statischen Bauplan</b> - welche <b>Klassen</b> es gibt, ihre <b>Attribute</b> und <b>Methoden</b> und wie sie <b>miteinander in Beziehung</b> stehen.</p>
+
+  <div class="h-sub">Bausteine</div>
+  <div class="symgrid">
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Klasse">
+        <rect x="38" y="10" width="64" height="72" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <text x="70" y="24" text-anchor="middle" font-size="11">Konto</text>
+        <line x1="38" y1="30" x2="102" y2="30" stroke="currentColor" stroke-width="1.5"/>
+        <text x="43" y="42" font-size="9">- saldo : double</text>
+        <line x1="38" y1="50" x2="102" y2="50" stroke="currentColor" stroke-width="1.5"/>
+        <text x="43" y="62" font-size="9">+ einzahlen()</text>
+        <text x="43" y="74" font-size="9">+ abheben()</text></svg></div>
+      <h4>Klasse <span class="abk">3 Felder</span></h4>
+      <p><b>Rechteck</b> mit drei Bereichen: <b>Name</b>, <b>Attribute</b>, <b>Methoden</b>.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Abstrakte Klasse">
+        <rect x="38" y="16" width="64" height="58" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <text x="70" y="33" text-anchor="middle" font-size="11" font-style="italic">Form</text>
+        <text x="70" y="46" text-anchor="middle" font-size="9">{abstract}</text>
+        <line x1="38" y1="52" x2="102" y2="52" stroke="currentColor" stroke-width="1.5"/>
+        <text x="43" y="66" font-size="9" font-style="italic">flaeche()</text></svg></div>
+      <h4>Abstrakte Klasse <span class="abk">{abstract}</span></h4>
+      <p><b>Kursiver Name</b> bzw. <b>{abstract}</b>. Kann nicht instanziiert werden; abstrakte Methoden ebenfalls kursiv.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Interface">
+        <rect x="34" y="14" width="72" height="60" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <text x="70" y="30" text-anchor="middle" font-size="10">«interface»</text>
+        <text x="70" y="43" text-anchor="middle" font-size="11" font-style="italic">Drucker</text>
+        <line x1="34" y1="50" x2="106" y2="50" stroke="currentColor" stroke-width="1.5"/>
+        <text x="40" y="64" font-size="9" font-style="italic">drucke()</text></svg></div>
+      <h4>Interface <span class="abk">«interface»</span></h4>
+      <p><b>Klasse mit Stereotyp «interface».</b> Eine reine Schnittstelle - legt Methoden fest, ohne sie auszuprogrammieren.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Notiz">
+        <path d="M40 16 L92 16 L106 30 L106 74 L40 74 Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+        <path d="M92 16 L92 30 L106 30" fill="none" stroke="currentColor" stroke-width="2"/>
+        <text x="48" y="46" font-size="9">Kommentar</text>
+        <text x="48" y="58" font-size="9">zur Klasse</text></svg></div>
+      <h4>Notiz <span class="abk">Kommentar</span></h4>
+      <p><b>Blatt mit Eselsohr</b>, per gestrichelter Linie angeheftet - ein erklärender Kommentar.</p>
+    </div>
+
+  </div>
+
+  <div class="h-sub">Beziehungen (Pfeile)</div>
+  <div class="symgrid">
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Vererbung">
+        <line x1="70" y1="34" x2="70" y2="74" stroke="currentColor" stroke-width="2.4"/>
+        <polygon points="70,12 60,34 80,34" fill="var(--bg2)" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+        <text x="70" y="86" text-anchor="middle" font-size="9">Unterklasse → Oberklasse</text></svg></div>
+      <h4>Vererbung <span class="abk">ist ein</span></h4>
+      <p><b>Durchgezogene Linie + leeres Dreieck</b> zur <b>Oberklasse</b>. „Sparkonto <b>ist ein</b> Konto".</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Implementierung">
+        <line x1="70" y1="34" x2="70" y2="74" stroke="currentColor" stroke-width="2.2" stroke-dasharray="6 5"/>
+        <polygon points="70,12 60,34 80,34" fill="var(--bg2)" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+        <text x="70" y="86" text-anchor="middle" font-size="9">Klasse → «interface»</text></svg></div>
+      <h4>Implementierung <span class="abk">Realisierung</span></h4>
+      <p><b>Gestrichelte Linie + leeres Dreieck</b> zum <b>Interface</b>. Die Klasse erfüllt dessen Schnittstelle.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Assoziation">
+        <line x1="14" y1="45" x2="126" y2="45" stroke="currentColor" stroke-width="2.4"/>
+        <text x="24" y="38" font-size="11" fill="var(--uml-ac)">1</text>
+        <text x="116" y="38" font-size="11" fill="var(--uml-ac)">*</text></svg></div>
+      <h4>Assoziation <span class="abk">kennt</span></h4>
+      <p><b>Durchgezogene Linie</b> mit <b>Multiplizitäten</b> (1, *, 0..1, 1..*): „kennt/nutzt".</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Gerichtete Assoziation">
+        <line x1="14" y1="45" x2="108" y2="45" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M124 45 L106 38 M124 45 L106 52" fill="none" stroke="currentColor" stroke-width="2.4"/></svg></div>
+      <h4>Gerichtete Assoziation <span class="abk">Navigierbarkeit</span></h4>
+      <p><b>Linie mit offener Pfeilspitze</b> - die Beziehung ist nur in <b>eine Richtung</b> navigierbar.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Aggregation">
+        <line x1="44" y1="45" x2="126" y2="45" stroke="currentColor" stroke-width="2.4"/>
+        <polygon points="44,45 30,38 16,45 30,52" fill="var(--bg2)" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+        <text x="60" y="68" text-anchor="middle" font-size="9">Raute am Ganzen</text></svg></div>
+      <h4>Aggregation <span class="abk">besteht aus</span></h4>
+      <p><b>Leere Raute</b> am <b>Ganzen</b>. Lockere Teil-Ganzes-Beziehung: das <b>Teil überlebt</b> das Ganze (Abteilung ◇— Mitarbeiter).</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Komposition">
+        <line x1="44" y1="45" x2="126" y2="45" stroke="currentColor" stroke-width="2.4"/>
+        <polygon points="44,45 30,38 16,45 30,52" fill="currentColor" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+        <text x="60" y="68" text-anchor="middle" font-size="9">Raute am Ganzen</text></svg></div>
+      <h4>Komposition <span class="abk">fest</span></h4>
+      <p><b>Gefüllte Raute</b> am <b>Ganzen</b>. Feste Teil-Ganzes-Beziehung: das <b>Teil stirbt mit</b> dem Ganzen (Gebäude ◆— Raum).</p>
+    </div>
+
+  </div>
+
+  <div class="h-sub">Syntax &amp; Sichtbarkeiten</div>
+  <div class="syntax">
+    <div class="s"><h5>Attribut</h5><code><b>Sichtbarkeit</b> name : Typ {Eigenschaften}
+- saldo : double
++ name : String</code></div>
+    <div class="s"><h5>Methode</h5><code><b>Sichtbarkeit</b> name(param : Typ, …) : Rückgabetyp
++ abheben(betrag : double) : boolean</code></div>
+    <div class="s"><h5>Sichtbarkeit</h5><code><b>+</b> public   <b>#</b> protected
+<b>-</b> private   <b>~</b> package</code></div>
+    <div class="s"><h5>Eigenschaften</h5><code>{static, final, readOnly, …}
+kursiv = abstrakt · unterstrichen = static</code></div>
+  </div>
+
+  <div class="callout merk"><span class="ci">📌</span><div><b>Raute-Merksatz:</b> <b>leer = lockere</b> Bindung (Aggregation), <b>gefüllt = feste</b> Bindung (Komposition). Die <b>Raute sitzt immer am Ganzen</b>. Dreieck = Vererbung/Implementierung und zeigt immer zur <b>Ober</b>klasse bzw. zum Interface.</div></div>
+
+  <div class="callout tip"><span class="ci">🧭</span><div><b>Hinweis:</b> Zum Klassendiagramm liegen im aktuellen Übungsmaterial keine eigenen Aufgaben - die Notation hier deckt aber den vollständigen IHK-Umfang 2024 zum Nachzeichnen ab.</div></div>
+
+</div>
+
+<!-- ===================================================================== -->
+<!--  SEQUENZ                                                              -->
+<!-- ===================================================================== -->
+<div id="vSequence" class="view sum">
+
+  <div class="h-sec"><span class="ico">⏱️</span> Sequenzdiagramm (Sequence)</div>
+  <p class="lead">Zeigt den <b>zeitlichen Ablauf</b> des <b>Nachrichtenaustauschs</b> zwischen Objekten. Die Zeit läuft <b>von oben nach unten</b> entlang der <b>Lebenslinien</b>; jede Nachricht ist ein Pfeil von Sender zu Empfänger.</p>
+
+  <div class="h-sub">Komplette Notation</div>
+  <div class="symgrid">
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Lebenslinie">
+        <rect x="46" y="10" width="48" height="20" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <text x="70" y="24" text-anchor="middle" font-size="11">: Konto</text>
+        <line x1="70" y1="30" x2="70" y2="84" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 5"/></svg></div>
+      <h4>Lebenslinie <span class="abk">Lifeline</span></h4>
+      <p><b>Objektkopf</b> (<span class="mono">:Klasse</span>) mit <b>gestrichelter Linie</b> nach unten - die Existenz des Objekts über die Zeit.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Aktivierung">
+        <line x1="70" y1="10" x2="70" y2="84" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 5"/>
+        <rect x="64" y="30" width="12" height="40" fill="var(--bg2)" stroke="currentColor" stroke-width="2"/></svg></div>
+      <h4>Aktivierung <span class="abk">Ausführung</span></h4>
+      <p><b>Schmaler Balken</b> auf der Lebenslinie - das Objekt ist gerade <b>aktiv</b> (führt etwas aus).</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Synchrone Nachricht">
+        <line x1="14" y1="45" x2="108" y2="45" stroke="currentColor" stroke-width="2.4"/>
+        <polygon points="124,45 104,37 104,53" fill="currentColor"/>
+        <text x="60" y="36" text-anchor="middle" font-size="10" fill="var(--uml-ac)">nachricht()</text></svg></div>
+      <h4>Synchrone Nachricht <span class="abk">Aufruf</span></h4>
+      <p><b>Durchgezogener Pfeil, gefüllte Spitze.</b> Der Sender <b>wartet</b> auf das Beenden des Aufrufs (Rückgabewert möglich).</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Rückgabe">
+        <line x1="32" y1="45" x2="126" y2="45" stroke="currentColor" stroke-width="2.2" stroke-dasharray="6 5"/>
+        <path d="M14 45 L32 38 M14 45 L32 52" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <text x="78" y="36" text-anchor="middle" font-size="10" fill="var(--uml-ac)">rückgabe</text></svg></div>
+      <h4>Rückgabe <span class="abk">Return</span></h4>
+      <p><b>Gestrichelter Pfeil, offene Spitze</b>, zurück zum Sender - das Ergebnis eines synchronen Aufrufs.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Asynchrone Nachricht">
+        <line x1="14" y1="45" x2="120" y2="45" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M124 45 L106 38 M124 45 L106 52" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <text x="60" y="36" text-anchor="middle" font-size="10" fill="var(--uml-ac)">signal</text></svg></div>
+      <h4>Asynchrone Nachricht <span class="abk">Signal</span></h4>
+      <p><b>Durchgezogener Pfeil, offene Spitze.</b> Der Sender <b>wartet nicht</b> auf eine Antwort und arbeitet sofort weiter.</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Objekt erzeugen">
+        <line x1="14" y1="30" x2="86" y2="30" stroke="currentColor" stroke-width="2.2" stroke-dasharray="6 5"/>
+        <polygon points="104,30 84,22 84,38" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <rect x="104" y="20" width="30" height="20" fill="none" stroke="currentColor" stroke-width="2"/>
+        <text x="50" y="22" text-anchor="middle" font-size="10" fill="var(--uml-ac)">«create»</text></svg></div>
+      <h4>Objekt erzeugen <span class="abk">create</span></h4>
+      <p><b>Gestrichelter Pfeil «create»</b> auf den Kopf eines <b>neuen Objekts</b> (Objekt-Konstruktion).</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Objekt zerstören">
+        <line x1="70" y1="8" x2="70" y2="56" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 5"/>
+        <line x1="58" y1="56" x2="82" y2="80" stroke="currentColor" stroke-width="3"/>
+        <line x1="82" y1="56" x2="58" y2="80" stroke="currentColor" stroke-width="3"/></svg></div>
+      <h4>Objekt zerstören <span class="abk">destroy</span></h4>
+      <p><b>Großes X</b> am Ende der Lebenslinie - das Objekt wird <b>zerstört</b> (Objekt-Destruktion).</p>
+    </div>
+
+    <div class="sym">
+      <div class="svgbox"><svg viewBox="0 0 140 90" role="img" aria-label="Kombiniertes Fragment">
+        <rect x="22" y="14" width="96" height="62" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        <path d="M22 14 L52 14 L52 24 L44 30 L22 30 Z" fill="var(--bg2)" stroke="currentColor" stroke-width="2"/>
+        <text x="34" y="26" font-size="10" fill="var(--uml-ac)">alt</text>
+        <text x="70" y="46" text-anchor="middle" font-size="9">[ Bedingung ]</text>
+        <line x1="22" y1="52" x2="118" y2="52" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 4"/>
+        <text x="34" y="66" font-size="9">[ else ]</text></svg></div>
+      <h4>Kombiniertes Fragment <span class="abk">alt/opt/loop</span></h4>
+      <p><b>Rahmen mit Tab.</b> <b>alt</b> = Alternative (if/else), <b>opt</b> = optional (if), <b>loop</b> = Schleife - Bedingung in [eckigen Klammern].</p>
+    </div>
+
+  </div>
+
+  <div class="h-sub">Notations-Regeln</div>
+  <ul class="rules">
+    <li><b>Zeit läuft nach unten</b> - die Reihenfolge der Nachrichten ist ihre zeitliche Abfolge.</li>
+    <li><b>Synchron</b> (gefüllte Spitze) = Sender wartet; <b>asynchron</b> (offene Spitze) = Sender wartet nicht.</li>
+    <li>Die <b>Rückgabe</b> ist ein gestrichelter Pfeil zurück zum Aufrufer (optional, nur bei synchronen Aufrufen sinnvoll).</li>
+    <li><b>«create»</b> erzeugt ein Objekt (Pfeil auf den Objektkopf), das <b>X</b> zerstört es.</li>
+    <li><b>alt/opt/loop</b> klammern Nachrichtenfolgen, die nur unter einer Bedingung bzw. wiederholt ablaufen.</li>
+  </ul>
+
+  <div class="callout tip"><span class="ci">🧭</span><div><b>Hinweis:</b> Zum Sequenzdiagramm liegen im aktuellen Übungsmaterial keine eigenen Aufgaben - die Notation hier entspricht dem vollständigen IHK-Umfang 2024.</div></div>
+
+</div>
+
+
+<!-- ===================================================================== -->
+<!--  KARTEIKARTEN  (study.js)                                              -->
+<!-- ===================================================================== -->
+<div id="vCards" class="view">
+  <div class="chips" id="cardChips"></div>
+  <div class="bar">
+    <div class="pbar"><i id="pfill"></i></div>
+    <div class="ptxt">0% beherrscht</div>
+    <button class="tbtn" id="tShuffle">🔀 Mischen</button>
+    <button class="tbtn" id="tOpen">Nur offene</button>
+    <button class="tbtn" id="tReset">Zurücksetzen</button>
+  </div>
+  <div id="study" class="study"></div>
+</div>
+
+<footer>FISI Lernplattform &middot; Lernfeld 5 &middot; UML-Diagramme &middot; Notation nach IHK 2024 &middot; Fortschritt der Karteikarten wird lokal im Browser gespeichert</footer>
+</div>
+
+<script src="study.js"></script>
+<script>
+/* ===== KARTEIKARTEN-DATEN ===== */
+const CATS={
+  allg:{label:"Grundlagen",color:"#b66bff"},
+  uc:{label:"Use-Case",color:"#2de2e6"},
+  akt:{label:"Aktivität",color:"#9dff52"},
+  zust:{label:"Zustand",color:"#ffb43b"},
+  kls:{label:"Klasse",color:"#ff2a6d"},
+  seq:{label:"Sequenz",color:"#6ea8ff"}
+};
+const CARDS=[
+  {c:"allg",q:"Wofür steht die Abkürzung UML?",a:"<b>Unified Modeling Language</b> - eine standardisierte grafische Sprache zur Modellierung von Software und Systemen."},
+  {c:"allg",q:"Unterschied <b>Struktur-</b> vs. <b>Verhaltensdiagramm</b>?",a:"<b>Struktur</b> = statischer Aufbau (z. B. Klassendiagramm). <b>Verhalten</b> = dynamischer Ablauf über die Zeit (Use-Case, Aktivität, Zustand, Sequenz)."},
+  {c:"allg",q:"Welche fünf UML-Diagrammtypen deckt die IHK-Notation 2024 ab?",a:"<b>Anwendungsfall-</b>, <b>Aktivitäts-</b>, <b>Klassen-</b>, <b>Sequenz-</b> und <b>Zustandsdiagramm</b>."},
+
+  {c:"uc",q:"Was zeigt ein <b>Anwendungsfalldiagramm</b>?",a:"<b>Was</b> ein System aus Sicht der Nutzer leisten soll - die Funktionen (Anwendungsfälle) und wer sie nutzt (Akteure). Das <i>Wie</i> bleibt offen."},
+  {c:"uc",q:"Wie werden <b>Akteur</b> und <b>Anwendungsfall</b> gezeichnet?",a:"<b>Akteur</b> = Strichmännchen (außerhalb der Systemgrenze). <b>Anwendungsfall</b> = Oval (innerhalb der Systemgrenze)."},
+  {c:"uc",q:"<b>«include»</b> - Bedeutung und Pfeilrichtung?",a:"<b>Pflicht</b>-Teilverhalten. Gestrichelter Pfeil mit offener Spitze <b>vom Basis-UC zum eingebundenen UC</b>. Der Basisfall bindet ihn immer ein."},
+  {c:"uc",q:"<b>«extend»</b> - Bedeutung und Pfeilrichtung?",a:"<b>Optionale</b> Erweiterung unter einer Bedingung. Gestrichelter Pfeil <b>vom erweiternden UC zum Basis-UC</b> - also andersherum als bei include."},
+  {c:"uc",q:"Häufigster Fehler im Use-Case-Diagramm?",a:"Die <b>«extend»-Pfeilrichtung</b> verkehrt herum. Der Pfeil zeigt auf den <b>erweiterten Basisfall</b>, nicht auf die Erweiterung."},
+  {c:"uc",q:"Was bedeutet <b>Generalisierung</b> zwischen Akteuren?",a:"'ist eine Art von' - leeres Dreieck zum Basisakteur. Der Spezialakteur (z. B. Admin) <b>erbt alle Anwendungsfälle</b> des Basisakteurs (z. B. Mitarbeiter)."},
+
+  {c:"akt",q:"Was zeigt ein <b>Aktivitätsdiagramm</b>?",a:"<b>Wie</b> ein Prozess abläuft - mit Aktionen, Verzweigungen, Parallelität und Verantwortungsbereichen (Schwimmbahnen)."},
+  {c:"akt",q:"Wie werden <b>Start-</b> und <b>Endknoten</b> gezeichnet?",a:"<b>Startknoten</b> = gefüllter Kreis. <b>Endknoten</b> = gefüllter Kreis mit Ring (Auge). Es darf mehrere Endknoten geben."},
+  {c:"akt",q:"Unterschied <b>Endknoten</b> vs. <b>Ablaufende</b> (Kreis mit X)?",a:"<b>Endknoten</b> (Auge) beendet die <b>gesamte Aktivität</b>. <b>Ablaufende</b> (Kreis mit X) beendet <b>nur den aktuellen Fluss</b>, andere parallele Flüsse laufen weiter."},
+  {c:"akt",q:"<b>Verzweigung</b> vs. <b>Teilung/Synchronisation</b>?",a:"<b>Raute</b> = Verzweigung/Zusammenführung: genau <b>ein</b> Weg (mit Bedingung). <b>Balken</b> = Teilung/Synchronisation: <b>alle</b> Wege laufen <b>parallel</b>."},
+  {c:"akt",q:"Wichtige Pfeil-Regel bei Aktionen?",a:"Zu und von einer <b>Aktion</b> führt <b>immer nur ein Pfeil</b>. Mehrere Wege müssen über eine <b>Raute</b> (Bedingung) oder einen <b>Balken</b> (parallel) geführt werden."},
+  {c:"akt",q:"Wozu dienen <b>Schwimmbahnen</b> (Swimlanes)?",a:"Sie ordnen jede Aktion einem <b>Verantwortungsbereich</b> (Akteur/System) zu - 'wer macht was'."},
+
+  {c:"zust",q:"Was zeigt ein <b>Zustandsdiagramm</b>?",a:"<b>Wie ein Objekt reagiert</b>: seine möglichen <b>Zustände</b> und die <b>Übergänge</b> dazwischen, ausgelöst durch Ereignisse. Gut für Oberflächen/Automaten."},
+  {c:"zust",q:"Wie ist eine <b>Transition</b> beschriftet?",a:"<b>ereignis [bedingung] / aktion</b>: das auslösende <b>Ereignis (Trigger)</b>, eine optionale <b>Bedingung (Guard)</b> und eine optionale <b>Aktion</b>."},
+  {c:"zust",q:"Welche Aktionen kann ein Zustand enthalten?",a:"<b>entry/</b> (beim Betreten), <b>do/</b> (während), <b>exit/</b> (beim Verlassen) und Reaktionen auf <b>ereignis/aktion</b>."},
+  {c:"zust",q:"Wie werden Anfangs- und Endzustand gezeichnet?",a:"<b>Anfangszustand</b> = gefüllter Kreis. <b>Endzustand</b> = gefüllter Kreis mit Ring. Zustände selbst sind <b>abgerundete Rechtecke</b>."},
+
+  {c:"kls",q:"Aus welchen drei Bereichen besteht eine <b>Klasse</b>?",a:"Rechteck mit drei Feldern: <b>Klassenname</b>, <b>Attribute</b>, <b>Methoden</b>."},
+  {c:"kls",q:"Was bedeuten die Sichtbarkeiten <b>+ # - ~</b>?",a:"<b>+</b> public, <b>#</b> protected, <b>-</b> private, <b>~</b> package."},
+  {c:"kls",q:"Syntax für ein <b>Attribut</b> und eine <b>Methode</b>?",a:"Attribut: <span class='mono'>Sichtbarkeit name : Typ {Eigenschaften}</span>. Methode: <span class='mono'>Sichtbarkeit name(param : Typ, …) : Rückgabetyp</span>."},
+  {c:"kls",q:"<b>Aggregation</b> vs. <b>Komposition</b>?",a:"Beide 'besteht aus', Raute am <b>Ganzen</b>. <b>Aggregation</b> = leere Raute (Teil überlebt das Ganze). <b>Komposition</b> = gefüllte Raute (Teil stirbt mit dem Ganzen)."},
+  {c:"kls",q:"Wie wird <b>Vererbung</b> dargestellt?",a:"Durchgezogene Linie mit <b>leerem Dreieck</b> zur Oberklasse - 'ist ein'. Bei einem <b>Interface</b>: gestrichelte Linie + leeres Dreieck (Implementierung/Realisierung)."},
+  {c:"kls",q:"Was sind <b>Multiplizitäten/Kardinalitäten</b>?",a:"Angaben an den Enden einer Assoziation: <b>1</b>, <b>*</b> (beliebig viele), <b>0..1</b>, <b>1..*</b> - 'wie viele Objekte stehen in Beziehung'."},
+
+  {c:"seq",q:"Was zeigt ein <b>Sequenzdiagramm</b>?",a:"Den <b>zeitlichen Ablauf</b> des Nachrichtenaustauschs zwischen Objekten - von oben nach unten entlang der <b>Lebenslinien</b>."},
+  {c:"seq",q:"<b>Synchrone</b> vs. <b>asynchrone</b> Nachricht?",a:"<b>Synchron</b> (gefüllte Pfeilspitze): Sender <b>wartet</b> auf das Ende/den Rückgabewert. <b>Asynchron</b> (offene Spitze): Sender wartet <b>nicht</b> auf Antwort."},
+  {c:"seq",q:"Wofür stehen <b>alt</b>, <b>opt</b> und <b>loop</b>?",a:"Kombinierte Fragmente: <b>alt</b> = Alternative (if/else), <b>opt</b> = optionaler Block (if), <b>loop</b> = Wiederholung (Schleife) - mit Bedingung in eckigen Klammern."}
+];
+
+/* ===== TABS ===== */
+const views={Overview:"vOverview",UseCase:"vUseCase",Activity:"vActivity",State:"vState",Class:"vClass",Sequence:"vSequence",Cards:"vCards"};
+function showTab(t){
+  Object.keys(views).forEach(k=>{
+    document.getElementById(views[k]).classList.toggle('on',k===t);
+    document.getElementById('t'+k).classList.toggle('on',k===t);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('tOverview').onclick=()=>showTab('Overview');
+document.getElementById('tUseCase').onclick=()=>showTab('UseCase');
+document.getElementById('tActivity').onclick=()=>showTab('Activity');
+document.getElementById('tState').onclick=()=>showTab('State');
+document.getElementById('tClass').onclick=()=>showTab('Class');
+document.getElementById('tSequence').onclick=()=>showTab('Sequence');
+document.getElementById('tCards').onclick=()=>{showTab('Cards');Study._rebuild();};
+
+/* ===== AUFKLAPP-BLOECKE (Uebungen) - ein Klick auf/zu ===== */
+document.querySelectorAll('.calc-toggle').forEach(tg=>{
+  const open=tg.textContent.trim();
+  const close=open.replace('anzeigen','verbergen');
+  tg.onclick=()=>{
+    const sol=tg.closest('.calc-card').querySelector('.calc-sol');
+    const shown=sol.classList.toggle('show');
+    tg.textContent=shown?close:open;
+  };
+});
+
+/* ===== KARTEIKARTEN ===== */
+Study.init({ cards: CARDS, cats: CATS, key: "fisi_lf5_uml_v1" });
+</script>
+<script>
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
