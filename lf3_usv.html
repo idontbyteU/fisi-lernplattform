@@ -94,34 +94,57 @@
     </div>
   </details>
 
-  <!-- AUFGABE 1 -->
+  <!-- AUFGABE 2 -->
   <div class="task">
-    <div class="tnum">Aufgabe 1</div>
-    <h3>Passende USV-Gr&ouml;&szlig;e dimensionieren</h3>
-    <p class="tq">2 Router à 50 W und 5 Standrechner à 400 W. Gesucht ist eine passende USV-Gr&ouml;&szlig;e f&uuml;r <b>20 Minuten</b> &Uuml;berbr&uuml;ckung, mit einem <b>Puffer von 30 %</b>.</p>
+    <div class="tnum">Aufgabe 2</div>
+    <h3>Akkus nachruesten ohne Zeitverlust</h3>
+    <p class="tq">Ein zusaetzliches Speichersystem soll an die vorhandene USV angeschlossen werden. Die aktuelle Ueberbrueckungszeit von <b>45 Minuten</b> darf sich dadurch nicht verringern. Das Speichersystem nimmt <b>560 W</b> auf. Die USV kann mit bis zu sechs weiteren <b>12-V-Akkus</b> zu je <b>14 Ah</b> erweitert werden. Ermitteln Sie die Anzahl der nachzuruestenden Akkus.</p>
+    <p class="tq" style="font-size:.9rem;color:var(--muted)">Formel: Ueberbrueckungszeit = (Anzahl Akkus × Kapazitaet × Spannung) / Last.</p>
     <details>
-      <summary>L&ouml;sung anzeigen<span class="ar">▸</span></summary>
+      <summary>Loesung anzeigen<span class="ar">▸</span></summary>
       <div class="sol">
-        <div class="step"><span class="b">1</span><span>Gesamtlast: 2×50 + 5×400 = <b>2100 W</b></span></div>
-        <div class="step"><span class="b">2</span><span>Energiebedarf 20 Min: 2100 W × 20/60 = <b>700 Wh</b></span></div>
-        <div class="step"><span class="b">3</span><span>Mit 30 % Reserve: 700 Wh / 0,7 = <b>1000 Wh</b></span></div>
-        <div class="res">→ USV mit mind. 1000 Wh</div>
+        <div class="step"><span class="b">1</span><span>Formel nach Anzahl umstellen: Anzahl = (Zeit × Last) / (Kapazitaet × Spannung)</span></div>
+        <div class="step"><span class="b">2</span><span>Zeit in Stunden: 45 Min = <b>0,75 h</b></span></div>
+        <div class="step"><span class="b">3</span><span>Zaehler: 0,75 h × 560 W = <b>420 Wh</b></span></div>
+        <div class="step"><span class="b">4</span><span>Nenner pro Akku: 12 V × 14 Ah = <b>168 Wh</b></span></div>
+        <div class="step"><span class="b">5</span><span>420 / 168 = 2,5 → aufrunden (2 Akkus reichen nicht)</span></div>
+        <div class="res">→ 3 Akkus</div>
       </div>
     </details>
   </div>
 
-  <!-- AUFGABE 2 (Platzhalter) -->
-  <div class="task todo">
-    <div class="tnum">Aufgabe 2</div>
-    <span class="pending">Aufgabe folgt</span>
-    <p class="tq">Inhalt wird nachgeliefert.</p>
+  <!-- AUFGABE 3a -->
+  <div class="task">
+    <div class="tnum">Aufgabe 3a</div>
+    <h3>USV dimensionieren — mit Zuschlagspuffer</h3>
+    <p class="tq">In einem neuen Raum laufen <b>2 Router à 50 W</b> und <b>5 Standrechner à 400 W</b>. Die USV soll diese Last <b>20 Minuten</b> unterbrechungsfrei versorgen. Auf den Energiebedarf ist ein <b>Puffer von 30 %</b> aufzuschlagen. Berechnen Sie die erforderliche Kapazitaet in Wh.</p>
+    <details>
+      <summary>Loesung anzeigen<span class="ar">▸</span></summary>
+      <div class="sol">
+        <div class="step"><span class="b">1</span><span>Gesamtlast: 2×50 + 5×400 = <b>2100 W</b></span></div>
+        <div class="step"><span class="b">2</span><span>Energiebedarf 20 Min: 2100 W × 20/60 = <b>700 Wh</b></span></div>
+        <div class="step"><span class="b">3</span><span>Puffer aufschlagen: 700 Wh × 1,30 = <b>910 Wh</b></span></div>
+        <div class="res">→ USV mit mind. 910 Wh</div>
+        <p style="margin-top:.6rem;font-size:.9rem;color:var(--muted);line-height:1.55"><b>Warum × 1,3:</b> Der Puffer bezieht sich auf den Bedarf. Die 700 Wh sind die volle Bezugsgroesse (100 %), gesucht sind 130 %. Dreisatz: 100 % → 700 Wh, also 1 % → 7 Wh, 130 % → 910 Wh. Man multipliziert, weil man mehr als den Ausgangswert will.</p>
+      </div>
+    </details>
   </div>
 
-  <!-- AUFGABE 3 (Platzhalter) -->
-  <div class="task todo">
-    <div class="tnum">Aufgabe 3</div>
-    <span class="pending">Aufgabe folgt</span>
-    <p class="tq">Inhalt wird nachgeliefert.</p>
+  <!-- AUFGABE 3b -->
+  <div class="task">
+    <div class="tnum">Aufgabe 3b</div>
+    <h3>USV dimensionieren — mit Restreserve</h3>
+    <p class="tq">Gleiche Last wie in 3a (<b>2100 W</b>, <b>20 Minuten</b> Ueberbrueckung). Aus Schutzgruenden duerfen die Akkus jedoch <b>nicht unter 30 % Ladung</b> entladen werden — diese 30 % muessen als Reserve erhalten bleiben. Berechnen Sie die erforderliche Gesamtkapazitaet in Wh.</p>
+    <details>
+      <summary>Loesung anzeigen<span class="ar">▸</span></summary>
+      <div class="sol">
+        <div class="step"><span class="b">1</span><span>Energiebedarf 20 Min (wie 3a): <b>700 Wh</b></span></div>
+        <div class="step"><span class="b">2</span><span>Diese 700 Wh duerfen nur die oberen <b>70 %</b> sein (30 % bleiben frei)</span></div>
+        <div class="step"><span class="b">3</span><span>Gesamtkapazitaet: 700 Wh / 0,70 = <b>1000 Wh</b></span></div>
+        <div class="res">→ USV mit mind. 1000 Wh</div>
+        <p style="margin-top:.6rem;font-size:.9rem;color:var(--muted);line-height:1.55"><b>Warum / 0,7:</b> Hier sind die 700 Wh nicht die 100 %, sondern nur ein Teil der gesuchten Gesamtkapazitaet — naemlich 70 %. Dreisatz: 70 % → 700 Wh, also 1 % → 10 Wh, 100 % → 1000 Wh. Man dividiert, weil man von einem Teil (70 %) auf das Ganze (100 %) hochrechnet. Gegenprobe: 70 % von 1000 = 700 Wh nutzbar, 30 % = 300 Wh bleiben frei. Reserve (1000) ist groesser als Puffer (910) — die groessere Zahl ist immer die Reserve.</p>
+      </div>
+    </details>
   </div>
 
   <!-- AUFGABE 4 -->
@@ -208,12 +231,21 @@
     </details>
   </div>
 
-  <!-- AUFGABE 9 (Platzhalter) -->
-  <div class="task todo">
+  <!-- AUFGABE 9 -->
+  <div class="task">
     <div class="tnum">Aufgabe 9</div>
-    <span class="pending">Aufgabe folgt</span>
-    <p class="tq">Aufgabe im Scan unvollst&auml;ndig &ndash; vollst&auml;ndiger Text wird nachgeliefert.</p>
-    <p class="frag">Bekanntes Fragment der Teilrechnung: <span class="mono">100/60 × 3 = 5 % + 30 % = 35 %</span>.</p>
+    <h3>Start des Notstromaggregats</h3>
+    <p class="tq">Server mit max. <b>600 VA</b> Leistungsaufnahme haengen an einer USV mit <b>240 VA</b> Ausgangsleistung. Bei voll geladenen Akkus versorgt die USV die Server rechnerisch <b>60 Minuten</b>. Bei Stromausfall versorgt die USV die Server, bis die Akkuladung auf <b>30 %</b> gesunken ist; dann uebernimmt ein Notstromaggregat. Das Aggregat benoetigt vom Start bis zur Betriebsbereitschaft <b>3 Minuten</b>. Bei welchem Ladungsstand muss der Start eingeleitet werden?</p>
+    <details>
+      <summary>Loesung anzeigen<span class="ar">▸</span></summary>
+      <div class="sol">
+        <div class="step"><span class="b">1</span><span>Linearer Verbrauch: 60 Min / 100 % = <b>0,6 Min pro Prozent</b></span></div>
+        <div class="step"><span class="b">2</span><span>3 Min Vorlauf entsprechen: 3 / 0,6 = <b>5 %</b></span></div>
+        <div class="step"><span class="b">3</span><span>Diese 5 % muessen vor der 30 %-Grenze noch da sein: 30 % + 5 % = <b>35 %</b></span></div>
+        <div class="res">→ Start bei 35 %</div>
+        <p style="margin-top:.6rem;font-size:.9rem;color:var(--muted);line-height:1.55"><b>Hinweis:</b> Die Angaben 600 VA / 240 VA werden fuer diese Rechnung nicht benoetigt (typische Ablenkung).</p>
+      </div>
+    </details>
   </div>
 
 </div>
