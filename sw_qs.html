@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Softwaretests & Qualitätssicherung · FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<style>
+/* Seitenlokal: Code-Blöcke + Inline-Code, themefest über CSS-Variablen.
+   Block scrollt auf dem Handy horizontal (kein overflow-x:hidden). */
+.sum pre.code{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;
+  padding:14px 16px;margin:.8rem 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.sum pre.code code{display:block;background:none;border:0;padding:0;border-radius:0;
+  font-family:var(--fmono);font-size:13.5px;line-height:1.75;white-space:pre;tab-size:4;color:var(--read)}
+.sum code{font-family:var(--fmono);font-size:.92em;background:rgba(140,180,220,.12);
+  border-radius:5px;padding:2px 6px;color:var(--purple)}
+html[data-theme="light"] .sum code{background:rgba(8,146,165,.10)}
+.sum pre.code code .cm{color:var(--dim)}
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="index.html">← Startseite</a>
+    <div>
+      <h1><span class="tag">QS</span>Softwaretests &amp; Qualitätssicherung</h1>
+      <div class="sub">Testablauf · ISO 9126 · Verfahren · Teststufen · TDD · pytest</div>
+    </div>
+    <div class="sp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="sum">
+
+  <!-- ===== 1 · ABLAUF ===== -->
+  <h2 class="h-sec"><span class="ico">🧭</span>1 · Ablauf eines Softwaretests</h2>
+  <p class="lead">Ein Softwaretest läuft in <b>sechs Phasen</b> ab. Quer über alle Phasen liegt die <b>Steuerung</b> — sie plant, überwacht und justiert den gesamten Testprozess.</p>
+  <ul class="clean">
+    <li><b>Testplanung</b> — Ziele festlegen</li>
+    <li><b>Testentwurf (Analyse &amp; Design)</b> — was wird wie getestet</li>
+    <li><b>Testvorbereitung</b> — konkrete Testszenarien und Testfälle festlegen</li>
+    <li><b>Testdurchführung</b> — die Testfälle ausführen</li>
+    <li><b>Testauswertung</b> — Testprotokolle erstellen</li>
+    <li><b>Testabschluss</b></li>
+  </ul>
+  <div class="chain">
+    <span>Planung</span><span>Entwurf</span><span>Vorbereitung</span><span>Durchführung</span><span>Auswertung</span><span>Abschluss</span>
+  </div>
+  <p class="lead"><b>Steuerung</b> ist ein Querschnitt über alle sechs Phasen.</p>
+  <div class="callout merk"><span class="ci">📌</span><div><b>Merkkette:</b> Planen → Entwerfen → Vorbereiten → Durchführen → Auswerten → Abschließen. Die Steuerung läuft über alle Phasen mit.</div></div>
+
+  <!-- ===== 2 · QUALITÄTSKRITERIEN ===== -->
+  <h2 class="h-sec"><span class="ico">📐</span>2 · Softwarequalitätskriterien (ISO 9126)</h2>
+  <p class="lead">Die Norm beschreibt <b>sechs Hauptmerkmale</b> für Softwarequalität, jeweils mit Untermerkmalen. In <b>allen</b> Gruppen kommt zusätzlich die <b>Konformität</b> (Normentreue) hinzu.</p>
+  <div class="cardgrid">
+    <div class="ic">
+      <h4>Funktionalität</h4>
+      <p>Korrektheit/Richtigkeit, Vollständigkeit, Angemessenheit, Interoperabilität, Ordnungsmäßigkeit, Sicherheit, Konformität.</p>
+    </div>
+    <div class="ic">
+      <h4>Zuverlässigkeit / Stabilität</h4>
+      <p>Reife, Fehlertoleranz, Wiederherstellbarkeit, Konformität.</p>
+    </div>
+    <div class="ic">
+      <h4>Benutzbarkeit</h4>
+      <p>Verständlichkeit, Erlernbarkeit, Bedienbarkeit (UI, Benutzer-Doku), Konformität.</p>
+    </div>
+    <div class="ic">
+      <h4>Effizienz</h4>
+      <p>Zeitverhalten, Verbrauchsverhalten (Codeoptimierung), Konformität.</p>
+    </div>
+    <div class="ic">
+      <h4>Änderbarkeit / Wartbarkeit</h4>
+      <p>Analysierbarkeit, Modifizierbarkeit, Stabilität, Prüfbarkeit (Quellcode vorhanden, kommentiert), Konformität.</p>
+    </div>
+    <div class="ic">
+      <h4>Übertragbarkeit</h4>
+      <p>Anpassbarkeit, Installierbarkeit, Austauschbarkeit, Konformität.</p>
+    </div>
+  </div>
+  <div class="callout merk"><span class="ci">📌</span><div>Besonders <b>Funktionalität</b> und <b>Zuverlässigkeit</b> lassen sich gut testen.</div></div>
+  <div class="callout tip"><span class="ci">ℹ️</span><div><b>Hinweis:</b> ISO 9126 wurde 2011 durch <b>ISO/IEC 25010</b> abgelöst. Die Kriterien sind inhaltlich sehr ähnlich; in IHK-Aufgaben taucht oft noch 9126 auf.</div></div>
+
+  <!-- ===== 3 · TESTVERFAHREN ===== -->
+  <h2 class="h-sec"><span class="ico">🔬</span>3 · Testverfahren — wie wird getestet?</h2>
+  <dl class="deflist">
+    <div>
+      <dt>Statisch</dt>
+      <dd>Code läuft <b>nicht</b>. Schreibtischtest (allein), Code Review (im Team), Code-Analyse (oft automatisch).</dd>
+    </div>
+    <div>
+      <dt>Dynamisch</dt>
+      <dd>Code <b>läuft</b>. Blackbox (ohne Codekenntnis) / Whitebox (mit Codekenntnis).</dd>
+    </div>
+  </dl>
+  <div class="callout merk"><span class="ci">📌</span><div><b>Statisch</b> = Code lesen/prüfen. <b>Dynamisch</b> = Code ausführen.</div></div>
+
+  <!-- ===== 4 · TESTSTUFEN ===== -->
+  <h2 class="h-sec"><span class="ico">🔺</span>4 · Teststufen — in welchem Umfang? (Testpyramide)</h2>
+  <p class="lead">Von unten (<b>viele</b>) nach oben (<b>wenige</b>):</p>
+  <ul class="clean">
+    <li><b>Unit-Test</b> — einzelne Funktion/Methode/Modul/Klasse — Basis, viele Tests</li>
+    <li><b>Integrationstest</b> — Zusammenspiel der Units</li>
+    <li><b>Acceptance- / Abnahmetest</b> — ganze Anwendung inkl. UI im realen Szenario — Spitze, wenige Tests</li>
+  </ul>
+  <div class="callout merk"><span class="ci">📌</span><div><b>Testpyramide:</b> viele kleine Unit-Tests unten, wenige große Abnahmetests oben.</div></div>
+
+  <!-- ===== 5 · UNIT-TESTS DETAIL ===== -->
+  <h2 class="h-sec"><span class="ico">🧩</span>5 · Unit-Tests (Detail)</h2>
+  <ul class="clean">
+    <li><b>Wichtigster Testbereich:</b> die meisten funktionalen Fehler nach dem Coding werden hier gefunden.</li>
+    <li>Testet einzelne Einheiten (Funktion/Methode/Modul/Klasse, je nach Sprache).</li>
+    <li><b>Ziel:</b> vollständige Codeüberdeckung (100 % des Codes soll ausgeführt und getestet werden).</li>
+    <li>Werden häufig automatisiert.</li>
+  </ul>
+
+  <!-- ===== 6 · TDD ===== -->
+  <h2 class="h-sec"><span class="ico">🔁</span>6 · Testgetriebene Entwicklung (TDD)</h2>
+  <ul class="clean">
+    <li>Die Ergebnisse der Tests treiben die weitere Entwicklung.</li>
+    <li>Typisch: Verteilen von <b>Alpha-</b>, <b>Beta-Versionen</b> und <b>Release Candidates</b> außerhalb des Entwicklungsteams.</li>
+    <li>Meist in agilen Vorgehensmodellen (z. B. Scrum) üblich.</li>
+  </ul>
+  <div class="callout tip"><span class="ci">ℹ️</span><div><b>Kern von TDD im engeren Sinn:</b> Test <b>zuerst</b> schreiben, dann Code. Zyklus <b>rot</b> (Test schlägt fehl) → <b>grün</b> (Code bis Test besteht) → <b>refactor</b> (aufräumen).</div></div>
+
+  <!-- ===== 7 · DOKUMENTATION ===== -->
+  <h2 class="h-sec"><span class="ico">📚</span>7 · Dokumentation</h2>
+  <dl class="deflist">
+    <div>
+      <dt>Benutzerdoku</dt>
+      <dd>Für Anwender/Administratoren: Benutzerhandbuch, Installationsanleitung, Schulungsunterlagen, Werbematerial.</dd>
+    </div>
+    <div>
+      <dt>Entwicklerdoku</dt>
+      <dd>Für Projektleiter, Entwickler, Tester: beschreibt Entwicklungsprozess sowie Aufbau und Funktionsweise des Systems; enthält den dokumentierten Quellcode und die Testdokumentation inkl. Testprotokolle.</dd>
+    </div>
+  </dl>
+
+  <!-- ===== 8 · ASSERT ===== -->
+  <h2 class="h-sec"><span class="ico">🐍</span>8 · Unit-Tests in Python: <code>assert</code></h2>
+  <ul class="clean">
+    <li><code>assert</code> ist ein <b>Keyword</b>, keine Funktion — also ohne Klammern aufrufen.</li>
+    <li>Bedingung <b>True</b> → Code läuft weiter (Testfall OK). Bedingung <b>False</b> → <code>AssertionError</code>.</li>
+    <li>Optionaler Fehlertext nach Komma.</li>
+    <li>Ein fehlgeschlagener <code>assert</code> beendet das Programm; mit <code>try/except</code> abfangbar.</li>
+  </ul>
+  <pre class="code"><code>def stellenzahl(x: int):            <span class="cm"># zu testende Funktion</span>
+    return len(str(int(x)))         <span class="cm"># Länge des Arguments (als int)</span>
+
+def test_stellenzahl():             <span class="cm"># der eigentliche Modultest</span>
+    assert stellenzahl(100) == 3    <span class="cm"># erwartet 3</span>
+    assert stellenzahl(50.78) == 2  <span class="cm"># int(50.78)=50 -> "50" -> 2</span>
+    assert stellenzahl(-1000) == 4  <span class="cm"># schlägt fehl!</span>
+
+test_stellenzahl()</code></pre>
+  <div class="callout warn"><span class="ci">⚠️</span><div><b>Klammer-Falle:</b> <code>assert</code> ist ein Keyword. Richtig: <code>assert funktion(x)==1</code> — Falsch: <code>assert(funktion(x)==1)</code>. Bei <code>-1000</code> schlägt der Test fehl, weil <code>"-1000"</code> fünf Zeichen hat (das Minus zählt mit), nicht vier.</div></div>
+  <p class="lead">Fehlertext-Beispiel (eigene Zeile):</p>
+  <pre class="code"><code>assert 2+2 == 5, "Houston, wir haben ein Problem"</code></pre>
+
+  <!-- ===== 9 · PYTEST ===== -->
+  <h2 class="h-sec"><span class="ico">✅</span>9 · pytest — das Python-Test-Tool</h2>
+  <ul class="clean">
+    <li>Nicht in Python enthalten: Installation mit <code>pip3 install pytest</code></li>
+    <li>Aufruf im Projektordner: <code>pytest meinprog.py</code></li>
+    <li>Führt alle Funktionen aus, deren Name mit <code>test_</code> beginnt.</li>
+    <li>Zeigt fehlgeschlagene und erfolgreiche Tests an.</li>
+  </ul>
+  <div class="callout merk"><span class="ci">📌</span><div>Nur Funktionen mit Präfix <code>test_</code> werden von pytest automatisch ausgeführt.</div></div>
+
+  <div class="detail-links">
+    <div class="dl-title">Weiter im Thema</div>
+    <a class="dl-link" href="index.html">🏠 Startseite</a>
+    <a class="dl-link" href="programmierung.html">💻 Programmierung</a>
+  </div>
+
+</div>
+</div>
+
+<footer>FISI//OS · <span>Softwaretests &amp; Qualitätssicherung</span></footer>
+
+<script>
+/* PWA: Service Worker registrieren (nur auf https / localhost aktiv) */
+if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("service-worker.js").catch(()=>{});});}
+</script>
+</body>
+</html>
