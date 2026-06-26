@@ -41,3 +41,15 @@ Karteikarten: study.js (3-Stufen-Mastery .m-lo/.m-mid/.m-hi) | Drawer: drawer.js
 
 ## Nordstern
 Abrufen statt Wiedererkennen. Aktives Produzieren/Anwenden vor passivem Lesen.
+
+## Fachrichtung — WICHTIG
+Die Plattform ist fuer FiSi (Fachinformatiker SYSTEMINTEGRATION), NICHT FiAE.
+Der Begriff "Anwendungsentwicklung" wird NICHT verwendet — weder in Texten,
+Ueberschriften, Beschreibungen noch in data-tags/Suchbegriffen.
+LF5 wird neutral als "Programmierung & Modellierung" o.ae. bezeichnet.
+
+## Startseiten-Struktur LF5 (bewusste Ausnahme)
+LF5 hat zwei Einstiege auf der Startseite:
+- Kachel "Lernfeld 5" unten bei LF1-4 -> programmierung.html (Themen-Hub: Python, UML, BPMN, Vorgehensmodelle, Struktogramme, JSON, Softwaretests)
+- Kachel "Programmierung" oben (Schnellzugriff) -> python_byte.html (Python direkt)
+Python ist dadurch doppelt erreichbar (Hub + Schnellzugriff) — bewusst so gewollt.
