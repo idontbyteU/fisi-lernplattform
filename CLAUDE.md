@@ -6,6 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **FISI//OS** is a static, PWA-capable learning platform for the German IT apprenticeship exam (Fachinformatiker Systemintegration). There is no build step, no package manager, no framework, and no server — every page is a plain `.html` file opened directly in the browser or served from a static host (e.g. GitHub Pages).
 
+## Design-System
+Verbindliche Design-Vorgaben stehen in DESIGN.md (Repo-Root): Farb-Tokens,
+Lernfeld-Akzentfarben, Breakpoints, Komponenten-Inventar, eiserne Regeln.
+Vor UI-/Seiten-Aenderungen DESIGN.md beachten. Single Source of Truth bleibt
+theme.css; DESIGN.md ist die Schnellreferenz.
+
 ## Running / developing locally
 
 Open `index.html` directly in a browser, or serve the directory with any static file server:
