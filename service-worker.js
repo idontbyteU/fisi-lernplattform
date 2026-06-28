@@ -9,7 +9,7 @@
 /*  Private Einzelnutzung: kein manuelles Hochzählen einer Versionsnr.   */
 /*  nötig – der Cache wird ohnehin bei jedem Online-Abruf erneuert.      */
 /* ===================================================================== */
-const CACHE = "fisi-os-v2";           // bei Network-first unkritisch; erhoeht fuer lf3_usv.html
+const CACHE = "fisi-os-v3";           // bei Network-first unkritisch; erhoeht fuer ap1_/ap2_uebersicht.html
 const ASSETS = [
   "./",
   "./index.html",
@@ -20,6 +20,8 @@ const ASSETS = [
   "./manifest.json",
   "./icon.svg",
   "./ap2.html",
+  "./ap1_uebersicht.html",
+  "./ap2_uebersicht.html",
   "./lf1.html",
   "./lf2.html",
   "./lf3.html",
