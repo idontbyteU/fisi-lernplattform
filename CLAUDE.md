@@ -92,6 +92,11 @@ Lange Konzept-Erklärungen öffnen in einem opaken Drawer im Vordergrund, standa
 - Panel-Hintergrund **immer voll deckend** (`var(--bg2)`, Alpha = 1), klare Kante/Schatten; eigener Scrollbereich mit `overscroll-behavior:contain`; Code-Blöcke horizontal scrollbar in `var(--code-bg)`. Im Vollbild Fokusfalle, Seite dahinter gesperrt; beim Schließen Fokus zurück auf den auslösenden Button. Schließen per Button, Esc, und (nur im Vollbild) Klick auf den abgedunkelten Hintergrund. Beim Drucken ausgeblendet.
 - Lange Erklär-Inhalte liegen als Markdown unter `content/` und müssen in `service-worker.js` (`ASSETS`) registriert werden (sonst nicht offline). Werden per `fetch` geladen → über lokalen Server/HTTPS öffnen, nicht per `file://`.
 
+### 5. Aufklappbereiche & reine Lese-/Navigationsseiten
+
+- Aufklappbare Bereiche immer als natives `<details>`/`<summary>` (auf- UND zuklappbar). Standardzustand bei Cluster-/Formel-/Lösungsblöcken: **zu**.
+- Reine Lese-/Navigationsseiten (z. B. Themen-Lernübersichten) **ohne Glow-Effekte** (kein `text-shadow`/`box-shadow`/`drop-shadow` auf Text), **hoher Kontrast in beiden Themes** — Lesbarkeit vor Effekt.
+
 ## Key conventions
 
 - **All content is inline**: Card data, question arrays, and page-specific JS live directly inside `<script>` tags in each HTML file — there are no separate JSON or JS data files.

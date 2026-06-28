@@ -10,6 +10,8 @@ Schnellreferenz der belegten Werte, um Raten zu vermeiden.
 - service-worker.js (network-first) + manifest.json nicht anfassen ohne Anlass.
 - Startseite: EINE Kachel pro Lernfeld. Unterthemen in den Hub, nie neue Startseiten-Kachel.
 - Kein Build-Step. Statisches HTML/CSS/JS.
+- Aufklappbare Bereiche immer als natives <details>/<summary> (auf- UND zuklappbar). Standardzustand bei Cluster-/Formel-/Loesungsbloecken: zu.
+- Reine Lese-/Navigationsseiten ohne Glow-Effekte, hoher Kontrast in beiden Themes (Lesbarkeit vor Effekt).
 
 ## Lernfeld-Akzentfarben (feste Zuordnung)
 LF1 cyan #2de2e6 | LF2 gruen #27f59a | LF3 amber #ffb43b | LF4 magenta #ff2a6d | LF5 lila #b66bff

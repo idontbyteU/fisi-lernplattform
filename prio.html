@@ -6,7 +6,21 @@
 <title>Prio · Prüfungstraining AP1 · FISI Lernplattform</title>
 <link rel="stylesheet" href="theme.css">
 <script src="theme.js"></script>
-<style>.shell{display:block}.main{width:100%}</style>
+<style>
+.shell{display:block}.main{width:100%}
+/* ===== Lernuebersicht (reine Lese-/Navi, kein Glow) ===== */
+.ovw{margin:0 0 1.8rem;padding:1.2rem 1.3rem 1.4rem;background:var(--glass);border:1px solid var(--line);border-radius:8px}
+.ovw-h{font-family:var(--fdisp);font-size:21px;font-weight:700;letter-spacing:.4px;color:var(--ink);margin:.1rem 0 .45rem}
+.ovw-lead{font-size:16px;line-height:1.6;color:var(--read);margin:0 0 1rem;max-width:660px}
+.ovw details{margin-bottom:7px}
+.ovw summary{font-family:var(--fui)}
+.ovw-list{list-style:none;margin:.35rem 0 .55rem;padding:.45rem .8rem .6rem 1rem;display:grid;gap:.5rem}
+.ovw-list li{position:relative;padding-left:1.15rem;font-size:15.5px;line-height:1.5;color:var(--read)}
+.ovw-list li::before{content:"";position:absolute;left:.25rem;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--muted)}
+.ovw-list li b{color:var(--ink)}
+.ovw-list a{color:var(--cyan);text-decoration:underline;text-underline-offset:2px;text-shadow:none}
+.ovw-list a:hover{color:var(--ink)}
+</style>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#070710">
 <link rel="apple-touch-icon" href="icon.svg">
@@ -36,6 +50,142 @@
 
 <div class="shell" id="shell">
   <div class="main">
+    <section class="ovw" aria-label="AP1-Lernuebersicht">
+      <h2 class="ovw-h">AP1 – Lernübersicht</h2>
+      <p class="ovw-lead">Alle prüfungsrelevanten Themen nach Clustern. Anklickbare Themen führen direkt zum passenden Modul.</p>
+
+      <details>
+        <summary>1 · Projektmanagement &amp; Planung<span class="ar">▸</span></summary>
+        <ul class="ovw-list">
+          <li>Projektmerkmale (zeitlich befristet, innovativ, risikobehaftet)</li>
+          <li>SMART-Prinzip</li>
+          <li>Projektphasen: Wasserfallmodell und Scrum</li>
+          <li>Phasen der Teambildung</li>
+          <li>Projektplanung: Strukturplan, Netzplan, Gantt-Diagramm</li>
+          <li>Lasten-/Pflichtenheft (Zweck, Urheber, Inhalt)</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>2 · Wirtschaftlichkeit &amp; Kalkulation<span class="ar">▸</span></summary>
+        <ul class="ovw-list">
+          <li>Machbarkeit und Wirtschaftlichkeit beurteilen</li>
+          <li>Vor- und Nachkalkulation</li>
+          <li><a href="lf2.html">Angebotsbewertung / Nutzwertanalyse</a></li>
+          <li><a href="lf2.html">Kauf, Miete, Leasing</a></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>3 · Kundenkommunikation &amp; Support<span class="ar">▸</span></summary>
+        <ul class="ovw-list">
+          <li>Support-Level (First/Second/Thirdlevel)</li>
+          <li>Ticketsystem</li>
+          <li>KI-Unterstützung</li>
+          <li>Situationsgerechte Kundenkommunikation</li>
+          <li>Englische Fachtexte interpretieren</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>4 · Hardware &amp; IT-Arbeitsplatz<span class="ar">▸</span></summary>
+        <ul class="ovw-list">
+          <li><a href="lf1.html">Hardwarekomponenten (CPU, Mainboard, RAM, Netzteil, GPU, Sensoren)</a></li>
+          <li>Geräteklassen: Desktop, Notebook, All-in-One, Thin Client, Tablet, Smartphone</li>
+          <li><a href="lf1.html">HDD vs. SSD</a></li>
+          <li>Filesysteme (FAT32, NTFS, APFS, ext4)</li>
+          <li>BIOS/UEFI-Einstellungen</li>
+          <li>Ergonomischer/barrierefreier Arbeitsplatz</li>
+          <li>Übertragungsraten/-zeiten &amp; Datenmengen berechnen</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>5 · Software &amp; Systeme<span class="ar">▸</span></summary>
+        <ul class="ovw-list">
+          <li>Standardsoftware (Office, DBMS, Browser)</li>
+          <li>Branchensoftware: ERP, SCM, CRM</li>
+          <li>Systemsoftware, Entwicklungssysteme (Compiler, Interpreter, Debugger)</li>
+          <li>KI-Software</li>
+          <li>Cloud (SaaS, DaaS), virtuelle Desktops</li>
+          <li>Kommunikationssysteme: Videokonferenz, Social Media</li>
+          <li>Client-Server-Systeme, Einbindung in Domäne</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>6 · Netzwerke<span class="ar">▸</span></summary>
+        <ul class="ovw-list">
+          <li><a href="lf3.html">OSI-Modell</a></li>
+          <li><a href="lf3.html">Netzwerkprotokolle (Ethernet, IP, DNS)</a></li>
+          <li><a href="lf3_ipv6.html">IPv4 und IPv6-Konfiguration</a></li>
+          <li><a href="lf3.html">Netzwerkkomponenten: Router, Switch, Gateway, Accesspoint, WLAN</a></li>
+          <li>Konsolenbefehle (ping, ipconfig/ip, traceroute, nslookup, arp, chmod)</li>
+          <li><a href="lf3.html">Subnetting</a></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>7 · Datensicherheit &amp; Verfügbarkeit (AP1-Teil)<span class="ar">▸</span></summary>
+        <ul class="ovw-list">
+          <li>Backup-Strategien</li>
+          <li>Verfügbarkeit z.B. NAS</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>8 · IT-Sicherheit<span class="ar">▸</span></summary>
+        <ul class="ovw-list">
+          <li><a href="lf4.html">Schutzziele: Vertraulichkeit, Integrität, Verfügbarkeit (CIA)</a></li>
+          <li>TOM (technisch-organisatorische Maßnahmen)</li>
+          <li><a href="lf4.html">Verschlüsselung: symmetrisch, asymmetrisch, hybrid</a></li>
+          <li>Hashwerte, Zertifikate, digitale Signaturen</li>
+          <li>2-Faktor-Authentifizierung</li>
+          <li>Passwort-Policy, Personal Firewall</li>
+          <li>Härtung von Betriebssystemen</li>
+          <li><a href="lf_isms_grundschutz.html">BSI IT-Grundschutz-Kompendium (Auszüge)</a></li>
+          <li><a href="lf4.html">Schutzbedarfsanalyse, Schutzbedarfskategorien, ISMS, Risiko-Matrix</a></li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>9 · Datenschutz<span class="ar">▸</span></summary>
+        <ul class="ovw-list">
+          <li><a href="lf4.html">DSGVO/BDSG-Grundzüge</a></li>
+          <li>Betroffenenrechte nach DSGVO</li>
+          <li>Anonymisierung &amp; Pseudonymisierung</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>10 · Programmierung &amp; Modellierung<span class="ar">▸</span></summary>
+        <ul class="ovw-list">
+          <li>Kontrollstrukturen via Pseudocode</li>
+          <li>Klassen, Attribute, Objekte, Methoden, Sichtbarkeit (public/private)</li>
+          <li><a href="lf5_uml.html">UML: Use-Case, Klassendiagramm, Aktivitätsdiagramm</a></li>
+          <li><a href="python_lab.html">Fehler im Quellcode finden + Schreibtischtest</a></li>
+          <li>Skriptsprachen (Shell)</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>11 · Datenbanken (AP1-Teil)<span class="ar">▸</span></summary>
+        <ul class="ovw-list">
+          <li>Grundlagen relationaler DB, einfache ER-Modelle</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>12 · Qualität &amp; Recht<span class="ar">▸</span></summary>
+        <ul class="ovw-list">
+          <li><a href="lf2.html">Vertragsbestandteile, Vertragsstörungen</a></li>
+          <li>Testprotokoll für Arbeitsplatz-Einrichtung</li>
+          <li>Nachhaltigkeit (ökologisch/ökonomisch/sozial)</li>
+          <li>Urheberrechtsgrundlagen</li>
+        </ul>
+      </details>
+    </section>
+
     <div class="tools">
       <div class="search">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>

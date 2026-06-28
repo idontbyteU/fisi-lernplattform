@@ -6,6 +6,20 @@
 <title>AP2 · FISI Lernplattform</title>
 <link rel="stylesheet" href="theme.css">
 <script src="theme.js"></script>
+<style>
+/* ===== Lernuebersicht (reine Lese-/Navi, kein Glow) ===== */
+.ovw{margin:0 0 1.8rem;padding:1.2rem 1.3rem 1.4rem;background:var(--glass);border:1px solid var(--line);border-radius:8px}
+.ovw-h{font-family:var(--fdisp);font-size:21px;font-weight:700;letter-spacing:.4px;color:var(--ink);margin:.1rem 0 .45rem}
+.ovw-lead{font-size:16px;line-height:1.6;color:var(--read);margin:0 0 1rem;max-width:660px}
+.ovw details{margin-bottom:7px}
+.ovw summary{font-family:var(--fui)}
+.ovw-list{list-style:none;margin:.35rem 0 .55rem;padding:.45rem .8rem .6rem 1rem;display:grid;gap:.5rem}
+.ovw-list li{position:relative;padding-left:1.15rem;font-size:15.5px;line-height:1.5;color:var(--read)}
+.ovw-list li::before{content:"";position:absolute;left:.25rem;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--muted)}
+.ovw-list li b{color:var(--ink)}
+.ovw-list a{color:var(--cyan);text-decoration:underline;text-underline-offset:2px;text-shadow:none}
+.ovw-list a:hover{color:var(--ink)}
+</style>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#070710">
 <link rel="apple-touch-icon" href="icon.svg">
@@ -26,6 +40,27 @@
 </header>
 
 <div class="wrap">
+  <section class="ovw" aria-label="AP2-Lernuebersicht">
+    <h2 class="ovw-h">AP2 – Lernübersicht</h2>
+    <p class="ovw-lead">Alle prüfungsrelevanten Themen nach Clustern. Anklickbare Themen führen direkt zum passenden Modul.</p>
+
+    <details>
+      <summary>Datensicherheit &amp; Verfügbarkeit (AP2-Teil)<span class="ar">▸</span></summary>
+      <ul class="ovw-list">
+        <li><a href="lf3.html">RAID</a></li>
+        <li><a href="lf3_usv.html">USV-Berechnung</a></li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>Datenbanken (AP2-Teil)<span class="ar">▸</span></summary>
+      <ul class="ovw-list">
+        <li>SQL</li>
+        <li>Nicht-relationale Datenbanken / NoSQL</li>
+      </ul>
+    </details>
+  </section>
+
   <div class="empty">
     <div class="ic">📐</div>
     <h2>AP2 – in Vorbereitung</h2>
