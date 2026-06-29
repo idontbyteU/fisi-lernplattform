@@ -9,7 +9,7 @@
 /*  Private Einzelnutzung: kein manuelles Hochzählen einer Versionsnr.   */
 /*  nötig – der Cache wird ohnehin bei jedem Online-Abruf erneuert.      */
 /* ===================================================================== */
-const CACHE = "fisi-os-v3";           // bei Network-first unkritisch; erhoeht fuer ap1_/ap2_uebersicht.html
+const CACHE = "fisi-os-v4";           // bei Network-first unkritisch; erhoeht fuer lf5_datenbanken.html
 const ASSETS = [
   "./",
   "./index.html",
@@ -42,6 +42,14 @@ const ASSETS = [
   "./json.html",
   "./lf5_bpmn.html",
   "./lf5_uml.html",
+  "./lf5_datenbanken.html",
+  "./img/db/db_sensor_aufgabe.png",
+  "./img/db/db_sensor_loesung.png",
+  "./img/db/db_sensor_relational.png",
+  "./img/db/db_walzanlage_aufgabe.png",
+  "./img/db/db_walzanlage_loesung.png",
+  "./img/db/db_impfzentrum_aufgabe.png",
+  "./img/db/db_impfzentrum_loesung.png",
   "./img/uml/ex_uc_schluesselsystem.png",
   "./img/uml/ex_act_raumbuchung.png",
   "./img/uml/ex_state_raumbelegung.png",
