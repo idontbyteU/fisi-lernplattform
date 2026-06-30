@@ -12,6 +12,17 @@ Lernfeld-Akzentfarben, Breakpoints, Komponenten-Inventar, eiserne Regeln.
 Vor UI-/Seiten-Aenderungen DESIGN.md beachten. Single Source of Truth bleibt
 theme.css; DESIGN.md ist die Schnellreferenz.
 
+**Vor jeder neuen Seite die Pflicht-Checkliste in DESIGN.md pruefen.**
+
+### Arbeitsteilung
+- **Claude Code** baut alles, was am Design-System haengt (Farben,
+  theme.css/theme.js-Anbindung, Theme-Toggle, Layout, Responsiveness) und liest
+  dafuer DESIGN.md/theme.css selbststaendig. Eigene Farb-:root-Bloecke nur als
+  Aliase auf die zentralen Variablen, nie mit eigenen Hex-Werten.
+- **Aus dem Chat** kommen die verifizierten Inhalte und die fehleranfaelligen
+  SVG-Diagramme (Geometrie/Beschriftung) - diese werden nicht veraendert,
+  hoechstens ihre Farben auf theme.css-Variablen umgestellt.
+
 ## Running / developing locally
 
 Open `index.html` directly in a browser, or serve the directory with any static file server:

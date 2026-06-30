@@ -4,9 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Datenbanken · LF5 · FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap');
-:root{--bg:#070b0f;--bg2:#0d1117;--bg3:#111820;--border:#1a2535;--cyan:#00e5ff;--cyan-dim:#00bcd480;--magenta:#ff00aa;--green:#00ff88;--grn-dim:#00ff8840;--yellow:#ffe600;--red:#ff3355;--purple:#b66bff;--txt:#c8d8e8;--txt-dim:#607080;--mono:'Share Tech Mono',monospace;--head:'Rajdhani',sans-serif;--body:'Inter',sans-serif}
+/* Rajdhani/Inter nur fuer die geprueften SVG-Diagramme (Original-Schriftbild) */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap');
+/* Seiten-Tokens sind reine Aliase auf die zentralen theme.css-Variablen.
+   In :root UND html[data-theme="light"] gesetzt, damit sie die theme.css-
+   Defaults in beiden Themes ueberschreiben (gleiche Spezifitaet, spaeter im Quelltext). */
+:root,html[data-theme="light"]{
+  --bg3:var(--code-bg);--border:var(--line);--cyan-dim:var(--muted);
+  --green:var(--ok);--yellow:var(--amber);--red:var(--danger);
+  --txt:var(--read);--txt-dim:var(--dim);
+  --mono:var(--fmono);--head:var(--fdisp);--body:var(--fui);
+}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--txt);font-family:var(--body);min-height:100vh;overflow-x:hidden}
 body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(0,229,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.03) 1px,transparent 1px);background-size:40px 40px}
@@ -15,7 +26,7 @@ header{position:relative;z-index:10;padding:24px 32px 20px;border-bottom:1px sol
 .back-btn:hover{color:var(--cyan);border-color:var(--cyan)}
 .header-main{flex:1}
 .sys-tag{font-family:var(--mono);font-size:10px;color:var(--purple);letter-spacing:.15em;opacity:.8;margin-bottom:4px}
-header h1{font-family:var(--head);font-size:clamp(22px,4vw,36px);font-weight:700;letter-spacing:.04em;color:#fff;line-height:1.1}
+header h1{font-family:var(--head);font-size:clamp(22px,4vw,36px);font-weight:700;letter-spacing:.04em;color:var(--ink);line-height:1.1}
 header h1 span{color:var(--purple)}
 .header-meta{font-family:var(--mono);font-size:11px;color:var(--txt-dim);margin-top:6px;letter-spacing:.05em}
 .nav-tabs{position:relative;z-index:10;display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--bg2);overflow-x:auto}
@@ -27,11 +38,11 @@ main{position:relative;z-index:5;max-width:1000px;margin:0 auto;padding:32px 24p
 .tab-panel.active{display:block}
 .intro{font-size:14px;color:var(--txt);line-height:1.7;margin-bottom:24px;max-width:760px}
 .intro strong{color:var(--purple)}
-h2{font-family:var(--head);font-weight:700;font-size:20px;color:#fff;margin:28px 0 14px;letter-spacing:.03em}
+h2{font-family:var(--head);font-weight:700;font-size:20px;color:var(--ink);margin:28px 0 14px;letter-spacing:.03em}
 h2:first-child{margin-top:0}
 h3{font-family:var(--head);font-weight:600;font-size:16px;color:var(--cyan);margin:22px 0 10px}
 p{font-size:14px;line-height:1.7;color:var(--txt);margin-bottom:12px}
-p strong,li strong{color:#fff}
+p strong,li strong{color:var(--ink)}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:20px 22px;margin-bottom:16px;position:relative;overflow:hidden}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--acc,var(--purple))}
 .card h3{margin-top:0}
@@ -39,19 +50,22 @@ ul.clean{list-style:none;margin:8px 0}
 ul.clean li{font-size:14px;color:var(--txt);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);line-height:1.55}
 ul.clean li::before{content:'▹';color:var(--acc,var(--purple));margin-right:10px}
 .note{border-radius:5px;padding:12px 16px;margin:14px 0;font-size:13px;line-height:1.6}
-.note.merk{background:rgba(0,255,136,.06);border-left:3px solid var(--green);color:#bfeed4}
+.note.merk{background:rgba(39,245,154,.08);border-left:3px solid var(--green);color:var(--read)}
 .note.merk b{color:var(--green)}
-.note.warn{background:rgba(255,230,0,.05);border-left:3px solid var(--yellow);color:#f0e6a0}
+.note.warn{background:rgba(255,180,59,.08);border-left:3px solid var(--yellow);color:var(--read)}
 .note.warn b{color:var(--yellow)}
 table.db{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden}
 table.db caption{font-family:var(--mono);font-size:11px;color:var(--txt-dim);text-align:left;padding:6px 2px;letter-spacing:.05em}
-table.db th{background:rgba(182,107,255,.12);color:#fff;font-family:var(--head);font-weight:600;font-size:13px;text-align:left;padding:9px 12px;border:1px solid var(--border)}
+table.db th{background:rgba(182,107,255,.12);color:var(--ink);font-family:var(--head);font-weight:600;font-size:13px;text-align:left;padding:9px 12px;border:1px solid var(--border)}
 table.db td{padding:8px 12px;border:1px solid var(--border);color:var(--txt)}
 table.db td.pk{color:var(--yellow);text-decoration:underline}
 table.db td.fk{color:var(--cyan)}
 table.db tr:hover td{background:rgba(255,255,255,.02)}
 .tbl-scroll{overflow-x:auto}
-.svg-box{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:20px;margin:14px 0;text-align:center}
+/* Feste dunkle Diagramm-Flaeche: die geprueften ERM-SVGs nutzen feste Neon-Farben
+   (Geometrie/Beschriftung unveraendert) und bleiben so in BEIDEN Themes lesbar
+   - analog zur festen weissen Flaeche der gescannten .task-img-Loesungsbilder. */
+.svg-box{background:#0d1117;border:1px solid var(--border);border-radius:6px;padding:20px;margin:14px 0;text-align:center}
 .svg-box svg{max-width:100%;height:auto}
 .svg-cap{font-family:var(--mono);font-size:11px;color:var(--txt-dim);margin-top:10px;letter-spacing:.04em}
 .split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -65,16 +79,21 @@ details>summary:hover{background:rgba(0,229,255,.04)}
 .details-body{padding:0 18px 18px}
 .task-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;margin-bottom:20px;overflow:hidden}
 .task-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.task-title{font-family:var(--head);font-weight:700;font-size:16px;color:#fff}
+.task-title{font-family:var(--head);font-weight:700;font-size:16px;color:var(--ink)}
 .task-badge{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:4px;background:#3a4150;color:#d8e2ec;letter-spacing:.05em}
 .task-body{padding:18px}
 .task-img{width:100%;border-radius:5px;background:#fff;padding:10px;margin:10px 0}
 .task-prompt{font-size:14px;line-height:1.7;color:var(--txt);margin-bottom:8px}
-.task-prompt b{color:#fff}
+.task-prompt b{color:var(--ink)}
 .sol-label{font-family:var(--mono);font-size:11px;color:var(--green);letter-spacing:.05em}
-code{font-family:var(--mono);font-size:.92em;background:rgba(255,255,255,.06);padding:1px 6px;border-radius:3px;color:var(--cyan)}
+code{font-family:var(--mono);font-size:.92em;background:var(--code-bg);padding:1px 6px;border-radius:3px;color:var(--cyan)}
 .kbd{display:inline-block;font-family:var(--mono);font-size:12px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:2px 8px;color:var(--yellow);margin:0 2px}
 </style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
 <header>

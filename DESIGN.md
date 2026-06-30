@@ -13,6 +13,15 @@ Schnellreferenz der belegten Werte, um Raten zu vermeiden.
 - Aufklappbare Bereiche immer als natives <details>/<summary> (auf- UND zuklappbar). Standardzustand bei Cluster-/Formel-/Loesungsbloecken: zu.
 - Reine Lese-/Navigationsseiten ohne Glow-Effekte, hoher Kontrast in beiden Themes (Lesbarkeit vor Effekt).
 
+## Pflicht-Checkliste bei jeder neuen Seite
+Vor dem Commit jeder neuen/umgestellten Seite abhaken:
+- [ ] Theme-Toggle hell/dunkel wie auf den anderen Seiten (wird von theme.js in den Header injiziert).
+- [ ] theme.css + theme.js eingebunden (keine reinen Inline-Styles, kein eigenes Farb-:root mit Hex).
+- [ ] Back-Link zum Hub/zur Uebersicht vorhanden.
+- [ ] Light- UND Dark-Theme lesbar (hoher Kontrast), kein Glow auf Lesetext.
+- [ ] Mobilfreundlich (bestehende Breakpoints, Touch-Ziele >=40px).
+- [ ] Aufklappbare Bloecke als natives <details> (auf UND zu), Standard: zu.
+
 ## Lernfeld-Akzentfarben (feste Zuordnung)
 LF1 cyan #2de2e6 | LF2 gruen #27f59a | LF3 amber #ffb43b | LF4 magenta #ff2a6d | LF5 lila #b66bff
 Akzent kommt automatisch aus data-lf="N" -> .tile[data-lf=N]{--ac:var(--lfN)}.
