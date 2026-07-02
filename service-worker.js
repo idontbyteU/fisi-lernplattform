@@ -9,7 +9,7 @@
 /*  Private Einzelnutzung: kein manuelles Hochzählen einer Versionsnr.   */
 /*  nötig – der Cache wird ohnehin bei jedem Online-Abruf erneuert.      */
 /* ===================================================================== */
-const CACHE = "fisi-os-v4";           // bei Network-first unkritisch; erhoeht fuer lf5_datenbanken.html
+const CACHE = "fisi-os-v5";           // bei Network-first unkritisch; erhoeht fuer Umbenennung ap1_training.html
 const ASSETS = [
   "./",
   "./index.html",
@@ -31,7 +31,7 @@ const ASSETS = [
   "./lf4_grundschutz_uebung.html",
   "./lf4_zusammenfassung.pdf",
   "./lf4_grundschutz_check_umsetzung.pdf",
-  "./prio.html",
+  "./ap1_training.html",
   "./programmierung.html",
   "./python_byte.html",
   "./python_lab.html",

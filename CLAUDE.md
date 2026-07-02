@@ -50,7 +50,7 @@ The PWA Service Worker only activates on HTTPS or `localhost`. On a raw `file://
 
 **Karteikarten-Seiten** (`lf1.html` – `lf4.html`): Define `CARDS` (array of `{id, q, a, c}`) and `CATS` (category map) as inline `<script>` constants, then call `Study.init({cards: CARDS, cats: CATS, key: "fisi_lf1_v2"})`. The `study.js` engine renders everything. The `key` string must be unique per page (it's the `localStorage` key).
 
-**Aufgaben-Seiten** (`prio.html`, `ap1_simulation.html`): Self-contained inline JS. Use the `.shell` / `.main` / `.rail` layout for the two-column task + explanation panel. Task data lives as a JS array inside the `<script>` block.
+**Aufgaben-Seiten** (`ap1_training.html`, `ap1_simulation.html`): Self-contained inline JS. Use the `.shell` / `.main` / `.rail` layout for the two-column task + explanation panel. Task data lives as a JS array inside the `<script>` block.
 
 **Zusammenfassungs-Seiten** (`lf4_it_sicherheit.html`, `lf_isms_grundschutz.html`, etc.): Pure HTML reference articles using `.sum` component classes from `theme.css`. No JS logic needed.
 

@@ -14,7 +14,7 @@ deutsches `„…"` mit geradem Schluss-`"`, wörtliches `</script>` in JS-Strin
 | Datei | Typ | Zweck | Umfang | Stand | Verlinkt von |
 |---|---|---|---|---|---|
 | `index.html` | Hub | Startseite, Kacheln, Suche/Filter, Countdown, PWA-Banner | 14 Kacheln, 8 Filter-Chips | ✅ fertig | — (Einstieg) |
-| `prio.html` | Aufgaben | AP1-Prüfungstraining, Tipp/Teil-/Komplettlösung | 16 Aufgaben | ✅ fertig | index |
+| `ap1_training.html` | Aufgaben | AP1-Prüfungstraining, Tipp/Teil-/Komplettlösung | 16 Aufgaben | ✅ fertig | index |
 | `ap1_simulation.html` | Aufgaben | AP1-Simulation: Timer, Musterlösung, Selbstkorrektur, Schwächenanalyse | 11 Aufgaben · 3 Modi | ✅ fertig | index |
 | `ap2.html` | Stub | Platzhalter AP2 / Projekt | 66 Zeilen | 🚧 Stub | index |
 | `python_byte.html` | Aufgaben | Python-Aufgaben + Debugging + Cheatsheet | 16 Aufgaben · 3 Bereiche | ✅ fertig | index |
@@ -37,7 +37,7 @@ deutsches `„…"` mit geradem Schluss-`"`, wörtliches `</script>` in JS-Strin
 ## 3. Navigation (index.html → Kacheln)
 
 **Sektion „Prüfungsvorbereitung"**
-- 🎯 AP1 · Aufgaben & Lösungswege → `prio.html`
+- 🎯 AP1 · Aufgaben & Lösungswege → `ap1_training.html`
 - ⏱️ AP1 · Prüfungssimulation → `ap1_simulation.html`
 - 📐 AP2 · Aufgaben & Projekt → `ap2.html` *(In Vorbereitung)*
 - 🗂️ Projekt → **kein Link** (`.ghost`-Kachel, „Geplant")
