@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernfeld 5 &middot; SQL &amp; Python &middot; FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<script src="drawer.js"></script>
+<style>
+/* ===== Nur SQL-spezifische Kleinigkeiten - alle Farben ueber zentrale Paletten-Variablen ===== */
+:root, html[data-theme="light"]{ --sql-ac: var(--purple); }
+
+/* Akzent dieser Seite = LF5 (lila), statt Cyan */
+.sql-ac{ color: var(--sql-ac); }
+.hdr h1 .tag{ background: var(--sql-ac); }
+.sum .h-sub{ color: var(--sql-ac); }
+.sum dl.deflist > div{ border-left-color: var(--sql-ac); }
+.sum dl.deflist dt{ color: var(--sql-ac); }
+
+/* Sprung-Button zu den Uebungen */
+.jump{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--fmono);
+  font-size:13.5px; letter-spacing:.4px; color:#fff; background:var(--sql-ac);
+  border:1px solid var(--sql-ac); border-radius:5px; padding:.55rem .95rem;
+  text-decoration:none; transition:.15s; }
+.jump:hover{ box-shadow:0 0 14px rgba(182,107,255,.45); transform:translateY(-1px); }
+.jumpbar{ display:flex; justify-content:flex-end; margin:.2rem 0 1.2rem; }
+
+/* Code-Bloecke - Fläche und Text ueber theme.css-Variablen (hell + dunkel lesbar) */
+pre{ background:var(--code-bg); border:1px solid var(--line); border-radius:8px;
+  padding:.85rem 1rem; overflow-x:auto; -webkit-overflow-scrolling:touch; margin:.55rem 0 1rem; }
+pre code{ display:block; font-family:var(--fmono); font-size:13.5px; line-height:1.65;
+  color:var(--read); white-space:pre; background:none; border:0; padding:0; }
+code{ font-family:var(--fmono); font-size:.9em; background:var(--code-bg);
+  border:1px solid var(--line); border-radius:4px; padding:1px 6px; color:var(--sql-ac); }
+/* Syntax-Highlighting: Token-Farben ueber theme.css-Variablen (hell + dunkel lesbar) */
+pre code .kw{ color:var(--magenta); font-weight:600; }    /* Schluesselwoerter */
+pre code .bi{ color:var(--cyan); }                         /* Builtins / Methoden */
+pre code .str{ color:var(--ok); }                          /* Strings */
+pre code .num{ color:var(--amber); }                       /* Zahlen */
+pre code .sq{ color:var(--cyan); font-weight:600; }        /* SQL-Schluesselwort im String */
+.co, pre code .co{ color:var(--dim); font-style:italic; } /* Kommentare */
+
+/* Querscrollbare Tabellen/Bereiche */
+.tbl-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="programmierung.html">&larr; LF5 Hub</a>
+    <div>
+      <h1><span class="tag">LF 5</span>SQL &amp; Python</h1>
+      <div class="sub">Datenbankzugriff mit SQLite3 &middot; Referenz &amp; Zusammenfassung</div>
+    </div>
+    <div class="sp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="sum">
+
+  <p class="lead">Kompakte <b>Nachschlage-Seite</b> zu <b>SQL</b> und dem <b>Datenbankzugriff mit Python</b> (Schwerpunkt <b>SQLite3</b>). Jeder Abschnitt: kurze Erklaerung + Code-Beispiel zum Uebernehmen.</p>
+
+  <div class="jumpbar"><a class="jump" href="lf5_sql_uebungen.html">&rarr; Zu den Uebungen</a></div>
+
+  <!-- 1) Ueberblick SQL-Statements -->
+  <div class="h-sec"><span class="ico">🧾</span> Ueberblick: die wichtigsten SQL-Statements</div>
+  <p class="lead">SQL (Structured Query Language) ist die Sprache, um relationale Datenbanken abzufragen und zu veraendern. Die zentralen Befehle:</p>
+  <dl class="deflist">
+    <div><dt>SELECT</dt><dd>Daten aus einer Tabelle <b>auslesen</b> (abfragen).</dd></div>
+    <div><dt>INSERT INTO … VALUES</dt><dd>Neue Datensaetze <b>einfuegen</b>.</dd></div>
+    <div><dt>DELETE FROM … WHERE</dt><dd>Datensaetze <b>loeschen</b>.</dd></div>
+    <div><dt>UPDATE … SET … WHERE</dt><dd>Bestehende Datensaetze <b>aendern</b>.</dd></div>
+    <div><dt>CREATE TABLE</dt><dd>Eine <b>Tabelle erzeugen</b>.</dd></div>
+    <div><dt>ALTER TABLE</dt><dd>Den <b>Aufbau</b> einer Tabelle aendern.</dd></div>
+    <div><dt>DROP TABLE</dt><dd>Eine <b>Tabelle loeschen</b>.</dd></div>
+    <div><dt>CREATE / DROP DATABASE</dt><dd>Eine <b>Datenbank erzeugen / loeschen</b> (nicht bei SQLite).</dd></div>
+    <div><dt>PRAGMA</dt><dd>Datenbank-<b>Einstellungen</b> setzen/abfragen (SQLite-spezifisch).</dd></div>
+  </dl>
+
+  <!-- 2) SQL-Datenbanken mit Python -->
+  <div class="h-sec"><span class="ico">🐍</span> SQL-Datenbanken mit Python</div>
+  <p class="lead">Python kann viele relationale Datenbanken nutzen: <b>MySQL, MariaDB, SQLite3, MS-SQL, Oracle, PostgreSQL, Access</b> und weitere. Damit ist moeglich:</p>
+  <ul class="clean">
+    <li>Tabellen &amp; Spalten <b>anlegen</b> (<code>CREATE</code>, <code>ALTER</code>)</li>
+    <li>Datensaetze <b>einfuegen / aendern / loeschen</b> (<code>INSERT</code> / <code>UPDATE</code> / <code>DELETE</code>)</li>
+    <li>Daten <b>abfragen</b> (<code>SELECT</code>)</li>
+  </ul>
+  <p><b>SQLite3</b> ist bereits in Python enthalten; andere Datenbanken brauchen ein <b>nachinstalliertes Modul</b>.</p>
+  <div class="callout warn"><span class="ci">⚠️</span><div><b>Achtung Namenskollision:</b> Nenne dein Skript <b>nicht</b> <code>sqlite3.py</code> oder <code>mariadb.py</code> – sonst importiert Python deine eigene Datei statt des Datenbank-Moduls.</div></div>
+
+  <!-- 3) Datenbank-Connectoren -->
+  <div class="h-sec"><span class="ico">🔌</span> Datenbank-Connectoren (pip-Module)</div>
+  <p class="lead">Welche Datenbank ueber welches Python-Modul angesprochen wird:</p>
+  <dl class="deflist">
+    <div><dt>SQLite</dt><dd><code>sqlite3</code> &middot; <b>keine Installation</b> noetig (in Python enthalten)</dd></div>
+    <div><dt>MySQL / MariaDB</dt><dd><code>mariadb</code> oder <code>mysql-connector-python</code></dd></div>
+    <div><dt>MS SQL-Server</dt><dd><code>pymssql</code> / <code>pyodbc</code></dd></div>
+    <div><dt>Oracle</dt><dd><code>cx_Oracle</code></dd></div>
+    <div><dt>PostgreSQL</dt><dd><code>psycopg2</code></dd></div>
+    <div><dt>MS Access</dt><dd><code>pyodbc</code></dd></div>
+    <div><dt>MongoDB</dt><dd><code>pymongo</code></dd></div>
+    <div><dt>InfluxDB</dt><dd><code>influxdb</code></dd></div>
+  </dl>
+  <div class="callout tip"><span class="ci">💡</span><div><b>Hinweis:</b> <code>sqlite3</code> funktioniert out-of-the-box. SQLite ist die <b>meistverwendete Datenbank-Engine der Welt</b>.</div></div>
+
+  <!-- 4) SQLite3 vs MariaDB/MySQL -->
+  <div class="h-sec"><span class="ico">⚖️</span> SQLite3 vs. MariaDB / MySQL</div>
+  <div class="cardgrid">
+    <div class="ic">
+      <h4>SQLite3</h4>
+      <ul class="clean">
+        <li>Kommunikation ueber das <b>Dateisystem</b> (lokal, performant)</li>
+        <li><b>Kein Serverdienst</b> noetig</li>
+        <li>Pro Datei <b>eine Datenbank</b></li>
+        <li>Ideal, wenn <b>App + DB auf einem Rechner</b> laufen</li>
+        <li>Fuer <b>kleine/mittlere Last</b>, kleiner Speicherbedarf</li>
+        <li><b>Transaktionsfaehig</b></li>
+        <li>Einige SQL-Funktionen <b>fehlen</b></li>
+      </ul>
+    </div>
+    <div class="ic">
+      <h4>MariaDB / MySQL</h4>
+      <ul class="clean">
+        <li><b>Server</b> notwendig</li>
+        <li>Ueber das <b>Netzwerk</b> erreichbar</li>
+        <li>Fuer <b>viele parallele Zugriffe</b></li>
+        <li><b>Groesserer Funktionsumfang</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 5) SQLite3 vorbereiten -->
+  <div class="h-sec"><span class="ico">🛠️</span> SQLite3-Zugriff vorbereiten</div>
+  <p class="lead">Verbindung aufbauen, Cursor holen und eine Tabelle anlegen:</p>
+<pre><code>import sqlite3
+
+db = sqlite3.connect("datenbank.sqlite3")   <span class="co"># Datei-DB (wird bei Bedarf angelegt)</span>
+db = sqlite3.connect(":memory:")            <span class="co"># DB im RAM, nicht persistent</span>
+
+cursor = db.cursor()
+sql = "CREATE TABLE tblArtikel(id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Anzahl INTEGER, Preis REAL)"
+cursor.execute(sql)
+db.close()</code></pre>
+  <div class="callout tip"><span class="ci">💡</span><div><b>Tipp:</b> Der grafische SQLite-Editor <b>sqlitebrowser.org</b> hilft beim einfachen Anlegen und Ansehen von Tabellen.</div></div>
+
+  <!-- 6) Schreiben -->
+  <div class="h-sec"><span class="ico">✏️</span> Schreiben: INSERT / UPDATE / DELETE + commit()</div>
+<pre><code>import sqlite3
+
+db = sqlite3.connect("datenbank.sqlite")
+cursor = db.cursor()
+sql = "INSERT INTO tblArtikel (Name, Anzahl) VALUES('Hut',14)"
+cursor.execute(sql)
+db.commit()   <span class="co"># Bestaetigt die Speicherung!</span>
+db.close()</code></pre>
+  <div class="callout warn"><span class="ci">⚠️</span><div><b>Merkregel:</b> Fuer <b>INSERT, UPDATE und DELETE</b> ist <code>commit()</code> notwendig – sonst werden die Daten <b>NICHT</b> gespeichert.</div></div>
+
+  <!-- 7) Lesen -->
+  <div class="h-sec"><span class="ico">📖</span> Lesen: SELECT</div>
+<pre><code>cursor = db.cursor()
+cursor.execute("SELECT * FROM tblArtikel")
+for ds in cursor:
+    print(f"{ds[0]:4} {ds[1]:12} {ds[2]:5}")</code></pre>
+  <div class="callout tip"><span class="ci">💡</span><div><b>Hinweis:</b> <code>SELECT * FROM sqlite_master</code> liefert das <b>Schema</b> der Datenbank (welche Tabellen es gibt).</div></div>
+
+  <!-- 8) fetchall -->
+  <div class="h-sec"><span class="ico">📥</span> fetchall() – Ergebnis in eigene Liste</div>
+<pre><code>cursor.execute("SELECT * FROM tblArtikel")
+data = cursor.fetchall()   <span class="co"># ganzes Ergebnis in Variable</span>
+db.close()                 <span class="co"># DB kann sofort geschlossen werden</span>
+
+for ds in data:
+    print(f"{ds[0]:4} {ds[1]:12} {ds[2]:8.2f}")</code></pre>
+  <p><b>Vorteil:</b> Die Datenbank ist sofort schliessbar und der Fehler <code>Unread result found</code> wird vermieden.</p>
+
+  <!-- 9) Cursor -->
+  <div class="h-sec"><span class="ico">🎯</span> Der Datenbank-Cursor (kurz erklaert)</div>
+  <p class="lead">Erst die <b>Verbindung</b> (Connection) ueber <code>connect()</code>, dann den <b>Cursor</b> ueber <code>db.cursor()</code>. Der Cursor <b>sendet SQL</b> (<code>execute</code>) <b>und nimmt Ergebnisse entgegen</b>.</p>
+  <ul class="clean">
+    <li>Ergebnis durchlaufen mit <code>for ds in cursor:</code> oder – besser – <code>data = cursor.fetchall()</code></li>
+    <li><code>cursor.rowcount</code> = Anzahl betroffener Datensaetze (bei <code>SELECT</code> in SQLite3 <b>nicht</b> verfuegbar)</li>
+  </ul>
+
+  <!-- 10) Parameterbindung -->
+  <div class="h-sec"><span class="ico">🧩</span> Parameterbindung (Platzhalter ?)</div>
+<pre><code>sql = "INSERT INTO tblArtikel (Name, Anzahl) VALUES (?,?)"
+cursor.execute(sql, [n, a])</code></pre>
+  <div class="callout merk"><span class="ci">📌</span><div><b>Vorteile der Parameterbindung:</b> einfacher &amp; lesbarer &middot; <b>Schutz vor SQL-Injection</b> &middot; korrekte Typuebergabe &middot; bessere Performance bei Massenoperationen.</div></div>
+
+  <!-- 11) NULL / None -->
+  <div class="h-sec"><span class="ico">⭕</span> NULL / None</div>
+  <p class="lead"><b>NULL</b> aus der Datenbank wird in Python zu <b>None</b>. <code>None</code> geht <b>nicht direkt</b> in einen f-String – vorher in einen Leerstring umwandeln. Ein Datensatz ist oft ein <b>Tupel</b> (unveraenderbar), daher erst in eine <b>Liste</b> wandeln:</p>
+<pre><code>daten = cursor.fetchall()
+for ds in daten:
+    ds = list(ds)
+    if ds[2] is None: ds[2] = ""
+    print(f"{ds[0]:5} {ds[2]:10}")</code></pre>
+
+  <!-- 12) datetime -->
+  <div class="h-sec"><span class="ico">🕒</span> Modul datetime (Datum &amp; Zeit)</div>
+<pre><code>import datetime
+
+zeit  = datetime.time(13, 34, 22)              <span class="co"># Uhrzeit</span>
+datum = datetime.date(1912, 6, 23)             <span class="co"># Datum</span>
+mond  = datetime.datetime(1969, 7, 21, 3, 56)  <span class="co"># Datum + Zeit</span>
+jetzt = datetime.datetime.now()
+
+diff  = ziel - jetzt   <span class="co"># Subtraktion zweier datetime -&gt; timedelta</span></code></pre>
+  <ul class="clean">
+    <li>Objekte: <code>date</code> / <code>time</code> / <code>datetime</code>; <code>timedelta</code> fuer Differenzen</li>
+    <li>Zeitbereich: <b>01.01.0001 – 31.12.9999</b></li>
+  </ul>
+
+  <!-- Abschluss -->
+  <div class="callout merk"><span class="ci">📌</span><div><b>Kurz gemerkt:</b> Verbindung &rarr; Cursor &rarr; <code>execute()</code>. Zum <b>Schreiben</b> immer <code>commit()</code>, zum <b>Lesen</b> gern <code>fetchall()</code>. Werte immer ueber <b>Platzhalter (?)</b> uebergeben – nie per String-Zusammenbau.</div></div>
+
+  <div class="jumpbar"><a class="jump" href="lf5_sql_uebungen.html">&rarr; Zu den Uebungen</a></div>
+
+</div>
+</div>
+
+<script>
+/* Leichtgewichtiges Syntax-Highlighting fuer <pre><code> (Python + SQL) - CSP-konform, kein externes JS */
+(function(){
+  var KW=new Set("import from as def return for in if elif else while None True False and or not is class with try except finally lambda pass break continue global del yield raise assert".split(" "));
+  var BI=new Set("print input int str float list dict tuple set len range open connect cursor execute executemany fetchall fetchone commit close".split(" "));
+  var SQL="SELECT INSERT INTO VALUES DELETE FROM WHERE UPDATE SET CREATE TABLE ALTER DROP DATABASE PRAGMA PRIMARY KEY AUTOINCREMENT INTEGER TEXT REAL AND OR NOT NULL".split(" ");
+  var sqlRE=new RegExp("\\b("+SQL.join("|")+")\\b","g");
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function hlStr(t){return '<span class="str">'+esc(t).replace(sqlRE,'<span class="sq">$1</span>')+'</span>';}
+  var RE=/(#[^\n]*)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(code){var out="",last=0,m;while((m=RE.exec(code))){out+=esc(code.slice(last,m.index));if(m[1])out+='<span class="co">'+esc(m[1])+'</span>';else if(m[2])out+=hlStr(m[2]);else if(m[3])out+='<span class="num">'+m[3]+'</span>';else{var w=m[4];out+=KW.has(w)?'<span class="kw">'+w+'</span>':BI.has(w)?'<span class="bi">'+w+'</span>':esc(w);}last=RE.lastIndex;}return out+esc(code.slice(last));}
+  document.querySelectorAll("pre code").forEach(function(c){c.innerHTML=hl(c.textContent);});
+})();
+</script>
+<script>
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
