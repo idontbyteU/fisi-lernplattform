@@ -9,7 +9,7 @@
 /*  Private Einzelnutzung: kein manuelles Hochzählen einer Versionsnr.   */
 /*  nötig – der Cache wird ohnehin bei jedem Online-Abruf erneuert.      */
 /* ===================================================================== */
-const CACHE = "fisi-os-v5";           // bei Network-first unkritisch; erhoeht fuer Umbenennung ap1_training.html
+const CACHE = "fisi-os-v6";           // bei Network-first unkritisch; erhoeht fuer 5 ER-Uebungen + Access-Tab (lf5_datenbanken)
 const ASSETS = [
   "./",
   "./index.html",
@@ -50,6 +50,17 @@ const ASSETS = [
   "./img/db/db_walzanlage_loesung.png",
   "./img/db/db_impfzentrum_aufgabe.png",
   "./img/db/db_impfzentrum_loesung.png",
+  "./img/db/er_a1_tarif_aufgabe.png",
+  "./img/db/er_a1_tarif_original.png",
+  "./img/db/er_a2_klinik_aufgabe.png",
+  "./img/db/er_a2_klinik_original.png",
+  "./img/db/er_a3_quickmeal_aufgabe.png",
+  "./img/db/er_a3_quickmeal_original.png",
+  "./img/db/er_a4_teile_aufgabe.png",
+  "./img/db/er_a4_teile_original.png",
+  "./img/db/er_a5_paletten_aufgabe.png",
+  "./img/db/er_a5_paletten_original.png",
+  "./img/db/db_northwind.png",
   "./img/uml/ex_uc_schluesselsystem.png",
   "./img/uml/ex_act_raumbuchung.png",
   "./img/uml/ex_state_raumbelegung.png",
