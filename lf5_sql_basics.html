@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernfeld 5 &middot; SQL-Basics &middot; FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<script src="drawer.js"></script>
+<style>
+/* ===== Nur SQL-spezifische Kleinigkeiten - alle Farben ueber zentrale Paletten-Variablen ===== */
+:root, html[data-theme="light"]{ --sql-ac: var(--purple); }   /* LF5-Akzent #b66bff (dunkel) / #7a3ec8 (hell) */
+
+/* Akzent dieser Seite = LF5 (lila), statt Cyan */
+.sql-ac{ color: var(--sql-ac); }
+.hdr h1 .tag{ background: var(--sql-ac); }
+.sum .h-sub{ color: var(--sql-ac); }
+
+/* Zurueck-/Sprung-Button */
+.jump{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--fmono);
+  font-size:13.5px; letter-spacing:.4px; color:#fff; background:var(--sql-ac);
+  border:1px solid var(--sql-ac); border-radius:5px; padding:.55rem .95rem;
+  text-decoration:none; transition:.15s; }
+.jump:hover{ box-shadow:0 0 14px rgba(182,107,255,.45); transform:translateY(-1px); }
+.jumpbar{ display:flex; justify-content:flex-end; margin:.2rem 0 1.2rem; }
+
+/* Code-Bloecke - Fläche und Text ueber theme.css-Variablen (hell + dunkel lesbar) */
+pre{ background:var(--code-bg); border:1px solid var(--line); border-radius:8px;
+  padding:.85rem 1rem; overflow-x:auto; -webkit-overflow-scrolling:touch; margin:.55rem 0 1rem; }
+pre code{ display:block; font-family:var(--fmono); font-size:13.5px; line-height:1.65;
+  color:var(--read); white-space:pre; background:none; border:0; padding:0; }
+code{ font-family:var(--fmono); font-size:.9em; background:var(--code-bg);
+  border:1px solid var(--line); border-radius:4px; padding:1px 6px; color:var(--sql-ac); }
+/* Syntax-Highlighting: Token-Farben ueber theme.css-Variablen (hell + dunkel lesbar) */
+pre code .kw{ color:var(--magenta); font-weight:600; }    /* Schluesselwoerter */
+pre code .bi{ color:var(--cyan); }                         /* Builtins / Methoden */
+pre code .str{ color:var(--ok); }                          /* Strings */
+pre code .num{ color:var(--amber); }                       /* Zahlen */
+pre code .sq{ color:var(--cyan); font-weight:600; }        /* SQL-Schluesselwort im String */
+.co, pre code .co{ color:var(--dim); font-style:italic; } /* Kommentare */
+
+/* Hinweis-Boxen (.note) - theme-aware, spiegelt die theme.css-Callouts in hell + dunkel */
+.note{ border:1px solid var(--line); border-radius:6px; padding:.7rem .85rem;
+  margin:.7rem 0; font-size:15.5px; line-height:1.55; color:var(--read); }
+.note.warn{ background:rgba(255,42,109,.08); border-color:rgba(255,42,109,.35); }
+.note.warn b{ color:var(--magenta); }
+.note.merk{ background:rgba(157,255,82,.08); border-color:rgba(157,255,82,.32); }
+.note.merk b{ color:var(--lime); }
+html[data-theme="light"] .note.warn{ background:#fdeaf1; border-color:#f2bed0; color:#8a1438; }
+html[data-theme="light"] .note.warn b{ color:var(--magenta); }
+html[data-theme="light"] .note.merk{ background:#ebf6e3; border-color:#c3e1a9; color:#2f5618; }
+html[data-theme="light"] .note.merk b{ color:#2e7d32; }
+
+/* Selbsttest-Aufklapper (.quiz) - standardmaessig geschlossen */
+details.quiz{ border:1px solid var(--line); border-radius:6px; overflow:hidden;
+  margin:.6rem 0; background:var(--glass); }
+details.quiz>summary{ cursor:pointer; padding:.7rem .9rem; font-family:var(--fui);
+  font-weight:600; font-size:15.5px; color:var(--ink); list-style:none; user-select:none; }
+details.quiz>summary::-webkit-details-marker{ display:none; }
+details.quiz>summary::before{ content:"\25B6"; color:var(--sql-ac); font-size:11px;
+  margin-right:.55rem; display:inline-block; transition:transform .15s; }
+details.quiz[open]>summary{ border-bottom:1px solid var(--line); color:var(--sql-ac); }
+details.quiz[open]>summary::before{ transform:rotate(90deg); }
+details.quiz .ans{ padding:.7rem .9rem; font-size:15.5px; line-height:1.55; color:var(--read); }
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="lf5_sql.html">&larr; SQL-Hub</a>
+    <div>
+      <h1><span class="tag">LF 5</span>SQL-Basics erkl&auml;rt &mdash; SQLite3 mit Python f&uuml;r Einsteiger</h1>
+      <div class="sub">Der komplette Ablauf einmal von vorn &mdash; jede Zeile erkl&auml;rt</div>
+    </div>
+    <div class="sp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="sum">
+
+  <p class="lead">Diese Seite geht das <b>eine Komplettbeispiel</b> Zeile f&uuml;r Zeile durch: von der Verbindung &uuml;ber Tabelle anlegen, Daten schreiben und lesen bis zum Schliessen. Ideal zum <b>ersten Verstehen</b>, bevor du zur kompakten <a class="sql-ac" href="lf5_sql.html"><b>SQL-Referenz</b></a> greifst.</p>
+
+  <div class="jumpbar"><a class="jump" href="lf5_sql.html">&rarr; Zur SQL-Referenz</a></div>
+
+  <!-- 1) Komplettbeispiel -->
+  <div class="h-sec"><span class="ico">🧩</span> Das Komplettbeispiel</div>
+  <p class="lead">Ein durchgehendes Skript &mdash; alle folgenden Abschnitte erkl&auml;ren die einzelnen Bausteine daraus:</p>
+<pre><code>import sqlite3
+<span class="co"># 1. Verbindung und Cursor erstellen</span>
+db = sqlite3.connect("schule.db")
+cursor = db.cursor()
+<span class="co"># 2. Tabelle anlegen</span>
+sql_create = """CREATE TABLE schueler (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    alterj INTEGER,
+    klasse TEXT
+)"""
+cursor.execute(sql_create)
+<span class="co"># 3. Daten eintragen (und speichern!)</span>
+cursor.execute("INSERT INTO schueler (name, alterj, klasse) VALUES ('Anna', 27, 'FI2027')")
+cursor.execute("INSERT INTO schueler (name, alterj, klasse) VALUES ('Hans', 22, 'FI2027')")
+db.commit()
+<span class="co"># 4. Daten abfragen und formatiert ausgeben</span>
+cursor.execute("SELECT * FROM schueler WHERE id &lt; 5 ORDER BY id DESC")
+for ds in cursor:
+    print(f"{ds[0]:2} {ds[1]:6} {ds[2]:3} {ds[3]:8}")
+<span class="co"># 5. Verbindung schliessen</span>
+db.close()</code></pre>
+
+  <!-- 2) Python-Syntax -->
+  <div class="h-sec"><span class="ico">🐍</span> Allgemeine Python-Syntax</div>
+  <p><code>import sqlite3</code> &mdash; damit holst du dir den <b>Werkzeugkasten</b> f&uuml;r Datenbanken in dein Skript. Ohne diese Zeile kennt Python die Datenbank-Befehle nicht.</p>
+  <p><b>Variablen</b> wie <code>db</code>, <code>cursor</code>, <code>sql_create</code> oder <code>ds</code> sind <b>selbst gew&auml;hlte Namen</b> &mdash; du k&ouml;nntest sie auch anders nennen. Sie sind nur Beh&auml;lter, in denen du dir die Verbindung, den Cursor, einen SQL-Text oder eine Ergebniszeile merkst.</p>
+  <p><b>Strings &amp; Anf&uuml;hrungszeichen:</b> Text steht in Anf&uuml;hrungszeichen. Kurzes, einzeiliges in <code>"..."</code>; f&uuml;r lange, mehrzeilige SQL-Befehle nimmst du <b>dreifache</b> Anf&uuml;hrungszeichen <code>"""..."""</code> &mdash; so darf der Text &uuml;ber mehrere Zeilen gehen (siehe <code>sql_create</code>).</p>
+
+  <!-- 3) sqlite3-Befehle -->
+  <div class="h-sec"><span class="ico">🗄️</span> Die Datenbank-Befehle (sqlite3-Modul)</div>
+  <p><code>connect("schule.db")</code> &mdash; &ouml;ffnet die Datenbankdatei. <b>Existiert sie nicht, wird sie bei Bedarf automatisch erstellt.</b></p>
+  <p><code>db.cursor()</code> &mdash; liefert den <b>Cursor</b>. Bild dazu: <code>db</code> ist die <b>Telefonleitung</b> zur Datenbank, der <code>cursor</code> ist die <b>Person</b>, der du am anderen Ende deine Befehle diktierst.</p>
+  <p><code>cursor.execute(...)</code> &mdash; <b>f&uuml;hrt einen SQL-Text aus</b> (Tabelle anlegen, einf&uuml;gen, abfragen &hellip;).</p>
+  <p><code>db.commit()</code> &mdash; &Auml;nderungen liegen zun&auml;chst nur im <b>Zwischenspeicher</b> (in der laufenden <b>Transaktion</b>). Erst <code>commit()</code> schreibt sie <b>dauerhaft auf die Platte</b>.</p>
+  <p><code>db.close()</code> &mdash; gibt die <b>Datei wieder frei</b>. Geh&ouml;rt zum sauberen Programmieren dazu.</p>
+  <div class="note warn"><b>Achtung:</b> <code>commit()</code> vergessen = Skript l&auml;uft fehlerfrei durch, aber nach <code>close()</code> ist nichts gespeichert.</div>
+  <div class="note merk"><b>Merke:</b> Daten &auml;ndern (INSERT/UPDATE/DELETE) &rarr; committen. Nur lesen (SELECT) &rarr; kein commit n&ouml;tig. CREATE speichert SQLite sofort.</div>
+
+  <!-- 4) SQL-Sprache -->
+  <div class="h-sec"><span class="ico">📝</span> Die SQL-Sprache</div>
+  <p><code>CREATE TABLE</code> &mdash; legt eine <b>Tabelle</b> an (stell sie dir wie ein <b>Excel-Blatt</b> vor) und definiert deren <b>Spalten</b>.</p>
+  <p><b>Datentypen:</b> <code>INTEGER</code> f&uuml;r ganze Zahlen, <code>TEXT</code> f&uuml;r Zeichenketten &mdash; sie legen fest, was in eine Spalte darf.</p>
+  <p><code>PRIMARY KEY AUTOINCREMENT</code> &mdash; wie eine <b>Personalnummer</b>: die Datenbank <b>z&auml;hlt selbst hoch</b> und vergibt eine eindeutige <code>id</code>. Deshalb gibst du die <code>id</code> beim <code>INSERT</code> <b>nie selbst an</b>.</p>
+  <p><code>NOT NULL</code> &mdash; macht die Spalte zum <b>Pflichtfeld</b> (darf nicht leer bleiben).</p>
+  <p><code>INSERT INTO ... VALUES</code> &mdash; f&uuml;gt eine Zeile ein. <b>Spalten und Werte in gleicher Reihenfolge.</b> Text steht in <b>'einfachen Anf&uuml;hrungszeichen'</b>, Zahlen ohne.</p>
+  <p><code>SELECT *</code> &mdash; der <b>Stern</b> bedeutet <b>alle Spalten</b>.</p>
+  <p><code>WHERE</code> &mdash; <b>filtert die Zeilen</b> (nur die, die zur Bedingung passen).</p>
+  <p><code>ORDER BY ... DESC</code> &mdash; <b>sortiert absteigend</b>; ohne <code>DESC</code> wird <b>aufsteigend</b> sortiert.</p>
+  <div class="note warn"><b>Achtung:</b> Die Spalte hei&szlig;t <code>alterj</code>, nicht <code>alter</code> &mdash; <code>alter</code> ist ein reserviertes SQL-Schl&uuml;sselwort (<code>ALTER TABLE</code>).</div>
+
+  <!-- 5) Ergebnisse verarbeiten -->
+  <div class="h-sec"><span class="ico">🔁</span> Ergebnisse verarbeiten (for-Schleife)</div>
+  <p><code>for ds in cursor:</code> &mdash; holt <b>jede Ergebniszeile einzeln</b> ab und legt sie in <code>ds</code>.</p>
+  <p>Ein <b>Datensatz</b> ist ein <b>Tupel</b>, z.&nbsp;B. <code>(1, 'Anna', 27, 'FI2027')</code>. Der <b>Index startet bei 0</b>: <code>ds[0]</code>=id, <code>ds[1]</code>=name, <code>ds[2]</code>=alterj, <code>ds[3]</code>=klasse.</p>
+  <p><b>f-Strings</b> setzen Variablen direkt in geschweifte Klammern <code>{}</code> ein. Die <b>Formatbreite</b> wie <code>{ds[0]:2}</code> reserviert <b>mindestens 2 Zeichen Platz</b> &mdash; so stehen die Spalten in der Konsole <b>gerade</b> untereinander.</p>
+  <div class="note merk"><b>Merke:</b> SELECT liefert Tupel &mdash; Zugriff per Index, Z&auml;hlung startet bei 0.</div>
+
+  <!-- 6) Teste dich -->
+  <div class="h-sec"><span class="ico">🧠</span> Teste dich</div>
+  <details class="quiz">
+    <summary>Was passiert, wenn du <code>db.commit()</code> nach einem INSERT wegl&auml;sst?</summary>
+    <div class="ans">Die &Auml;nderungen bleiben in der Transaktion (Zwischenspeicher) und gehen mit <code>close()</code> verloren &mdash; es wird nichts dauerhaft gespeichert.</div>
+  </details>
+  <details class="quiz">
+    <summary>Was steht in <code>ds[2]</code> beim Datensatz <code>(1, 'Anna', 27, 'FI2027')</code>?</summary>
+    <div class="ans">27 &mdash; die Z&auml;hlung beginnt bei 0, also ist <code>ds[2]</code> das dritte Element (alterj).</div>
+  </details>
+  <details class="quiz">
+    <summary>Warum hei&szlig;t die Spalte <code>alterj</code> und nicht <code>alter</code>?</summary>
+    <div class="ans"><code>alter</code> ist ein reserviertes SQL-Schl&uuml;sselwort (<code>ALTER TABLE</code>) &mdash; als Spaltenname w&uuml;rde es zu Problemen f&uuml;hren.</div>
+  </details>
+
+  <div class="jumpbar"><a class="jump" href="lf5_sql.html">&rarr; Zur SQL-Referenz</a></div>
+
+</div>
+</div>
+
+<script>
+/* Leichtgewichtiges Syntax-Highlighting fuer &lt;pre&gt;&lt;code&gt; (Python + SQL) - CSP-konform, kein externes JS */
+(function(){
+  var KW=new Set("import from as def return for in if elif else while None True False and or not is class with try except finally lambda pass break continue global del yield raise assert".split(" "));
+  var BI=new Set("print input int str float list dict tuple set len range open connect cursor execute executemany fetchall fetchone commit close".split(" "));
+  var SQL="SELECT INSERT INTO VALUES DELETE FROM WHERE UPDATE SET CREATE TABLE ALTER DROP DATABASE PRAGMA PRIMARY KEY AUTOINCREMENT INTEGER TEXT REAL AND OR NOT NULL ORDER BY DESC ASC".split(" ");
+  var sqlRE=new RegExp("\\b("+SQL.join("|")+")\\b","g");
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function hlStr(t){return '<span class="str">'+esc(t).replace(sqlRE,'<span class="sq">$1</span>')+'</span>';}
+  var RE=/(#[^\n]*)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(code){var out="",last=0,m;while((m=RE.exec(code))){out+=esc(code.slice(last,m.index));if(m[1])out+='<span class="co">'+esc(m[1])+'</span>';else if(m[2])out+=hlStr(m[2]);else if(m[3])out+='<span class="num">'+m[3]+'</span>';else{var w=m[4];out+=KW.has(w)?'<span class="kw">'+w+'</span>':BI.has(w)?'<span class="bi">'+w+'</span>':esc(w);}last=RE.lastIndex;}return out+esc(code.slice(last));}
+  document.querySelectorAll("pre code").forEach(function(c){c.innerHTML=hl(c.textContent);});
+})();
+</script>
+<script>
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
