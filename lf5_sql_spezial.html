@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernfeld 5 &middot; SQL Spezial &middot; FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<script src="drawer.js"></script>
+<style>
+/* ===== Nur SQL-spezifische Kleinigkeiten - alle Farben ueber zentrale Paletten-Variablen ===== */
+:root, html[data-theme="light"]{ --sql-ac: var(--purple); }
+
+/* Akzent dieser Seite = LF5 (lila), statt Cyan */
+.sql-ac{ color: var(--sql-ac); }
+.hdr h1 .tag{ background: var(--sql-ac); }
+.sum .h-sub{ color: var(--sql-ac); }
+.sum dl.deflist > div{ border-left-color: var(--sql-ac); }
+.sum dl.deflist dt{ color: var(--sql-ac); }
+
+/* Sprung-Buttons */
+.jump{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--fmono);
+  font-size:13.5px; letter-spacing:.4px; color:#fff; background:var(--sql-ac);
+  border:1px solid var(--sql-ac); border-radius:5px; padding:.55rem .95rem;
+  text-decoration:none; transition:.15s; }
+.jump:hover{ box-shadow:0 0 14px rgba(182,107,255,.45); transform:translateY(-1px); }
+.jumpbar{ display:flex; justify-content:flex-end; gap:.5rem; flex-wrap:wrap; margin:.2rem 0 1.2rem; }
+
+/* Code-Bloecke - Fläche und Text ueber theme.css-Variablen (hell + dunkel lesbar) */
+pre{ background:var(--code-bg); border:1px solid var(--line); border-radius:8px;
+  padding:.85rem 1rem; overflow-x:auto; -webkit-overflow-scrolling:touch; margin:.55rem 0 1rem; }
+pre code{ display:block; font-family:var(--fmono); font-size:13.5px; line-height:1.65;
+  color:var(--read); white-space:pre; background:none; border:0; padding:0; }
+code{ font-family:var(--fmono); font-size:.9em; background:var(--code-bg);
+  border:1px solid var(--line); border-radius:4px; padding:1px 6px; color:var(--sql-ac); }
+/* Syntax-Highlighting: Token-Farben ueber theme.css-Variablen (hell + dunkel lesbar) */
+pre code .kw{ color:var(--magenta); font-weight:600; }    /* Schluesselwoerter */
+pre code .bi{ color:var(--cyan); }                         /* Builtins / Methoden */
+pre code .str{ color:var(--ok); }                          /* Strings */
+pre code .num{ color:var(--amber); }                       /* Zahlen */
+pre code .sq{ color:var(--cyan); font-weight:600; }        /* SQL-Schluesselwort im String */
+.co, pre code .co{ color:var(--dim); font-style:italic; } /* Kommentare */
+
+/* Querscrollbare Tabellen/Bereiche */
+.tbl-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="lf5_sql.html">&larr; SQL-Hub</a>
+    <div>
+      <h1><span class="tag">LF 5</span>Sicher &amp; Speziell</h1>
+      <div class="sub">Parameterbindung, NULL/None &amp; datetime</div>
+    </div>
+    <div class="sp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="sum">
+
+  <p class="lead">Teil 3 von 3: Werte sicher per Platzhalter binden, mit <code>NULL</code>/<code>None</code> umgehen und mit dem Modul <code>datetime</code> arbeiten.</p>
+
+  <div class="jumpbar">
+    <a class="jump" href="lf5_sql_grundlagen.html">&rarr; Grundlagen</a>
+    <a class="jump" href="lf5_sql_crud.html">&rarr; Schreiben &amp; Lesen</a>
+    <a class="jump" href="lf5_sql_uebungen.html">&rarr; Uebungen</a>
+  </div>
+
+  <!-- 10) Parameterbindung -->
+  <div class="h-sec"><span class="ico">🧩</span> Parameterbindung (Platzhalter ?)</div>
+<pre><code>sql = "INSERT INTO tblArtikel (Name, Anzahl) VALUES (?,?)"
+cursor.execute(sql, [n, a])</code></pre>
+  <div class="callout merk"><span class="ci">📌</span><div><b>Vorteile der Parameterbindung:</b> einfacher &amp; lesbarer &middot; <b>Schutz vor SQL-Injection</b> &middot; korrekte Typuebergabe &middot; bessere Performance bei Massenoperationen.</div></div>
+
+  <!-- 11) NULL / None -->
+  <div class="h-sec"><span class="ico">⭕</span> NULL / None</div>
+  <p class="lead"><b>NULL</b> aus der Datenbank wird in Python zu <b>None</b>. <code>None</code> geht <b>nicht direkt</b> in einen f-String – vorher in einen Leerstring umwandeln. Ein Datensatz ist oft ein <b>Tupel</b> (unveraenderbar), daher erst in eine <b>Liste</b> wandeln:</p>
+<pre><code>daten = cursor.fetchall()
+for ds in daten:
+    ds = list(ds)
+    if ds[2] is None: ds[2] = ""
+    print(f"{ds[0]:5} {ds[2]:10}")</code></pre>
+
+  <!-- 12) datetime -->
+  <div class="h-sec"><span class="ico">🕒</span> Modul datetime (Datum &amp; Zeit)</div>
+<pre><code>import datetime
+
+zeit  = datetime.time(13, 34, 22)              <span class="co"># Uhrzeit</span>
+datum = datetime.date(1912, 6, 23)             <span class="co"># Datum</span>
+mond  = datetime.datetime(1969, 7, 21, 3, 56)  <span class="co"># Datum + Zeit</span>
+jetzt = datetime.datetime.now()
+
+diff  = ziel - jetzt   <span class="co"># Subtraktion zweier datetime -&gt; timedelta</span></code></pre>
+  <ul class="clean">
+    <li>Objekte: <code>date</code> / <code>time</code> / <code>datetime</code>; <code>timedelta</code> fuer Differenzen</li>
+    <li>Zeitbereich: <b>01.01.0001 – 31.12.9999</b></li>
+  </ul>
+
+  <!-- Abschluss -->
+  <div class="callout merk"><span class="ci">📌</span><div><b>Kurz gemerkt:</b> Verbindung &rarr; Cursor &rarr; <code>execute()</code>. Zum <b>Schreiben</b> immer <code>commit()</code>, zum <b>Lesen</b> gern <code>fetchall()</code>. Werte immer ueber <b>Platzhalter (?)</b> uebergeben – nie per String-Zusammenbau.</div></div>
+
+  <div class="jumpbar">
+    <a class="jump" href="lf5_sql_grundlagen.html">&rarr; Grundlagen</a>
+    <a class="jump" href="lf5_sql_crud.html">&rarr; Schreiben &amp; Lesen</a>
+    <a class="jump" href="lf5_sql_uebungen.html">&rarr; Uebungen</a>
+  </div>
+
+</div>
+</div>
+
+<script>
+/* Leichtgewichtiges Syntax-Highlighting fuer <pre><code> (Python + SQL) - CSP-konform, kein externes JS */
+(function(){
+  var KW=new Set("import from as def return for in if elif else while None True False and or not is class with try except finally lambda pass break continue global del yield raise assert".split(" "));
+  var BI=new Set("print input int str float list dict tuple set len range open connect cursor execute executemany fetchall fetchone commit close".split(" "));
+  var SQL="SELECT INSERT INTO VALUES DELETE FROM WHERE UPDATE SET CREATE TABLE ALTER DROP DATABASE PRAGMA PRIMARY KEY AUTOINCREMENT INTEGER TEXT REAL AND OR NOT NULL".split(" ");
+  var sqlRE=new RegExp("\\b("+SQL.join("|")+")\\b","g");
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function hlStr(t){return '<span class="str">'+esc(t).replace(sqlRE,'<span class="sq">$1</span>')+'</span>';}
+  var RE=/(#[^\n]*)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(code){var out="",last=0,m;while((m=RE.exec(code))){out+=esc(code.slice(last,m.index));if(m[1])out+='<span class="co">'+esc(m[1])+'</span>';else if(m[2])out+=hlStr(m[2]);else if(m[3])out+='<span class="num">'+m[3]+'</span>';else{var w=m[4];out+=KW.has(w)?'<span class="kw">'+w+'</span>':BI.has(w)?'<span class="bi">'+w+'</span>':esc(w);}last=RE.lastIndex;}return out+esc(code.slice(last));}
+  document.querySelectorAll("pre code").forEach(function(c){c.innerHTML=hl(c.textContent);});
+})();
+</script>
+<script>
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
