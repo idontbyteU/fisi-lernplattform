@@ -20,7 +20,7 @@
   border:1px solid var(--sql-ac); border-radius:5px; padding:.55rem .95rem;
   text-decoration:none; transition:.15s; }
 .jump:hover{ box-shadow:0 0 14px rgba(182,107,255,.45); transform:translateY(-1px); }
-.jumpbar{ display:flex; justify-content:flex-end; margin:.2rem 0 1.2rem; }
+.jumpbar{ display:flex; justify-content:flex-end; gap:.5rem; flex-wrap:wrap; margin:.2rem 0 1.2rem; }
 
 /* Uebungs-Karten */
 .uebung{ background:var(--glass); border:1px solid var(--line); border-radius:8px;
@@ -70,7 +70,7 @@ pre code .sq{ color:var(--cyan); font-weight:600; }
 
 <header class="hdr">
   <div class="hdr-in">
-    <a class="back" href="lf5_sql.html">&larr; SQL-Referenz</a>
+    <a class="back" href="lf5_sql.html">&larr; SQL-Hub</a>
     <div>
       <h1><span class="tag">LF 5</span>SQL-Uebungen</h1>
       <div class="sub">SQLite3 mit Python &middot; Aufgabe zuerst, Loesung aufklappen</div>
@@ -84,7 +84,12 @@ pre code .sq{ color:var(--cyan); font-weight:600; }
 
   <p class="lead">Sieben Uebungen zum <b>Datenbankzugriff mit SQLite3</b>. Erst selbst versuchen, dann die <b>Loesung aufklappen</b>. Die Grundlagen dazu stehen in der <a class="sql-ac" href="lf5_sql.html"><b>SQL-Referenz</b></a>.</p>
 
-  <div class="jumpbar"><a class="jump" href="lf5_sql.html">&rarr; Zur Referenz</a></div>
+  <div class="jumpbar">
+    <a class="jump" href="lf5_sql_basics.html">&rarr; Basics</a>
+    <a class="jump" href="lf5_sql_grundlagen.html">&rarr; Grundlagen</a>
+    <a class="jump" href="lf5_sql_crud.html">&rarr; CRUD</a>
+    <a class="jump" href="lf5_sql_spezial.html">&rarr; Spezial</a>
+  </div>
 
   <!-- UE1 -->
   <div class="uebung">
@@ -191,7 +196,12 @@ for ds in daten:
 
   <div class="callout merk"><span class="ci">📌</span><div><b>Faustregeln:</b> Schreiben (INSERT/UPDATE/DELETE) braucht <code>commit()</code> &middot; Werte immer ueber <b>Platzhalter (?)</b> &middot; zum Lesen <code>fetchall()</code>, dann DB schliessen.</div></div>
 
-  <div class="jumpbar"><a class="jump" href="lf5_sql.html">&rarr; Zur Referenz</a></div>
+  <div class="jumpbar">
+    <a class="jump" href="lf5_sql_basics.html">&rarr; Basics</a>
+    <a class="jump" href="lf5_sql_grundlagen.html">&rarr; Grundlagen</a>
+    <a class="jump" href="lf5_sql_crud.html">&rarr; CRUD</a>
+    <a class="jump" href="lf5_sql_spezial.html">&rarr; Spezial</a>
+  </div>
 
 </div>
 </div>
