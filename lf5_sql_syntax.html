@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernfeld 5 &middot; SQL-Syntax &amp; Punktuierung &middot; FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<script src="study.js"></script>
+<style>
+/* ===== Nur SQL-spezifische Kleinigkeiten - alle Farben ueber zentrale Paletten-Variablen ===== */
+:root, html[data-theme="light"]{ --sql-ac: var(--purple); }   /* LF5-Akzent #b66bff (dunkel) / #7a3ec8 (hell) */
+
+/* Akzent dieser Seite = LF5 (lila), statt Cyan */
+.sql-ac{ color: var(--sql-ac); }
+.hdr h1 .tag{ background: var(--sql-ac); }
+
+/* ============ Numerierte Abschnitte ============ */
+section.card{ background:var(--glass); border:1px solid var(--line); border-radius:8px;
+  padding:1.1rem 1.2rem; margin-top:1rem; }
+section.card h2{ font-family:var(--fdisp); font-size:1.15rem; display:flex; align-items:baseline;
+  gap:10px; margin:0 0 .7rem; color:var(--ink); letter-spacing:.3px; }
+section.card p{ margin-bottom:.6rem; color:var(--read); line-height:1.6; }
+section.card p:last-child{ margin-bottom:0; }
+section.card strong{ color:var(--ink); }
+.step{ font-family:var(--fmono); font-size:.78rem; color:#fff; background:var(--sql-ac);
+  border-radius:6px; padding:2px 9px; white-space:nowrap; }
+
+/* Inline-Code + Tabellen-Code ueber theme.css-Variablen (hell + dunkel lesbar) */
+code{ font-family:var(--fmono); font-size:.9em; background:var(--code-bg);
+  border:1px solid var(--line); border-radius:4px; padding:1px 6px; color:var(--sql-ac);
+  white-space:nowrap; }
+
+/* ============ Code-Bloecke ============ */
+pre.code{ background:var(--code-bg); border:1px solid var(--line); border-radius:8px;
+  padding:.85rem 1rem; overflow-x:auto; -webkit-overflow-scrolling:touch; margin:.6rem 0 1rem;
+  font-family:var(--fmono); font-size:13.5px; line-height:1.7; color:var(--read); white-space:pre; }
+/* Hand-gesetzte Token-Farben -> theme.css-Variablen (hell + dunkel lesbar) */
+pre.code .kw{ color:var(--magenta); font-weight:600; }   /* Schluesselwoerter */
+pre.code .ty{ color:var(--cyan); }                        /* Datentypen */
+pre.code .st{ color:var(--ok); }                          /* Strings */
+pre.code .bt{ color:var(--amber); font-weight:700; }      /* Backtick-Namen */
+pre.code .pu{ color:var(--sql-ac); }                      /* Satzzeichen */
+pre.code .cm{ color:var(--dim); font-style:italic; }      /* Kommentare */
+
+/* ============ Vergleichstabelle Anfuehrungszeichen ============ */
+table.quotes{ width:100%; border-collapse:collapse; margin:12px 0; font-size:.9rem; }
+table.quotes th, table.quotes td{ border:1px solid var(--line); padding:8px 10px;
+  text-align:left; vertical-align:top; color:var(--read); }
+table.quotes th{ background:var(--code-bg); font-size:.82rem; color:var(--ink); }
+table.quotes td code{ white-space:normal; }
+table.quotes strong{ color:var(--ink); }
+
+/* ============ Hinweis-Boxen (.note) - spiegelt die theme.css-Callouts in hell + dunkel ============ */
+.note{ border:1px solid var(--line); border-radius:6px; padding:.7rem .85rem;
+  margin:.7rem 0; font-size:15.5px; line-height:1.55; color:var(--read); }
+.note.warn{ background:rgba(255,42,109,.08); border-color:rgba(255,42,109,.35); }
+.note.warn b, .note.warn strong{ color:var(--magenta); }
+.note.merk{ background:rgba(157,255,82,.08); border-color:rgba(157,255,82,.32); }
+.note.merk b, .note.merk strong{ color:var(--lime); }
+.note em{ color:var(--ink); font-style:normal; font-weight:600; }
+html[data-theme="light"] .note.warn{ background:#fdeaf1; border-color:#f2bed0; color:#8a1438; }
+html[data-theme="light"] .note.warn b, html[data-theme="light"] .note.warn strong{ color:var(--magenta); }
+html[data-theme="light"] .note.merk{ background:#ebf6e3; border-color:#c3e1a9; color:#2f5618; }
+html[data-theme="light"] .note.merk b, html[data-theme="light"] .note.merk strong{ color:#2e7d32; }
+html[data-theme="light"] .note em{ color:var(--ink); }
+
+/* ============ Zeichen-fuer-Zeichen-Explorer ============ */
+.explorer-hint{ font-size:.85rem; color:var(--muted); margin-bottom:8px; }
+pre.explorer{ user-select:none; }
+.tok{ cursor:pointer; border-radius:4px; padding:1px 2px; border-bottom:2px dotted currentColor; }
+.tok:hover{ background:rgba(182,107,255,.18); }
+.tok.active{ background:rgba(182,107,255,.32); border-bottom-style:solid; }
+#tokPanel{ min-height:74px; border:1px dashed var(--line); border-radius:8px;
+  padding:12px 14px; font-size:.92rem; background:var(--code-bg); color:var(--read); }
+#tokPanel .tok-title{ font-family:var(--fmono); font-weight:700; color:var(--sql-ac);
+  margin-bottom:4px; display:block; }
+#tokPanel.empty{ color:var(--muted); display:flex; align-items:center; }
+
+/* ============ Aufklappbare Bloecke (1 Klick auf / 1 Klick zu, Default zu) ============ */
+details{ border:1px solid var(--line); border-radius:8px; background:var(--glass); margin-top:.6rem; }
+details>summary{ cursor:pointer; padding:.6rem .85rem; font-weight:600; font-size:.92rem;
+  list-style:none; display:flex; align-items:center; gap:8px; color:var(--ink); user-select:none; }
+details>summary::-webkit-details-marker{ display:none; }
+details>summary::before{ content:"\25B8"; color:var(--sql-ac); transition:transform .15s; display:inline-block; }
+details[open]>summary::before{ transform:rotate(90deg); }
+details .d-body{ padding:.2rem .85rem .85rem; font-size:.92rem; color:var(--read); }
+details .d-body p{ margin-bottom:.5rem; color:var(--read); line-height:1.6; }
+details .d-body p:last-child{ margin-bottom:0; }
+details .d-body strong{ color:var(--ink); }
+
+/* ============ Quiz ============ */
+.qz{ margin-top:14px; }
+.qz-q{ font-weight:600; margin-bottom:6px; color:var(--ink); }
+details.solution{ border-color:rgba(39,245,154,.4); }
+details.solution>summary{ color:var(--ok); }
+details.solution>summary::before{ color:var(--ok); }
+details.solution pre.code{ margin:.2rem 0 0; }
+
+.merksatz-lead{ font-size:.88rem; color:var(--muted); }
+
+summary:focus-visible, .tok:focus-visible{ outline:2px solid var(--sql-ac); outline-offset:2px; }
+
+footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted); }
+
+/* ============ Responsiv 880 / 640 / 560 ============ */
+@media (max-width:880px){
+  section.card{ padding:1rem 1.05rem; }
+}
+@media (max-width:640px){
+  section.card h2{ font-size:1.08rem; }
+  table.quotes{ font-size:.85rem; }
+}
+@media (max-width:560px){
+  pre.code{ font-size:12.5px; }
+  table.quotes th, table.quotes td{ padding:6px 7px; }
+  table.quotes{ font-size:.8rem; }
+}
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="lf5_sql.html">&larr; SQL-Hub</a>
+    <div>
+      <h1><span class="tag">LF 5</span>SQL-Syntax Schritt f&uuml;r Schritt</h1>
+      <div class="sub">Satzzeichen im SQL-Code &middot; ; ( ) , &#96; '</div>
+    </div>
+    <div class="sp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="sum">
+
+  <p class="lead">
+    Anhand der Webshop-Aufgabe (CREATE TABLE + INSERT in MariaDB): Was bedeutet jedes
+    Satzzeichen im SQL-Code — und warum steht <code>`position`</code> in Backticks?
+  </p>
+
+  <!-- ==================== 1 ==================== -->
+  <section class="card">
+    <h2><span class="step">1</span> Semikolon — wo eine Anweisung endet</h2>
+    <p>
+      SQL ignoriert Zeilenumbrüche komplett. Eine Anweisung ist erst zu Ende, wenn das
+      <code>;</code> kommt. Deshalb kann sich ein <code>CREATE TABLE</code>
+      über 15 Zeilen erstrecken und zählt trotzdem als <em>eine</em> Anweisung.
+    </p>
+    <pre class="code"><span class="kw">CREATE DATABASE</span> webshop<span class="pu">;</span>
+<span class="kw">USE</span> webshop<span class="pu">;</span></pre>
+    <p>
+      In HeidiSQL wichtig: Beim Ausführen mit <code>F9</code> nutzt HeidiSQL die
+      Semikolons, um das Skript in einzelne Anweisungen zu zerlegen.
+      <code>USE webshop;</code> bedeutet: „Alle folgenden Befehle beziehen sich auf
+      diese Datenbank" — sonst müsste man überall <code>webshop.kunde</code> schreiben.
+    </p>
+  </section>
+
+  <!-- ==================== 2 ==================== -->
+  <section class="card">
+    <h2><span class="step">2</span> Kommentare</h2>
+    <pre class="code"><span class="cm">-- Kommentar bis zum Zeilenende (zwei Minus + Leerzeichen!)</span>
+<span class="cm">/* Mehrzeiliger
+   Kommentar */</span></pre>
+    <p>MariaDB überliest beides komplett — gleiche Logik wie <code>#</code> in Python.</p>
+  </section>
+
+  <!-- ==================== 3 ==================== -->
+  <section class="card">
+    <h2><span class="step">3</span> CREATE TABLE — Klammern und Kommas</h2>
+    <p>
+      Das äußere Klammernpaar <code>( … )</code> umschließt die <strong>komplette
+      Spaltendefinition</strong>. Darin trennt das <code>,</code> die einzelnen
+      Einträge — jeder Eintrag ist entweder eine Spalte oder ein Constraint.
+    </p>
+    <pre class="code"><span class="kw">CREATE TABLE</span> kunde <span class="pu">(</span>
+    kundeId  <span class="ty">INT UNSIGNED</span> <span class="kw">NOT NULL AUTO_INCREMENT</span><span class="pu">,</span>
+    vorname  <span class="ty">VARCHAR(50)</span> <span class="kw">NOT NULL</span><span class="pu">,</span>
+    <span class="kw">PRIMARY KEY</span> <span class="pu">(</span>kundeId<span class="pu">)</span>   <span class="cm">-- letzter Eintrag: KEIN Komma!</span>
+<span class="pu">);</span></pre>
+    <p>
+      Eine Spaltendefinition liest sich immer gleich: <strong>Name → Datentyp → Optionen</strong>.
+      Klassischer Anfängerfehler: ein Komma nach dem letzten Eintrag vor der schließenden
+      Klammer → Syntaxfehler.
+    </p>
+  </section>
+
+  <!-- ==================== 4 ==================== -->
+  <section class="card">
+    <h2><span class="step">4</span> Die Klammer beim Datentyp bedeutet je nach Typ etwas anderes</h2>
+    <details>
+      <summary><code>VARCHAR(50)</code> — maximale Länge, variabel</summary>
+      <div class="d-body"><p>Bis zu 50 Zeichen. „Max" belegt nur 3 Zeichen Speicher.</p></div>
+    </details>
+    <details>
+      <summary><code>CHAR(5)</code> — feste Länge (und warum PLZ kein INT ist)</summary>
+      <div class="d-body">
+        <p>Immer genau 5 Zeichen — perfekt für die PLZ.</p>
+        <p>Warum kein <code>INT</code>? Weil <code>01067</code> (Dresden)
+        als Zahl die führende Null verlieren würde. PLZs sind Zeichenketten — man rechnet nicht damit.</p>
+      </div>
+    </details>
+    <details>
+      <summary><code>DECIMAL(10,2)</code> — zwei Zahlen in der Klammer</summary>
+      <div class="d-body">
+        <p>10 Stellen insgesamt, davon 2 nach dem Komma → maximal 99999999.99.</p>
+        <p>Für Geldbeträge Pflicht: <code>FLOAT</code> produziert Rundungsfehler
+        (0.1 + 0.2 = 0.30000000000000004 — kennst du aus Python).</p>
+      </div>
+    </details>
+    <details>
+      <summary><code>ENUM('offen', …)</code> — Liste erlaubter Werte</summary>
+      <div class="d-body">
+        <p>Die Klammer enthält alle erlaubten Werte, durch Kommas getrennt. Jeder andere Wert
+        wird abgelehnt — quasi ein eingebauter Constraint.</p>
+      </div>
+    </details>
+    <details>
+      <summary><code>INT</code> / <code>TEXT</code> — keine Klammer</summary>
+      <div class="d-body"><p>Brauchen keine Längenangabe.</p></div>
+    </details>
+  </section>
+
+  <!-- ==================== 5 ==================== -->
+  <section class="card">
+    <h2><span class="step">5</span> Die drei Anführungszeichen — der Kern der Sache</h2>
+    <table class="quotes">
+      <tr>
+        <th>Zeichen</th><th>Job</th><th>Beispiel</th>
+      </tr>
+      <tr>
+        <td><code>` `</code> Backticks</td>
+        <td><strong>Namen</strong> (Tabellen, Spalten). Nötig bei Kollision mit Schlüsselwörtern
+            oder Sonderzeichen im Namen.</td>
+        <td><code>CREATE TABLE `position`</code></td>
+      </tr>
+      <tr>
+        <td><code>' '</code> einfach</td>
+        <td><strong>Werte</strong>: Strings und Daten. Das ist der SQL-Standard.</td>
+        <td><code>'Max'</code>, <code>'versendet'</code>, <code>'2025-11-04'</code></td>
+      </tr>
+      <tr>
+        <td><code>" "</code> doppelt</td>
+        <td><strong>Finger weg.</strong> Verhält sich je nach Servereinstellung
+            (<code>ANSI_QUOTES</code>) mal wie <code>'</code>, mal wie <code>`</code> — also unzuverlässig.</td>
+        <td>—</td>
+      </tr>
+    </table>
+    <p>
+      Warum braucht <code>position</code> Backticks? <code>POSITION()</code>
+      ist eine eingebaute String-Funktion in MariaDB
+      (<code>POSITION('b' IN 'abc')</code> → 2). Ohne Backticks weiß der Parser
+      nicht, ob Funktion oder Tabellenname gemeint ist → Syntaxfehler. Mit Backticks ist es
+      eindeutig: ein Name.
+    </p>
+    <div class="note merk">
+      <strong>Merksatz:</strong> Backticks = „das <em>heißt</em> so" · einfache Quotes = „das <em>steht drin</em>"
+    </div>
+    <p class="merksatz-lead">
+      Deutsche Tastatur: Backtick liegt neben dem ß → <code>Shift + ´</code>, dann Leertaste.
+    </p>
+  </section>
+
+  <!-- ==================== 6: Explorer ==================== -->
+  <section class="card">
+    <h2><span class="step">6</span> Zeichen für Zeichen: der FK-Constraint</h2>
+    <p class="explorer-hint">👆 Tippe/klicke die unterstrichenen Teile an — die Erklärung erscheint darunter.</p>
+    <pre class="code explorer"><span class="kw">CREATE TABLE</span> <span class="bt tok" tabindex="0" data-k="backtick">`position`</span> <span class="pu tok" tabindex="0" data-k="paren">(</span>
+    positionId   <span class="ty">INT UNSIGNED</span> <span class="kw">NOT NULL</span> <span class="kw tok" tabindex="0" data-k="ai">AUTO_INCREMENT</span><span class="pu tok" tabindex="0" data-k="comma">,</span>
+    anzahl       <span class="ty">INT</span><span class="pu">,</span>
+    artikelId    <span class="ty">INT UNSIGNED</span> <span class="kw">NOT NULL</span><span class="pu">,</span>
+    bestellungId <span class="ty">INT UNSIGNED</span> <span class="kw">NOT NULL</span><span class="pu">,</span>
+    <span class="kw">PRIMARY KEY</span> <span class="pu">(</span>positionId<span class="pu">)</span><span class="pu">,</span>
+    <span class="kw tok" tabindex="0" data-k="constraint">CONSTRAINT</span> <span class="tok" tabindex="0" data-k="fkname">fk_position_artikel</span>
+        <span class="kw tok" tabindex="0" data-k="fk">FOREIGN KEY</span> <span class="pu">(</span>artikelId<span class="pu">)</span> <span class="kw tok" tabindex="0" data-k="ref">REFERENCES</span> artikel<span class="pu">(</span>artikelId<span class="pu">)</span>
+<span class="pu tok" tabindex="0" data-k="end">);</span></pre>
+    <div id="tokPanel" class="empty">Noch nichts ausgewählt — tippe oben ein markiertes Element an.</div>
+  </section>
+
+  <!-- ==================== 7 ==================== -->
+  <section class="card">
+    <h2><span class="step">7</span> INSERT — die zwei Klammernpaare</h2>
+    <pre class="code"><span class="kw">INSERT INTO</span> kunde <span class="pu">(</span>vorname<span class="pu">,</span> nachname<span class="pu">,</span> mail<span class="pu">)</span> <span class="kw">VALUES</span>
+<span class="pu">(</span><span class="st">'Max'</span><span class="pu">,</span> <span class="st">'Müller'</span><span class="pu">,</span> <span class="st">'max.mueller@example.com'</span><span class="pu">),</span>
+<span class="pu">(</span><span class="st">'Laura'</span><span class="pu">,</span> <span class="st">'Schmidt'</span><span class="pu">,</span> <span class="st">'laura.schmidt@example.com'</span><span class="pu">);</span></pre>
+    <p>
+      <strong>Erstes Klammernpaar</strong> (nach dem Tabellennamen): welche Spalten befüllt werden —
+      in welcher Reihenfolge. AUTO_INCREMENT- und DEFAULT-Spalten lässt man einfach weg.
+    </p>
+    <p>
+      <strong>Nach VALUES:</strong> pro Datensatz ein Klammernpaar. Die Werte müssen exakt zur
+      Spaltenliste passen — gleiche Anzahl, gleiche Reihenfolge. Zwischen den Datensätzen
+      <code>,</code> — nach dem letzten das <code>;</code>.
+    </p>
+    <details>
+      <summary>Spezialfall <code>''</code> — leerer String ≠ NULL</summary>
+      <div class="d-body">
+        <p>Zwei einfache Quotes direkt hintereinander = <strong>leerer String</strong>.</p>
+        <p>Leerer String heißt „da steht was, nämlich nichts". <code>NULL</code>
+        heißt „unbekannt / kein Wert". Die Aufgabe verlangt bei der Tastatur explizit den leeren String.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Spezialfall <code>DEFAULT</code> — ohne Quotes!</summary>
+      <div class="d-body">
+        <p><code>('2025-11-13', DEFAULT, 1)</code> — das Schlüsselwort
+        <code>DEFAULT</code> sagt: „Setz den Default-Wert aus der Tabellendefinition
+        ein" → hier <code>'offen'</code>.</p>
+        <p>Mit Quotes (<code>'DEFAULT'</code>) würde MariaDB versuchen, den String
+        „DEFAULT" in die ENUM-Spalte zu stecken → Fehler, weil er nicht in der Werteliste steht.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Datumsformat</summary>
+      <div class="d-body">
+        <p>Immer <code>'JJJJ-MM-TT'</code> (ISO 8601) in einfachen Quotes:
+        <code>'2025-11-04'</code>. Das deutsche Format
+        <code>'04.11.2025'</code> funktioniert <strong>nicht</strong>.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ==================== Merkkaesten (nach Abschnitt 7, vor dem Quiz) ==================== -->
+  <div class="note merk">
+    <strong>Logische Auswertungsreihenfolge:</strong> FROM → WHERE (einzelne Zeilen) → GROUP BY →
+    HAVING (fertige Gruppen) → SELECT → ORDER BY → LIMIT. Deshalb ist
+    <code>WHERE COUNT(*) &gt; 1</code> ein Fehler: COUNT existiert an dieser Stelle noch nicht.
+  </div>
+  <div class="note merk">
+    <strong>position ist zweideutig:</strong> Als Tabellenname reserviert-nah, daher Backticks:
+    <code>CREATE TABLE `position`</code>. Als String-Funktion:
+    <code>SELECT POSITION('shop' IN 'webshop')</code> liefert 4 — SQL zählt ab 1,
+    nicht ab 0 wie Python.
+  </div>
+
+  <!-- ==================== 8: Quiz ==================== -->
+  <section class="card">
+    <h2><span class="step">✓</span> Abrufen statt Wiedererkennen</h2>
+    <p class="merksatz-lead">Erst selbst beantworten (laut oder auf Papier), dann Lösung aufklappen.</p>
+
+    <div class="qz">
+      <p class="qz-q">1. Warum steht <code>`position`</code> in Backticks — und was würde ohne passieren?</p>
+      <details class="solution"><summary>Lösung</summary>
+        <div class="d-body"><p><code>POSITION()</code> ist eine eingebaute
+        MariaDB-Funktion. Ohne Backticks kann der Parser Funktion und Tabellenname nicht
+        unterscheiden → Syntaxfehler. Backticks markieren das Wort eindeutig als Namen.</p></div>
+      </details>
+    </div>
+
+    <div class="qz">
+      <p class="qz-q">2. Welche drei Anführungszeichen gibt es in SQL und wofür?</p>
+      <details class="solution"><summary>Lösung</summary>
+        <div class="d-body"><p><code>`</code> Backticks für Namen ·
+        <code>'</code> einfache Quotes für Werte (Strings, Daten) ·
+        <code>"</code> doppelte Quotes vermeiden (Verhalten hängt von
+        <code>ANSI_QUOTES</code> ab).</p></div>
+      </details>
+    </div>
+
+    <div class="qz">
+      <p class="qz-q">3. Was ist der Unterschied zwischen <code>''</code> und <code>NULL</code>?</p>
+      <details class="solution"><summary>Lösung</summary>
+        <div class="d-body"><p>Leerer String = ein vorhandener Wert mit Länge 0
+        („da steht nichts drin"). NULL = kein Wert / unbekannt. Ein
+        <code>NOT NULL</code>-Constraint erlaubt <code>''</code>,
+        aber kein <code>NULL</code>.</p></div>
+      </details>
+    </div>
+
+    <div class="qz">
+      <p class="qz-q">4. Warum <code>DEFAULT</code> ohne Quotes schreiben?</p>
+      <details class="solution"><summary>Lösung</summary>
+        <div class="d-body"><p>Es ist ein Schlüsselwort („nimm den Default-Wert der Spalte"),
+        kein String. <code>'DEFAULT'</code> mit Quotes wäre der Text „DEFAULT" —
+        der steht nicht in der ENUM-Liste → Fehler.</p></div>
+      </details>
+    </div>
+
+    <div class="qz">
+      <p class="qz-q">5. Warum ist <code>plz CHAR(5)</code> und nicht <code>INT</code>?</p>
+      <details class="solution"><summary>Lösung</summary>
+        <div class="d-body"><p>PLZs können mit 0 beginnen (01067 Dresden) — als Zahl ginge die
+        führende Null verloren. Außerdem rechnet man mit PLZs nicht. CHAR(5), weil PLZs immer
+        genau 5 Zeichen haben.</p></div>
+      </details>
+    </div>
+
+    <div class="qz">
+      <p class="qz-q">6. In welcher Reihenfolge müssen die 5 Webshop-Tabellen erstellt werden — und warum?</p>
+      <details class="solution"><summary>Lösung</summary>
+        <div class="d-body"><p>Erst <code>kunde</code> und
+        <code>kategorie</code> (keine FKs), dann <code>artikel</code>
+        (→ kategorie) und <code>bestellung</code> (→ kunde), zuletzt
+        <code>`position`</code> (→ artikel + bestellung).
+        <code>REFERENCES</code> schlägt fehl, wenn die Zieltabelle noch nicht
+        existiert. Gleiche Reihenfolge gilt für die INSERTs.</p></div>
+      </details>
+    </div>
+
+    <div class="qz">
+      <p class="qz-q">7. Transferaufgabe: Schreib die Tabelle <code>`position`</code> aus dem Kopf — inkl. beider FKs.</p>
+      <details class="solution"><summary>Lösung</summary>
+        <div class="d-body">
+<pre class="code"><span class="kw">CREATE TABLE</span> <span class="bt">`position`</span> <span class="pu">(</span>
+    positionId   <span class="ty">INT UNSIGNED</span> <span class="kw">NOT NULL AUTO_INCREMENT</span><span class="pu">,</span>
+    anzahl       <span class="ty">INT</span><span class="pu">,</span>
+    artikelId    <span class="ty">INT UNSIGNED</span> <span class="kw">NOT NULL</span><span class="pu">,</span>
+    bestellungId <span class="ty">INT UNSIGNED</span> <span class="kw">NOT NULL</span><span class="pu">,</span>
+    <span class="kw">PRIMARY KEY</span> <span class="pu">(</span>positionId<span class="pu">),</span>
+    <span class="kw">CONSTRAINT</span> fk_position_artikel
+        <span class="kw">FOREIGN KEY</span> <span class="pu">(</span>artikelId<span class="pu">)</span> <span class="kw">REFERENCES</span> artikel<span class="pu">(</span>artikelId<span class="pu">),</span>
+    <span class="kw">CONSTRAINT</span> fk_position_bestellung
+        <span class="kw">FOREIGN KEY</span> <span class="pu">(</span>bestellungId<span class="pu">)</span> <span class="kw">REFERENCES</span> bestellung<span class="pu">(</span>bestellungId<span class="pu">)</span>
+<span class="pu">);</span></pre>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ==================== Karteikarten ==================== -->
+  <div class="h-sec"><span class="ico">🎴</span> Karteikarten &mdash; Abrufen trainieren</div>
+  <p class="lead">Kategorien: <b>Bausteine</b>, <b>DDL</b>, <b>DML</b>, <b>DQL</b>. Karte umdrehen mit Klick/Leertaste, dann ehrlich einschätzen — dein Fortschritt wird lokal gespeichert.</p>
+  <div id="vCards" class="view on">
+    <div class="chips" id="cardChips"></div>
+    <div class="bar">
+      <div class="pbar"><i id="pfill"></i></div>
+      <div class="ptxt">0% beherrscht</div>
+      <button class="tbtn" id="tShuffle">🔀 Mischen</button>
+      <button class="tbtn" id="tOpen">Nur offene</button>
+      <button class="tbtn" id="tReset">Zurücksetzen</button>
+    </div>
+    <div id="study" class="study"></div>
+  </div>
+
+  <footer>fisi-lernplattform · LF5 · SQL-Syntax-Vertiefung</footer>
+
+</div>
+</div>
+
+<script>
+/* ============ Zeichen-für-Zeichen-Explorer ============ */
+(function () {
+  var texte = {
+    backtick: {
+      t: '` ` — Backticks',
+      d: 'Markieren einen NAMEN. Hier zwingend: POSITION() ist eine eingebaute MariaDB-Funktion. Ohne Backticks kann der Parser Funktion und Tabellenname nicht unterscheiden → Syntaxfehler.'
+    },
+    paren: {
+      t: '( — öffnende Klammer',
+      d: 'Umschließt die komplette Spaltendefinition der Tabelle. Alles bis zur passenden schließenden Klammer gehört zu dieser Tabelle.'
+    },
+    ai: {
+      t: 'AUTO_INCREMENT',
+      d: 'MariaDB zählt diese Spalte automatisch hoch (1, 2, 3, …). Deshalb wird sie beim INSERT komplett weggelassen.'
+    },
+    comma: {
+      t: ', — Komma',
+      d: 'Trennt die Einträge innerhalb der Klammer (Spalten und Constraints). Achtung: nach dem LETZTEN Eintrag kein Komma!'
+    },
+    constraint: {
+      t: 'CONSTRAINT',
+      d: 'Leitet eine benannte Regel ein. Optional, aber sinnvoll: Der Name taucht in Fehlermeldungen auf — statt kryptischer Auto-Namen wie position_ibfk_1.'
+    },
+    fkname: {
+      t: 'fk_position_artikel — der Constraint-Name',
+      d: 'Frei wählbar. Namenskonvention: fk_kindtabelle_elterntabelle. Erscheint in Fehlermeldungen, wenn die Regel verletzt wird.'
+    },
+    fk: {
+      t: 'FOREIGN KEY (artikelId)',
+      d: 'Die Klammer enthält die Spalte in DIESER Tabelle (position), die den Fremdschlüssel bildet. Datentyp muss exakt zum referenzierten PK passen (INT UNSIGNED = INT UNSIGNED), sonst Fehler 150.'
+    },
+    ref: {
+      t: 'REFERENCES artikel(artikelId)',
+      d: 'Zieltabelle + Zielspalte (fast immer deren Primary Key). Als Satz: „artikelId in position darf nur Werte enthalten, die in artikel.artikelId existieren" — referenzielle Integrität.'
+    },
+    end: {
+      t: '); — Klammer zu + Semikolon',
+      d: 'Die schließende Klammer beendet die Spaltendefinition, das Semikolon beendet die gesamte CREATE-TABLE-Anweisung.'
+    }
+  };
+
+  var panel = document.getElementById('tokPanel');
+  var toks = document.querySelectorAll('.tok');
+
+  function select(el) {
+    toks.forEach(function (t) { t.classList.remove('active'); });
+    el.classList.add('active');
+    var info = texte[el.getAttribute('data-k')];
+    if (!info) return;
+    panel.classList.remove('empty');
+    panel.innerHTML = '';
+    var title = document.createElement('span');
+    title.className = 'tok-title';
+    title.textContent = info.t;
+    var body = document.createElement('span');
+    body.textContent = info.d;
+    panel.appendChild(title);
+    panel.appendChild(body);
+  }
+
+  toks.forEach(function (el) {
+    el.addEventListener('click', function () { select(el); });
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(el); }
+    });
+  });
+})();
+</script>
+
+<script>
+/* ============ Karteikarten (study.js) ============ */
+const CATS = {
+  bs:  { label: "Bausteine", color: "#2de2e6" },
+  ddl: { label: "DDL",       color: "#ffb43b" },
+  dml: { label: "DML",       color: "#ff2a6d" },
+  dql: { label: "DQL",       color: "#27f59a" }
+};
+
+const CARDS = [
+{ c:"bs", q:"Datentyp für einen Nachnamen bis max. 50 Zeichen — und warum nicht CHAR?", a:"<code>VARCHAR(50)</code> — variable Länge, belegt nur den nötigen Platz. <code>CHAR(50)</code> würde immer 50 Zeichen belegen." },
+{ c:"bs", q:"Datentyp für eine deutsche Postleitzahl?", a:"<code>CHAR(5)</code> — feste Länge. Kein INT: führende Nullen (01067) gingen verloren, und mit einer PLZ rechnet man nicht." },
+{ c:"bs", q:"Datentyp für einen Geldbetrag bis ca. 99 Mio. Euro?", a:"<code>DECIMAL(10,2)</code> — exakt, 10 Stellen gesamt, davon 2 Nachkommastellen. Kein FLOAT: Rundungsfehler." },
+{ c:"bs", q:"Datentyp für eine lange Produktbeschreibung ohne Längenbegrenzung?", a:"<code>TEXT</code> — ohne Klammer." },
+{ c:"bs", q:"Spalte status darf nur offen, bezahlt oder storniert enthalten.", a:"<code>ENUM('offen','bezahlt','storniert')</code>" },
+{ c:"bs", q:"Ganzzahl-Spalte, die nie negativ werden kann?", a:"<code>INT UNSIGNED</code> — verschiebt den Wertebereich komplett ins Positive." },
+{ c:"bs", q:"Was bedeutet NOT NULL — und was gilt ohne diese Angabe?", a:"Pflichtfeld: Spalte muss einen Wert haben. Ohne Angabe ist NULL erlaubt (= unbekannt / kein Wert)." },
+{ c:"bs", q:"Spalte anzahl soll automatisch 0 bekommen, wenn beim INSERT nichts angegeben wird.", a:"<code>anzahl INT NOT NULL DEFAULT 0</code> — Zahlen bei DEFAULT ohne Anführungszeichen." },
+{ c:"bs", q:"ID-Spalte soll automatisch hochzählen.", a:"<code>ticketId INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY</code>" },
+{ c:"bs", q:"Was macht PRIMARY KEY — welche 3 Eigenschaften stecken drin?", a:"Eindeutige Identifikation jeder Zeile. Impliziert NOT NULL + UNIQUE + automatischen Index. Nur 1 PK pro Tabelle." },
+{ c:"bs", q:"Spalte eMail darf keine Duplikate enthalten, ist aber nicht der PK.", a:"<code>eMail VARCHAR(100) UNIQUE</code> — mehrere UNIQUE pro Tabelle möglich, im Gegensatz zum PK." },
+{ c:"bs", q:"Spalte gehalt darf nur Werte über 0 annehmen.", a:"<code>CHECK(gehalt &gt; 0)</code> — wird bei INSERT/UPDATE geprüft, Verstoß führt zu Fehler 4025." },
+{ c:"bs", q:"Unterschied zwischen '' und NULL?", a:"<code>''</code> = bewusst leerer Text (Wert vorhanden, Länge 0). <code>NULL</code> = unbekannt / kein Wert. NOT NULL erlaubt <code>''</code>, aber kein NULL." },
+{ c:"bs", q:"Wann Backticks, wann einfache Anführungszeichen?", a:"Backticks = Namen von Tabellen/Spalten (nötig bei reservierten Wörtern wie <code>`position`</code>). <code>'...'</code> = Textwerte / Daten." },
+{ c:"bs", q:"Beide Kommentar-Arten in SQL?", a:"<code>-- einzeilig</code> (Leerzeichen nach den Strichen!) und <code>/* mehrzeilig */</code>" },
+{ c:"ddl", q:"Neue Datenbank firmendb anlegen ohne Fehler, falls sie schon existiert — und aktivieren.", a:"<code>CREATE DATABASE IF NOT EXISTS firmendb;</code><br><code>USE firmendb;</code>" },
+{ c:"ddl", q:"Tabelle mitarbeiter mit auto-ID, Pflichtfeld nachname (max. 75) und optionalem geburtsdatum.", a:"<code>CREATE TABLE mitarbeiter (<br>mitarbeiterId INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,<br>nachname VARCHAR(75) NOT NULL,<br>geburtsdatum DATE);</code>" },
+{ c:"ddl", q:"Tabelle rechnung soll auf kunde verweisen: Kunden-Änderungen mitziehen, Löschen verweigern solange Rechnungen existieren.", a:"<code>CONSTRAINT fk_rechnung_kunde FOREIGN KEY (kundeId) REFERENCES kunde(kundeId) ON UPDATE CASCADE ON DELETE NO ACTION</code> — referenzierte Tabelle muss vorher existieren." },
+{ c:"ddl", q:"Suche/Sortierung über nachname beschleunigen — was ist der Preis dafür?", a:"<code>INDEX idx_mitarbeiter_nachname (nachname)</code> — schneller lesen, aber mehr Speicher und langsamere INSERTs. PK und UNIQUE indizieren automatisch." },
+{ c:"ddl", q:"Bestehende Tabelle geraet um Spalte seriennummer (Pflicht, max. 30 Zeichen) erweitern.", a:"<code>ALTER TABLE geraet ADD COLUMN seriennummer VARCHAR(30) NOT NULL DEFAULT '';</code> — NOT NULL braucht bei bestehenden Zeilen ein DEFAULT." },
+{ c:"ddl", q:"Spalte preis auf DECIMAL(10,2), Pflicht, nur positiv umstellen.", a:"<code>ALTER TABLE buch MODIFY preis DECIMAL(10,2) NOT NULL CHECK(preis &gt; 0);</code> — MODIFY ersetzt die komplette Definition, alles neu mit angeben!" },
+{ c:"ddl", q:"Spalte mail in eMail umbenennen.", a:"<code>ALTER TABLE kunde RENAME COLUMN mail TO eMail;</code> (ab MariaDB 10.5; älter: CHANGE COLUMN)" },
+{ c:"ddl", q:"Spalte telefon entfernen.", a:"<code>ALTER TABLE kunde DROP COLUMN telefon;</code> — Daten der Spalte sind weg, kein Undo." },
+{ c:"ddl", q:"Alle Datensätze aus testdaten löschen und auto_increment auf 1 zurücksetzen.", a:"<code>TRUNCATE TABLE testdaten;</code> — DDL, kein WHERE möglich. Scheitert, wenn ein FK auf die Tabelle zeigt." },
+{ c:"ddl", q:"Ganze Tabelle inkl. Struktur entfernen.", a:"<code>DROP TABLE altdaten;</code> — Unterschied zu TRUNCATE: auch die Struktur ist weg." },
+{ c:"ddl", q:"Alle Tabellen der DB anzeigen / Struktur einer Tabelle prüfen.", a:"<code>SHOW TABLES;</code> / <code>DESCRIBE geraet;</code>" },
+{ c:"dml", q:"Einen Datensatz in schulung einfügen (titel, dauer in Tagen).", a:"<code>INSERT INTO schulung (titel, dauer) VALUES ('Linux Basics', 3);</code> — Spaltenliste und Werteliste je ein Klammerpaar, Reihenfolge muss übereinstimmen." },
+{ c:"dml", q:"Drei Räume auf einmal in raum einfügen.", a:"<code>INSERT INTO raum (bezeichnung) VALUES ('R101'), ('R102'), ('R203');</code> — ein VALUES, mehrere Klammerpaare mit Komma." },
+{ c:"dml", q:"In welcher Reihenfolge INSERTs bei Tabellen mit Fremdschlüsseln — und warum?", a:"Erst die referenzierte Tabelle (ohne FK), dann die verweisende. Der FK-Wert muss beim Einfügen bereits existieren, sonst Constraint-Fehler." },
+{ c:"dml", q:"Preis des Buchs mit buchId 7 auf 24,90 ändern.", a:"<code>UPDATE buch SET preis = 24.90 WHERE buchId = 7;</code> — Dezimalpunkt, kein Komma." },
+{ c:"dml", q:"Mehrere Zeilen mit je eigenem Wert in einem UPDATE — worauf achten?", a:"<code>UPDATE fahrzeug SET kmStand = CASE fahrzeugId WHEN 1 THEN 45000 WHEN 2 THEN 82000 ELSE kmStand END;</code> — ELSE kmStand behält den alten Wert; ELSE DEFAULT(...) würde alle übrigen Zeilen zurücksetzen!" },
+{ c:"dml", q:"Was passiert bei UPDATE oder DELETE ohne WHERE?", a:"Trifft ALLE Zeilen der Tabelle. Schutz: vorher dieselbe Bedingung als SELECT testen." },
+{ c:"dml", q:"Ticket mit exakt dem Betreff Drucker defekt löschen.", a:"<code>DELETE FROM ticket WHERE betreff = 'Drucker defekt';</code> — <code>=</code> vergleicht den exakten Wert." },
+{ c:"dml", q:"Alle Tickets löschen, deren Betreff das Wort drucker irgendwo enthält.", a:"<code>DELETE FROM ticket WHERE betreff LIKE '%drucker%';</code> — Standard-Collation ist case-insensitive, trifft auch Drucker." },
+{ c:"dml", q:"Warum ist DELETE DML, TRUNCATE aber DDL?", a:"DELETE löscht Zeile für Zeile (Inhalt, WHERE möglich, auto_increment läuft weiter). TRUNCATE setzt die Tabelle als Objekt neu auf: Struktur-Operation, kein WHERE, Zähler auf 1." },
+{ c:"dql", q:"Nur Name und Preis aller Artikel aus artikel anzeigen.", a:"<code>SELECT artikelName, preis FROM artikel;</code>" },
+{ c:"dql", q:"Wofür steht * in SELECT * FROM kunde;?", a:"Alle Spalten. Praktisch zum Prüfen, in Produktivabfragen besser konkrete Spalten nennen." },
+{ c:"dql", q:"Alle Geräte mit Preis über 500 Euro anzeigen.", a:"<code>SELECT geraetName, preis FROM geraet WHERE preis &gt; 500;</code> — WHERE filtert einzelne Zeilen." },
+{ c:"dql", q:"Spalte preis in der Ausgabe als Verkaufspreis beschriften.", a:"<code>SELECT preis AS Verkaufspreis FROM artikel;</code> — Alias ändert nur die Anzeige, nicht die Tabelle." },
+{ c:"dql", q:"Teuerstes Buch zuerst anzeigen.", a:"<code>SELECT * FROM buch ORDER BY preis DESC;</code> — ASC (Standard) aufsteigend, DESC absteigend." },
+{ c:"dql", q:"Nur die 2 teuersten Bücher.", a:"<code>SELECT * FROM buch ORDER BY preis DESC LIMIT 2;</code> — LIMIT immer als letzte Klausel." },
+{ c:"dql", q:"Netto- und Bruttopreis (19 %) nebeneinander ausgeben.", a:"<code>SELECT preis AS Nettopreis, preis * 1.19 AS Bruttopreis FROM artikel;</code> — Rechnen direkt im SELECT möglich." },
+{ c:"dql", q:"Bruttopreis auf 2 Nachkommastellen runden.", a:"<code>ROUND(preis * 1.19, 2)</code> — rechnet wirklich, Ergebnis bleibt eine Zahl." },
+{ c:"dql", q:"Unterschied ROUND() und FORMAT()?", a:"ROUND liefert eine Zahl (weiterrechenbar). FORMAT liefert formatierten TEXT — nur für die Anzeige, z.B. <code>FORMAT(preis, 2, 'de_DE')</code> mit Komma." },
+{ c:"dql", q:"Anzahl aller Datensätze in bestellung.", a:"<code>SELECT COUNT(*) AS anzahl FROM bestellung;</code>" },
+{ c:"dql", q:"Durchschnittliche Dauer aller Schulungen.", a:"<code>SELECT AVG(dauer) AS durchschnitt FROM schulung;</code>" },
+{ c:"dql", q:"Günstigsten und teuersten Preis in einer Abfrage.", a:"<code>SELECT MIN(preis) AS guenstigster, MAX(preis) AS teuerster FROM artikel;</code>" },
+{ c:"dql", q:"Gesamtwert aller Lagerartikel (Summe der Preise).", a:"<code>SELECT SUM(preis) AS gesamtwert FROM artikel;</code>" },
+{ c:"dql", q:"Anzahl Fahrzeuge pro Standort.", a:"<code>SELECT standortId, COUNT(*) AS anzahl FROM fahrzeug GROUP BY standortId;</code> — Aggregatfunktion läuft pro Gruppe." },
+{ c:"dql", q:"Nur Standorte mit mehr als 3 Fahrzeugen — warum HAVING statt WHERE?", a:"<code>... GROUP BY standortId HAVING COUNT(*) &gt; 3;</code> — WHERE filtert VOR der Gruppierung (kennt COUNT noch nicht), HAVING filtert die fertigen Gruppen." }
+];
+
+Study.init({ cards: CARDS, cats: CATS, key: "fisi_lf5_sqlsyntax_study_v1" });
+</script>
+
+<script>
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
