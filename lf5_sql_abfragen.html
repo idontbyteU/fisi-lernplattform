@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernfeld 5 &middot; Pruefungs-SQL (MariaDB) &middot; FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<script src="drawer.js"></script>
+<style>
+/* ===== Nur seitenspezifische Kleinigkeiten - alle Farben ueber zentrale Paletten-Variablen ===== */
+:root, html[data-theme="light"]{ --sql-ac: var(--purple); }   /* LF5-Akzent (lila) */
+
+/* Akzent dieser Seite = LF5 (lila), statt Cyan */
+.sql-ac{ color: var(--sql-ac); }
+.hdr h1 .tag{ background: var(--sql-ac); }
+.sum dl.deflist > div{ border-left-color: var(--sql-ac); }
+.sum dl.deflist dt{ color: var(--sql-ac); }
+
+/* <details> auf LF5-Lila umfaerben (Basis-Stil kommt aus theme.css) */
+details[open]{ border-color:rgba(182,107,255,.4); }
+details[open] summary{ background:rgba(182,107,255,.1); color:var(--sql-ac); }
+.det-c p{ margin:.5rem 0; }
+.det-c p:first-child{ margin-top:0; }
+.det-c p:last-child{ margin-bottom:0; }
+.det-c .tf b{ color:var(--danger); }
+.det-c .ms b{ color:var(--ok); }
+
+/* Hinweis-Boxen (.note) - theme-aware, hell + dunkel lesbar */
+.note{ border:1px solid var(--line); border-radius:6px; padding:.7rem .85rem;
+  margin:.7rem 0; font-size:15.5px; line-height:1.55; color:var(--read); }
+.note.warn{ background:rgba(255,42,109,.08); border-color:rgba(255,42,109,.35); }
+.note.warn b{ color:var(--magenta); }
+.note.merk{ background:rgba(157,255,82,.08); border-color:rgba(157,255,82,.32); }
+.note.merk b{ color:var(--lime); }
+html[data-theme="light"] .note.warn{ background:#fdeaf1; border-color:#f2bed0; color:#8a1438; }
+html[data-theme="light"] .note.warn b{ color:var(--magenta); }
+html[data-theme="light"] .note.merk{ background:#ebf6e3; border-color:#c3e1a9; color:#2f5618; }
+html[data-theme="light"] .note.merk b{ color:#2e7d32; }
+
+/* Code-Bloecke - Flaeche und Text ueber theme.css-Variablen (hell + dunkel lesbar) */
+pre{ background:var(--code-bg); border:1px solid var(--line); border-radius:8px;
+  padding:.85rem 1rem; overflow-x:auto; -webkit-overflow-scrolling:touch; margin:.55rem 0 1rem; }
+pre code{ display:block; font-family:var(--fmono); font-size:13.5px; line-height:1.65;
+  color:var(--read); white-space:pre; background:none; border:0; padding:0; }
+code{ font-family:var(--fmono); font-size:.9em; background:var(--code-bg);
+  border:1px solid var(--line); border-radius:4px; padding:1px 6px; color:var(--sql-ac); }
+.co, pre code .co{ color:var(--dim); font-style:italic; }
+
+/* Beispiel-DB: 4 kleine Tabellen im Grid */
+.db-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin:.6rem 0 1rem; }
+.db-wrap{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.db-tbl{ border-collapse:collapse; width:100%; font-family:var(--fmono); font-size:14px; }
+.db-tbl caption{ text-align:left; font-family:var(--fmono); font-size:12.5px; letter-spacing:.5px;
+  color:var(--sql-ac); text-transform:uppercase; padding-bottom:.35rem; }
+.db-tbl th, .db-tbl td{ border:1px solid var(--line); padding:.4rem .6rem; text-align:left; color:var(--read); }
+.db-tbl th{ background:rgba(182,107,255,.1); color:var(--ink); font-weight:700; }
+html[data-theme="light"] .db-tbl th{ background:rgba(122,62,200,.1); }
+
+/* Breakpoints 880 / 640 / 560 / 380 - Grundlayout kommt aus theme.css */
+@media (max-width:880px){ .db-grid{ gap:.7rem; } .det-c{ font-size:15.5px; } }
+@media (max-width:640px){ .db-tbl{ font-size:13.5px; } .note{ font-size:15px; } }
+@media (max-width:560px){ .db-grid{ grid-template-columns:1fr; } }
+@media (max-width:380px){ .db-tbl th, .db-tbl td{ padding:.3rem .45rem; } }
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="lf5_sql.html">&larr; SQL-Hub</a>
+    <div>
+      <h1><span class="tag">LF 5</span>Pruefungs-SQL (MariaDB)</h1>
+      <div class="sub">Abfragen ueben wie in der AP2 &middot; Dialekt MariaDB/MySQL</div>
+    </div>
+    <div class="sp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="sum">
+
+  <!-- Intro -->
+  <div class="note"><b>Hier uebst du SQL wie in der AP2:</b> Abfragen auf Papier schreiben, zuordnen, beurteilen &mdash; Dialekt MariaDB/MySQL (HeidiSQL). Die Python-Praxis mit SQLite findest du in den anderen Sub-Seiten.</div>
+
+  <!-- Beispiel-Datenbank -->
+  <div class="h-sec"><span class="ico">🗃️</span> Beispiel-Datenbank <code>webshop</code></div>
+  <div class="db-grid">
+
+    <div class="db-wrap">
+      <table class="db-tbl">
+        <caption>kategorie</caption>
+        <thead><tr><th>kategorieId</th><th>bezeichnung</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Hardware</td></tr>
+          <tr><td>2</td><td>Software</td></tr>
+          <tr><td>3</td><td>Zubehoer</td></tr>
+          <tr><td>4</td><td>Kabel</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="db-wrap">
+      <table class="db-tbl">
+        <caption>artikel</caption>
+        <thead><tr><th>artikelId</th><th>artikelName</th><th>preis</th><th>kategorieId</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Bildschirm</td><td>149.00</td><td>1</td></tr>
+          <tr><td>2</td><td>Maus</td><td>39.00</td><td>3</td></tr>
+          <tr><td>3</td><td>Tastatur</td><td>34.90</td><td>3</td></tr>
+          <tr><td>4</td><td>Windows 11</td><td>120.00</td><td>2</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="db-wrap">
+      <table class="db-tbl">
+        <caption>kunde</caption>
+        <thead><tr><th>kundeId</th><th>name</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Sabine</td></tr>
+          <tr><td>2</td><td>Max</td></tr>
+          <tr><td>3</td><td>Lisa</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="db-wrap">
+      <table class="db-tbl">
+        <caption>bestellung</caption>
+        <thead><tr><th>bestellungId</th><th>kundeId</th><th>artikelId</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>1</td><td>1</td></tr>
+          <tr><td>2</td><td>1</td><td>2</td></tr>
+          <tr><td>3</td><td>2</td><td>4</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+  <div class="note merk"><b>Merke:</b> Kategorie 4 (Kabel) hat keine Artikel, Lisa hat keine Bestellung &mdash; das wird in den Aufgaben wichtig.</div>
+
+  <!-- BLOCK 1 -->
+  <div class="h-sec"><span class="ico">🧭</span> Sprachsektionen: DDL, DML, DQL, DCL, TCL</div>
+
+  <details>
+    <summary>Zu welcher Sektion gehoert <code>SELECT</code>?<span class="ar">▶</span></summary>
+    <div class="det-c"><b>DQL</b> &mdash; fragt Daten nur ab, aendert nichts.</div>
+  </details>
+  <details>
+    <summary>Zu welcher Sektion gehoert <code>CREATE TABLE</code>?<span class="ar">▶</span></summary>
+    <div class="det-c"><b>DDL</b> &mdash; aendert die Struktur, nicht die Daten.</div>
+  </details>
+  <details>
+    <summary>Zu welcher Sektion gehoert <code>GRANT</code>?<span class="ar">▶</span></summary>
+    <div class="det-c"><b>DCL</b> &mdash; vergibt Rechte.</div>
+  </details>
+  <details>
+    <summary>Zu welcher Sektion gehoert <code>INSERT</code>?<span class="ar">▶</span></summary>
+    <div class="det-c"><b>DML</b> &mdash; fuegt Datensaetze ein.</div>
+  </details>
+  <details>
+    <summary>Zu welcher Sektion gehoert <code>DROP</code>?<span class="ar">▶</span></summary>
+    <div class="det-c"><b>DDL</b> &mdash; loescht Struktur (Tabelle/Datenbank), nicht einzelne Datensaetze.</div>
+  </details>
+  <details>
+    <summary>Zu welcher Sektion gehoert <code>REVOKE</code>?<span class="ar">▶</span></summary>
+    <div class="det-c"><b>DCL</b> &mdash; entzieht Rechte.</div>
+  </details>
+  <details>
+    <summary>Zu welcher Sektion gehoert <code>UPDATE</code>?<span class="ar">▶</span></summary>
+    <div class="det-c"><b>DML</b> &mdash; aendert bestehende Datensaetze.</div>
+  </details>
+  <details>
+    <summary>Zu welcher Sektion gehoert <code>COMMIT</code>?<span class="ar">▶</span></summary>
+    <div class="det-c"><b>TCL</b> &mdash; schliesst eine Transaktion ab.</div>
+  </details>
+
+  <div class="note warn"><b>Typischer Fehler:</b> <code>DROP</code> (DDL &mdash; loescht die ganze Tabelle) mit <code>DELETE</code> (DML &mdash; loescht Datensaetze) verwechseln.</div>
+  <div class="note merk"><b>DDL</b> = Struktur &middot; <b>DML</b> = Daten &middot; <b>DQL</b> = Abfrage &middot; <b>DCL</b> = Rechte &middot; <b>TCL</b> = Transaktion</div>
+
+  <!-- BLOCK 2 -->
+  <div class="h-sec"><span class="ico">🧱</span> Datentypen entscheiden</div>
+
+  <details>
+    <summary>Welcher Datentyp fuer einen Artikelpreis?<span class="ar">▶</span></summary>
+    <div class="det-c">
+      <p><b>&rarr; DECIMAL(10,2):</b> exakt, ideal fuer Geldbetraege.</p>
+      <p class="tf"><b>Typischer Fehler:</b> FLOAT/DOUBLE bei Geld.</p>
+      <p class="ms"><b>Merksatz:</b> "Geld = DECIMAL, Messwerte = FLOAT."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Welcher Datentyp fuer die Anrede (Herr/Frau/Divers)?<span class="ar">▶</span></summary>
+    <div class="det-c">
+      <p><b>&rarr; ENUM('Herr','Frau','Divers'):</b> feste Werteliste.</p>
+      <p class="tf"><b>Typischer Fehler:</b> VARCHAR statt fester Auswahl.</p>
+      <p class="ms"><b>Merksatz:</b> "Feste Werteliste = ENUM."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Welcher Datentyp fuer eine Postleitzahl?<span class="ar">▶</span></summary>
+    <div class="det-c">
+      <p><b>&rarr; CHAR(5):</b> feste Laenge, fuehrende Null bleibt.</p>
+      <p class="tf"><b>Typischer Fehler:</b> INT statt Text.</p>
+      <p class="ms"><b>Merksatz:</b> "Ziffern &ne; Zahlen: Wird nicht gerechnet, ist es Text."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Wie speicherst du den letzten Aenderungszeitpunkt eines Datensatzes automatisch?<span class="ar">▶</span></summary>
+    <div class="det-c">
+      <p><b>&rarr; TIMESTAMP</b> mit <code>DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</code>.</p>
+      <p class="tf"><b>Typischer Fehler:</b> manuell per UPDATE pflegen.</p>
+      <p class="ms"><b>Merksatz:</b> "Zeitstempel automatisieren, nicht pflegen."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Welcher Datentyp fuer eine lange Artikelbeschreibung?<span class="ar">▶</span></summary>
+    <div class="det-c">
+      <p><b>&rarr; TEXT</b> (bis 65535 Byte).</p>
+      <p class="tf"><b>Typischer Fehler:</b> VARCHAR(255).</p>
+      <p class="ms"><b>Merksatz:</b> "VARCHAR = kurze Angaben, TEXT = Fliesstext."</p>
+    </div>
+  </details>
+
+  <div class="note"><b>Herleitung &amp; Details:</b> <a class="sql-ac" href="lf5_sql_syntax.html#datentypen">SQL-Syntax &sect;4 Datentypen</a></div>
+
+  <!-- BLOCK 3 -->
+  <div class="h-sec"><span class="ico">🔗</span> Constraints &amp; Fremdschluessel</div>
+  <p class="lead">Die Tabelle <code>artikel</code> mit Primaerschluessel, Index und Fremdschluessel auf <code>kategorie</code>:</p>
+<pre><code>CREATE TABLE IF NOT EXISTS artikel(
+  artikelId INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,   <span class="co">-- PRIMARY KEY/UNIQUE erzeugen automatisch einen Index</span>
+  artikelName VARCHAR(75) NOT NULL,
+  beschreibung TEXT,
+  preis DECIMAL(10,2),
+  kategorieId INT UNSIGNED NOT NULL,   <span class="co">-- FK-Datentyp muss zum Parent passen (inkl. UNSIGNED)</span>
+  INDEX idx_artikel_name (artikelName),
+  CONSTRAINT artikel_kategorie
+    FOREIGN KEY (kategorieId)
+    REFERENCES kategorie (kategorieId)
+    ON UPDATE CASCADE
+    ON DELETE NO ACTION
+);</code></pre>
+
+  <details>
+    <summary>Was passiert bei: <code>DELETE FROM kategorie WHERE kategorieId = 3;</code><span class="ar">▶</span></summary>
+    <div class="det-c">
+      <p><b>Fehler!</b> <code>ON DELETE NO ACTION</code> blockiert: Maus und Tastatur verweisen auf Kategorie 3.</p>
+      <p><b>Zusatz:</b> Kategorie 4 (Kabel) waere loeschbar &mdash; kein Artikel verweist darauf.</p>
+      <p class="ms"><b>Merksatz:</b> "NO ACTION = Datenbank schuetzt abhaengige Datensaetze."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Was passiert bei: <code>UPDATE kategorie SET kategorieId = 30 WHERE kategorieId = 3;</code><span class="ar">▶</span></summary>
+    <div class="det-c">
+      <p><b>Klappt:</b> <code>ON UPDATE CASCADE</code> aendert die kategorieId bei Maus und Tastatur automatisch auf 30 mit.</p>
+      <p class="ms"><b>Merksatz:</b> "CASCADE = Aenderung wandert zum Child."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Warum muss beim Befuellen zuerst <code>kategorie</code>, dann <code>artikel</code> befuellt werden?<span class="ar">▶</span></summary>
+    <div class="det-c">
+      <p>Der FK-Wert muss beim INSERT bereits im Parent existieren, sonst Constraint-Fehler.</p>
+      <p class="ms"><b>Merksatz:</b> "Erst Parent, dann Child &mdash; Loeschen umgekehrt."</p>
+    </div>
+  </details>
+
+</div>
+</div>
+
+<script>
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
