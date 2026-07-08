@@ -82,7 +82,7 @@ pre code .sq{ color:var(--cyan); font-weight:600; }
 <div class="wrap">
 <div class="sum">
 
-  <p class="lead">Sieben Uebungen zum <b>Datenbankzugriff mit SQLite3</b>. Erst selbst versuchen, dann die <b>Loesung aufklappen</b>. Die Grundlagen dazu stehen in der <a class="sql-ac" href="lf5_sql_grundlagen.html"><b>SQL-Referenz</b></a>.</p>
+  <p class="lead">Elf Uebungen zum <b>Datenbankzugriff mit SQLite3</b>. Erst selbst versuchen, dann die <b>Loesung aufklappen</b>. Die Grundlagen dazu stehen in der <a class="sql-ac" href="lf5_sql_grundlagen.html"><b>SQL-Referenz</b></a>.</p>
 
   <div class="jumpbar">
     <a class="jump" href="lf5_sql_basics.html">&rarr; Basics</a>
@@ -194,6 +194,97 @@ for ds in daten:
     </details>
   </div>
 
+  <!-- UE8 -->
+  <div class="uebung">
+    <h3><span class="num">UE 8</span> Telefon-DB anlegen (Reset-Skript)</h3>
+    <p class="task"><b>Aufgabe:</b> Skript <code>telefon1.py</code>: loescht <code>telefon.db</code> falls vorhanden (<code>try/except FileNotFoundError</code>), legt sie neu an mit Tabelle <code>telefon</code> (<code>ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Telefonnummer TEXT</code>).</p>
+    <details class="sol"><summary>// LOESUNG</summary>
+<pre><code>import sqlite3, os
+
+try:
+    os.remove("telefon.db")
+except FileNotFoundError:
+    print("telefon.db nicht vorhanden")
+
+db = sqlite3.connect("telefon.db")
+cursor = db.cursor()
+sql = """CREATE TABLE IF NOT EXISTS telefon (
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name TEXT NOT NULL,
+    Telefonnummer TEXT)"""
+cursor.execute(sql)
+db.close()
+print("Datenbank und Tabelle angelegt!")</code></pre>
+    </details>
+  </div>
+
+  <!-- UE9 -->
+  <div class="uebung">
+    <h3><span class="num">UE 9</span> Eintraege erfassen in Endlosschleife</h3>
+    <p class="task"><b>Aufgabe:</b> <code>telefon2.py</code>: In einer Endlosschleife Name + Telefonnummer einlesen und per <b>parametrisiertem INSERT</b> speichern. Ein leerer Name beendet die Schleife. Nicht vergessen: <code>commit()</code>!</p>
+    <details class="sol"><summary>// LOESUNG</summary>
+<pre><code>import sqlite3
+
+db = sqlite3.connect("telefon.db")
+cursor = db.cursor()
+
+while True:
+    n = input("Name> ")
+    if n == "": break
+    t = input("Telefonnummer> ")
+    sql = "INSERT INTO telefon (Name, Telefonnummer) VALUES (?,?)"
+    cursor.execute(sql, [n, t])
+    db.commit()
+    print("Daten eingefuegt")
+
+db.close()
+print("Programm beendet")</code></pre>
+    </details>
+  </div>
+
+  <!-- UE10 -->
+  <div class="uebung">
+    <h3><span class="num">UE 10</span> Formatierte Ausgabe sortiert nach Name</h3>
+    <p class="task"><b>Aufgabe:</b> <code>telefon3.py</code>: Alle Datensaetze sortiert nach <code>Name</code> als Tabelle mit Ueberschrift ausgeben, Spalten per <b>f-String</b> ausgerichtet.</p>
+    <details class="sol"><summary>// LOESUNG</summary>
+<pre><code>import sqlite3
+
+db = sqlite3.connect("telefon.db")
+cursor = db.cursor()
+cursor.execute("SELECT * FROM telefon ORDER BY Name")
+
+print("\nID Name             Telefonnummer")
+print("----------------------------------")
+for ds in cursor:
+    print(f"{ds[0]:2} {ds[1]:16} {ds[2]}")
+
+db.close()</code></pre>
+    </details>
+  </div>
+
+  <!-- UE11 -->
+  <div class="uebung">
+    <h3><span class="num">UE 11</span> Datensatz per ID loeschen</h3>
+    <p class="task"><b>Aufgabe:</b> <code>telefon4.py</code>: Erst die Tabelle wie in UE 10 anzeigen, dann eine <code>ID</code> erfragen und den Datensatz loeschen (<code>DELETE FROM telefon WHERE ID=?</code>). <code>commit()</code> nicht vergessen!</p>
+    <details class="sol"><summary>// LOESUNG</summary>
+<pre><code>import sqlite3
+
+db = sqlite3.connect("telefon.db")
+cursor = db.cursor()
+cursor.execute("SELECT * FROM telefon ORDER BY Name")
+
+print("\nID Name             Telefonnummer")
+print("----------------------------------")
+for ds in cursor:
+    print(f"{ds[0]:2} {ds[1]:16} {ds[2]}")
+
+e = int(input("Welche ID loeschen> "))
+cursor.execute("DELETE FROM telefon WHERE ID=?", [e])
+db.commit()
+db.close()</code></pre>
+    </details>
+  </div>
+
   <div class="callout merk"><span class="ci">📌</span><div><b>Faustregeln:</b> Schreiben (INSERT/UPDATE/DELETE) braucht <code>commit()</code> &middot; Werte immer ueber <b>Platzhalter (?)</b> &middot; zum Lesen <code>fetchall()</code>, dann DB schliessen.</div></div>
 
   <div class="jumpbar">
@@ -210,8 +301,8 @@ for ds in daten:
 /* Leichtgewichtiges Syntax-Highlighting fuer <pre><code> (Python + SQL) - CSP-konform, kein externes JS */
 (function(){
   var KW=new Set("import from as def return for in if elif else while None True False and or not is class with try except finally lambda pass break continue global del yield raise assert".split(" "));
-  var BI=new Set("print input int str float list dict tuple set len range open connect cursor execute executemany fetchall fetchone commit close".split(" "));
-  var SQL="SELECT INSERT INTO VALUES DELETE FROM WHERE UPDATE SET CREATE TABLE ALTER DROP DATABASE PRAGMA PRIMARY KEY AUTOINCREMENT INTEGER TEXT REAL AND OR NOT NULL".split(" ");
+  var BI=new Set("print input int str float list dict tuple set len range open connect cursor execute executemany fetchall fetchone commit close os remove FileNotFoundError".split(" "));
+  var SQL="SELECT INSERT INTO VALUES DELETE FROM WHERE UPDATE SET CREATE TABLE ALTER DROP DATABASE PRAGMA PRIMARY KEY AUTOINCREMENT INTEGER TEXT REAL AND OR NOT NULL ORDER BY IF EXISTS".split(" ");
   var sqlRE=new RegExp("\\b("+SQL.join("|")+")\\b","g");
   function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
   function hlStr(t){return '<span class="str">'+esc(t).replace(sqlRE,'<span class="sq">$1</span>')+'</span>';}

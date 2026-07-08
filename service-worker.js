@@ -9,7 +9,7 @@
 /*  Private Einzelnutzung: kein manuelles Hochzählen einer Versionsnr.   */
 /*  nötig – der Cache wird ohnehin bei jedem Online-Abruf erneuert.      */
 /* ===================================================================== */
-const CACHE = "fisi-os-v8";           // bei Network-first unkritisch; erhoeht fuer SQL-Modul (lf5_sql + lf5_sql_uebungen + lf5_sql_syntax)
+const CACHE = "fisi-os-v9";           // bei Network-first unkritisch; erhoeht fuer SQL-Modul (lf5_sql + lf5_sql_uebungen + lf5_sql_syntax)
 const ASSETS = [
   "./",
   "./index.html",
