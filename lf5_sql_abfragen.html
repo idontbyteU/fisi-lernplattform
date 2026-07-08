@@ -271,6 +271,189 @@ html[data-theme="light"] .db-tbl th{ background:rgba(122,62,200,.1); }
     </div>
   </details>
 
+  <!-- BLOCK 4 -->
+  <div class="h-sec"><span class="ico">🔀</span> JOINs &mdash; Tabellen verknuepfen</div>
+  <p class="lead">Aufgabe erst selbst auf Papier schreiben, dann aufklappen.</p>
+
+  <details>
+    <summary>Zeige alle Artikel mit ihrem Kategorienamen (artikelName, bezeichnung, preis).<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT a.artikelName, k.bezeichnung, a.preis
+FROM artikel a
+INNER JOIN kategorie k ON a.kategorieId = k.kategorieId;</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>artikelName</th><th>bezeichnung</th><th>preis</th></tr></thead>
+          <tbody>
+            <tr><td>Bildschirm</td><td>Hardware</td><td>149.00</td></tr>
+            <tr><td>Windows 11</td><td>Software</td><td>120.00</td></tr>
+            <tr><td>Maus</td><td>Zubehoer</td><td>39.00</td></tr>
+            <tr><td>Tastatur</td><td>Zubehoer</td><td>34.90</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tf"><b>Typischer Fehler:</b> Kabel erwartet &mdash; INNER JOIN zeigt nur Zeilen mit Partner auf beiden Seiten.</p>
+      <p class="ms"><b>Merksatz:</b> "INNER JOIN = nur Treffer."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Zeige alle Kategorien und ihre Artikel &mdash; auch Kategorien ohne Artikel.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT k.bezeichnung, a.artikelName
+FROM kategorie k
+LEFT JOIN artikel a ON k.kategorieId = a.kategorieId;</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>bezeichnung</th><th>artikelName</th></tr></thead>
+          <tbody>
+            <tr><td>Hardware</td><td>Bildschirm</td></tr>
+            <tr><td>Software</td><td>Windows 11</td></tr>
+            <tr><td>Zubehoer</td><td>Maus</td></tr>
+            <tr><td>Zubehoer</td><td>Tastatur</td></tr>
+            <tr><td>Kabel</td><td>NULL</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="ms"><b>Merksatz:</b> "'auch ohne...' in der Aufgabe = LEFT JOIN; die Tabelle, von der alles erscheinen soll, steht links."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Welche Kunden haben noch nie bestellt? (Zwei Loesungswege!)<span class="ar">▶</span></summary>
+    <div class="det-c">
+      <p><b>Weg 1 &mdash; LEFT JOIN + IS NULL:</b></p>
+<pre><code>SELECT k.name FROM kunde k
+LEFT JOIN bestellung b ON k.kundeId = b.kundeId
+WHERE b.bestellungId IS NULL;</code></pre>
+      <p><b>Weg 2 &mdash; Subquery mit NOT IN:</b></p>
+<pre><code>SELECT name FROM kunde
+WHERE kundeId NOT IN (SELECT kundeId FROM bestellung);</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis (beide Wege)</caption>
+          <thead><tr><th>name</th></tr></thead>
+          <tbody>
+            <tr><td>Lisa</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tf"><b>Typischer Fehler:</b> <code>WHERE b.bestellungId = NULL</code> &mdash; mit NULL vergleicht man nur ueber <code>IS NULL</code>, nie mit <code>=</code>.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Wer hat was bestellt? (name, artikelName, preis)<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT k.name, a.artikelName, a.preis
+FROM bestellung b
+INNER JOIN kunde k ON b.kundeId = k.kundeId
+INNER JOIN artikel a ON b.artikelId = a.artikelId;</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>name</th><th>artikelName</th><th>preis</th></tr></thead>
+          <tbody>
+            <tr><td>Sabine</td><td>Bildschirm</td><td>149.00</td></tr>
+            <tr><td>Sabine</td><td>Maus</td><td>39.00</td></tr>
+            <tr><td>Max</td><td>Windows 11</td><td>120.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="ms"><b>Merksatz:</b> "3-Tabellen-JOIN: Zwischentabelle (bestellung) ins FROM, beide Richtungen per ON anschliessen."</p>
+    </div>
+  </details>
+
+  <div class="note merk"><b>Merke:</b> INNER = nur Zeilen mit Partner auf beiden Seiten &middot; LEFT = alles von links, rechts ggf. NULL &middot; Tabellen-Aliase (<code>artikel a</code>) sparen Schreibarbeit und sind AP2-ueblich.</div>
+
+  <!-- BLOCK 5 -->
+  <div class="h-sec"><span class="ico">∑</span> GROUP BY &amp; Aggregate</div>
+
+  <details>
+    <summary>Sortimentswert je Kategorie (Summe der Artikelpreise).<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT k.bezeichnung, SUM(a.preis) AS gesamt
+FROM kategorie k
+INNER JOIN artikel a ON k.kategorieId = a.kategorieId
+GROUP BY k.bezeichnung;</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>bezeichnung</th><th>gesamt</th></tr></thead>
+          <tbody>
+            <tr><td>Hardware</td><td>149.00</td></tr>
+            <tr><td>Software</td><td>120.00</td></tr>
+            <tr><td>Zubehoer</td><td>73.90</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="ms"><b>Merksatz:</b> "Jede Spalte im SELECT ist entweder gruppiert oder aggregiert."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Nur Kategorien mit Sortimentswert ueber 100.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT k.bezeichnung, SUM(a.preis) AS gesamt
+FROM kategorie k
+INNER JOIN artikel a ON k.kategorieId = a.kategorieId
+GROUP BY k.bezeichnung
+HAVING SUM(a.preis) &gt; 100;</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>bezeichnung</th><th>gesamt</th></tr></thead>
+          <tbody>
+            <tr><td>Hardware</td><td>149.00</td></tr>
+            <tr><td>Software</td><td>120.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tf"><b>Typischer Fehler:</b> Aggregat ins <code>WHERE</code> geschrieben &mdash; WHERE filtert Zeilen VOR der Gruppierung, HAVING filtert Gruppen DANACH.</p>
+      <p class="ms"><b>Merksatz:</b> "WHERE = Zeilenfilter, HAVING = Gruppenfilter."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Artikelanzahl je Kategorie &mdash; Kabel muss mit 0 erscheinen.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT k.bezeichnung, COUNT(a.artikelId) AS anzahl
+FROM kategorie k
+LEFT JOIN artikel a ON k.kategorieId = a.kategorieId
+GROUP BY k.bezeichnung;</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>bezeichnung</th><th>anzahl</th></tr></thead>
+          <tbody>
+            <tr><td>Hardware</td><td>1</td></tr>
+            <tr><td>Software</td><td>1</td></tr>
+            <tr><td>Zubehoer</td><td>2</td></tr>
+            <tr><td>Kabel</td><td>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tf"><b>Typischer Fehler:</b> <code>COUNT(*)</code> zaehlt die NULL-Zeile mit &mdash; Kabel faelschlich 1. <code>COUNT(spalte)</code> ignoriert NULL.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Bestellungen je Kunde &mdash; auch Lisa mit 0.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT k.name, COUNT(b.bestellungId) AS anzahl
+FROM kunde k
+LEFT JOIN bestellung b ON k.kundeId = b.kundeId
+GROUP BY k.name;</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>name</th><th>anzahl</th></tr></thead>
+          <tbody>
+            <tr><td>Sabine</td><td>2</td></tr>
+            <tr><td>Max</td><td>1</td></tr>
+            <tr><td>Lisa</td><td>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+
 </div>
 </div>
 
