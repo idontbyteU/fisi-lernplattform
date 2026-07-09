@@ -124,3 +124,17 @@ Diese Umgebung läuft unter **Windows mit PowerShell**. Commit-Nachrichten **IMM
 - **Mehrzeilige Beschreibung:** Text vorher in eine **temporäre Datei** schreiben und mit `git commit -F <datei>` committen (Datei danach löschen).
 
 **NICHT verwenden:** Here-Strings (`@'…'@` / `@"…"@`) oder `$(printf …)`-Konstruktionen als Commit-Nachricht. Diese werden je nach Shell falsch interpretiert und erzeugen einen **kaputten Betreff (z. B. nur `@`)**. Wenn eine ausführliche, strukturierte Nachricht nötig ist, führt der Weg über `-F <datei>` — nicht über verschachtelte Shell-Expansion.
+
+## Berichtspflicht
+
+Nach JEDER Aufgabe (auch reinen Lese-Aufgaben) einen vollstaendigen Abschlussbericht in `cc_bericht.txt` schreiben (Datei **ueberschreiben**).
+
+Inhalt immer:
+- Datum
+- Modus (gelesen / gebaut)
+- `git status`
+- Was getan wurde (mit Zeilennummern)
+- Verifikations-Checks: Smart-Quotes, echte Umlaute, `details`/`summary`-Balance
+- Vollstaendige Diffs bzw. Dateiinhalte
+
+`cc_bericht.txt` bleibt **IMMER untracked** — nie stagen, nie committen.
