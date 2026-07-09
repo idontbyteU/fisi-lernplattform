@@ -454,6 +454,157 @@ GROUP BY k.name;</code></pre>
     </div>
   </details>
 
+  <!-- BLOCK 6 -->
+  <div class="h-sec"><span class="ico">🔍</span> Filtern &amp; Sortieren &mdash; LIKE, DISTINCT, ORDER BY, UNION</div>
+
+  <details>
+    <summary>Alle Artikel, deren Name mit T beginnt &mdash; und alle, die 'us' enthalten.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT artikelName FROM artikel WHERE artikelName LIKE 'T%';
+<span class="co">-- Tastatur</span>
+SELECT artikelName FROM artikel WHERE artikelName LIKE '%us%';
+<span class="co">-- Maus</span></code></pre>
+      <p class="ms"><b>Merksatz:</b> "% = beliebig viele Zeichen, _ = genau ein Zeichen."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Welche Kunden haben bestellt &mdash; jeder Name nur einmal?<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT DISTINCT k.name
+FROM kunde k
+INNER JOIN bestellung b ON k.kundeId = b.kundeId;</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>name</th></tr></thead>
+          <tbody>
+            <tr><td>Sabine</td></tr>
+            <tr><td>Max</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tf"><b>Typischer Fehler:</b> Ohne DISTINCT steht Sabine zweimal in der Liste (2 Bestellungen).</p>
+    </div>
+  </details>
+  <details>
+    <summary>Der teuerste Artikel &mdash; mit Sortierung.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT artikelName, preis FROM artikel
+ORDER BY preis DESC
+LIMIT 1;</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>artikelName</th><th>preis</th></tr></thead>
+          <tbody>
+            <tr><td>Bildschirm</td><td>149.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="ms"><b>Merksatz:</b> "ORDER BY sortiert, LIMIT schneidet ab &mdash; DESC nicht vergessen, sonst kommt der billigste."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Alle Artikel unter 40 Euro und alle ueber 140 Euro in EINER Liste.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT artikelName FROM artikel WHERE preis &lt; 40
+UNION
+SELECT artikelName FROM artikel WHERE preis &gt; 140;</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>artikelName</th></tr></thead>
+          <tbody>
+            <tr><td>Maus</td></tr>
+            <tr><td>Tastatur</td></tr>
+            <tr><td>Bildschirm</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="ms"><b>Merksatz:</b> "UNION entfernt Duplikate, UNION ALL behaelt sie."</p>
+    </div>
+  </details>
+
+  <!-- BLOCK 7 -->
+  <div class="h-sec"><span class="ico">🎯</span> Subqueries &mdash; Abfrage in der Abfrage</div>
+
+  <details>
+    <summary>Alle Artikel, die teurer sind als der Durchschnitt.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT artikelName, preis FROM artikel
+WHERE preis &gt; (SELECT AVG(preis) FROM artikel);</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis (Durchschnitt: 85.73)</caption>
+          <thead><tr><th>artikelName</th><th>preis</th></tr></thead>
+          <tbody>
+            <tr><td>Bildschirm</td><td>149.00</td></tr>
+            <tr><td>Windows 11</td><td>120.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="ms"><b>Merksatz:</b> "Die innere Abfrage laeuft zuerst und liefert EINEN Wert."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Welche Artikel wurden noch nie bestellt?<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT artikelName FROM artikel
+WHERE artikelId NOT IN (SELECT artikelId FROM bestellung);</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>artikelName</th></tr></thead>
+          <tbody>
+            <tr><td>Tastatur</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tf"><b>Typischer Fehler:</b> Verwechslung der Richtung &mdash; die innere Abfrage liefert die BESTELLTEN Ids (1, 2, 4), NOT IN dreht es um.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Der teuerste Artikel &mdash; diesmal OHNE LIMIT.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT artikelName, preis FROM artikel
+WHERE preis = (SELECT MAX(preis) FROM artikel);</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>artikelName</th><th>preis</th></tr></thead>
+          <tbody>
+            <tr><td>Bildschirm</td><td>149.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="ms"><b>Merksatz:</b> "Zwei Wege zum Ziel: ORDER BY+LIMIT (6.3) oder Subquery mit MAX &mdash; beide AP2-tauglich."</p>
+    </div>
+  </details>
+
+  <!-- BLOCK 8 -->
+  <div class="h-sec"><span class="ico">🔐</span> Rechte vergeben &mdash; GRANT &amp; REVOKE</div>
+
+  <details>
+    <summary>Ein Azubi-Account soll die webshop-DB nur lesen und Datensaetze einfuegen duerfen.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>GRANT SELECT, INSERT ON webshop.* TO 'azubi'@'localhost';</code></pre>
+      <p class="ms"><b>Merksatz:</b> "GRANT rechte ON datenbank.tabelle TO nutzer."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Das Einfuegen soll wieder entzogen werden.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>REVOKE INSERT ON webshop.* FROM 'azubi'@'localhost';</code></pre>
+      <p class="tf"><b>Typischer Fehler:</b> TO statt FROM &mdash; GRANT ... TO, aber REVOKE ... FROM.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Warum bekommt der Azubi nicht einfach ALL PRIVILEGES?<span class="ar">▶</span></summary>
+    <div class="det-c">
+      <p>Least-Privilege-Prinzip &mdash; jeder Account erhaelt nur die Rechte, die er fuer seine Aufgabe braucht. Begrenzt Schaden bei Fehlbedienung und kompromittierten Konten (Bruecke zu LF4 / IT-Grundschutz).</p>
+    </div>
+  </details>
+
 </div>
 </div>
 
