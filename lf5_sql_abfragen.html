@@ -146,6 +146,30 @@ html[data-theme="light"] .db-tbl th{ background:rgba(122,62,200,.1); }
   </div>
   <div class="note merk"><b>Merke:</b> Kategorie 4 (Kabel) hat keine Artikel, Lisa hat keine Bestellung &mdash; das wird in den Aufgaben wichtig.</div>
 
+  <!-- Grundvokabular -->
+  <div class="h-sec"><span class="ico">🔤</span> Grundvokabular: Statement, Klausel, Operator</div>
+  <p class="lead">Bevor es losgeht &mdash; die drei Ebenen, aus denen jede SQL-Anweisung besteht:</p>
+  <div class="note">
+    <p><b>Statement</b> = ganzer Satz. Eine vollstaendige Anweisung, endet mit <code>;</code> (z.&nbsp;B. <code>SELECT ... FROM ...;</code>).</p>
+    <p><b>Klausel</b> = Satzteil. Ein benannter Abschnitt innerhalb des Statements, kann nicht allein stehen (z.&nbsp;B. <code>WHERE ...</code>, <code>GROUP BY ...</code>).</p>
+    <p><b>Operator / Funktion</b> = Wort im Satzteil. Das kleinste Bauteil, das Werte vergleicht oder verarbeitet (z.&nbsp;B. <code>&gt;=</code>, <code>LIKE</code>, <code>SUM()</code>).</p>
+  </div>
+  <div class="note merk"><b>Merksatz:</b> "Statement = Satz, Klausel = Satzteil, Operator = Wort."</div>
+  <div class="db-wrap">
+    <table class="db-tbl">
+      <caption>Einordnung</caption>
+      <thead><tr><th>Beispiel</th><th>Ebene</th><th>Hinweis</th></tr></thead>
+      <tbody>
+        <tr><td>SELECT / INSERT / CREATE</td><td>Statement</td><td>Sektion DQL / DML / DDL</td></tr>
+        <tr><td>FROM / WHERE / GROUP BY / ORDER BY</td><td>Klausel</td><td>Satzteil im Statement</td></tr>
+        <tr><td>LIKE / IN / EXISTS / &gt;= / AND</td><td>Operator</td><td>vergleicht / verknuepft Werte</td></tr>
+        <tr><td>COUNT / SUM / CONCAT</td><td>Funktion</td><td>verarbeitet Werte, gibt einen zurueck</td></tr>
+        <tr><td>AS / DISTINCT / NOT NULL</td><td>Schluesselwort</td><td>steuert Verhalten / benennt</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note"><b>Ausfuehrungsreihenfolge:</b> Geschrieben: SELECT &rarr; FROM &rarr; WHERE &rarr; GROUP BY &rarr; HAVING &rarr; ORDER BY &rarr; LIMIT.<br>Ausgefuehrt: FROM &rarr; WHERE &rarr; GROUP BY &rarr; HAVING &rarr; SELECT &rarr; ORDER BY &rarr; LIMIT.</div>
+
   <!-- BLOCK 1 -->
   <div class="h-sec"><span class="ico">🧭</span> Sprachsektionen: DDL, DML, DQL, DCL, TCL</div>
 
@@ -268,6 +292,111 @@ html[data-theme="light"] .db-tbl th{ background:rgba(122,62,200,.1); }
     <div class="det-c">
       <p>Der FK-Wert muss beim INSERT bereits im Parent existieren, sonst Constraint-Fehler.</p>
       <p class="ms"><b>Merksatz:</b> "Erst Parent, dann Child &mdash; Loeschen umgekehrt."</p>
+    </div>
+  </details>
+
+  <p class="lead">Struktur nachtraeglich aendern &mdash; <code>ALTER</code>, Indizes, Tabellen kopieren und leeren:</p>
+
+  <details>
+    <summary>Fuege der Tabelle <code>artikel</code> eine Spalte <code>lagerbestand</code> direkt nach <code>preis</code> hinzu.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>ALTER TABLE artikel
+  ADD COLUMN lagerbestand INT UNSIGNED NOT NULL DEFAULT 0 AFTER preis;
+<span class="co">-- FIRST statt "AFTER preis" setzt die Spalte an die erste Position</span></code></pre>
+      <p class="ms"><b>Merksatz:</b> "ADD COLUMN ... AFTER spalte / FIRST steuert die Position."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Aendere <code>beschreibung</code> auf <code>VARCHAR(255)</code> mit Standardwert.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>ALTER TABLE artikel
+  MODIFY beschreibung VARCHAR(255) NOT NULL DEFAULT '(keine)';</code></pre>
+      <p class="tf"><b>Typischer Fehler:</b> <code>MODIFY</code> braucht die <b>komplette</b> neue Definition &mdash; fehlt <code>NOT NULL</code>, ist die Spalte danach wieder nullable.</p>
+      <p class="ms"><b>Merksatz:</b> "MODIFY = Definition tauschen, Spaltenname bleibt."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Benenne <code>artikelName</code> in <code>bezeichnung</code> um und mach sie zu <code>VARCHAR(100)</code>.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>ALTER TABLE artikel
+  CHANGE COLUMN artikelName bezeichnung VARCHAR(100) NOT NULL;</code></pre>
+      <p class="tf"><b>Typischer Fehler:</b> <code>CHANGE</code> mit <code>MODIFY</code> verwechseln &mdash; <code>MODIFY</code> kann nicht umbenennen. Reihenfolge: alter Name, neuer Name, dann die Definition.</p>
+      <p class="ms"><b>Merksatz:</b> "CHANGE = umbenennen + neu definieren, MODIFY = nur neu definieren."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Loesche <code>beschreibung</code> und <code>lagerbestand</code> in einem Statement.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>ALTER TABLE artikel
+  DROP COLUMN beschreibung,
+  DROP COLUMN lagerbestand;</code></pre>
+      <p class="ms"><b>Merksatz:</b> "Mehrere Aenderungen in einem ALTER &mdash; per Komma trennen."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Fuege den Fremdschluessel <code>artikel &rarr; kategorie</code> nachtraeglich hinzu.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>ALTER TABLE artikel
+  ADD CONSTRAINT artikel_kategorie
+  FOREIGN KEY (kategorieId) REFERENCES kategorie (kategorieId)
+  ON UPDATE CASCADE
+  ON DELETE NO ACTION;</code></pre>
+      <p class="tf"><b>Typischer Fehler:</b> vorhandene Daten verletzen den FK &mdash; verweist eine <code>kategorieId</code> in <code>artikel</code> auf keinen Parent, scheitert das <code>ADD CONSTRAINT</code>.</p>
+      <p class="ms"><b>Merksatz:</b> "FK nachruesten = ADD CONSTRAINT ... FOREIGN KEY ... REFERENCES ..."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Lege einen Index auf <code>preis</code> an, entferne ihn wieder, zeige alle Indizes.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>ALTER TABLE artikel ADD INDEX idx_preis (preis);
+ALTER TABLE artikel DROP INDEX idx_preis;
+SHOW INDEX FROM artikel;</code></pre>
+      <p class="ms"><b>Merksatz:</b> "Index = Register fuers schnelle Suchen/Sortieren &mdash; kostet aber beim Schreiben Zeit."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Welche vier Index-Arten gibt es &mdash; und ist ein Fremdschluessel ein Index?<span class="ar">▶</span></summary>
+    <div class="det-c">
+      <p><b>1. PRIMARY KEY</b> &mdash; eindeutig <b>und</b> nicht NULL, genau einer pro Tabelle.</p>
+      <p><b>2. UNIQUE</b> &mdash; eindeutig, NULL ist (einmal) erlaubt.</p>
+      <p><b>3. Normaler INDEX</b> &mdash; nur Tempo, Duplikate erlaubt.</p>
+      <p><b>4. Fremdschluessel</b> &mdash; ist eine <b>Regel</b> (referentielle Integritaet), <b>kein</b> eigener Index-Typ. Zum schnellen Pruefen braucht er aber einen Index auf der Spalte; MariaDB legt ihn automatisch an, falls keiner existiert.</p>
+      <p class="co">Randnotiz: Standard-Indexstruktur ist BTREE (gut fuer Bereich/Sortierung); daneben gibt es FULLTEXT (Volltext) und SPATIAL (Geodaten).</p>
+      <p class="ms"><b>Merksatz:</b> "PK und UNIQUE sind auch Indizes &mdash; der FK ist eine Regel, die einen Index nutzt."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Struktur kopieren: <code>CREATE TABLE ... LIKE</code> vs. <code>... AS SELECT</code>.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>CREATE TABLE artikel_backup LIKE artikel;
+<span class="co">-- exakte Struktur (Spalten, Indizes, Keys, AUTO_INCREMENT), 0 Zeilen</span>
+
+CREATE TABLE artikel_backup AS SELECT * FROM artikel;
+<span class="co">-- Struktur + alle Daten, aber OHNE Schluessel/Indizes/AUTO_INCREMENT</span></code></pre>
+      <p class="ms"><b>Merksatz:</b> "LIKE = leere Kopie mit Schluesseln, AS SELECT = gefuellte Kopie ohne Schluessel."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Wie leerst du <code>bestellung</code> komplett &mdash; und wie grenzt sich das von DELETE und DROP ab?<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>TRUNCATE TABLE bestellung;</code></pre>
+      <p>Loescht <b>alle</b> Datensaetze, die Tabellenstruktur bleibt, <code>AUTO_INCREMENT</code> wird auf 1 zurueckgesetzt.</p>
+      <p><b>Abgrenzung:</b></p>
+      <p><code>DELETE FROM bestellung;</code> (ohne WHERE) &mdash; leert ebenfalls, aber Zeile fuer Zeile (DML, per ROLLBACK widerrufbar, Zaehler laeuft weiter).</p>
+      <p><code>DROP TABLE bestellung;</code> &mdash; entfernt die Tabelle inklusive Struktur; danach ist sie weg.</p>
+      <p class="ms"><b>Merksatz:</b> "TRUNCATE leert (schnell, Zaehler-Reset), DELETE loescht Zeilen (widerrufbar), DROP wirft die Tabelle weg."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Warum scheitert <code>CREATE TABLE position (...)</code> &mdash; und wie loest du es?<span class="ar">▶</span></summary>
+    <div class="det-c">
+      <p><code>position</code> (wie auch <code>order</code>, <code>group</code>, <code>rank</code>) ist ein <b>reserviertes Wort</b> &mdash; ohne Schutz kommt ein Syntaxfehler.</p>
+<pre><code>CREATE TABLE `position` (
+  id INT UNSIGNED NOT NULL PRIMARY KEY,
+  `rank` INT
+);</code></pre>
+      <p class="tf"><b>Typischer Fehler:</b> reservierte Woerter als Tabellen-/Spaltennamen ohne Backticks.</p>
+      <p class="ms"><b>Merksatz:</b> "Reserviertes Wort als Name? In Backticks setzen: <code>`position`</code>."</p>
     </div>
   </details>
 
@@ -453,6 +582,48 @@ GROUP BY k.name;</code></pre>
       </div>
     </div>
   </details>
+  <details>
+    <summary>Aktionspreis: 10&nbsp;% Rabatt auf jeden Artikel, auf 2 Nachkommastellen gerundet.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT artikelName, preis, ROUND(preis * 0.90, 2) AS aktionspreis
+FROM artikel;</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>artikelName</th><th>preis</th><th>aktionspreis</th></tr></thead>
+          <tbody>
+            <tr><td>Bildschirm</td><td>149.00</td><td>134.10</td></tr>
+            <tr><td>Maus</td><td>39.00</td><td>35.10</td></tr>
+            <tr><td>Tastatur</td><td>34.90</td><td>31.41</td></tr>
+            <tr><td>Windows 11</td><td>120.00</td><td>108.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tf"><b>Typischer Fehler:</b> die 2 vergessen &mdash; <code>ROUND(preis*0.90)</code> rundet auf ganze Euro (z.&nbsp;B. 31 statt 31.41).</p>
+      <p class="ms"><b>Merksatz:</b> "ROUND(wert, n) &mdash; n = Anzahl der Nachkommastellen."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Kunden mit mindestens 2 Bestellungen &mdash; Alias im HAVING nutzen.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT k.name, COUNT(*) AS anzahl
+FROM kunde k
+INNER JOIN bestellung b ON k.kundeId = b.kundeId
+GROUP BY k.name
+HAVING anzahl &gt;= 2;</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>name</th><th>anzahl</th></tr></thead>
+          <tbody>
+            <tr><td>Sabine</td><td>2</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tf"><b>Typischer Fehler:</b> sich darauf verlassen, dass jede DB den Alias im HAVING erlaubt &mdash; MariaDB/MySQL tun es, aber die sichere Pruefungsschreibweise wiederholt das Aggregat: <code>HAVING COUNT(*) &gt;= 2</code>.</p>
+      <p class="ms"><b>Merksatz:</b> "HAVING darf den SELECT-Alias nutzen &mdash; im Zweifel das Aggregat ausschreiben."</p>
+    </div>
+  </details>
 
   <!-- BLOCK 6 -->
   <div class="h-sec"><span class="ico">🔍</span> Filtern &amp; Sortieren &mdash; LIKE, DISTINCT, ORDER BY, UNION</div>
@@ -522,6 +693,42 @@ SELECT artikelName FROM artikel WHERE preis &gt; 140;</code></pre>
         </table>
       </div>
       <p class="ms"><b>Merksatz:</b> "UNION entfernt Duplikate, UNION ALL behaelt sie."</p>
+    </div>
+  </details>
+  <details>
+    <summary>Kunden und Artikel in EINER Liste &mdash; mit Herkunftsspalte.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT 'KUNDE'   AS typ, name        AS bezeichnung FROM kunde
+UNION
+SELECT 'ARTIKEL' AS typ, artikelName AS bezeichnung FROM artikel;</code></pre>
+      <div class="db-wrap">
+        <table class="db-tbl">
+          <caption>Ergebnis</caption>
+          <thead><tr><th>typ</th><th>bezeichnung</th></tr></thead>
+          <tbody>
+            <tr><td>KUNDE</td><td>Sabine</td></tr>
+            <tr><td>KUNDE</td><td>Max</td></tr>
+            <tr><td>KUNDE</td><td>Lisa</td></tr>
+            <tr><td>ARTIKEL</td><td>Bildschirm</td></tr>
+            <tr><td>ARTIKEL</td><td>Maus</td></tr>
+            <tr><td>ARTIKEL</td><td>Tastatur</td></tr>
+            <tr><td>ARTIKEL</td><td>Windows 11</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><b>Trick:</b> Ein fester Text (<code>'KUNDE'</code>) als erste Spalte stempelt jeder Zeile ihre Herkunft auf &mdash; typisch, wenn zwei Quellen (z.&nbsp;B. Kunden und Lieferanten) zusammengefuehrt werden.</p>
+      <p class="tf"><b>Typischer Fehler:</b> unterschiedliche Spaltenzahl/-reihenfolge in den beiden SELECTs &mdash; bei UNION muessen Anzahl und Typen der Spalten zusammenpassen.</p>
+      <p class="ms"><b>Merksatz:</b> "Literal-Spalte = Herkunftsstempel; beide SELECTs brauchen dieselbe Spaltenstruktur."</p>
+    </div>
+  </details>
+  <details>
+    <summary><code>DISTINCT</code> ueber zwei Spalten &mdash; einmalige Kombinationen.<span class="ar">▶</span></summary>
+    <div class="det-c">
+<pre><code>SELECT DISTINCT plz, ort FROM kunde_adresse;</code></pre>
+      <p><b>Wirkung:</b> <code>DISTINCT</code> bezieht sich auf die <b>ganze Zeile</b>, nicht auf eine einzelne Spalte &mdash; hier bleibt jede <b>Kombination</b> aus <code>plz</code> und <code>ort</code> genau einmal uebrig. Dieselbe PLZ mit zwei verschiedenen Orten ergibt also zwei Zeilen.</p>
+      <p class="co">Beispiel abstrakt: Die Webshop-DB dieser Seite hat keine Adressspalten &mdash; das Muster gilt fuer jede Tabelle.</p>
+      <p class="tf"><b>Typischer Fehler:</b> <code>DISTINCT</code> als Funktion auf nur eine Spalte beziehen (<code>DISTINCT(plz), ort</code>) &mdash; es wirkt immer auf alle SELECT-Spalten zusammen.</p>
+      <p class="ms"><b>Merksatz:</b> "DISTINCT gilt fuer die komplette Zeile, nicht fuer eine Klammer."</p>
     </div>
   </details>
 
