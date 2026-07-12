@@ -9,7 +9,7 @@
 /*  Private Einzelnutzung: kein manuelles Hochzählen einer Versionsnr.   */
 /*  nötig – der Cache wird ohnehin bei jedem Online-Abruf erneuert.      */
 /* ===================================================================== */
-const CACHE = "fisi-os-v11";          // bei Network-first unkritisch; erhoeht fuer SQL-Modul (lf5_sql_python ersetzt basics/grundlagen/crud/spezial)
+const CACHE = "fisi-os-v12";          // bei Network-first unkritisch; erhoeht fuer neue Seite lf5_sql_probleme
 const ASSETS = [
   "./",
   "./index.html",
@@ -48,6 +48,7 @@ const ASSETS = [
   "./lf5_sql_python.html",
   "./lf5_sql_syntax.html",
   "./lf5_sql_abfragen.html",
+  "./lf5_sql_probleme.html",
   "./img/db/db_sensor_aufgabe.png",
   "./img/db/db_sensor_loesung.png",
   "./img/db/db_sensor_relational.png",

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernfeld 5 &middot; SQL &mdash; Probleme l&ouml;sen &middot; FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<style>
+/* ===== Nur seitenspezifische Kleinigkeiten - alle Farben ueber zentrale Paletten-Variablen ===== */
+:root, html[data-theme="light"]{ --sql-ac: var(--purple); }   /* LF5-Akzent (lila) */
+
+.sql-ac{ color: var(--sql-ac); }
+.hdr h1 .tag{ background: var(--sql-ac); }
+
+/* Kurze Schema-Erinnerung */
+.note{ border:1px solid var(--line); border-radius:6px; padding:.7rem .85rem;
+  margin:.2rem 0 1.2rem; font-size:15px; line-height:1.6; color:var(--read); }
+.note b{ color:var(--sql-ac); }
+.note code{ font-family:var(--fmono); font-size:.9em; background:var(--code-bg);
+  border:1px solid var(--line); border-radius:4px; padding:1px 6px; color:var(--sql-ac); white-space:nowrap; }
+
+/* ============ Aufgaben-Karten ============ */
+section.card{ background:var(--glass); border:1px solid var(--line); border-radius:8px;
+  padding:1rem 1.1rem; margin-top:1rem; }
+p.task{ margin:0 0 .7rem; color:var(--read); line-height:1.55; font-size:1rem; }
+p.task .num{ font-family:var(--fmono); font-size:.78rem; color:#fff; background:var(--sql-ac);
+  border-radius:6px; padding:2px 9px; margin-right:8px; }
+p.task b{ color:var(--ink); }
+
+/* Eingabezeile */
+.inrow{ display:flex; align-items:center; gap:10px; }
+.sqin{ flex:1 1 auto; width:100%; font-family:var(--fmono); font-size:14px; line-height:1.5;
+  padding:.6rem .75rem; border-radius:8px; border:1px solid var(--line);
+  background:var(--code-bg); color:var(--read); outline:none; transition:border-color .15s, box-shadow .15s; }
+.sqin::placeholder{ color:var(--dim); }
+.sqin:focus{ border-color:var(--sql-ac); box-shadow:0 0 0 2px rgba(182,107,255,.22); }
+.sqin.good{ border-color:var(--ok); box-shadow:0 0 0 2px rgba(39,245,154,.28); }
+.sqin.bad{ border-color:var(--danger); box-shadow:0 0 0 2px rgba(255,42,109,.28); animation:shake .34s; }
+html[data-theme="light"] .sqin.good{ box-shadow:0 0 0 2px rgba(19,138,94,.25); }
+html[data-theme="light"] .sqin.bad{ box-shadow:0 0 0 2px rgba(200,30,90,.22); }
+
+.mark{ flex:0 0 auto; font-family:var(--fmono); font-weight:700; font-size:1.15rem;
+  color:var(--ok); width:1.2em; text-align:center; opacity:0; transform:scale(.6);
+  transition:opacity .18s, transform .18s; }
+.inrow.ok .mark{ opacity:1; transform:scale(1); }
+
+@keyframes shake{
+  0%,100%{ transform:translateX(0); }
+  20%{ transform:translateX(-6px); }
+  40%{ transform:translateX(6px); }
+  60%{ transform:translateX(-4px); }
+  80%{ transform:translateX(4px); }
+}
+
+/* ============ Aufklappbare Loesung (1 Klick auf / 1 Klick zu, Default zu) ============ */
+details{ border:1px solid var(--line); border-radius:8px; background:var(--glass); margin-top:.7rem; }
+details>summary{ cursor:pointer; padding:.55rem .8rem; font-weight:600; font-size:.9rem;
+  list-style:none; display:flex; align-items:center; gap:8px; color:var(--ink); user-select:none; }
+details>summary::-webkit-details-marker{ display:none; }
+details>summary::before{ content:"\25B8"; color:var(--sql-ac); transition:transform .15s; display:inline-block; }
+details[open]>summary::before{ transform:rotate(90deg); }
+details[open]{ border-color:rgba(182,107,255,.4); }
+
+/* Loesungs-Codezeile mit Syntax-Highlighting (MariaDB-Stil, hell + dunkel lesbar) */
+pre.code{ background:var(--code-bg); border:0; border-top:1px solid var(--line); border-radius:0 0 8px 8px;
+  margin:0; padding:.7rem .85rem; overflow-x:auto; -webkit-overflow-scrolling:touch;
+  font-family:var(--fmono); font-size:13.5px; line-height:1.6; color:var(--read); white-space:pre; }
+pre.code .kw{ color:var(--magenta); font-weight:600; }   /* Schluesselwoerter */
+pre.code .st{ color:var(--ok); }                          /* Strings */
+pre.code .nu{ color:var(--amber); }                       /* Zahlen */
+pre.code .pu{ color:var(--sql-ac); }                      /* Satzzeichen / Operatoren */
+
+summary:focus-visible, .sqin:focus-visible{ outline:2px solid var(--sql-ac); outline-offset:2px; }
+
+.lead{ color:var(--read); line-height:1.6; }
+footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted); }
+
+/* ============ Responsiv 880 / 640 / 560 ============ */
+@media (max-width:880px){ section.card{ padding:.9rem 1rem; } }
+@media (max-width:640px){ p.task{ font-size:.96rem; } .sqin{ font-size:13.5px; } }
+@media (max-width:560px){ pre.code{ font-size:12.5px; } .sqin{ font-size:13px; } }
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="lf5_sql.html">&larr; SQL-Hub</a>
+    <div>
+      <h1><span class="tag">LF 5</span>Probleme l&ouml;sen</h1>
+      <div class="sub">Schreiben &mdash; Enter &mdash; Feedback</div>
+    </div>
+    <div class="sp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="sum">
+
+  <p class="lead">
+    Schreib die Abfrage in die Zeile und dr&uuml;cke <b>Enter</b>. Richtig &rarr; gr&uuml;ner Rahmen und Haken,
+    falsch &rarr; kurzes rotes Wackeln (deine Eingabe bleibt stehen). Gro&szlig;-/Kleinschreibung der
+    Schl&uuml;sselw&ouml;rter und zus&auml;tzliche Leerzeichen sind egal &mdash; Spalten-, Tabellennamen und Textwerte
+    m&uuml;ssen exakt stimmen.
+  </p>
+
+  <div class="note">
+    <b>Beispiel-DB:</b>
+    <code>artikel(artikelId, artikelName, preis, kategorieId)</code> &middot;
+    <code>kunde(kundeId, name)</code> &middot;
+    <code>bestellung(bestellungId, kundeId, artikelId)</code>
+  </div>
+
+  <!-- ==================== 1 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">1</span>Alle Artikel unter 40 Euro &mdash; <b>Name und Preis</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="1" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> artikelName<span class="pu">,</span> preis <span class="kw">FROM</span> artikel <span class="kw">WHERE</span> preis <span class="pu">&lt;</span> <span class="nu">40</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 2 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">2</span>Artikel, deren Name ein <b>'a'</b> enth&auml;lt.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="2" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> artikelName <span class="kw">FROM</span> artikel <span class="kw">WHERE</span> artikelName <span class="kw">LIKE</span> <span class="st">'%a%'</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 3 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">3</span>Alle Artikel <b>alphabetisch nach Name</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="3" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> artikelName <span class="kw">FROM</span> artikel <span class="kw">ORDER BY</span> artikelName <span class="kw">ASC</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 4 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">4</span>Die <b>zwei g&uuml;nstigsten</b> Artikel &mdash; Name und Preis.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="4" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> artikelName<span class="pu">,</span> preis <span class="kw">FROM</span> artikel <span class="kw">ORDER BY</span> preis <span class="kw">ASC LIMIT</span> <span class="nu">2</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 5 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">5</span>Artikel, die <b>nicht mit B beginnen</b> und <b>&uuml;ber 35 Euro</b> kosten.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="5" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> artikelName<span class="pu">,</span> preis <span class="kw">FROM</span> artikel <span class="kw">WHERE</span> artikelName <span class="kw">NOT LIKE</span> <span class="st">'B%'</span> <span class="kw">AND</span> preis <span class="pu">&gt;</span> <span class="nu">35</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 6 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">6</span>Welche <code style="font-family:var(--fmono)">kundeId</code>s kommen in <b>bestellung</b> vor &mdash; <b>jede nur einmal</b>?</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="6" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT DISTINCT</span> kundeId <span class="kw">FROM</span> bestellung<span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 7 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">7</span>Wie <b>viele Artikel</b> kosten unter 100 Euro? <b>(Spaltenname anzahl)</b></p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="7" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT COUNT</span><span class="pu">(</span><span class="pu">*</span><span class="pu">)</span> <span class="kw">AS</span> anzahl <span class="kw">FROM</span> artikel <span class="kw">WHERE</span> preis <span class="pu">&lt;</span> <span class="nu">100</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 8 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">8</span><b>Summe aller Artikelpreise</b> (Spaltenname gesamt).</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="8" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT SUM</span><span class="pu">(</span>preis<span class="pu">)</span> <span class="kw">AS</span> gesamt <span class="kw">FROM</span> artikel<span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 9 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">9</span><b>Anzahl Bestellungen pro Kunde</b> (kundeId + Anzahl als anzahl).</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="9" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> kundeId<span class="pu">,</span> <span class="kw">COUNT</span><span class="pu">(</span><span class="pu">*</span><span class="pu">)</span> <span class="kw">AS</span> anzahl <span class="kw">FROM</span> bestellung <span class="kw">GROUP BY</span> kundeId<span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 10 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">10</span>Nur <code style="font-family:var(--fmono)">kundeId</code>s mit <b>mindestens 2 Bestellungen</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="10" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> kundeId <span class="kw">FROM</span> bestellung <span class="kw">GROUP BY</span> kundeId <span class="kw">HAVING COUNT</span><span class="pu">(</span><span class="pu">*</span><span class="pu">)</span> <span class="pu">&gt;=</span> <span class="nu">2</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <footer>fisi-lernplattform &middot; LF5 &middot; SQL &mdash; Probleme l&ouml;sen</footer>
+
+</div>
+</div>
+
+<script>
+/* ============ Pruef-Logik (kein Backend, kein localStorage) ============ */
+(function(){
+  "use strict";
+
+  // Akzeptierte Loesungen je Aufgabe (mehrere Wege wo im Prompt markiert)
+  var ACCEPTED = {
+    1:["SELECT artikelName, preis FROM artikel WHERE preis < 40"],
+    2:["SELECT artikelName FROM artikel WHERE artikelName LIKE '%a%'"],
+    3:["SELECT artikelName FROM artikel ORDER BY artikelName ASC",
+       "SELECT artikelName FROM artikel ORDER BY artikelName"],
+    4:["SELECT artikelName, preis FROM artikel ORDER BY preis ASC LIMIT 2",
+       "SELECT artikelName, preis FROM artikel ORDER BY preis LIMIT 2"],
+    5:["SELECT artikelName, preis FROM artikel WHERE artikelName NOT LIKE 'B%' AND preis > 35",
+       "SELECT * FROM artikel WHERE artikelName NOT LIKE 'B%' AND preis > 35"],
+    6:["SELECT DISTINCT kundeId FROM bestellung"],
+    7:["SELECT COUNT(*) AS anzahl FROM artikel WHERE preis < 100"],
+    8:["SELECT SUM(preis) AS gesamt FROM artikel"],
+    9:["SELECT kundeId, COUNT(*) AS anzahl FROM bestellung GROUP BY kundeId"],
+    10:["SELECT kundeId FROM bestellung GROUP BY kundeId HAVING COUNT(*) >= 2"]
+  };
+
+  // SQL-Schluesselwoerter, die case-insensitiv sein duerfen (Namen/Werte bleiben exakt)
+  var KW = ["SELECT","DISTINCT","FROM","WHERE","ORDER","GROUP","HAVING","BY",
+            "ASC","DESC","LIMIT","LIKE","NOT","AND","OR","AS",
+            "COUNT","SUM","AVG","MIN","MAX"];
+
+  function normalize(sql){
+    var s = String(sql).trim();
+    s = s.replace(/;+\s*$/, "");                 // Semikolon am Ende optional
+    KW.forEach(function(k){                       // Keywords vereinheitlichen (Case egal)
+      s = s.replace(new RegExp("\\b" + k + "\\b", "gi"), k);
+    });
+    s = s.replace(/\s+/g, " ");                    // Mehrfach-Leerzeichen -> eins
+    s = s.replace(/\s*([(),])\s*/g, "$1");        // Leerzeichen um ( ) , weg
+    s = s.replace(/\s*(<=|>=|<>|!=|<|>|=)\s*/g, "$1"); // Leerzeichen um Operatoren weg
+    return s.trim();
+  }
+
+  // Loesungen vor-normalisieren
+  var NORM = {};
+  Object.keys(ACCEPTED).forEach(function(i){
+    NORM[i] = ACCEPTED[i].map(normalize);
+  });
+
+  function check(input){
+    var i = input.getAttribute("data-i");
+    var row = input.closest(".inrow");
+    var want = NORM[i] || [];
+    var got = normalize(input.value);
+    input.classList.remove("good","bad");
+
+    if (got !== "" && want.indexOf(got) !== -1){
+      input.classList.add("good");
+      row.classList.add("ok");
+    } else {
+      row.classList.remove("ok");
+      // Neustart der Wackel-Animation erzwingen
+      input.classList.remove("bad");
+      void input.offsetWidth;
+      input.classList.add("bad");
+    }
+  }
+
+  var inputs = document.querySelectorAll(".sqin");
+  Array.prototype.forEach.call(inputs, function(input){
+    input.addEventListener("keydown", function(e){
+      if (e.key === "Enter"){ e.preventDefault(); check(input); }
+    });
+    // Tippen nach falscher Antwort raeumt das rote Feedback wieder ab
+    input.addEventListener("input", function(){
+      input.classList.remove("bad","good");
+      input.closest(".inrow").classList.remove("ok");
+    });
+  });
+})();
+</script>
+
+<script>
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
