@@ -9,7 +9,7 @@
 /*  Private Einzelnutzung: kein manuelles Hochzählen einer Versionsnr.   */
 /*  nötig – der Cache wird ohnehin bei jedem Online-Abruf erneuert.      */
 /* ===================================================================== */
-const CACHE = "fisi-os-v13";          // v13: 12 neue Aufgaben (11-22) in lf5_sql_probleme
+const CACHE = "fisi-os-v14";          // v14: Probleme-Seite auf 36 Aufgaben + Klartext/Ergebnistabellen
 const ASSETS = [
   "./",
   "./index.html",

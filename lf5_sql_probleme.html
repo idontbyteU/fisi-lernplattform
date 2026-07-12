@@ -63,13 +63,28 @@ details[open]>summary::before{ transform:rotate(90deg); }
 details[open]{ border-color:rgba(182,107,255,.4); }
 
 /* Loesungs-Codezeile mit Syntax-Highlighting (MariaDB-Stil, hell + dunkel lesbar) */
-pre.code{ background:var(--code-bg); border:0; border-top:1px solid var(--line); border-radius:0 0 8px 8px;
+pre.code{ background:var(--code-bg); border:0; border-top:1px solid var(--line);
   margin:0; padding:.7rem .85rem; overflow-x:auto; -webkit-overflow-scrolling:touch;
   font-family:var(--fmono); font-size:13.5px; line-height:1.6; color:var(--read); white-space:pre; }
 pre.code .kw{ color:var(--magenta); font-weight:600; }   /* Schluesselwoerter */
 pre.code .st{ color:var(--ok); }                          /* Strings */
 pre.code .nu{ color:var(--amber); }                       /* Zahlen */
 pre.code .pu{ color:var(--sql-ac); }                      /* Satzzeichen / Operatoren */
+
+/* Klartext-Erklaerung ("Mensch-Sprache") direkt unter dem Code */
+.mensch{ margin:.7rem .85rem .3rem; padding:.1rem 0 .1rem .7rem;
+  border-left:2px solid var(--sql-ac); color:var(--read); font-size:.92rem; line-height:1.55; }
+
+/* Ergebnistabelle (kompakt, nur Theme-Variablen) */
+.restab{ border-collapse:collapse; margin:.25rem .85rem .4rem; font-family:var(--fmono);
+  font-size:12.5px; color:var(--read); }
+.restab caption{ text-align:left; color:var(--muted); font-size:.75rem; padding-bottom:3px; }
+.restab th, .restab td{ border:1px solid var(--line); padding:3px 9px; text-align:left; }
+.restab th{ background:var(--glass2); color:var(--ok); font-weight:600; }
+
+/* Kurzhinweis unter der Tabelle */
+.erg{ display:block; margin:0 .85rem .5rem; color:var(--muted);
+  font-family:var(--fmono); font-size:.78rem; line-height:1.5; }
 
 summary:focus-visible, .sqin:focus-visible{ outline:2px solid var(--sql-ac); outline-offset:2px; }
 
@@ -114,14 +129,15 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     Schreib die Abfrage in die Zeile und dr&uuml;cke <b>Enter</b>. Richtig &rarr; gr&uuml;ner Rahmen und Haken,
     falsch &rarr; kurzes rotes Wackeln (deine Eingabe bleibt stehen). Gro&szlig;-/Kleinschreibung der
     Schl&uuml;sselw&ouml;rter und zus&auml;tzliche Leerzeichen sind egal &mdash; Spalten-, Tabellennamen und Textwerte
-    m&uuml;ssen exakt stimmen.
+    m&uuml;ssen exakt stimmen. In der L&ouml;sung stehen Code, eine Klartext-Erkl&auml;rung und das erwartete Ergebnis.
   </p>
 
   <div class="note">
     <b>Beispiel-DB:</b>
     <code>artikel(artikelId, artikelName, preis, kategorieId)</code> &middot;
     <code>kunde(kundeId, name)</code> &middot;
-    <code>bestellung(bestellungId, kundeId, artikelId)</code>
+    <code>bestellung(bestellungId, kundeId, artikelId)</code> &middot;
+    <code>kategorie(kategorieId, bezeichnung)</code>
   </div>
 
   <!-- ==================== 1 ==================== -->
@@ -133,6 +149,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT</span> artikelName<span class="pu">,</span> preis <span class="kw">FROM</span> artikel <span class="kw">WHERE</span> preis <span class="pu">&lt;</span> <span class="nu">40</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; Aus der Tabelle artikel: zeige Name und Preis jeder Zeile, bei der der Preis kleiner als 40 ist.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>artikelName</th><th>preis</th></tr></thead><tbody><tr><td>Maus</td><td>39.00</td></tr><tr><td>Tastatur</td><td>34.90</td></tr></tbody></table>
+<span class="erg">&rarr; Maus 39.00, Tastatur 34.90</span>
     </details>
   </section>
 
@@ -145,6 +164,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT</span> artikelName <span class="kw">FROM</span> artikel <span class="kw">WHERE</span> artikelName <span class="kw">LIKE</span> <span class="st">'%a%'</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; Aus der Tabelle artikel: zeige den Namen jeder Zeile, bei der der Name irgendwo ein kleines a enth&auml;lt (davor und dahinter darf beliebig viel stehen).</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>artikelName</th></tr></thead><tbody><tr><td>Maus</td></tr><tr><td>Tastatur</td></tr></tbody></table>
+<span class="erg">&rarr; Maus, Tastatur (Bildschirm/Windows: kein kleines a)</span>
     </details>
   </section>
 
@@ -157,6 +179,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT</span> artikelName <span class="kw">FROM</span> artikel <span class="kw">ORDER BY</span> artikelName <span class="kw">ASC</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; Aus der Tabelle artikel: zeige alle Namen &mdash; und sortiere die Ergebniszeilen aufsteigend nach dem Namen (A zuerst).</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>artikelName</th></tr></thead><tbody><tr><td>Bildschirm</td></tr><tr><td>Maus</td></tr><tr><td>Tastatur</td></tr><tr><td>Windows 11</td></tr></tbody></table>
+<span class="erg">ASC optional (Standard)</span>
     </details>
   </section>
 
@@ -169,6 +194,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT</span> artikelName<span class="pu">,</span> preis <span class="kw">FROM</span> artikel <span class="kw">ORDER BY</span> preis <span class="kw">ASC LIMIT</span> <span class="nu">2</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; Aus der Tabelle artikel: zeige Name und Preis, sortiere aufsteigend nach Preis (billigster zuerst) und schneide nach den ersten zwei Zeilen ab.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>artikelName</th><th>preis</th></tr></thead><tbody><tr><td>Tastatur</td><td>34.90</td></tr><tr><td>Maus</td><td>39.00</td></tr></tbody></table>
+<span class="erg">&rarr; Tastatur, Maus &mdash; LIMIT braucht ORDER BY davor!</span>
     </details>
   </section>
 
@@ -181,6 +209,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT</span> artikelName<span class="pu">,</span> preis <span class="kw">FROM</span> artikel <span class="kw">WHERE</span> artikelName <span class="kw">NOT LIKE</span> <span class="st">'B%'</span> <span class="kw">AND</span> preis <span class="pu">&gt;</span> <span class="nu">35</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; Aus der Tabelle artikel: zeige Name und Preis jeder Zeile, bei der der Name NICHT mit B beginnt UND gleichzeitig der Preis &uuml;ber 35 liegt &mdash; beide Bedingungen m&uuml;ssen stimmen.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>artikelName</th><th>preis</th></tr></thead><tbody><tr><td>Maus</td><td>39.00</td></tr><tr><td>Windows 11</td><td>120.00</td></tr></tbody></table>
+<span class="erg">&rarr; Maus, Windows 11 &mdash; % wirkt nur mit LIKE</span>
     </details>
   </section>
 
@@ -193,6 +224,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT DISTINCT</span> kundeId <span class="kw">FROM</span> bestellung<span class="pu">;</span></pre>
+<p class="mensch">&#128483; Aus der Tabelle bestellung: zeige die Spalte kundeId, aber jede vorkommende Nummer nur ein einziges Mal (Doppelte aus dem Ergebnis werfen).</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>kundeId</th></tr></thead><tbody><tr><td>1</td></tr><tr><td>2</td></tr></tbody></table>
+<span class="erg">&rarr; 1, 2</span>
     </details>
   </section>
 
@@ -205,6 +239,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT COUNT</span><span class="pu">(</span><span class="pu">*</span><span class="pu">)</span> <span class="kw">AS</span> anzahl <span class="kw">FROM</span> artikel <span class="kw">WHERE</span> preis <span class="pu">&lt;</span> <span class="nu">100</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; Aus der Tabelle artikel: behalte nur Zeilen mit Preis unter 100, z&auml;hle wie viele Zeilen &uuml;brig sind, und nenne diese Zahl im Ergebnis 'anzahl'.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>anzahl</th></tr></thead><tbody><tr><td>2</td></tr></tbody></table>
+<span class="erg">&rarr; 2 &mdash; FROM = Tabelle, nie Spalte!</span>
     </details>
   </section>
 
@@ -217,6 +254,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT SUM</span><span class="pu">(</span>preis<span class="pu">)</span> <span class="kw">AS</span> gesamt <span class="kw">FROM</span> artikel<span class="pu">;</span></pre>
+<p class="mensch">&#128483; Aus der Tabelle artikel: addiere die Werte der Spalte preis &uuml;ber alle Zeilen zu einer Zahl und nenne sie 'gesamt'.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>gesamt</th></tr></thead><tbody><tr><td>342.90</td></tr></tbody></table>
+<span class="erg">&rarr; 342.90</span>
     </details>
   </section>
 
@@ -229,6 +269,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT</span> kundeId<span class="pu">,</span> <span class="kw">COUNT</span><span class="pu">(</span><span class="pu">*</span><span class="pu">)</span> <span class="kw">AS</span> anzahl <span class="kw">FROM</span> bestellung <span class="kw">GROUP BY</span> kundeId<span class="pu">;</span></pre>
+<p class="mensch">&#128483; Aus der Tabelle bestellung: lege f&uuml;r jede kundeId einen Stapel an, z&auml;hle pro Stapel die Zeilen, und zeige kundeId plus diese Anzahl (als 'anzahl').</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>kundeId</th><th>anzahl</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr><tr><td>2</td><td>1</td></tr></tbody></table>
+<span class="erg">&rarr; 1|2, 2|1 &mdash; SELECT-Spalte = GROUP-BY-Spalte</span>
     </details>
   </section>
 
@@ -241,6 +284,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT</span> kundeId <span class="kw">FROM</span> bestellung <span class="kw">GROUP BY</span> kundeId <span class="kw">HAVING COUNT</span><span class="pu">(</span><span class="pu">*</span><span class="pu">)</span> <span class="pu">&gt;=</span> <span class="nu">2</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; Aus der Tabelle bestellung: staple nach kundeId, z&auml;hle pro Stapel &mdash; und zeige nur die Stapel, deren Z&auml;hlung mindestens 2 ergibt (Bedingung an den Stapel = HAVING).</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>kundeId</th></tr></thead><tbody><tr><td>1</td></tr></tbody></table>
+<span class="erg">&rarr; 1 &mdash; HAVING nie ohne GROUP BY, Rechnung = HAVING</span>
     </details>
   </section>
 
@@ -256,6 +302,10 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">INSERT INTO</span> artikel <span class="pu">(</span>artikelName<span class="pu">,</span> preis<span class="pu">,</span> kategorieId<span class="pu">)</span> <span class="kw">VALUES</span> <span class="pu">(</span><span class="st">'Kabel'</span><span class="pu">,</span> <span class="nu">9.90</span><span class="pu">,</span> <span class="nu">4</span><span class="pu">)</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; F&uuml;ge in die Tabelle artikel eine neue Zeile ein: in die Spalten artikelName, preis und kategorieId kommen 'Kabel', 9.90 und 4. Die artikelId l&auml;sst du weg &mdash; die z&auml;hlt die Datenbank selbst hoch.</p>
+<table class="restab"><caption>artikel danach (neue Zeile)</caption><thead><tr><th>artikelId</th><th>artikelName</th><th>preis</th><th>kategorieId</th></tr></thead><tbody><tr><td>5</td><td>Kabel</td><td>9.90</td><td>4</td></tr></tbody></table>
+<span class="erg">kein Anzeige-Ergebnis &mdash; INSERT ver&auml;ndert die Tabelle</span>
+<span class="erg">artikelId weglassen &mdash; AUTO_INCREMENT vergibt sie</span>
     </details>
   </section>
 
@@ -268,6 +318,10 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">INSERT INTO</span> kunde <span class="pu">(</span>name<span class="pu">)</span> <span class="kw">VALUES</span> <span class="pu">(</span><span class="st">'Tom'</span><span class="pu">)</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; F&uuml;ge in die Tabelle kunde eine neue Zeile ein: in die Spalte name kommt der Text 'Tom'. Alles andere vergibt die Datenbank.</p>
+<table class="restab"><caption>kunde danach (neue Zeile)</caption><thead><tr><th>kundeId</th><th>name</th></tr></thead><tbody><tr><td>4</td><td>Tom</td></tr></tbody></table>
+<span class="erg">kein Anzeige-Ergebnis &mdash; die Tabelle w&auml;chst um diese Zeile</span>
+<span class="erg">Text immer in Hochkommata</span>
     </details>
   </section>
 
@@ -283,6 +337,10 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">UPDATE</span> artikel <span class="kw">SET</span> preis <span class="pu">=</span> <span class="nu">29.90</span> <span class="kw">WHERE</span> artikelName <span class="pu">=</span> <span class="st">'Tastatur'</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; In der Tabelle artikel: setze die Spalte preis auf 29.90 &mdash; aber nur in den Zeilen, in denen der Name 'Tastatur' ist. Ohne das WHERE w&uuml;rde JEDER Artikel 29.90 kosten!</p>
+<table class="restab"><caption>artikel danach (ge&auml;nderte Zeile)</caption><thead><tr><th>artikelId</th><th>artikelName</th><th>preis</th></tr></thead><tbody><tr><td>3</td><td>Tastatur</td><td>29.90</td></tr></tbody></table>
+<span class="erg">nur diese eine Zeile &auml;ndert sich</span>
+<span class="erg">Ohne WHERE: ALLE Artikel kosten 29.90!</span>
     </details>
   </section>
 
@@ -295,6 +353,8 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">UPDATE</span> artikel <span class="kw">SET</span> kategorieId <span class="pu">=</span> <span class="nu">1</span> <span class="kw">WHERE</span> artikelName <span class="pu">=</span> <span class="st">'Windows 11'</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; In der Tabelle artikel: setze kategorieId auf 1, aber nur bei der Zeile mit dem Namen 'Windows 11'.</p>
+<table class="restab"><caption>artikel danach (ge&auml;nderte Zeile)</caption><thead><tr><th>artikelId</th><th>artikelName</th><th>kategorieId</th></tr></thead><tbody><tr><td>4</td><td>Windows 11</td><td>1</td></tr></tbody></table>
     </details>
   </section>
 
@@ -310,6 +370,10 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">DELETE FROM</span> bestellung <span class="kw">WHERE</span> kundeId <span class="pu">=</span> <span class="nu">2</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; L&ouml;sche aus der Tabelle bestellung alle Zeilen, deren kundeId 2 ist. Ohne WHERE w&auml;re die ganze Tabelle leer!</p>
+<table class="restab"><caption>bestellung danach</caption><thead><tr><th>bestellungId</th><th>kundeId</th><th>artikelId</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>1</td></tr><tr><td>2</td><td>1</td><td>2</td></tr></tbody></table>
+<span class="erg">Zeile 3 (kundeId 2) ist weg</span>
+<span class="erg">DELETE hat FROM &mdash; aber kein SELECT</span>
     </details>
   </section>
 
@@ -322,6 +386,10 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">DELETE FROM</span> artikel <span class="kw">WHERE</span> preis <span class="pu">&lt;</span> <span class="nu">10</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; L&ouml;sche aus der Tabelle artikel alle Zeilen, deren Preis unter 10 liegt.</p>
+<table class="restab"><caption>artikel danach</caption><thead><tr><th>artikelId</th><th>artikelName</th><th>preis</th></tr></thead><tbody><tr><td>1</td><td>Bildschirm</td><td>149.00</td></tr><tr><td>2</td><td>Maus</td><td>39.00</td></tr><tr><td>3</td><td>Tastatur</td><td>34.90</td></tr><tr><td>4</td><td>Windows 11</td><td>120.00</td></tr></tbody></table>
+<span class="erg">das Kabel (9.90) aus Aufgabe 11 ist wieder weg &mdash; sonst trifft es nichts</span>
+<span class="erg">trifft das Kabel aus Aufgabe 11</span>
     </details>
   </section>
 
@@ -338,6 +406,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT</span> a.artikelName<span class="pu">,</span> k.bezeichnung <span class="kw">FROM</span> artikel a
 <span class="kw">INNER JOIN</span> kategorie k <span class="kw">ON</span> a.kategorieId <span class="pu">=</span> k.kategorieId<span class="pu">;</span></pre>
+<p class="mensch">&#128483; Klebe die Tabellen artikel und kategorie zeilenweise zusammen: eine Artikel-Zeile passt zu der Kategorie-Zeile, bei der beide kategorieId gleich sind. Zeige dann Artikelname und Kategoriebezeichnung nebeneinander. (a und k sind nur Spitznamen f&uuml;r die Tabellen.)</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>artikelName</th><th>bezeichnung</th></tr></thead><tbody><tr><td>Bildschirm</td><td>Hardware</td></tr><tr><td>Maus</td><td>Zubehoer</td></tr><tr><td>Tastatur</td><td>Zubehoer</td></tr><tr><td>Windows 11</td><td>Software</td></tr></tbody></table>
+<span class="erg">ON = &uuml;ber welche Spalten geklebt wird (FK = PK)</span>
     </details>
   </section>
 
@@ -351,6 +422,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT</span> k.name<span class="pu">,</span> b.bestellungId <span class="kw">FROM</span> kunde k
 <span class="kw">LEFT JOIN</span> bestellung b <span class="kw">ON</span> k.kundeId <span class="pu">=</span> b.kundeId<span class="pu">;</span></pre>
+<p class="mensch">&#128483; Klebe kunde und bestellung zusammen &uuml;ber die kundeId &mdash; aber behalte ALLE Kunden, auch die ohne passende Bestellung: bei denen bleibt die Bestellspalte einfach leer (NULL). Das macht LEFT: die linke Tabelle kommt komplett.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>name</th><th>bestellungId</th></tr></thead><tbody><tr><td>Sabine</td><td>1</td></tr><tr><td>Sabine</td><td>2</td></tr><tr><td>Max</td><td>3</td></tr><tr><td>Lisa</td><td>NULL</td></tr></tbody></table>
+<span class="erg">&rarr; Lisa erscheint mit NULL &mdash; LEFT = linke Tabelle komplett</span>
     </details>
   </section>
 
@@ -367,6 +441,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT</span> artikelName<span class="pu">,</span> preis <span class="kw">FROM</span> artikel
 <span class="kw">WHERE</span> preis <span class="pu">=</span> <span class="pu">(</span><span class="kw">SELECT MIN</span><span class="pu">(</span>preis<span class="pu">)</span> <span class="kw">FROM</span> artikel<span class="pu">)</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; Zwei Schritte: Die innere Abfrage (in der Klammer) l&auml;uft zuerst und ermittelt den kleinsten Preis (34.90). Dann zeigt die &auml;u&szlig;ere Abfrage jede Zeile, deren Preis genau diesem Wert entspricht.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>artikelName</th><th>preis</th></tr></thead><tbody><tr><td>Tastatur</td><td>34.90</td></tr></tbody></table>
+<span class="erg">innere Abfrage l&auml;uft zuerst &rarr; liefert 34.90</span>
     </details>
   </section>
 
@@ -380,6 +457,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT</span> name <span class="kw">FROM</span> kunde k <span class="kw">WHERE NOT EXISTS</span>
 <span class="pu">(</span><span class="kw">SELECT</span> <span class="nu">1</span> <span class="kw">FROM</span> bestellung b <span class="kw">WHERE</span> b.kundeId <span class="pu">=</span> k.kundeId<span class="pu">)</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; Gehe die Kundentabelle Zeile f&uuml;r Zeile durch. F&uuml;r jeden Kunden pr&uuml;ft die innere Abfrage: gibt es in bestellung eine Zeile mit seiner kundeId? Findet sie NICHTS (NOT EXISTS), kommt der Kunde ins Ergebnis &mdash; also alle, die noch nie bestellt haben.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>name</th></tr></thead><tbody><tr><td>Lisa</td></tr></tbody></table>
+<span class="erg">&rarr; Lisa &mdash; "noch nie" = NOT EXISTS (Karteileichen)</span>
     </details>
   </section>
 
@@ -396,6 +476,9 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT</span> <span class="kw">CONCAT</span><span class="pu">(</span>artikelName<span class="pu">,</span> <span class="st">' ('</span><span class="pu">,</span> preis<span class="pu">,</span> <span class="st">' Euro)'</span><span class="pu">)</span> <span class="kw">AS</span> info
 <span class="kw">FROM</span> artikel<span class="pu">;</span></pre>
+<p class="mensch">&#128483; Aus der Tabelle artikel: baue pro Zeile einen neuen Text zusammen &mdash; Name, dann ' (', dann der Preis, dann ' Euro)' &mdash; und nenne diese zusammengeklebte Spalte 'info'.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>info</th></tr></thead><tbody><tr><td>Bildschirm (149.00 Euro)</td></tr><tr><td>Maus (39.00 Euro)</td></tr><tr><td>Tastatur (34.90 Euro)</td></tr><tr><td>Windows 11 (120.00 Euro)</td></tr></tbody></table>
+<span class="erg">&rarr; z.B. "Maus (39.00 Euro)" &mdash; CONCAT klebt Texte</span>
     </details>
   </section>
 
@@ -408,6 +491,236 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </div>
     <details><summary>L&ouml;sung anzeigen</summary>
 <pre class="code"><span class="kw">SELECT</span> name<span class="pu">,</span> <span class="kw">CURRENT_DATE</span> <span class="kw">AS</span> heute <span class="kw">FROM</span> kunde<span class="pu">;</span></pre>
+<p class="mensch">&#128483; Aus der Tabelle kunde: zeige den Namen und daneben in jeder Zeile das heutige Datum des Datenbankservers, als Spalte 'heute'.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>name</th><th>heute</th></tr></thead><tbody><tr><td>Sabine</td><td>2026-07-12</td></tr><tr><td>Max</td><td>2026-07-12</td></tr><tr><td>Lisa</td><td>2026-07-12</td></tr></tbody></table>
+<span class="erg">NOW() = Datum+Zeit &middot; CURRENT_DATE = nur Datum</span>
+    </details>
+  </section>
+
+  <!-- ==================== INSERT II ==================== -->
+  <h2 class="grp">INSERT II &ndash; Kategorie &amp; Bestellung</h2>
+
+  <!-- ==================== 23 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">23</span>Lege die neue Kategorie <b>'Netzwerk'</b> an <b>(kategorieId automatisch)</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="23" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">INSERT INTO</span> kategorie <span class="pu">(</span>bezeichnung<span class="pu">)</span> <span class="kw">VALUES</span> <span class="pu">(</span><span class="st">'Netzwerk'</span><span class="pu">)</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; F&uuml;ge in die Tabelle kategorie eine neue Zeile ein: in die Spalte bezeichnung kommt 'Netzwerk'. Die kategorieId z&auml;hlt die Datenbank selbst hoch.</p>
+<table class="restab"><caption>kategorie danach (neue Zeile)</caption><thead><tr><th>kategorieId</th><th>bezeichnung</th></tr></thead><tbody><tr><td>5</td><td>Netzwerk</td></tr></tbody></table>
+    </details>
+  </section>
+
+  <!-- ==================== 24 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">24</span>Lisa (kundeId 3) bestellt die <b>Tastatur (artikelId 3)</b> &mdash; lege die Bestellung an.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="24" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">INSERT INTO</span> bestellung <span class="pu">(</span>kundeId<span class="pu">,</span> artikelId<span class="pu">)</span> <span class="kw">VALUES</span> <span class="pu">(</span><span class="nu">3</span><span class="pu">,</span> <span class="nu">3</span><span class="pu">)</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; F&uuml;ge in bestellung eine neue Zeile ein: kundeId 3 (Lisa) und artikelId 3 (Tastatur). Zahlen brauchen keine Hochkommata &mdash; nur Text.</p>
+<table class="restab"><caption>bestellung danach (neue Zeile)</caption><thead><tr><th>bestellungId</th><th>kundeId</th><th>artikelId</th></tr></thead><tbody><tr><td>4</td><td>3</td><td>3</td></tr></tbody></table>
+<span class="erg">damit ist Lisa keine Karteileiche mehr!</span>
+    </details>
+  </section>
+
+  <!-- ==================== UPDATE II ==================== -->
+  <h2 class="grp">UPDATE II &ndash; Rechnen &amp; Umbenennen</h2>
+
+  <!-- ==================== 25 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">25</span>Erh&ouml;he <b>alle Preise in Kategorie 3</b> um 5 Euro.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="25" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">UPDATE</span> artikel <span class="kw">SET</span> preis <span class="pu">=</span> preis <span class="pu">+</span> <span class="nu">5</span> <span class="kw">WHERE</span> kategorieId <span class="pu">=</span> <span class="nu">3</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; In der Tabelle artikel: setze den Preis auf den ALTEN Preis plus 5 &mdash; aber nur in Zeilen mit kategorieId 3. Rechts vom = darf gerechnet werden; preis = preis + 5 heisst "nimm den bisherigen Wert und addiere 5".</p>
+<table class="restab"><caption>artikel danach (ge&auml;nderte Zeilen)</caption><thead><tr><th>artikelName</th><th>preis</th></tr></thead><tbody><tr><td>Maus</td><td>44.00</td></tr><tr><td>Tastatur</td><td>39.90</td></tr></tbody></table>
+    </details>
+  </section>
+
+  <!-- ==================== 26 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">26</span>Benenne den Artikel <b>'Maus'</b> in <b>'Gaming-Maus'</b> um.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="26" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">UPDATE</span> artikel <span class="kw">SET</span> artikelName <span class="pu">=</span> <span class="st">'Gaming-Maus'</span> <span class="kw">WHERE</span> artikelName <span class="pu">=</span> <span class="st">'Maus'</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; In artikel: setze den Namen auf 'Gaming-Maus', wo der Name bisher 'Maus' war. Dieselbe Spalte darf in SET und WHERE stehen &mdash; WHERE prueft den ALTEN Wert, SET schreibt den neuen.</p>
+<table class="restab"><caption>artikel danach (ge&auml;nderte Zeile)</caption><thead><tr><th>artikelId</th><th>artikelName</th></tr></thead><tbody><tr><td>2</td><td>Gaming-Maus</td></tr></tbody></table>
+    </details>
+  </section>
+
+  <!-- ==================== DELETE II ==================== -->
+  <h2 class="grp">DELETE II &ndash; Kunde &amp; Bestellung</h2>
+
+  <!-- ==================== 27 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">27</span>L&ouml;sche den Kunden <b>'Tom'</b> (aus Aufgabe 12) wieder.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="27" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">DELETE FROM</span> kunde <span class="kw">WHERE</span> name <span class="pu">=</span> <span class="st">'Tom'</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; L&ouml;sche aus kunde alle Zeilen, deren name 'Tom' ist. Sicherer w&auml;re WHERE kundeId = 4 &mdash; die Id ist eindeutig, ein Name kann doppelt vorkommen.</p>
+<table class="restab"><caption>kunde danach</caption><thead><tr><th>kundeId</th><th>name</th></tr></thead><tbody><tr><td>1</td><td>Sabine</td></tr><tr><td>2</td><td>Max</td></tr><tr><td>3</td><td>Lisa</td></tr></tbody></table>
+    </details>
+  </section>
+
+  <!-- ==================== 28 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">28</span>L&ouml;sche alle Bestellungen mit dem <b>Bildschirm (artikelId 1)</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="28" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">DELETE FROM</span> bestellung <span class="kw">WHERE</span> artikelId <span class="pu">=</span> <span class="nu">1</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; L&ouml;sche aus bestellung alle Zeilen mit artikelId 1. Der Artikel selbst bleibt in der artikel-Tabelle &mdash; nur die Bestellzeilen verschwinden.</p>
+<table class="restab"><caption>bestellung danach</caption><thead><tr><th>bestellungId</th><th>kundeId</th><th>artikelId</th></tr></thead><tbody><tr><td>2</td><td>1</td><td>2</td></tr><tr><td>3</td><td>2</td><td>4</td></tr></tbody></table>
+<span class="erg">bestellungId 1 (Sabine, Bildschirm) ist weg</span>
+    </details>
+  </section>
+
+  <!-- ==================== JOIN II ==================== -->
+  <h2 class="grp">JOIN II &ndash; Mehrfach- &amp; LEFT JOIN</h2>
+
+  <!-- ==================== 29 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">29</span>Zeige zu jeder Bestellung <b>Kundenname + Artikelname</b> &mdash; zwei JOINs (kunde und artikel).</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="29" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> k.name<span class="pu">,</span> a.artikelName <span class="kw">FROM</span> bestellung b
+<span class="kw">INNER JOIN</span> kunde k <span class="kw">ON</span> b.kundeId <span class="pu">=</span> k.kundeId
+<span class="kw">INNER JOIN</span> artikel a <span class="kw">ON</span> b.artikelId <span class="pu">=</span> a.artikelId<span class="pu">;</span></pre>
+<p class="mensch">&#128483; Nimm jede Bestellzeile, klebe &uuml;ber die kundeId den passenden Kunden dran und &uuml;ber die artikelId den passenden Artikel &mdash; zwei Klebestellen hintereinander. Zeige dann Name und Artikelname. JOINs lassen sich beliebig aneinanderreihen.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>name</th><th>artikelName</th></tr></thead><tbody><tr><td>Sabine</td><td>Bildschirm</td></tr><tr><td>Sabine</td><td>Maus</td></tr><tr><td>Max</td><td>Windows 11</td></tr></tbody></table>
+    </details>
+  </section>
+
+  <!-- ==================== 30 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">30</span>Zeige <b>alle Kategorien</b> mit ihren Artikeln &mdash; <b>auch Kategorien ohne</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="30" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> k.bezeichnung<span class="pu">,</span> a.artikelName <span class="kw">FROM</span> kategorie k
+<span class="kw">LEFT JOIN</span> artikel a <span class="kw">ON</span> k.kategorieId <span class="pu">=</span> a.kategorieId<span class="pu">;</span></pre>
+<p class="mensch">&#128483; Klebe kategorie und artikel zusammen, aber behalte ALLE Kategorien &mdash; auch Kabel, das keinen Artikel hat: dort bleibt die Artikelspalte leer (NULL). LEFT = die links stehende Tabelle (kategorie) kommt komplett.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>bezeichnung</th><th>artikelName</th></tr></thead><tbody><tr><td>Hardware</td><td>Bildschirm</td></tr><tr><td>Software</td><td>Windows 11</td></tr><tr><td>Zubehoer</td><td>Maus</td></tr><tr><td>Zubehoer</td><td>Tastatur</td></tr><tr><td>Kabel</td><td>NULL</td></tr></tbody></table>
+    </details>
+  </section>
+
+  <!-- ==================== Subqueries II ==================== -->
+  <h2 class="grp">Subqueries II &ndash; AVG &amp; EXISTS</h2>
+
+  <!-- ==================== 31 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">31</span>Alle Artikel, die <b>teurer als der Durchschnitt</b> sind.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="31" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> artikelName<span class="pu">,</span> preis <span class="kw">FROM</span> artikel
+<span class="kw">WHERE</span> preis <span class="pu">&gt;</span> <span class="pu">(</span><span class="kw">SELECT AVG</span><span class="pu">(</span>preis<span class="pu">)</span> <span class="kw">FROM</span> artikel<span class="pu">)</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; Die innere Abfrage l&auml;uft zuerst und berechnet den Durchschnitt aller Preise (85.73). Danach zeigt die &auml;u&szlig;ere jede Zeile, deren Preis dar&uuml;ber liegt. Kein Draht nach au&szlig;en &rarr; l&auml;uft nur einmal.</p>
+<table class="restab"><caption>Ergebnis (Durchschnitt: 85.73)</caption><thead><tr><th>artikelName</th><th>preis</th></tr></thead><tbody><tr><td>Bildschirm</td><td>149.00</td></tr><tr><td>Windows 11</td><td>120.00</td></tr></tbody></table>
+    </details>
+  </section>
+
+  <!-- ==================== 32 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">32</span>Welche Kunden haben <b>schon mal bestellt</b>? <b>(EXISTS)</b></p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="32" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> name <span class="kw">FROM</span> kunde k <span class="kw">WHERE EXISTS</span>
+<span class="pu">(</span><span class="kw">SELECT</span> <span class="nu">1</span> <span class="kw">FROM</span> bestellung b <span class="kw">WHERE</span> b.kundeId <span class="pu">=</span> k.kundeId<span class="pu">)</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; Gehe die Kundentabelle Zeile f&uuml;r Zeile durch. Pro Kunde pr&uuml;ft die innere Abfrage: gibt es in bestellung eine Zeile mit seiner kundeId? Findet sie mindestens eine (EXISTS), kommt der Kunde ins Ergebnis. "Schon mal" = EXISTS, "noch nie" = NOT EXISTS.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>name</th></tr></thead><tbody><tr><td>Sabine</td></tr><tr><td>Max</td></tr></tbody></table>
+    </details>
+  </section>
+
+  <!-- ==================== Funktionen II ==================== -->
+  <h2 class="grp">Funktionen II &ndash; ROUND &amp; YEAR</h2>
+
+  <!-- ==================== 33 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">33</span>Jeden Artikel mit <b>10 % Rabatt</b>, auf 2 Stellen gerundet (Spalte aktionspreis). <b>(ROUND)</b></p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="33" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> artikelName<span class="pu">,</span> <span class="kw">ROUND</span><span class="pu">(</span>preis <span class="pu">*</span> <span class="nu">0.90</span><span class="pu">,</span> <span class="nu">2</span><span class="pu">)</span> <span class="kw">AS</span> aktionspreis <span class="kw">FROM</span> artikel<span class="pu">;</span></pre>
+<p class="mensch">&#128483; Rechne pro Zeile den Preis mal 0.90 (= minus 10 %), runde das Ergebnis auf 2 Nachkommastellen und nenne die Spalte 'aktionspreis'. ROUND(wert, stellen).</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>artikelName</th><th>aktionspreis</th></tr></thead><tbody><tr><td>Bildschirm</td><td>134.10</td></tr><tr><td>Maus</td><td>35.10</td></tr><tr><td>Tastatur</td><td>31.41</td></tr><tr><td>Windows 11</td><td>108.00</td></tr></tbody></table>
+    </details>
+  </section>
+
+  <!-- ==================== 34 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">34</span>Zeige jeden Kunden mit dem <b>aktuellen Jahr</b> (Spalte jahr). <b>(YEAR)</b></p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="34" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> name<span class="pu">,</span> <span class="kw">YEAR</span><span class="pu">(</span><span class="kw">CURRENT_DATE</span><span class="pu">)</span> <span class="kw">AS</span> jahr <span class="kw">FROM</span> kunde<span class="pu">;</span></pre>
+<p class="mensch">&#128483; Zeige den Namen und daneben pro Zeile das Jahr aus dem heutigen Datum: YEAR() schneidet aus einem Datum nur die Jahreszahl heraus.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>name</th><th>jahr</th></tr></thead><tbody><tr><td>Sabine</td><td>2026</td></tr><tr><td>Max</td><td>2026</td></tr><tr><td>Lisa</td><td>2026</td></tr></tbody></table>
+<span class="erg">CURRENT_DATE = ganzes Datum &middot; YEAR(...) = nur die Jahreszahl</span>
+    </details>
+  </section>
+
+  <!-- ==================== Operatoren ==================== -->
+  <h2 class="grp">Operatoren &ndash; BETWEEN &amp; &lt;&gt;</h2>
+
+  <!-- ==================== 35 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">35</span>Alle Artikel <b>zwischen 35 und 125 Euro</b> (einschlie&szlig;lich) &mdash; mit <b>BETWEEN</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="35" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> artikelName<span class="pu">,</span> preis <span class="kw">FROM</span> artikel <span class="kw">WHERE</span> preis <span class="kw">BETWEEN</span> <span class="nu">35</span> <span class="kw">AND</span> <span class="nu">125</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; Behalte Zeilen, deren Preis im Bereich 35 bis 125 liegt &mdash; BETWEEN schlie&szlig;t beide Grenzen MIT EIN.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>artikelName</th><th>preis</th></tr></thead><tbody><tr><td>Maus</td><td>39.00</td></tr><tr><td>Windows 11</td><td>120.00</td></tr></tbody></table>
+<span class="erg">auch m&ouml;glich: WHERE preis &gt;= 35 AND preis &lt;= 125</span>
+    </details>
+  </section>
+
+  <!-- ==================== 36 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">36</span>Alle Artikel <b>au&szlig;er 'Maus'</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="36" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> artikelName <span class="kw">FROM</span> artikel <span class="kw">WHERE</span> artikelName <span class="pu">&lt;&gt;</span> <span class="st">'Maus'</span><span class="pu">;</span></pre>
+<p class="mensch">&#128483; Zeige jeden Namen, der NICHT w&ouml;rtlich 'Maus' ist &mdash; &lt;&gt; vergleicht exakt, % funktioniert nur mit LIKE.</p>
+<table class="restab"><caption>Ergebnis</caption><thead><tr><th>artikelName</th></tr></thead><tbody><tr><td>Bildschirm</td></tr><tr><td>Tastatur</td></tr><tr><td>Windows 11</td></tr></tbody></table>
+<span class="erg">&lt;&gt; und != bedeuten dasselbe (ungleich)</span>
     </details>
   </section>
 
@@ -464,7 +777,36 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
         "SELECT * FROM kunde k WHERE NOT EXISTS (SELECT 1 FROM bestellung b WHERE b.kundeId = k.kundeId)"],
     21:["SELECT CONCAT(artikelName, ' (', preis, ' Euro)') AS info FROM artikel"],
     22:["SELECT name, CURRENT_DATE AS heute FROM kunde",
-        "SELECT name, CURDATE() AS heute FROM kunde"]
+        "SELECT name, CURDATE() AS heute FROM kunde"],
+    23:["INSERT INTO kategorie (bezeichnung) VALUES ('Netzwerk')"],
+    24:["INSERT INTO bestellung (kundeId, artikelId) VALUES (3, 3)"],
+    25:["UPDATE artikel SET preis = preis + 5 WHERE kategorieId = 3"],
+    26:["UPDATE artikel SET artikelName = 'Gaming-Maus' WHERE artikelName = 'Maus'"],
+    27:["DELETE FROM kunde WHERE name = 'Tom'"],
+    28:["DELETE FROM bestellung WHERE artikelId = 1"],
+    29:["SELECT k.name, a.artikelName FROM bestellung b INNER JOIN kunde k ON b.kundeId = k.kundeId INNER JOIN artikel a ON b.artikelId = a.artikelId",
+        "SELECT k.name, a.artikelName FROM bestellung b INNER JOIN kunde k ON k.kundeId = b.kundeId INNER JOIN artikel a ON a.artikelId = b.artikelId",
+        "SELECT k.name, a.artikelName FROM bestellung b INNER JOIN artikel a ON b.artikelId = a.artikelId INNER JOIN kunde k ON b.kundeId = k.kundeId",
+        "SELECT k.name, a.artikelName FROM bestellung b INNER JOIN artikel a ON a.artikelId = b.artikelId INNER JOIN kunde k ON k.kundeId = b.kundeId",
+        "SELECT k.name, a.artikelName FROM bestellung b JOIN kunde k ON b.kundeId = k.kundeId JOIN artikel a ON b.artikelId = a.artikelId",
+        "SELECT k.name, a.artikelName FROM bestellung b JOIN kunde k ON k.kundeId = b.kundeId JOIN artikel a ON a.artikelId = b.artikelId",
+        "SELECT k.name, a.artikelName FROM bestellung b JOIN artikel a ON b.artikelId = a.artikelId JOIN kunde k ON b.kundeId = k.kundeId",
+        "SELECT k.name, a.artikelName FROM bestellung b JOIN artikel a ON a.artikelId = b.artikelId JOIN kunde k ON k.kundeId = b.kundeId"],
+    30:["SELECT k.bezeichnung, a.artikelName FROM kategorie k LEFT JOIN artikel a ON k.kategorieId = a.kategorieId",
+        "SELECT k.bezeichnung, a.artikelName FROM kategorie k LEFT JOIN artikel a ON a.kategorieId = k.kategorieId",
+        "SELECT k.bezeichnung, a.artikelName FROM kategorie k LEFT OUTER JOIN artikel a ON k.kategorieId = a.kategorieId",
+        "SELECT k.bezeichnung, a.artikelName FROM kategorie k LEFT OUTER JOIN artikel a ON a.kategorieId = k.kategorieId"],
+    31:["SELECT artikelName, preis FROM artikel WHERE preis > (SELECT AVG(preis) FROM artikel)",
+        "SELECT * FROM artikel WHERE preis > (SELECT AVG(preis) FROM artikel)"],
+    32:["SELECT name FROM kunde k WHERE EXISTS (SELECT 1 FROM bestellung b WHERE b.kundeId = k.kundeId)",
+        "SELECT * FROM kunde k WHERE EXISTS (SELECT 1 FROM bestellung b WHERE b.kundeId = k.kundeId)"],
+    33:["SELECT artikelName, ROUND(preis * 0.90, 2) AS aktionspreis FROM artikel"],
+    34:["SELECT name, YEAR(CURRENT_DATE) AS jahr FROM kunde",
+        "SELECT name, YEAR(CURDATE()) AS jahr FROM kunde"],
+    35:["SELECT artikelName, preis FROM artikel WHERE preis BETWEEN 35 AND 125",
+        "SELECT artikelName, preis FROM artikel WHERE preis >= 35 AND preis <= 125"],
+    36:["SELECT artikelName FROM artikel WHERE artikelName <> 'Maus'",
+        "SELECT artikelName FROM artikel WHERE artikelName != 'Maus'"]
   };
 
   // SQL-Schluesselwoerter, die case-insensitiv sein duerfen (Namen/Werte bleiben exakt)
@@ -473,7 +815,8 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
             "COUNT","SUM","AVG","MIN","MAX",
             "INSERT","INTO","VALUES","UPDATE","SET","DELETE",
             "INNER","LEFT","OUTER","JOIN","ON","EXISTS",
-            "CONCAT","CURRENT_DATE","CURDATE"];
+            "CONCAT","CURRENT_DATE","CURDATE",
+            "ROUND","YEAR","BETWEEN"];
 
   function normalize(sql){
     var s = String(sql).trim();
