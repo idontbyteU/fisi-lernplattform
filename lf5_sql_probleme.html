@@ -74,6 +74,12 @@ pre.code .pu{ color:var(--sql-ac); }                      /* Satzzeichen / Opera
 summary:focus-visible, .sqin:focus-visible{ outline:2px solid var(--sql-ac); outline-offset:2px; }
 
 .lead{ color:var(--read); line-height:1.6; }
+
+/* Zwischenueberschrift je Themengruppe (kein Glow, beide Modi lesbar) */
+.grp{ font-family:var(--fmono); font-size:13px; font-weight:600; letter-spacing:2px;
+  text-transform:uppercase; color:var(--sql-ac); margin:2rem 0 .2rem; }
+.grp::before{ content:"// "; color:var(--magenta); }
+
 footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted); }
 
 /* ============ Responsiv 880 / 640 / 560 ============ */
@@ -238,6 +244,173 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     </details>
   </section>
 
+  <!-- ==================== INSERT ==================== -->
+  <h2 class="grp">INSERT &ndash; Datens&auml;tze einf&uuml;gen</h2>
+
+  <!-- ==================== 11 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">11</span>F&uuml;ge den Artikel <b>'Kabel'</b>, <b>9.90 Euro</b>, <b>Kategorie 4</b> ein.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="11" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">INSERT INTO</span> artikel <span class="pu">(</span>artikelName<span class="pu">,</span> preis<span class="pu">,</span> kategorieId<span class="pu">)</span> <span class="kw">VALUES</span> <span class="pu">(</span><span class="st">'Kabel'</span><span class="pu">,</span> <span class="nu">9.90</span><span class="pu">,</span> <span class="nu">4</span><span class="pu">)</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 12 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">12</span>F&uuml;ge den Kunden <b>'Tom'</b> ein <b>(kundeId automatisch)</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="12" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">INSERT INTO</span> kunde <span class="pu">(</span>name<span class="pu">)</span> <span class="kw">VALUES</span> <span class="pu">(</span><span class="st">'Tom'</span><span class="pu">)</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== UPDATE ==================== -->
+  <h2 class="grp">UPDATE &ndash; Datens&auml;tze &auml;ndern</h2>
+
+  <!-- ==================== 13 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">13</span>&Auml;ndere den Preis der <b>Tastatur</b> auf <b>29.90</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="13" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">UPDATE</span> artikel <span class="kw">SET</span> preis <span class="pu">=</span> <span class="nu">29.90</span> <span class="kw">WHERE</span> artikelName <span class="pu">=</span> <span class="st">'Tastatur'</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 14 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">14</span>Verschiebe <b>'Windows 11'</b> in <b>Kategorie 1</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="14" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">UPDATE</span> artikel <span class="kw">SET</span> kategorieId <span class="pu">=</span> <span class="nu">1</span> <span class="kw">WHERE</span> artikelName <span class="pu">=</span> <span class="st">'Windows 11'</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== DELETE ==================== -->
+  <h2 class="grp">DELETE &ndash; Datens&auml;tze l&ouml;schen</h2>
+
+  <!-- ==================== 15 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">15</span>L&ouml;sche <b>alle Bestellungen</b> von <b>Kunde 2</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="15" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">DELETE FROM</span> bestellung <span class="kw">WHERE</span> kundeId <span class="pu">=</span> <span class="nu">2</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 16 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">16</span>L&ouml;sche <b>alle Artikel unter 10 Euro</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="16" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">DELETE FROM</span> artikel <span class="kw">WHERE</span> preis <span class="pu">&lt;</span> <span class="nu">10</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== JOIN ==================== -->
+  <h2 class="grp">JOIN &ndash; Tabellen verkn&uuml;pfen</h2>
+
+  <!-- ==================== 17 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">17</span>Zeige zu jedem Artikel <b>Name + Kategoriebezeichnung</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="17" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> a.artikelName<span class="pu">,</span> k.bezeichnung <span class="kw">FROM</span> artikel a
+<span class="kw">INNER JOIN</span> kategorie k <span class="kw">ON</span> a.kategorieId <span class="pu">=</span> k.kategorieId<span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 18 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">18</span>Alle Kunden mit ihren Bestellungen &mdash; <b>auch Kunden ohne</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="18" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> k.name<span class="pu">,</span> b.bestellungId <span class="kw">FROM</span> kunde k
+<span class="kw">LEFT JOIN</span> bestellung b <span class="kw">ON</span> k.kundeId <span class="pu">=</span> b.kundeId<span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== Subqueries ==================== -->
+  <h2 class="grp">Subqueries &ndash; Unterabfragen</h2>
+
+  <!-- ==================== 19 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">19</span>Der <b>g&uuml;nstigste Artikel</b> &mdash; <b>ohne LIMIT</b>, mit <b>Unterabfrage</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="19" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> artikelName<span class="pu">,</span> preis <span class="kw">FROM</span> artikel
+<span class="kw">WHERE</span> preis <span class="pu">=</span> <span class="pu">(</span><span class="kw">SELECT MIN</span><span class="pu">(</span>preis<span class="pu">)</span> <span class="kw">FROM</span> artikel<span class="pu">)</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 20 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">20</span>Welche Kunden haben <b>noch nie bestellt</b>? <b>(EXISTS-Familie)</b></p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="20" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> name <span class="kw">FROM</span> kunde k <span class="kw">WHERE NOT EXISTS</span>
+<span class="pu">(</span><span class="kw">SELECT</span> <span class="nu">1</span> <span class="kw">FROM</span> bestellung b <span class="kw">WHERE</span> b.kundeId <span class="pu">=</span> k.kundeId<span class="pu">)</span><span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== Funktionen ==================== -->
+  <h2 class="grp">Funktionen &ndash; CONCAT &amp; Datum</h2>
+
+  <!-- ==================== 21 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">21</span>Zu jedem Artikel <b>'Name (Preis Euro)'</b> als Spalte <b>info</b>. <b>(CONCAT)</b></p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="21" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> <span class="kw">CONCAT</span><span class="pu">(</span>artikelName<span class="pu">,</span> <span class="st">' ('</span><span class="pu">,</span> preis<span class="pu">,</span> <span class="st">' Euro)'</span><span class="pu">)</span> <span class="kw">AS</span> info
+<span class="kw">FROM</span> artikel<span class="pu">;</span></pre>
+    </details>
+  </section>
+
+  <!-- ==================== 22 ==================== -->
+  <section class="card">
+    <p class="task"><span class="num">22</span>Zeige zu jedem Kunden das <b>aktuelle Datum</b> als Spalte <b>heute</b>.</p>
+    <div class="inrow">
+      <input type="text" class="sqin" data-i="22" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="SQL hier schreiben, Enter dr&uuml;cken">
+      <span class="mark" aria-hidden="true">&#10003;</span>
+    </div>
+    <details><summary>L&ouml;sung anzeigen</summary>
+<pre class="code"><span class="kw">SELECT</span> name<span class="pu">,</span> <span class="kw">CURRENT_DATE</span> <span class="kw">AS</span> heute <span class="kw">FROM</span> kunde<span class="pu">;</span></pre>
+    </details>
+  </section>
+
   <footer>fisi-lernplattform &middot; LF5 &middot; SQL &mdash; Probleme l&ouml;sen</footer>
 
 </div>
@@ -262,13 +435,45 @@ footer{ margin-top:40px; text-align:center; font-size:.8rem; color:var(--muted);
     7:["SELECT COUNT(*) AS anzahl FROM artikel WHERE preis < 100"],
     8:["SELECT SUM(preis) AS gesamt FROM artikel"],
     9:["SELECT kundeId, COUNT(*) AS anzahl FROM bestellung GROUP BY kundeId"],
-    10:["SELECT kundeId FROM bestellung GROUP BY kundeId HAVING COUNT(*) >= 2"]
+    10:["SELECT kundeId FROM bestellung GROUP BY kundeId HAVING COUNT(*) >= 2"],
+    11:["INSERT INTO artikel (artikelName, preis, kategorieId) VALUES ('Kabel', 9.90, 4)"],
+    12:["INSERT INTO kunde (name) VALUES ('Tom')"],
+    13:["UPDATE artikel SET preis = 29.90 WHERE artikelName = 'Tastatur'"],
+    14:["UPDATE artikel SET kategorieId = 1 WHERE artikelName = 'Windows 11'"],
+    15:["DELETE FROM bestellung WHERE kundeId = 2"],
+    16:["DELETE FROM artikel WHERE preis < 10"],
+    17:["SELECT a.artikelName, k.bezeichnung FROM artikel a INNER JOIN kategorie k ON a.kategorieId = k.kategorieId",
+        "SELECT a.artikelName, k.bezeichnung FROM artikel a INNER JOIN kategorie k ON k.kategorieId = a.kategorieId",
+        "SELECT a.artikelName, k.bezeichnung FROM artikel a JOIN kategorie k ON a.kategorieId = k.kategorieId",
+        "SELECT a.artikelName, k.bezeichnung FROM artikel a JOIN kategorie k ON k.kategorieId = a.kategorieId",
+        "SELECT a.artikelName, k.bezeichnung FROM artikel AS a INNER JOIN kategorie AS k ON a.kategorieId = k.kategorieId",
+        "SELECT a.artikelName, k.bezeichnung FROM artikel AS a INNER JOIN kategorie AS k ON k.kategorieId = a.kategorieId",
+        "SELECT a.artikelName, k.bezeichnung FROM artikel AS a JOIN kategorie AS k ON a.kategorieId = k.kategorieId",
+        "SELECT a.artikelName, k.bezeichnung FROM artikel AS a JOIN kategorie AS k ON k.kategorieId = a.kategorieId"],
+    18:["SELECT k.name, b.bestellungId FROM kunde k LEFT JOIN bestellung b ON k.kundeId = b.kundeId",
+        "SELECT k.name, b.bestellungId FROM kunde k LEFT JOIN bestellung b ON b.kundeId = k.kundeId",
+        "SELECT k.name, b.bestellungId FROM kunde k LEFT OUTER JOIN bestellung b ON k.kundeId = b.kundeId",
+        "SELECT k.name, b.bestellungId FROM kunde k LEFT OUTER JOIN bestellung b ON b.kundeId = k.kundeId",
+        "SELECT k.name, b.bestellungId FROM kunde AS k LEFT JOIN bestellung AS b ON k.kundeId = b.kundeId",
+        "SELECT k.name, b.bestellungId FROM kunde AS k LEFT JOIN bestellung AS b ON b.kundeId = k.kundeId",
+        "SELECT k.name, b.bestellungId FROM kunde AS k LEFT OUTER JOIN bestellung AS b ON k.kundeId = b.kundeId",
+        "SELECT k.name, b.bestellungId FROM kunde AS k LEFT OUTER JOIN bestellung AS b ON b.kundeId = k.kundeId"],
+    19:["SELECT artikelName, preis FROM artikel WHERE preis = (SELECT MIN(preis) FROM artikel)",
+        "SELECT * FROM artikel WHERE preis = (SELECT MIN(preis) FROM artikel)"],
+    20:["SELECT name FROM kunde k WHERE NOT EXISTS (SELECT 1 FROM bestellung b WHERE b.kundeId = k.kundeId)",
+        "SELECT * FROM kunde k WHERE NOT EXISTS (SELECT 1 FROM bestellung b WHERE b.kundeId = k.kundeId)"],
+    21:["SELECT CONCAT(artikelName, ' (', preis, ' Euro)') AS info FROM artikel"],
+    22:["SELECT name, CURRENT_DATE AS heute FROM kunde",
+        "SELECT name, CURDATE() AS heute FROM kunde"]
   };
 
   // SQL-Schluesselwoerter, die case-insensitiv sein duerfen (Namen/Werte bleiben exakt)
   var KW = ["SELECT","DISTINCT","FROM","WHERE","ORDER","GROUP","HAVING","BY",
             "ASC","DESC","LIMIT","LIKE","NOT","AND","OR","AS",
-            "COUNT","SUM","AVG","MIN","MAX"];
+            "COUNT","SUM","AVG","MIN","MAX",
+            "INSERT","INTO","VALUES","UPDATE","SET","DELETE",
+            "INNER","LEFT","OUTER","JOIN","ON","EXISTS",
+            "CONCAT","CURRENT_DATE","CURDATE"];
 
   function normalize(sql){
     var s = String(sql).trim();
