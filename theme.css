@@ -8,13 +8,13 @@
 
 /* ---------- DESIGN TOKENS ---------- */
 :root{
-  --bg:#070710; --bg2:#0c0c1a; --ink:#f3fbff; --muted:#9fb0cc; --dim:#6b768f; --read:#d8e3f2;
+  --bg:#101418; --bg2:#171d24; --ink:#e8edf2; --muted:#9fb0cc; --dim:#9aa7b2; --read:#d8e3f2;
   --cyan:#2de2e6; --magenta:#ff2a6d; --purple:#b66bff; --lime:#9dff52; --amber:#ffb43b;
-  --line:rgba(120,180,220,.14); --glass:rgba(16,20,36,.62); --glass2:rgba(20,26,46,.7);
+  --line:#2a333d; --glass:rgba(16,20,36,.62); --glass2:rgba(20,26,46,.7);
   --ok:#27f59a; --warn:#ffb43b; --danger:#ff2a6d;
   /* Lernfeld-Neon */
   --lf1:#2de2e6; --lf2:#27f59a; --lf3:#ffb43b; --lf4:#ff2a6d; --lf5:#b66bff;
-  --fdisp:"Orbitron",sans-serif; --fui:"Chakra Petch",sans-serif; --fmono:"Share Tech Mono",monospace;
+  --fdisp:"Orbitron",sans-serif; --fui:"Segoe UI",system-ui,sans-serif; --fmono:Consolas,monospace;
   /* Aliase, damit alter Seiten-Code mit grünem Branding weiterläuft */
   --green:var(--cyan); --green-d:var(--cyan); --green-soft:rgba(45,226,230,.1);
   --blue:var(--cyan); --blue-soft:rgba(45,226,230,.1);
