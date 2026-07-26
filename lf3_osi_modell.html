@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSI-Modell · LF3 · FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+/* ===== Werkzeugleiste über den Tabellen (Stil aus lf3_ipv6.html) ===== */
+.rvtools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.2rem 0 1.1rem}
+.rvtools .hint{font-family:var(--fmono);font-size:12px;color:var(--dim)}
+.rvtools #rvReset{margin-left:auto}
+
+/* ===== Aufdeck-Mechanik für die Tabellenzellen ===== */
+td.rv{position:relative;cursor:pointer;user-select:none;min-width:70px}
+td.rv .val{visibility:hidden}
+td.rv.shown .val{visibility:visible}
+td.rv::after{content:"?";position:absolute;inset:2px;display:flex;
+  align-items:center;justify-content:center;border-radius:4px;
+  font-family:var(--fmono);font-size:13px;color:var(--amber);
+  background:var(--bg2);
+  background-image:repeating-linear-gradient(45deg,rgba(120,180,220,.10),rgba(120,180,220,.10) 7px,rgba(120,180,220,.20) 7px,rgba(120,180,220,.20) 14px);
+  transition:.1s}
+td.rv.shown::after{display:none}
+td.rv:hover::after{color:var(--cyan)}
+html[data-theme="light"] td.rv::after{background:#eef3f8;
+  background-image:repeating-linear-gradient(45deg,#dde6f0,#dde6f0 7px,#c8d6e6 7px,#c8d6e6 14px)}
+html[data-theme="light"] table.ltbl th{background:#e6f4f6}
+</style>
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="lf3.html">← Lernfeld 3</a>
+    <div>
+      <h1><span class="tag" style="background:var(--amber)">LF3</span>OSI- &amp; TCP/IP-Modell</h1>
+      <div class="sub">7 Schichten · Einheiten · Protokolle · Geräte · TCP/IP-Zuordnung</div>
+    </div>
+    <div class="sp"></div>
+    <div class="tabs">
+      <button id="tTables" class="on">Tabellen</button>
+      <button id="tCards">Karteikarten</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ TAB 1 · TABELLEN ============ -->
+  <div id="vTables">
+
+    <div class="rvtools">
+      <span class="hint">Zelle anklicken = aufdecken · nochmal klicken = wieder abdecken</span>
+      <button class="tbtn" id="rvReset">Alles abdecken</button>
+    </div>
+
+    <h2 class="tg-title">OSI-Referenzmodell · 7 Schichten</h2>
+    <div style="overflow-x:auto;margin:0 0 1.4rem">
+      <table class="ltbl">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Schicht</th>
+            <th>PDU</th>
+            <th>Protokolle &amp; Standards</th>
+            <th>Geräte/Hardware</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="lg">7</td>
+            <td class="rv"><span class="val">Anwendung (Application)</span></td>
+            <td class="rv"><span class="val">Daten</span></td>
+            <td class="rv"><span class="val">HTTP, HTTPS, FTP, SMTP, IMAP, POP3, DNS, DHCP, SSH, NTP, SNMP</span></td>
+            <td class="rv"><span class="val">Application Gateway, Proxy, L7-Firewall, L7-Load-Balancer</span></td>
+          </tr>
+          <tr>
+            <td class="lg">6</td>
+            <td class="rv"><span class="val">Darstellung (Presentation)</span></td>
+            <td class="rv"><span class="val">Daten</span></td>
+            <td class="rv"><span class="val">SSL/TLS, ASCII, MIME, JPEG, PNG, Base64, GZIP, HTML</span></td>
+            <td class="rv"><span class="val">(Software-Funktion)</span></td>
+          </tr>
+          <tr>
+            <td class="lg">5</td>
+            <td class="rv"><span class="val">Sitzung (Session)</span></td>
+            <td class="rv"><span class="val">Daten</span></td>
+            <td class="rv"><span class="val">NetBIOS, RPC, SMB, NFS, SOCKS</span></td>
+            <td class="rv"><span class="val">(Software-Funktion)</span></td>
+          </tr>
+          <tr>
+            <td class="lg">4</td>
+            <td class="rv"><span class="val">Transport</span></td>
+            <td class="rv"><span class="val">Segment (TCP) / Datagramm (UDP)</span></td>
+            <td class="rv"><span class="val">TCP, UDP, SCTP</span></td>
+            <td class="rv"><span class="val">L4-Firewall (Stateful), L4-Load-Balancer</span></td>
+          </tr>
+          <tr>
+            <td class="lg">3</td>
+            <td class="rv"><span class="val">Vermittlung (Network)</span></td>
+            <td class="rv"><span class="val">Paket</span></td>
+            <td class="rv"><span class="val">IP (IPv4/IPv6), ICMP, IPsec</span></td>
+            <td class="rv"><span class="val">Router, Layer-3-Switch</span></td>
+          </tr>
+          <tr>
+            <td class="lg">2</td>
+            <td class="rv"><span class="val">Sicherung (Data Link)</span></td>
+            <td class="rv"><span class="val">Rahmen (Frame)</span></td>
+            <td class="rv"><span class="val">Ethernet (802.3), WLAN (802.11), PPP, ARP · Zugriffsverfahren: CSMA/CD (Ethernet), CSMA/CA (WLAN)</span></td>
+            <td class="rv"><span class="val">Switch (L2), Bridge, Access Point (AP), NIC</span></td>
+          </tr>
+          <tr>
+            <td class="lg">1</td>
+            <td class="rv"><span class="val">Bitübertragung (Physical)</span></td>
+            <td class="rv"><span class="val">Bit</span></td>
+            <td class="rv"><span class="val">1000BASE-T, DSL, Koax, Glasfaser (LWL), RJ45</span></td>
+            <td class="rv"><span class="val">Hub, Repeater, Kabel, Medienkonverter, Modem</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="tg-title">TCP/IP-Modell · 4 Schichten</h2>
+    <div style="overflow-x:auto;margin:0 0 1.4rem">
+      <table class="ltbl">
+        <thead>
+          <tr>
+            <th>Schicht</th>
+            <th>entspricht OSI</th>
+            <th>Protokolle</th>
+            <th>Aufgabe</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="lg">Anwendung (Application)</td>
+            <td class="rv"><span class="val">5 + 6 + 7</span></td>
+            <td class="rv"><span class="val">HTTP, FTP, SMTP, DNS, DHCP</span></td>
+            <td class="rv"><span class="val">Dienste für Anwendungen bereitstellen</span></td>
+          </tr>
+          <tr>
+            <td class="lg">Transport</td>
+            <td class="rv"><span class="val">4</span></td>
+            <td class="rv"><span class="val">TCP, UDP</span></td>
+            <td class="rv"><span class="val">Ende-zu-Ende-Übertragung, Ports</span></td>
+          </tr>
+          <tr>
+            <td class="lg">Internet</td>
+            <td class="rv"><span class="val">3</span></td>
+            <td class="rv"><span class="val">IP, ICMP</span></td>
+            <td class="rv"><span class="val">logische Adressierung, Routing</span></td>
+          </tr>
+          <tr>
+            <td class="lg">Netzzugang / Link Layer</td>
+            <td class="rv"><span class="val">1 + 2</span></td>
+            <td class="rv"><span class="val">Ethernet, ARP, WLAN</span></td>
+            <td class="rv"><span class="val">Übertragung im lokalen Netz</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ============ TAB 2 · KARTEIKARTEN ============ -->
+  <div id="vCards" style="display:none">
+    <div class="chips" id="chips"></div>
+    <div class="bar">
+      <div class="pbar"><i id="pfill"></i></div>
+      <div class="ptxt"><b id="pnum">0</b> / <span id="ptot">0</span> gewusst</div>
+      <div class="tools">
+        <button class="tbtn" id="tShuffle">🔀 Mischen</button>
+        <button class="tbtn" id="tOpen">Nur offene</button>
+        <button class="tbtn" id="tReset">Zurücksetzen</button>
+      </div>
+    </div>
+
+    <div id="study" class="study"></div>
+  </div>
+
+  <footer>FISI Lernplattform · Lernfeld 3 · OSI- &amp; TCP/IP-Modell · Fortschritt wird lokal im Browser gespeichert · Leertaste = umdrehen, ← → = blättern</footer>
+</div>
+
+<script>
+/* ===================================================================== */
+/*  TAB 1 — Aufdeck-Mechanik der Tabellen (kein localStorage, rein visuell) */
+/* ===================================================================== */
+document.querySelectorAll('#vTables td.rv').forEach(td=>{
+  td.addEventListener('click',()=>td.classList.toggle('shown'));
+});
+document.getElementById('rvReset').onclick=()=>{
+  document.querySelectorAll('#vTables td.rv.shown').forEach(td=>td.classList.remove('shown'));
+};
+
+/* ===================================================================== */
+/*  TAB 2 — Karteikarten                                                  */
+/* ===================================================================== */
+
+/* ===== KATEGORIEN ===== */
+const CATS={
+  osi:{label:"OSI-Schichten",color:"var(--amber)"},
+  transport:{label:"Transport (L4)",color:"var(--cyan)"},
+  tcpip:{label:"TCP/IP-Modell",color:"var(--lime)"},
+  konzept:{label:"Konzepte",color:"var(--magenta)"}
+};
+
+/* ===== KARTEN ===== */
+const CARDS=[
+{id:"o0",c:"osi",q:"Wie viele Schichten hat das OSI-Modell, wozu dient es?",a:"<b>7 Schichten.</b> Es beschreibt standardisiert, wie Netzwerkkommunikation in aufeinander aufbauenden Ebenen abläuft."},
+{id:"o1",c:"osi",q:"Nenne die 7 Schichten (1→7).",a:"1 Bitübertragung, 2 Sicherung, 3 Vermittlung, 4 Transport, 5 Sitzung, 6 Darstellung, 7 Anwendung. Eselsbrücke: <b>A</b>lle <b>D</b>eutschen <b>S</b>tudenten <b>T</b>rinken <b>V</b>erschiedene <b>S</b>orten <b>B</b>ier (7→1)."},
+{id:"o2",c:"osi",q:"Schicht 1 – Bitübertragung (Physical)?",a:"Überträgt <b>rohe Bits</b> über das Medium. Einheit: Bit. Geräte: Hub, Repeater, Kabel, Modem."},
+{id:"o3",c:"osi",q:"Schicht 2 – Sicherung (Data Link)?",a:"<b>MAC-Adressierung</b> im lokalen Netz, Fehlererkennung. Einheit: Rahmen. Geräte: Switch, Bridge, AP."},
+{id:"o4",c:"osi",q:"Schicht 3 – Vermittlung (Network)?",a:"<b>Logische Adressierung (IP) und Routing</b> zwischen Netzen. Einheit: Paket. Gerät: Router, Layer-3-Switch."},
+{id:"o5",c:"osi",q:"Schicht 4 – Transport?",a:"<b>Ende-zu-Ende</b>, Portadressierung. TCP: verbindungsorientiert, zuverlässig (mit Quittierung). UDP: verbindungslos, schnell, nicht garantiert (Streaming, DNS). Einheit: Segment (TCP) / Datagramm (UDP)."},
+{id:"o6",c:"osi",q:"Schicht 5 – Sitzung (Session)?",a:"<b>Auf- und Abbau</b> sowie Steuerung von Sitzungen zwischen zwei Systemen."},
+{id:"o7",c:"osi",q:"Schicht 6 – Darstellung (Presentation)?",a:"<b>Datenformat</b>, Kodierung, Kompression, Verschlüsselung (z. B. TLS, JPEG)."},
+{id:"o8",c:"osi",q:"Schicht 7 – Anwendung (Application)?",a:"<b>Schnittstelle zu Netzwerkanwendungen</b> (HTTP, SMTP, DNS, DHCP)."},
+{id:"o9",c:"osi",q:"Welche Schicht nutzt IP, welche MAC?",a:"<b>IP</b> auf Schicht 3 (Vermittlung), <b>MAC</b> auf Schicht 2 (Sicherung)."},
+{id:"o10",c:"osi",q:"Auf welcher Schicht arbeiten Switch und Router?",a:"<b>Switch:</b> Schicht 2. <b>Router:</b> Schicht 3."},
+{id:"o11",c:"osi",q:"Wie heißen die Dateneinheiten von Schicht 4 bis 1?",a:"<b>Segment, Paket, Rahmen, Bit.</b>"},
+{id:"o12",c:"konzept",q:"Auf welcher Schicht liegt ARP und warum?",a:"<b>Schicht 2.</b> Es löst zu einer IP die MAC-Adresse auf und bleibt dabei im lokalen Netz – ARP-Frames werden nicht geroutet. Bindeglied zwischen 2 und 3, zugeordnet zu 2."},
+{id:"o13",c:"konzept",q:"Wie regelt Schicht 2 den Medienzugriff bei Ethernet und WLAN?",a:"<b>CSMA</b> = Carrier Sense Multiple Access: vor dem Senden prüfen, ob das Medium frei ist. Ethernet: <b>CSMA/CD</b> (Collision Detection, erkennt Kollisionen). WLAN: <b>CSMA/CA</b> (Collision Avoidance, vermeidet sie vorab, da Funk Kollisionen nicht zuverlässig erkennt)."},
+{id:"o14",c:"tcpip",q:"Wie viele Schichten hat TCP/IP, wie ordnen sie sich zu OSI?",a:"<b>4 Schichten.</b> Anwendung = OSI 5–7, Transport = 4, Internet = 3, Netzzugang = 1+2."},
+{id:"o15",c:"transport",q:"Wozu dienen Ports auf Schicht 4, welche bekannten Ports gibt es?",a:"Ports ordnen eingehende Pakete der <b>richtigen Anwendung/dem richtigen Dienst</b> zu. HTTP 80, HTTPS 443, DNS 53, SSH 22, DHCP 67/68."},
+{id:"o16",c:"transport",q:"Welches Schicht-4-Protokoll garantiert die Zustellung und wie?",a:"<b>TCP.</b> Es baut vor der Übertragung per 3-Way-Handshake (SYN, SYN-ACK, ACK) eine Verbindung auf und fordert verlorene Segmente erneut an. UDP tut das nicht."},
+{id:"o17",c:"konzept",q:"Was versteht man unter Datenkapselung (Encapsulation)?",a:"Auf dem Weg 7→1 hängt jede Schicht den Daten ihre eigenen Steuerinfos an (Header, auf Schicht 2 zusätzlich Trailer). Beim Empfänger 1→7 werden sie schrittweise wieder entfernt (Entkapselung)."}
+];
+CARDS.forEach((c,i)=>{if(!c.id)c.id="o"+i;});
+
+/* ===== STATE ===== */
+const LS="lf3_osi_cards_v1";
+let store; try{store=JSON.parse(localStorage.getItem(LS))||{}}catch(e){store={}}
+store.known=store.known||{};
+function save(){try{localStorage.setItem(LS,JSON.stringify(store))}catch(e){}}
+
+let activeCat="alle", onlyOpen=false, shuffled=false, view="tables";
+let deck=[], pos=0, flipped=false;
+
+/* ===== CHIPS ===== */
+const chipsEl=document.getElementById('chips');
+function count(cat){return CARDS.filter(c=>cat==="alle"||c.c===cat).length;}
+function buildChips(){
+  chipsEl.innerHTML="";
+  const all=document.createElement('button');
+  all.className="chip"+(activeCat==="alle"?" on":"");
+  all.innerHTML='Alle<span class="ct">'+CARDS.length+'</span>';
+  all.onclick=()=>{activeCat="alle";buildChips();rebuild();};
+  chipsEl.appendChild(all);
+  Object.keys(CATS).forEach(k=>{
+    const c=document.createElement('button');
+    c.className="chip"+(activeCat===k?" on":"");
+    c.innerHTML=CATS[k].label+'<span class="ct">'+count(k)+'</span>';
+    if(activeCat===k){c.style.background=CATS[k].color;c.style.borderColor=CATS[k].color;}
+    c.onclick=()=>{activeCat=k;buildChips();rebuild();};
+    chipsEl.appendChild(c);
+  });
+}
+
+/* ===== DECK ===== */
+function baseDeck(){
+  let d=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
+  if(onlyOpen) d=d.filter(c=>!store.known[c.id]);
+  return d;
+}
+function rebuild(){
+  deck=baseDeck();
+  if(shuffled){for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}}
+  pos=0;flipped=false;
+  updateProg();
+  renderStudy();
+}
+function updateProg(){
+  const scope=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
+  const k=scope.filter(c=>store.known[c.id]).length;
+  document.getElementById('ptot').textContent=scope.length;
+  document.getElementById('pnum').textContent=k;
+  document.getElementById('pfill').style.width=(scope.length?k/scope.length*100:0)+"%";
+}
+
+/* ===== STUDY ===== */
+const studyEl=document.getElementById('study');
+function renderStudy(){
+  if(deck.length===0){
+    studyEl.innerHTML='<div class="done-msg"><div class="em">🎉</div><h3>Alles gewusst!</h3><p>In dieser Auswahl sind keine offenen Karten mehr. Schalte "Nur offene" aus oder setze zurück.</p><button class="tbtn" onclick="document.getElementById(\'tReset\').click()">Zurücksetzen</button></div>';
+    return;
+  }
+  if(pos>=deck.length)pos=deck.length-1;
+  const card=deck[pos];const cat=CATS[card.c];
+  studyEl.innerHTML=`
+    <div class="counter">Karte <b>${pos+1}</b> / ${deck.length}${store.known[card.id]?' · ✓ gewusst':''}</div>
+    <div class="flash${flipped?' flip':''}" id="flash">
+      <div class="flash-inner">
+        <div class="face">
+          <div class="f-cat" style="color:${cat.color}">${cat.label}</div>
+          <div class="f-q">${card.q}</div>
+          <div class="f-hint">Klick / Leertaste zum Umdrehen</div>
+        </div>
+        <div class="face b">
+          <div class="f-lbl">Antwort</div>
+          <div class="f-a">${card.a}</div>
+          <div class="f-hint">Wusstest du es?</div>
+        </div>
+      </div>
+    </div>
+    <div class="ans-btns">
+      <button class="again" id="bAgain">✗ Nochmal</button>
+      <button class="known" id="bKnown">✓ Gewusst</button>
+    </div>
+    <div class="nav">
+      <button id="bPrev">← Zurück</button>
+      <span>${pos+1} / ${deck.length}</span>
+      <button id="bNext">Weiter →</button>
+    </div>`;
+  document.getElementById('flash').onclick=()=>{flipped=!flipped;document.getElementById('flash').classList.toggle('flip',flipped);};
+  document.getElementById('bAgain').onclick=()=>{delete store.known[card.id];save();next();};
+  document.getElementById('bKnown').onclick=()=>{store.known[card.id]=true;save();next();};
+  document.getElementById('bPrev').onclick=()=>{if(pos>0){pos--;flipped=false;renderStudy();}};
+  document.getElementById('bNext').onclick=()=>next();
+}
+function next(){updateProg();if(pos<deck.length-1){pos++;flipped=false;renderStudy();}else{if(onlyOpen){rebuild();}else{pos=deck.length;renderStudy2done();}}}
+function renderStudy2done(){
+  studyEl.innerHTML='<div class="done-msg"><div class="em">✅</div><h3>Durch den Stapel!</h3><p>Du hast alle Karten dieser Auswahl einmal gesehen.</p><button class="tbtn" id="bRestart">Nochmal von vorn</button></div>';
+  document.getElementById('bRestart').onclick=()=>{pos=0;flipped=false;renderStudy();};
+}
+
+/* ===== CONTROLS ===== */
+document.getElementById('tShuffle').onclick=function(){shuffled=!shuffled;this.classList.toggle('on',shuffled);rebuild();};
+document.getElementById('tOpen').onclick=function(){onlyOpen=!onlyOpen;this.classList.toggle('on',onlyOpen);rebuild();};
+document.getElementById('tReset').onclick=function(){
+  const scope=CARDS.filter(c=>activeCat==="alle"||c.c===activeCat);
+  scope.forEach(c=>delete store.known[c.id]);save();rebuild();
+};
+
+/* ===== TAB-UMSCHALTUNG ===== */
+const vTables=document.getElementById('vTables');
+const vCards=document.getElementById('vCards');
+const bTables=document.getElementById('tTables');
+const bCards=document.getElementById('tCards');
+function setView(v){
+  view=v;
+  bTables.classList.toggle('on',v==="tables");
+  bCards.classList.toggle('on',v==="cards");
+  vTables.style.display=(v==="tables")?'':'none';
+  vCards.style.display=(v==="cards")?'':'none';
+  if(v==="cards")rebuild();
+}
+bTables.onclick=()=>setView('tables');
+bCards.onclick=()=>setView('cards');
+
+/* ===== TASTATUR (nur im Karteikarten-Tab) ===== */
+document.addEventListener('keydown',e=>{
+  if(view!=="cards"||deck.length===0)return;
+  if(e.code==="Space"){e.preventDefault();flipped=!flipped;const f=document.getElementById('flash');if(f)f.classList.toggle('flip',flipped);}
+  else if(e.code==="ArrowRight")next();
+  else if(e.code==="ArrowLeft"){if(pos>0){pos--;flipped=false;renderStudy();}}
+});
+
+/* ===== INIT ===== */
+buildChips();
+</script>
+<script>
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
