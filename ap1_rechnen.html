@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Rechenaufgaben · AP1 · FISI Lernplattform</title>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme.js"></script>
+  <script src="rechnen_data.js"></script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#101418">
+  <style>
+    /* Seiten-spezifische Ergaenzungen */
+    .gruppen-chips, .unter-chips {
+      display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .75rem;
+    }
+    .chip {
+      padding: .35rem .8rem; border-radius: 2rem; border: 1.5px solid var(--line);
+      background: var(--bg2); color: var(--ink); cursor: pointer;
+      font-size: .9rem; transition: background .15s, border-color .15s;
+      display: inline-flex; align-items: center; gap: .3rem;
+      min-height: 44px;
+    }
+    .chip.aktiv        { border-color: var(--cyan); color: var(--cyan); }
+    .chip.disabled     { opacity: .4; cursor: not-allowed; }
+    .chip[data-state="ok"]     { border-color: var(--ok);     color: var(--ok); }
+    .chip[data-state="warn"]   { border-color: var(--warn);   color: var(--warn); }
+    .chip[data-state="danger"] { border-color: var(--danger); color: var(--danger); }
+    .aufgaben-card {
+      background: var(--bg2); border: 1px solid var(--line);
+      border-radius: .75rem; padding: 1.25rem; margin: 1rem 0;
+    }
+    .frage { font-size: 1.05rem; line-height: 1.6; margin-bottom: 1rem; }
+    .eingabe-zeile {
+      display: flex; align-items: center; gap: .5rem; margin: .5rem 0;
+    }
+    .eingabe-zeile input {
+      font-size: 1.1rem; padding: .5rem .75rem; border-radius: .4rem;
+      border: 1.5px solid var(--line); background: var(--bg);
+      color: var(--ink); min-height: 44px; width: 9rem;
+    }
+    .eingabe-zeile input.richtig { border-color: var(--ok); }
+    .eingabe-zeile input.falsch  { border-color: var(--danger); }
+    .einheit-label { color: var(--dim); font-size: .95rem; }
+    .teil-label    { color: var(--dim); font-size: .9rem; min-width: 2.5rem; }
+    .btn-reihe { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+    .btn {
+      padding: .5rem 1.1rem; border-radius: .4rem; border: none;
+      cursor: pointer; font-size: .95rem; min-height: 44px;
+      background: var(--bg2); color: var(--ink); border: 1px solid var(--line);
+    }
+    .btn-primary { background: var(--cyan); color: #000; border-color: var(--cyan); }
+    .btn-danger  { background: var(--danger); color: #fff; border-color: var(--danger); }
+    .btn:disabled { opacity: .4; cursor: not-allowed; }
+    .feedback { margin-top: .5rem; font-weight: 600; }
+    .feedback.ok  { color: var(--ok); }
+    .feedback.err { color: var(--danger); }
+    details.formeln, details.rechenweg { margin-top: .75rem; }
+    details.formeln summary, details.rechenweg summary {
+      cursor: pointer; color: var(--dim); font-size: .9rem;
+      list-style: none; padding: .25rem 0;
+    }
+    details.formeln summary::before  { content: "▶  "; }
+    details.formeln[open] summary::before { content: "▼  "; }
+    details.rechenweg summary::before { content: "▶  "; }
+    details.rechenweg[open] summary::before { content: "▼  "; }
+    .schritt-liste { padding-left: 1.2rem; }
+    .schritt-liste li { margin: .25rem 0; font-size: .95rem; }
+    .falle-box {
+      margin-top: .75rem; padding: .6rem .9rem;
+      border-left: 3px solid var(--warn); background: var(--bg);
+      border-radius: 0 .4rem .4rem 0; font-size: .9rem;
+    }
+    .merk-box {
+      margin-top: .5rem; padding: .6rem .9rem;
+      border-left: 3px solid var(--ok); background: var(--bg);
+      border-radius: 0 .4rem .4rem 0; font-size: .9rem;
+    }
+    .formelsammlung-link {
+      display: inline-block; margin: .5rem 0 1rem;
+      color: var(--cyan); font-size: .9rem; text-decoration: none;
+    }
+    .formelsammlung-link:hover { text-decoration: underline; }
+    @media (max-width: 560px) {
+      .eingabe-zeile input { width: 7rem; }
+      .btn { font-size: .85rem; padding: .45rem .8rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scan"></div>
+
+  <header class="hdr">
+    <div class="hdr-in">
+      <a href="ap1_uebersicht.html" class="back">← AP1</a>
+      <div>
+        <h1><span class="tag" style="background:var(--lf5);color:#000">AP1</span>
+        Rechenaufgaben</h1>
+        <p class="sub">Datenmengen · Energie · Netzteile · Verfügbarkeit</p>
+      </div>
+      <span class="hdr-sp"></span>
+    </div>
+  </header>
+
+  <main class="wrap" style="padding:1rem 1rem 3rem">
+
+    <!-- Gruppen-Chips -->
+    <div class="gruppen-chips" id="gruppenChips"></div>
+
+    <!-- Unterthemen-Chips -->
+    <div class="unter-chips" id="unterChips"></div>
+
+    <!-- Formelsammlung-Link -->
+    <a href="formelsammlung.html" class="formelsammlung-link"
+       target="_blank">📄 Formelsammlung öffnen</a>
+
+    <!-- Formeln zum aktiven Thema -->
+    <details class="formeln" id="formelnDetails">
+      <summary>Formeln zu diesem Thema</summary>
+      <ul class="schritt-liste" id="formelnListe"></ul>
+    </details>
+
+    <!-- Aufgabenkarte -->
+    <div class="aufgaben-card" id="aufgabenCard">
+      <div class="frage" id="frageText">Thema auswählen …</div>
+      <div id="eingabeBereich"></div>
+      <div class="btn-reihe">
+        <button class="btn btn-primary" id="btnPruefen" disabled>Prüfen</button>
+        <button class="btn btn-danger"  id="btnLoesung" disabled>Lösung anzeigen</button>
+        <button class="btn"             id="btnNaechste" disabled>Nächste Aufgabe</button>
+      </div>
+      <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+
+      <!-- Rechenweg: EIN einklappbarer Block, standardmaessig zu -->
+      <details class="rechenweg" id="rechenwegDetails" hidden>
+        <summary>Rechenweg, Falle und Merksatz</summary>
+        <ol class="schritt-liste" id="schritteListe"></ol>
+        <div class="falle-box" id="falleBox"></div>
+        <div class="merk-box"  id="merkBox"></div>
+      </details>
+    </div>
+
+  </main>
+
+<script>
+/* =====================================================================
+   ap1_rechnen.html - reine Huelle.
+   Alle Aufgabendaten kommen aus rechnen_data.js (globale const RECHNEN).
+   Diese Datei enthaelt KEINE Aufgaben und KEINE Formeln, nur Anzeige,
+   Vergleichslogik und Fortschritt.
+   ===================================================================== */
+(function () {
+  "use strict";
+
+  var KEY = "rechnen_ap1_v1";
+
+  /* ---------- DOM ---------- */
+  var elGruppen   = document.getElementById("gruppenChips");
+  var elUnter     = document.getElementById("unterChips");
+  var elFormelnD  = document.getElementById("formelnDetails");
+  var elFormelnL  = document.getElementById("formelnListe");
+  var elFrage     = document.getElementById("frageText");
+  var elEingabe   = document.getElementById("eingabeBereich");
+  var elFeedback  = document.getElementById("feedback");
+  var elWegD      = document.getElementById("rechenwegDetails");
+  var elSchritte  = document.getElementById("schritteListe");
+  var elFalle     = document.getElementById("falleBox");
+  var elMerk      = document.getElementById("merkBox");
+  var btnPruefen  = document.getElementById("btnPruefen");
+  var btnLoesung  = document.getElementById("btnLoesung");
+  var btnNaechste = document.getElementById("btnNaechste");
+
+  /* ---------- Zustand ---------- */
+  var gruppeId = null;   // aktive Gruppe
+  var themaId  = null;   // aktives Thema
+  var aufgabe  = null;   // Rueckgabe von gen()
+  var felder   = [];     // [{input, soll, pruef}]
+  var aufgabeFehl = 0;   // Fehlversuche bei DIESER Aufgabe (0 nach "Nächste")
+
+  /* ---------- Speicher ---------- */
+  var store = { v: 1, stats: {}, gruppe: null, thema: null };
+  try {
+    var roh = localStorage.getItem(KEY);
+    if (roh) {
+      var g = JSON.parse(roh);
+      if (g && typeof g === "object") {
+        store.stats  = g.stats  || {};
+        store.gruppe = g.gruppe || null;
+        store.thema  = g.thema  || null;
+      }
+    }
+  } catch (e) { /* kein Speicher verfuegbar - Seite laeuft trotzdem */ }
+
+  function sichern() {
+    store.gruppe = gruppeId;
+    store.thema  = themaId;
+    try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {}
+  }
+
+  // Je Thema wird nur das LETZTE Ergebnis gemerkt: { "<themaId>": {last:…} }
+  function setzeZustand(id, wert) {
+    if (!id) return;
+    if (!store.stats[id]) store.stats[id] = {};
+    store.stats[id].last = wert;
+    renderUnter();
+    sichern();
+  }
+
+  /* ---------- Zahlen ---------- */
+
+  // Musterloesung so schreiben, wie man sie eintippt: Komma als Dezimal-
+  // trenner, BEWUSST ohne Tausenderpunkte - sonst liest zuZahl() den Punkt
+  // wieder als Dezimaltrenner und die eigene Loesung gaelte als falsch.
+  function alsEingabe(x) {
+    if (typeof x !== "number" || !isFinite(x)) return String(x);
+    return String(x).replace(".", ",");
+  }
+
+  // Eingabe zu Zahl: akzeptiert 1,82 und 1.82 sowie 1.234,56 und 2.520
+  function zuZahl(s) {
+    s = String(s).replace(/\s/g, "");
+    if (s === "") return NaN;
+    if (s.indexOf(",") > -1) {
+      // Komma = Dezimaltrenner, alle Punkte sind Tausenderpunkte
+      s = s.replace(/\./g, "").replace(",", ".");
+    } else if ((s.match(/\./g) || []).length > 1 || /^-?\d{1,3}(\.\d{3})+$/.test(s)) {
+      // reine Tausenderpunkte (2.520, 1.234.567). Eine echte Nachkomma-
+      // stelle kann das nicht sein: alle Loesungen sind auf 2 Stellen
+      // gerundet, drei Ziffern nach dem Punkt gibt es nicht.
+      s = s.replace(/\./g, "");
+    }
+    return parseFloat(s);
+  }
+
+  // Textvergleich: Leerzeichen weg, Kleinschreibung
+  function normText(s) {
+    return String(s).replace(/\s/g, "").toLowerCase();
+  }
+
+  /* ---------- Vergleich nach pruef-Art -----------------------------
+     Die Kennzeichnung kommt aus rechnen_data.js, die Logik liegt hier:
+       exakt = ganze Zahl / aufgerundete Sekunden -> muss stimmen
+       geld  = Toleranz +/- 0,01
+       rel   = Toleranz +/- 0,5 %
+       text  = Textabgleich (z. B. Seitenverhaeltnis 16:9)
+     ---------------------------------------------------------------- */
+  function stimmt(eingabe, soll, pruef) {
+    if (pruef === "text") return normText(eingabe) === normText(soll);
+
+    var z = zuZahl(eingabe);
+    if (isNaN(z)) return false;
+    var s = typeof soll === "number" ? soll : zuZahl(soll);
+    var d = Math.abs(z - s);
+
+    if (pruef === "geld")  return d <= 0.01 + 1e-9;
+    if (pruef === "rel")   return d <= Math.abs(s) * 0.005 + 1e-9;
+    return d < 1e-9;                                  // "exakt"
+  }
+
+  /* ---------- Chips ---------- */
+
+  // Farbe = letztes Ergebnis des Themas. Nie gespielt -> gar kein Zustand.
+  function zustand(id) {
+    var s = store.stats[id];
+    if (!s || !s.last) return null;
+    return s.last === "ok" || s.last === "warn" || s.last === "danger" ? s.last : null;
+  }
+
+  var ZEICHEN = { ok: "✓", warn: "!", danger: "✕" };
+
+  function renderGruppen() {
+    elGruppen.innerHTML = "";
+    RECHNEN.gruppen.forEach(function (g) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip";
+      b.textContent = g.label;
+
+      if (!g.themen || g.themen.length === 0) {
+        b.classList.add("disabled");
+        b.disabled = true;
+        b.title = "Noch keine Aufgaben in dieser Gruppe";
+      } else {
+        if (g.id === gruppeId) b.classList.add("aktiv");
+        b.addEventListener("click", function () {
+          waehleGruppe(g.id);
+        });
+      }
+      elGruppen.appendChild(b);
+    });
+  }
+
+  function renderUnter() {
+    elUnter.innerHTML = "";
+    if (!gruppeId) return;
+    var g = RECHNEN.gruppen.filter(function (x) { return x.id === gruppeId; })[0];
+    if (!g) return;
+
+    g.themen.forEach(function (id) {
+      var t = RECHNEN.themen[id];
+      if (!t) return;                                  // defekter Verweis
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip";
+      if (id === themaId) b.classList.add("aktiv");
+
+      var z = zustand(id);
+      if (z) b.setAttribute("data-state", z);
+
+      b.textContent = t.label + (z ? "  " + ZEICHEN[z] : "");
+
+      b.addEventListener("click", function () { waehleThema(id); });
+      elUnter.appendChild(b);
+    });
+  }
+
+  /* ---------- Auswahl ---------- */
+
+  function waehleGruppe(id) {
+    gruppeId = id;
+    themaId = null;
+    aufgabe = null;
+    leereAufgabe("Unterthema auswählen …");
+    renderGruppen();
+    renderUnter();
+    sichern();
+  }
+
+  function waehleThema(id) {
+    themaId = id;
+    renderUnter();
+    renderFormeln();
+    neueAufgabe();
+    sichern();
+  }
+
+  function renderFormeln() {
+    elFormelnL.innerHTML = "";
+    var t = RECHNEN.themen[themaId];
+    if (!t || !t.formeln) return;
+    t.formeln.forEach(function (f) {
+      var li = document.createElement("li");
+      li.textContent = f;
+      elFormelnL.appendChild(li);
+    });
+  }
+
+  /* ---------- Aufgabe ---------- */
+
+  function leereAufgabe(text) {
+    elFrage.textContent = text;
+    elEingabe.innerHTML = "";
+    elFeedback.textContent = "";
+    elFeedback.className = "feedback";
+    elWegD.hidden = true;
+    elWegD.open = false;
+    felder = [];
+    btnPruefen.disabled = true;
+    btnLoesung.disabled = true;
+    btnNaechste.disabled = true;
+  }
+
+  function zeile(label, einheit, soll, pruef) {
+    var wrap = document.createElement("div");
+    wrap.className = "eingabe-zeile";
+
+    if (label) {
+      var l = document.createElement("span");
+      l.className = "teil-label";
+      l.textContent = label;
+      wrap.appendChild(l);
+    }
+
+    var inp = document.createElement("input");
+    inp.type = "text";
+    inp.autocomplete = "off";
+    if (pruef !== "text") inp.inputMode = "decimal";
+    inp.setAttribute("aria-label", label ? label : "Antwort");
+    inp.addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+        if (!btnPruefen.disabled) pruefen();
+        else if (!btnNaechste.disabled) neueAufgabe();
+      }
+    });
+    wrap.appendChild(inp);
+
+    if (einheit) {
+      var e = document.createElement("span");
+      e.className = "einheit-label";
+      e.textContent = einheit;
+      wrap.appendChild(e);
+    }
+
+    elEingabe.appendChild(wrap);
+    felder.push({ input: inp, soll: soll, pruef: pruef });
+  }
+
+  function neueAufgabe() {
+    var t = RECHNEN.themen[themaId];
+    if (!t) return;
+
+    aufgabe = t.gen();
+    aufgabeFehl = 0;          // neue Aufgabe: Fehlzähler zurück, Chip bleibt
+
+    elFrage.innerHTML = aufgabe.frage;
+    elEingabe.innerHTML = "";
+    elFeedback.textContent = "";
+    elFeedback.className = "feedback";
+    elWegD.hidden = true;
+    elWegD.open = false;
+    felder = [];
+
+    if (aufgabe.teile && aufgabe.teile.length) {
+      aufgabe.teile.forEach(function (teil) {
+        zeile(teil.label, teil.einheit, teil.loesung, teil.pruef);
+      });
+    } else {
+      zeile("", aufgabe.einheit, aufgabe.loesung, aufgabe.pruef);
+    }
+
+    btnPruefen.disabled = false;
+    btnLoesung.disabled = false;
+    btnNaechste.disabled = false;
+    if (felder.length) felder[0].input.focus();
+  }
+
+  /* ---------- Pruefen ---------- */
+
+  function pruefen() {
+    if (!aufgabe || !felder.length) return;
+
+    var alleRichtig = true;
+    felder.forEach(function (f) {
+      var ok = stimmt(f.input.value, f.soll, f.pruef);
+      f.input.classList.remove("richtig", "falsch");
+      f.input.classList.add(ok ? "richtig" : "falsch");
+      if (!ok) alleRichtig = false;
+    });
+
+    if (alleRichtig) {
+      elFeedback.textContent = "Richtig.";
+      elFeedback.className = "feedback ok";
+    } else {
+      elFeedback.textContent = felder.length > 1
+        ? "Noch nicht alles richtig. Rot markierte Felder stimmen nicht."
+        : "Noch nicht richtig.";
+      elFeedback.className = "feedback err";
+    }
+
+    /* Chip-Farbe = letztes Ergebnis dieses Themas:
+         gleich richtig                  -> ok
+         richtig nach >= 1 Fehlversuch   -> warn
+         zweiter Fehlversuch derselben Aufgabe -> danger            */
+    if (alleRichtig) {
+      setzeZustand(themaId, aufgabeFehl === 0 ? "ok" : "warn");
+    } else {
+      aufgabeFehl++;
+      if (aufgabeFehl >= 2) setzeZustand(themaId, "danger");
+    }
+  }
+
+  /* ---------- Loesung ---------- */
+
+  function loesungZeigen() {
+    if (!aufgabe) return;
+
+    // Musterloesung in die Felder schreiben
+    felder.forEach(function (f) {
+      f.input.value = alsEingabe(f.soll);
+      f.input.classList.remove("richtig", "falsch");
+    });
+
+    elSchritte.innerHTML = "";
+    (aufgabe.schritte || []).forEach(function (s) {
+      var li = document.createElement("li");
+      li.textContent = s;
+      elSchritte.appendChild(li);
+    });
+
+    elFalle.textContent = aufgabe.falle || "";
+    elFalle.style.display = aufgabe.falle ? "" : "none";
+    elMerk.textContent = aufgabe.merk || "";
+    elMerk.style.display = aufgabe.merk ? "" : "none";
+
+    elWegD.hidden = false;
+    elWegD.open = true;
+
+    elFeedback.textContent = "Lösung angezeigt.";
+    elFeedback.className = "feedback";
+
+    setzeZustand(themaId, "danger");   // Loesung gesehen = nicht selbst geloest
+  }
+
+  /* ---------- Verdrahtung ---------- */
+
+  btnPruefen.addEventListener("click", pruefen);
+  btnLoesung.addEventListener("click", loesungZeigen);
+  btnNaechste.addEventListener("click", neueAufgabe);
+
+  /* ---------- Start ---------- */
+
+  renderGruppen();
+
+  // letzte Auswahl wiederherstellen, sofern sie noch existiert
+  var gLetzte = RECHNEN.gruppen.filter(function (x) {
+    return x.id === store.gruppe && x.themen && x.themen.length;
+  })[0];
+
+  if (gLetzte) {
+    gruppeId = gLetzte.id;
+    renderGruppen();
+    renderUnter();
+    if (store.thema && gLetzte.themen.indexOf(store.thema) > -1 && RECHNEN.themen[store.thema]) {
+      themaId = store.thema;
+      renderUnter();
+      renderFormeln();
+      neueAufgabe();
+    } else {
+      leereAufgabe("Unterthema auswählen …");
+    }
+  } else {
+    leereAufgabe("Gruppe und Unterthema auswählen …");
+  }
+})();
+</script>
+</body>
+</html>

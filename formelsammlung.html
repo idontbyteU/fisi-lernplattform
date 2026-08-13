@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formelsammlung · AP1 · FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<script src="rechnen_data.js"></script>
+<style>
+/* ===== Formelsammlung (reine Leseseite, kein Glow) ===== */
+.fs-h{font-family:var(--fdisp);font-size:21px;font-weight:700;letter-spacing:.4px;
+  color:var(--ink);margin:.1rem 0 .45rem;text-shadow:none}
+.fs-lead{font-size:16px;line-height:1.6;color:var(--read);margin:0 0 1.2rem;max-width:660px}
+.fs-hinweis{font-size:14.5px;line-height:1.55;color:var(--muted);margin:0 0 1.4rem;
+  border-left:3px solid var(--line);padding:.5rem .9rem}
+.fs-hinweis a{color:var(--cyan)}
+.fs details{margin-bottom:7px}
+.fs summary{font-family:var(--fui)}
+.fs-thema{padding:.2rem .8rem .1rem 1rem}
+.fs-thema h3{font-family:var(--fui);font-size:15.5px;font-weight:700;color:var(--ink);
+  margin:.85rem 0 .35rem;text-shadow:none}
+.fs-thema h3:first-child{margin-top:.5rem}
+.fs-formeln{list-style:none;margin:0 0 .6rem;padding:0;display:grid;gap:.35rem}
+.fs-formeln li{font-family:var(--fmono);font-size:14px;line-height:1.55;color:var(--read);
+  background:var(--glass2);border:1px solid var(--line);border-radius:6px;
+  padding:.42rem .7rem;overflow-x:auto;white-space:pre-wrap}
+.fs-leer{font-size:15px;color:var(--muted);padding:.5rem 1rem}
+.fs-zahl{font-size:13px;color:var(--dim);font-family:var(--fmono);margin-left:.4rem}
+@media (max-width:560px){
+  .fs-formeln li{font-size:13px}
+  .fs-thema{padding-left:.5rem;padding-right:.5rem}
+}
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#101418">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="ap1_rechnen.html">← Rechenaufgaben</a>
+    <div>
+      <h1><span class="tag" style="background:var(--lf5);color:#000">AP1</span>Formelsammlung</h1>
+      <div class="sub">Alle Formeln der Rechenaufgaben</div>
+    </div>
+    <span class="hdr-sp"></span>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="fs" aria-label="Formelsammlung">
+    <h2 class="fs-h">Formelsammlung</h2>
+    <p class="fs-lead">Die Formeln zu allen Aufgabentypen der Rechenseite, nach Gruppen
+      sortiert. Ein Klick auf eine Gruppe klappt sie auf.</p>
+
+    <p class="fs-hinweis">Diese Seite wird direkt aus den Aufgabendaten erzeugt
+      (<span style="font-family:var(--fmono)">rechnen_data.js</span>). Kommt ein
+      Aufgabentyp dazu, steht seine Formel hier automatisch mit &ndash; sie kann
+      also nicht veralten. Zum Üben geht es
+      <a href="ap1_rechnen.html">zurück zu den Rechenaufgaben</a>.</p>
+
+    <div id="fsInhalt"></div>
+  </section>
+
+  <footer>FISI Lernplattform · Formelsammlung · erzeugt aus den Aufgabendaten</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var ziel = document.getElementById("fsInhalt");
+
+  if (typeof RECHNEN === "undefined") {
+    ziel.innerHTML = '<p class="fs-leer">Die Aufgabendaten konnten nicht geladen ' +
+                     'werden (rechnen_data.js fehlt).</p>';
+    return;
+  }
+
+  var themenGesamt = 0;
+  var formelnGesamt = 0;
+
+  RECHNEN.gruppen.forEach(function (g) {
+    var themen = (g.themen || []).filter(function (id) { return RECHNEN.themen[id]; });
+
+    var det = document.createElement("details");
+    var sum = document.createElement("summary");
+    sum.textContent = g.label;
+
+    var zahl = document.createElement("span");
+    zahl.className = "fs-zahl";
+    zahl.textContent = themen.length === 1 ? "1 Thema" : themen.length + " Themen";
+    sum.appendChild(zahl);
+
+    var pfeil = document.createElement("span");
+    pfeil.className = "ar";
+    pfeil.textContent = "▸";
+    sum.appendChild(pfeil);
+    det.appendChild(sum);
+
+    if (themen.length === 0) {
+      var leer = document.createElement("p");
+      leer.className = "fs-leer";
+      leer.textContent = "Für diese Gruppe gibt es noch keine Aufgaben.";
+      det.appendChild(leer);
+    } else {
+      var box = document.createElement("div");
+      box.className = "fs-thema";
+
+      themen.forEach(function (id) {
+        var t = RECHNEN.themen[id];
+        themenGesamt++;
+
+        var h = document.createElement("h3");
+        h.textContent = t.label;
+        box.appendChild(h);
+
+        var ul = document.createElement("ul");
+        ul.className = "fs-formeln";
+        (t.formeln || []).forEach(function (f) {
+          var li = document.createElement("li");
+          li.textContent = f;
+          ul.appendChild(li);
+          formelnGesamt++;
+        });
+        if (!ul.children.length) {
+          var li0 = document.createElement("li");
+          li0.textContent = "(keine Formeln hinterlegt)";
+          ul.appendChild(li0);
+        }
+        box.appendChild(ul);
+      });
+
+      det.appendChild(box);
+    }
+
+    ziel.appendChild(det);
+  });
+
+  var fuss = document.createElement("p");
+  fuss.className = "fs-leer";
+  fuss.textContent = themenGesamt + " Aufgabentypen, " + formelnGesamt + " Formelzeilen.";
+  ziel.appendChild(fuss);
+})();
+
+/* PWA: Service Worker registrieren (nur auf https / GitHub Pages aktiv) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){navigator.serviceWorker.register('service-worker.js').catch(function(){});});
+}
+</script>
+</body>
+</html>

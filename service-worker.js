@@ -9,7 +9,7 @@
 /*  Private Einzelnutzung: kein manuelles Hochzählen einer Versionsnr.   */
 /*  nötig – der Cache wird ohnehin bei jedem Online-Abruf erneuert.      */
 /* ===================================================================== */
-const CACHE = "fisi-os-v14";          // v14: Probleme-Seite auf 36 Aufgaben + Klartext/Ergebnistabellen
+const CACHE = "fisi-os-v15";          // v15: AP1-Rechenaufgaben + Formelsammlung + rechnen_data.js
 const ASSETS = [
   "./",
   "./index.html",
@@ -17,6 +17,7 @@ const ASSETS = [
   "./theme.js",
   "./study.js",
   "./drawer.js",
+  "./rechnen_data.js",
   "./manifest.json",
   "./icon.svg",
   "./ap2.html",
@@ -33,6 +34,8 @@ const ASSETS = [
   "./lf4_zusammenfassung.pdf",
   "./lf4_grundschutz_check_umsetzung.pdf",
   "./ap1_training.html",
+  "./ap1_rechnen.html",
+  "./formelsammlung.html",
   "./programmierung.html",
   "./python_byte.html",
   "./python_lab.html",
