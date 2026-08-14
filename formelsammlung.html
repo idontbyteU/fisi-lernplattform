@@ -27,9 +27,42 @@
   padding:.42rem .7rem;overflow-x:auto;white-space:pre-wrap}
 .fs-leer{font-size:15px;color:var(--muted);padding:.5rem 1rem}
 .fs-zahl{font-size:13px;color:var(--dim);font-family:var(--fmono);margin-left:.4rem}
+
+/* Mini-Ueberschrift ueber Rechenweg bzw. Formelblock */
+.fs-mini{font-family:var(--fui);font-size:12.5px;font-weight:700;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--dim);margin:.6rem 0 .3rem;text-shadow:none}
+
+/* ---- Flowchart: Kaesten mit Pfeil, am Handy vertikal gestapelt ---- */
+.fs-flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:.35rem;
+  margin:0 0 .8rem;max-width:100%}
+.fs-box{display:flex;align-items:center;border:1px solid var(--line);border-radius:6px;
+  background:var(--bg);color:var(--read);font-family:var(--fui);font-size:13.5px;
+  line-height:1.4;padding:.4rem .65rem;max-width:100%;overflow-wrap:anywhere}
+.fs-box:first-child{border-color:var(--cyan)}
+.fs-box:last-child{border-color:var(--ok)}
+.fs-pfeil{display:flex;align-items:center;color:var(--dim);font-size:15px;line-height:1;
+  flex:0 0 auto}
+.fs-pfeil::after{content:"\2192"}
+
+/* ---- Warn-/Merkkasten: identisch zu ap1_rechnen.html ---- */
+.falle-box{
+  margin-top:.75rem; padding:.6rem .9rem;
+  border-left:3px solid var(--warn); background:var(--bg);
+  border-radius:0 .4rem .4rem 0; font-size:.9rem; color:var(--read);
+}
+.merk-box{
+  margin-top:.5rem; padding:.6rem .9rem;
+  border-left:3px solid var(--ok); background:var(--bg);
+  border-radius:0 .4rem .4rem 0; font-size:.9rem; color:var(--read);
+}
+
 @media (max-width:560px){
   .fs-formeln li{font-size:13px}
   .fs-thema{padding-left:.5rem;padding-right:.5rem}
+  .fs-flow{flex-direction:column;align-items:stretch;gap:.25rem}
+  .fs-box{width:100%;font-size:13px}
+  .fs-pfeil{justify-content:center}
+  .fs-pfeil::after{content:"\2193"}
 }
 </style>
 <link rel="manifest" href="manifest.json">
@@ -56,7 +89,9 @@
   <section class="fs" aria-label="Formelsammlung">
     <h2 class="fs-h">Formelsammlung</h2>
     <p class="fs-lead">Die Formeln zu allen Aufgabentypen der Rechenseite, nach Gruppen
-      sortiert. Ein Klick auf eine Gruppe klappt sie auf.</p>
+      sortiert. Ein Klick auf eine Gruppe klappt sie auf. Zu jedem Aufgabentyp steht
+      zuerst der Rechenweg als Ablaufkette, darunter die ausgeschriebenen Formeln und
+      zum Schluss die Warn- und Merksätze.</p>
 
     <p class="fs-hinweis">Diese Seite wird direkt aus den Aufgabendaten erzeugt
       (<span style="font-family:var(--fmono)">rechnen_data.js</span>). Kommt ein
@@ -84,6 +119,43 @@
 
   var themenGesamt = 0;
   var formelnGesamt = 0;
+  var hinweiseGesamt = 0;
+
+  /* Kleine Ueberschrift ueber einem Block */
+  function mini(text) {
+    var d = document.createElement("div");
+    d.className = "fs-mini";
+    d.textContent = text;
+    return d;
+  }
+
+  /* Flowchart aus flow[]: Kasten - Pfeil - Kasten - ... */
+  function flowchart(schritte) {
+    var wrap = document.createElement("div");
+    wrap.className = "fs-flow";
+    schritte.forEach(function (s, i) {
+      if (i > 0) {
+        var pf = document.createElement("span");
+        pf.className = "fs-pfeil";
+        pf.setAttribute("aria-hidden", "true");
+        wrap.appendChild(pf);
+      }
+      var kasten = document.createElement("div");
+      kasten.className = "fs-box";
+      kasten.textContent = s;
+      wrap.appendChild(kasten);
+    });
+    return wrap;
+  }
+
+  /* Warn-/Merkkasten wie im Rechen-Trainer */
+  function hinweis(text, klasse) {
+    var d = document.createElement("div");
+    d.className = klasse;
+    d.textContent = text;
+    hinweiseGesamt++;
+    return d;
+  }
 
   RECHNEN.gruppen.forEach(function (g) {
     var themen = (g.themen || []).filter(function (id) { return RECHNEN.themen[id]; });
@@ -120,20 +192,39 @@
         h.textContent = t.label;
         box.appendChild(h);
 
+        /* 1. Rechenweg als Flowchart */
+        if (t.flow && t.flow.length) {
+          box.appendChild(mini("Rechenweg"));
+          box.appendChild(flowchart(t.flow));
+        }
+
+        /* 2. Formeln - Warn- und Merksaetze werden hier herausgezogen
+              und weiter unten als eigener Kasten gezeigt. */
+        var warnungen = [];
+        var merksaetze = [];
         var ul = document.createElement("ul");
         ul.className = "fs-formeln";
+
         (t.formeln || []).forEach(function (f) {
+          if (f.indexOf("Achtung: ") === 0) { warnungen.push(f); return; }
+          if (f.indexOf("Merksatz: ") === 0) { merksaetze.push(f); return; }
           var li = document.createElement("li");
           li.textContent = f;
           ul.appendChild(li);
           formelnGesamt++;
         });
+
         if (!ul.children.length) {
           var li0 = document.createElement("li");
           li0.textContent = "(keine Formeln hinterlegt)";
           ul.appendChild(li0);
         }
+        box.appendChild(mini("Formeln"));
         box.appendChild(ul);
+
+        /* 3. Warnungen, dann Merksaetze */
+        warnungen.forEach(function (w) { box.appendChild(hinweis(w, "falle-box")); });
+        merksaetze.forEach(function (m) { box.appendChild(hinweis(m, "merk-box")); });
       });
 
       det.appendChild(box);
@@ -144,7 +235,8 @@
 
   var fuss = document.createElement("p");
   fuss.className = "fs-leer";
-  fuss.textContent = themenGesamt + " Aufgabentypen, " + formelnGesamt + " Formelzeilen.";
+  fuss.textContent = themenGesamt + " Aufgabentypen, " + formelnGesamt +
+                     " Formelzeilen, " + hinweiseGesamt + " Warn- und Merksätze.";
   ziel.appendChild(fuss);
 })();
 

@@ -9,7 +9,18 @@
 /*                                                                       */
 /*  Aufbau:                                                              */
 /*    RECHNEN.gruppen = [ {id, label, themen:[themenId, ...]} ]          */
-/*    RECHNEN.themen  = { <themenId>: {label, formeln:[], gen()} }       */
+/*    RECHNEN.themen  = { <themenId>: {label, formeln:[], flow:[],      */
+/*                        gen()} }                                      */
+/*                                                                       */
+/*  formeln[] = ausgeschriebene Formelzeilen (eine Zeile je Eintrag,     */
+/*    KEINE \n innerhalb eines Eintrags - ap1_rechnen.html rendert sie   */
+/*    ohne pre-wrap).                                                    */
+/*    Zeilen mit dem Praefix "Achtung: " sind Warnhinweise, Zeilen mit   */
+/*    "Merksatz: " sind Merksaetze. formelsammlung.html zieht sie aus    */
+/*    der Liste heraus und zeigt sie als Warn- bzw. Merk-Box;            */
+/*    ap1_rechnen.html listet sie unveraendert mit auf.                  */
+/*  flow[]    = Ablaufkette des Rechenwegs, ein Kasten je Eintrag.       */
+/*    Wird von formelsammlung.html als Flowchart dargestellt.            */
 /*                                                                       */
 /*  gen() wuerfelt bei jedem Aufruf frische Zahlen und liefert           */
 /*    {frage, einheit, loesung, pruef, schritte, falle, merk}            */
@@ -215,11 +226,25 @@ const RECHNEN = (function () {
     einheiten: {
       label: "Einheiten umrechnen",
       formeln: [
-        "Dezimal -> binär:  Zielwert = X * 1000^n / 1024^n",
-        "n = 1 (kB/KiB), 2 (MB/MiB), 3 (GB/GiB), 4 (TB/TiB)",
-        "1 KiB = 1024 Byte, 1 MiB = 1024² Byte, 1 GiB = 1024³ Byte, 1 TiB = 1024⁴ Byte",
-        "Byte = Bit / 8",
-        "Bit = Byte * 8"
+        "Dezimale Einheiten (Hersteller): kB, MB, GB, TB - Schritte von 1.000",
+        "Binäre Einheiten (Betriebssystem): KiB, MiB, GiB, TiB - Schritte von 1.024",
+        "1 kB = 1.000 Byte   |   1 KiB = 1.024 Byte",
+        "1 MB = 1.000² Byte   |   1 MiB = 1.024² Byte",
+        "1 GB = 1.000³ Byte   |   1 GiB = 1.024³ Byte",
+        "1 TB = 1.000⁴ Byte   |   1 TiB = 1.024⁴ Byte",
+        "Dezimale Angabe in binäre Einheit: Zielwert = Ausgangswert × (1.000 ÷ 1.024)ⁿ",
+        "n = 1 bei k, 2 bei M, 3 bei G, 4 bei T",
+        "Byte in Bit = Byte × 8",
+        "Bit in Byte = Bit ÷ 8",
+        "Achtung: kB/MB/GB/TB sind dezimale Einheiten, KiB/MiB/GiB/TiB binäre - binär meint hier die 1.024er-Schritte, nicht das Zahlensystem.",
+        "Merksatz: 1 Byte = 8 Bit."
+      ],
+      flow: [
+        "Angabe mit Einheit",
+        "dezimal (kB, MB, GB) oder binär (KiB, MiB, GiB)?",
+        "n bestimmen: k = 1, M = 2, G = 3, T = 4",
+        "× (1.000 ÷ 1.024)ⁿ",
+        "Zielwert in der gesuchten Einheit"
       ],
       gen: function (v) {
         v = v || {};
@@ -283,10 +308,22 @@ const RECHNEN = (function () {
     zeit_bit: {
       label: "Übertragungszeit (Bit-Rate)",
       formeln: [
-        "D = G * 1024³ * 8            (GiB in Bit)",
-        "R_bit = R * 10⁹  bei Gbit/s   bzw.   R * 10⁶  bei Mbit/s",
-        "R_eff = R_bit * p / 100      (nutzbarer Anteil)",
-        "t = aufrunden(D / R_eff)     (Sekunden)"
+        "Datenmenge in Bit = GiB × 1024³ × 8",
+        "Rate in Bit/s = Zahl × 10⁹ (bei Gbit/s) oder × 10⁶ (bei Mbit/s)",
+        "Nutzbare Rate = Rate in Bit/s × Nutzanteil(%) ÷ 100",
+        "Zeit (Sekunden) = AUFRUNDEN( Datenmenge in Bit ÷ nutzbare Rate )",
+        "Achtung: GiB sind 1.024³ Byte, nicht 1.000³ - und die Byte müssen vor dem Teilen mit 8 auf Bit gebracht werden.",
+        "Merksatz: Zeit = Datenmenge ÷ Geschwindigkeit."
+      ],
+      flow: [
+        "Datenmenge",
+        "in Bit umrechnen",
+        "Geschwindigkeit",
+        "in Bit/s umrechnen",
+        "Nutzanteil berücksichtigen",
+        "Datenmenge ÷ nutzbare Rate",
+        "Sekunden",
+        "AUFRUNDEN"
       ],
       gen: function (v) {
         v = v || {};
@@ -327,9 +364,19 @@ const RECHNEN = (function () {
     zeit_byte: {
       label: "Übertragungszeit (Byte-Rate)",
       formeln: [
-        "D_MB = G * 1024³ / 1000²     (GiB in MB)",
-        "t = aufrunden(D_MB / R)      (Sekunden)",
-        "Achtung: MB/s ist eine Byte-Rate - hier wird nicht mit 8 multipliziert."
+        "Datenmenge in MB = GiB × 1024³ ÷ 1.000²",
+        "Zeit (Sekunden) = AUFRUNDEN( Datenmenge in MB ÷ Rate in MB/s )",
+        "Mbit/s = Megabit pro Sekunde, MB/s = Megabyte pro Sekunde",
+        "Achtung: MB/s ist eine BYTE-Rate - hier NICHT mit 8 multiplizieren.",
+        "Merksatz: großes B = Byte, kleines b = Bit. Ein Buchstabe, Faktor 8."
+      ],
+      flow: [
+        "Datenmenge in GiB",
+        "in Byte umrechnen (× 1024³)",
+        "in MB umrechnen (÷ 1.000²)",
+        "÷ Rate in MB/s",
+        "Sekunden",
+        "AUFRUNDEN"
       ],
       gen: function (v) {
         v = v || {};
@@ -364,8 +411,17 @@ const RECHNEN = (function () {
     faktor: {
       label: "Faktor-Vergleich",
       formeln: [
-        "Beide Raten auf dieselbe Einheit bringen: Gbit/s * 1000 = Mbit/s",
-        "Faktor = R1 / R2   (R1 = die schnellere Schnittstelle)"
+        "Zuerst beide Raten auf dieselbe Einheit bringen: 1 Gbit/s = 1.000 Mbit/s",
+        "Faktor = schnellere Rate ÷ langsamere Rate",
+        "Beispiel: 2 Gbit/s = 2.000 Mbit/s, geteilt durch 500 Mbit/s ergibt Faktor 4",
+        "Ergebnis: die schnellere Verbindung ist 4× so schnell.",
+        "Achtung: beide Raten müssen VOR dem Teilen dieselbe Einheit haben."
+      ],
+      flow: [
+        "Zwei Raten mit verschiedenen Einheiten",
+        "beide auf dieselbe Einheit bringen (z. B. Mbit/s)",
+        "schnellere Rate ÷ langsamere Rate",
+        "Faktor"
       ],
       gen: function (v) {
         v = v || {};
@@ -402,9 +458,23 @@ const RECHNEN = (function () {
     bild_menge: {
       label: "Bild-/Screenshot-Datenmenge",
       formeln: [
-        "D = N * B * H * Byte/Pixel * k / 100     (Byte nach Komprimierung)",
-        "D_bit = D * 8",
-        "t = aufrunden(D_bit / R_bit)             (Idealfall = volle Rate)"
+        "Rohdaten (Byte) = Anzahl Bilder × Breite × Höhe × Byte pro Pixel",
+        "Datenmenge (Byte) = Rohdaten × Komprimierung(%) ÷ 100",
+        "Datenmenge in Bit = Datenmenge in Byte × 8",
+        "Zeit (Sekunden) = AUFRUNDEN( Datenmenge in Bit ÷ Rate in Bit/s )",
+        "Achtung: erst komprimieren, dann in Bit umrechnen - nicht umgekehrt.",
+        "Merksatz: Idealfall bedeutet volle Rate, also kein Abschlag für den Nutzanteil."
+      ],
+      flow: [
+        "Anzahl Bilder",
+        "Breite × Höhe",
+        "Pixelanzahl",
+        "× Byte pro Pixel",
+        "Rohdaten",
+        "× Komprimierung",
+        "Datenmenge",
+        "× 8 ergibt Bit",
+        "÷ Rate in Bit/s, dann AUFRUNDEN"
       ],
       gen: function (v) {
         v = v || {};
@@ -454,13 +524,28 @@ const RECHNEN = (function () {
     scanner: {
       label: "Scanner-Datenmenge (dpi)",
       formeln: [
-        "Zoll = cm / 2,54          -> ZWINGEND auf 2 Nachkommastellen runden",
-        "Pixel = (b_Zoll * dpi) * (h_Zoll * dpi)",
-        "D = N * Pixel * Bit/Pixel / 8      (Byte)",
-        "GB = D / 10⁹",
-        "D_k = GB * k / 100                 (nach Komprimierung)",
-        "Rate = (R_bit * p / 100) / 8 / 10⁹ (GB/s)",
-        "t = aufrunden(D_k / Rate)"
+        "dpi = dots per inch = Bildpunkte pro Zoll",
+        "Schritt 1 - Zoll = Zentimeter ÷ 2,54 (ZWINGEND auf 2 Nachkommastellen runden)",
+        "Schritt 2 - Breite in Pixel = Breite in Zoll × dpi",
+        "Schritt 2 - Höhe in Pixel = Höhe in Zoll × dpi",
+        "Schritt 3 - Pixel je Bild = Breite in Pixel × Höhe in Pixel",
+        "Schritt 4 - Datenmenge (Byte) = Anzahl Bilder × Pixel je Bild × Bit pro Pixel ÷ 8",
+        "Schritt 5 - Datenmenge in GB = Byte ÷ 10⁹",
+        "Schritt 6 - Endgröße = GB × Komprimierung(%) ÷ 100",
+        "Schritt 7 - Nutzbare Rate (GB/s) = Rate in Bit/s × Nutzanteil(%) ÷ 100 ÷ 8 ÷ 10⁹",
+        "Schritt 8 - Zeit (Sekunden) = AUFRUNDEN( Endgröße ÷ nutzbare Rate )",
+        "Achtung: die Zwischenrundung auf 2 Nachkommastellen gehört in Schritt 1 - danach wird durchgerechnet.",
+        "Merksatz: doppelte dpi bedeuten vierfache Datenmenge, weil Breite UND Höhe wachsen."
+      ],
+      flow: [
+        "Papiergröße in cm",
+        "cm in Zoll (÷ 2,54, auf 2 Nachkommastellen runden)",
+        "Zoll × dpi",
+        "Pixel je Bild",
+        "× Bit pro Pixel ÷ 8",
+        "Datenmenge in Byte",
+        "÷ 10⁹ ergibt GB, dann × Komprimierung",
+        "÷ nutzbare Rate, dann AUFRUNDEN"
       ],
       gen: function (v) {
         v = v || {};
@@ -523,9 +608,19 @@ const RECHNEN = (function () {
     pixel: {
       label: "Pixelzahl & Seitenverhältnis",
       formeln: [
-        "Pixel gesamt = B * H",
-        "ggT(B, H) über den euklidischen Algorithmus bestimmen",
-        "Seitenverhältnis = (B / ggT) : (H / ggT)"
+        "Pixel gesamt = Breite × Höhe",
+        "ggT = größter gemeinsamer Teiler von Breite und Höhe (euklidischer Algorithmus)",
+        "Seitenverhältnis = (Breite ÷ ggT) : (Höhe ÷ ggT)",
+        "Beispiel: 1920 × 1080, ggT = 120",
+        "Beispiel: 1920 ÷ 120 = 16 und 1080 ÷ 120 = 9, also 16 : 9",
+        "Merksatz: das Seitenverhältnis immer mit dem ggT kürzen, nie ungekürzt stehen lassen."
+      ],
+      flow: [
+        "Auflösung Breite × Höhe",
+        "Breite × Höhe ergibt Pixel gesamt",
+        "ggT von Breite und Höhe bestimmen",
+        "beide Werte ÷ ggT",
+        "Seitenverhältnis als B : H"
       ],
       gen: function (v) {
         v = v || {};
@@ -559,10 +654,21 @@ const RECHNEN = (function () {
     stromkosten: {
       label: "Stromkosten pro Monat",
       formeln: [
-        "E = P / 1000 * h * d          (Verbrauch in kWh)",
-        "P in Watt, h = Stunden pro Tag, d = Tage im Monat",
-        "Kosten = E * Preis / 100      (EUR, wenn der Preis in ct/kWh steht)",
-        "Monatstage: 30, 31 oder 30,42 (= 365 / 12)"
+        "Leistung in Kilowatt = Leistung in Watt ÷ 1.000",
+        "Verbrauch (kWh) = Leistung in kW × Stunden pro Tag × Tage im Monat",
+        "Kosten (EUR) = Verbrauch in kWh × Preis in ct/kWh ÷ 100",
+        "Monatslänge: 30 Tage, 31 Tage oder 30,42 Tage (Jahresdurchschnitt = 365 ÷ 12)",
+        "Achtung: zwei Umrechnungen, die gern untergehen - Watt ÷ 1.000 ergibt Kilowatt, Cent ÷ 100 ergibt Euro.",
+        "Merksatz: erst kW, dann kWh, dann Euro."
+      ],
+      flow: [
+        "Leistung in Watt",
+        "÷ 1.000 ergibt Leistung in kW",
+        "× Stunden pro Tag",
+        "× Tage im Monat",
+        "Verbrauch in kWh",
+        "× Strompreis in ct/kWh ÷ 100",
+        "Kosten in EUR"
       ],
       gen: function (v) {
         v = v || {};
@@ -601,9 +707,18 @@ const RECHNEN = (function () {
     strom_jahr: {
       label: "Jahresverbrauch & -kosten",
       formeln: [
-        "E = n * P / 1000 * h * 365    (kWh pro Jahr)",
-        "Kosten = E * Preis / 100      (EUR pro Jahr)",
-        "Dauerbetrieb: h = 24"
+        "Verbrauch (kWh pro Jahr) = Anzahl Geräte × Leistung in Watt ÷ 1.000 × Stunden pro Tag × 365",
+        "Kosten (EUR pro Jahr) = Verbrauch in kWh × Preis in ct/kWh ÷ 100",
+        "Merksatz: Dauerbetrieb bedeutet 24 Stunden pro Tag, also 8.760 Stunden im Jahr."
+      ],
+      flow: [
+        "Anzahl Geräte",
+        "× Leistung in Watt ÷ 1.000",
+        "× Stunden pro Tag",
+        "× 365 Tage",
+        "Verbrauch in kWh pro Jahr",
+        "× Strompreis in ct/kWh ÷ 100",
+        "Kosten in EUR pro Jahr"
       ],
       gen: function (v) {
         v = v || {};
@@ -645,9 +760,19 @@ const RECHNEN = (function () {
     sparen: {
       label: "Sparpotenzial beim Gerätetausch",
       formeln: [
-        "dP = P_alt - P_neu            (eingesparte Leistung in Watt)",
-        "E = dP / 1000 * h * 365       (eingesparte kWh pro Jahr)",
-        "Ersparnis = E * Preis / 100   (EUR pro Jahr)"
+        "Eingesparte Leistung (Watt) = Leistung alt - Leistung neu",
+        "Eingesparte Energie (kWh pro Jahr) = eingesparte Leistung ÷ 1.000 × Stunden pro Tag × 365",
+        "Ersparnis (EUR pro Jahr) = eingesparte kWh × Preis in ct/kWh ÷ 100",
+        "Achtung: gerechnet wird mit der DIFFERENZ, nicht mit der Leistung des neuen Geräts."
+      ],
+      flow: [
+        "Leistung alt",
+        "minus Leistung neu",
+        "eingesparte Watt",
+        "÷ 1.000 × Stunden pro Tag × 365",
+        "eingesparte kWh pro Jahr",
+        "× Strompreis ÷ 100",
+        "Ersparnis in EUR pro Jahr"
       ],
       gen: function (v) {
         v = v || {};
@@ -686,9 +811,18 @@ const RECHNEN = (function () {
     amortisation: {
       label: "Amortisationszeit",
       formeln: [
-        "t = Mehrpreis / Ersparnis je Monat   (Monate, aufrunden)",
-        "Jahre = Monate / 12",
-        "Amortisiert ist die Anschaffung, sobald die Summe der Ersparnisse den Mehrpreis erreicht."
+        "Amortisation bedeutet: ab wann hat die Ersparnis den Mehrpreis ausgeglichen?",
+        "Zeit (Monate) = AUFRUNDEN( Mehrpreis ÷ Ersparnis pro Monat )",
+        "Zeit (Jahre) = Monate ÷ 12",
+        "Achtung: es wird immer AUFGERUNDET - nach 8,3 Monaten ist der Mehrpreis noch nicht wieder drin.",
+        "Merksatz: amortisiert ist die Anschaffung, sobald die Summe der Ersparnisse den Mehrpreis erreicht."
+      ],
+      flow: [
+        "Mehrpreis der teureren Variante",
+        "÷ Ersparnis pro Monat",
+        "Monate (Zwischenwert mit Nachkommastellen)",
+        "AUFRUNDEN auf volle Monate",
+        "÷ 12 ergibt Jahre"
       ],
       gen: function (v) {
         v = v || {};
@@ -724,9 +858,19 @@ const RECHNEN = (function () {
     tco: {
       label: "Gesamtkosten (TCO)",
       formeln: [
-        "Betriebskosten = Kosten je Monat * 12 * Jahre",
-        "TCO = Anschaffung + Betriebskosten",
-        "TCO je Jahr = TCO / Jahre"
+        "TCO = Total Cost of Ownership = Gesamtkosten über den gesamten Nutzungszeitraum",
+        "Betriebskosten = Kosten pro Monat × 12 × Jahre",
+        "TCO = Anschaffungspreis + Betriebskosten",
+        "TCO pro Jahr = TCO ÷ Jahre",
+        "Merksatz: der Kaufpreis ist nur ein Teil - über die Laufzeit übersteigen die Betriebskosten ihn oft deutlich."
+      ],
+      flow: [
+        "Anschaffungspreis (einmalig)",
+        "Kosten pro Monat × 12 × Jahre",
+        "Betriebskosten",
+        "Anschaffung + Betriebskosten",
+        "TCO",
+        "÷ Jahre ergibt TCO pro Jahr"
       ],
       gen: function (v) {
         v = v || {};
@@ -766,9 +910,18 @@ const RECHNEN = (function () {
     kauf_leasing: {
       label: "Kauf oder Leasing",
       formeln: [
-        "Leasingkosten = Rate * Laufzeit in Monaten",
-        "Differenz = |Leasingkosten - Kaufpreis|",
-        "Günstiger ist die Variante mit der kleineren Summe."
+        "Kauf: Gesamtkosten = Kaufpreis",
+        "Leasing: Gesamtkosten = Rate pro Monat × Laufzeit in Monaten",
+        "Differenz = Betrag von (Leasingkosten - Kaufpreis)",
+        "Achtung: die Monatsrate wirkt klein - erst Rate mal Laufzeit ist mit dem Kaufpreis vergleichbar.",
+        "Merksatz: günstiger ist die Variante mit der kleineren Gesamtsumme."
+      ],
+      flow: [
+        "Kaufpreis (einmalig)",
+        "Rate pro Monat × Laufzeit in Monaten",
+        "Leasingkosten gesamt",
+        "Betrag der Differenz beider Summen",
+        "kleinere Gesamtsumme ist günstiger"
       ],
       gen: function (v) {
         v = v || {};
@@ -809,9 +962,20 @@ const RECHNEN = (function () {
     netzteil_dimension: {
       label: "Netzteil dimensionieren",
       formeln: [
-        "P_summe = Summe aller Komponenten (Anzahl * Leistung)",
-        "P_noetig = P_summe * (1 + Reserve / 100)",
-        "Ergebnis aufrunden - ein Netzteil darf nie knapp bemessen sein."
+        "Je Komponente: Leistung = Anzahl × Leistung in Watt",
+        "Gesamtleistung = Summe aller Komponenten (CPU, GPU, Mainboard, RAM, SSD, Lüfter, weitere)",
+        "Nötige Leistung = Gesamtleistung × (1 + Reserve(%) ÷ 100)",
+        "Ergebnis AUFRUNDEN auf volle Watt.",
+        "Achtung: ein Netzteil sollte nicht dauerhaft an seiner maximalen Leistung laufen - die Reserve wird aufgeschlagen, nicht abgezogen.",
+        "Merksatz: Summe bilden, Reserve draufschlagen, aufrunden."
+      ],
+      flow: [
+        "CPU + GPU + Mainboard + RAM + SSD + Lüfter + weitere",
+        "je Komponente: Anzahl × Leistung",
+        "Gesamtleistung in Watt",
+        "× (1 + Reserve ÷ 100)",
+        "AUFRUNDEN",
+        "nötige Netzteilleistung"
       ],
       gen: function (v) {
         v = v || {};
@@ -856,9 +1020,19 @@ const RECHNEN = (function () {
     wirkungsgrad: {
       label: "Wirkungsgrad & Verlustleistung",
       formeln: [
-        "P_zu = P_ab / (Wirkungsgrad / 100)      (aufgenommene Leistung)",
-        "P_verlust = P_zu - P_ab                 (als Wärme abgegeben)",
-        "Wirkungsgrad = P_ab / P_zu * 100"
+        "Aufgenommene Leistung = abgegebene Leistung ÷ (Wirkungsgrad(%) ÷ 100)",
+        "Verlustleistung = aufgenommene Leistung - abgegebene Leistung",
+        "Wirkungsgrad (%) = abgegebene Leistung ÷ aufgenommene Leistung × 100",
+        "Die Verlustleistung geht als Wärme verloren.",
+        "Achtung: es wird GETEILT, nicht multipliziert - die aufgenommene Leistung ist immer größer als die abgegebene.",
+        "Merksatz: Aufnahme = Abgabe geteilt durch Wirkungsgrad."
+      ],
+      flow: [
+        "aufgenommene Leistung aus dem Netz",
+        "Gerät (Netzteil)",
+        "Nutzleistung an die Komponenten",
+        "Verlustleistung = Aufnahme - Abgabe",
+        "Verlust wird zu Wärme"
       ],
       gen: function (v) {
         v = v || {};
@@ -896,9 +1070,20 @@ const RECHNEN = (function () {
     ausfallzeit: {
       label: "Erlaubte Ausfallzeit",
       formeln: [
-        "Ausfall in % = 100 - Verfügbarkeit in %",
-        "Ausfallzeit = Zeitraum * Ausfall / 100",
-        "Zeitraum: Jahr = 8760 h, Monat (30 Tage) = 720 h, Woche = 168 h"
+        "Ausfall (%) = 100 - Verfügbarkeit (%)",
+        "Ausfallzeit = Zeitraum × Ausfall(%) ÷ 100",
+        "Ausfallzeit in Minuten = Ausfallzeit in Stunden × 60",
+        "Zeiträume: Jahr = 8.760 h, Monat (30 Tage) = 720 h, Woche = 168 h",
+        "Achtung: gerechnet wird mit dem AUSFALLanteil, nicht mit der Verfügbarkeit.",
+        "Merksatz: erst 100 % minus Verfügbarkeit, dann mal den Zeitraum."
+      ],
+      flow: [
+        "vereinbarte Verfügbarkeit in %",
+        "100 % minus Verfügbarkeit",
+        "Ausfall in %",
+        "× Zeitraum in Stunden ÷ 100",
+        "Ausfallzeit in Stunden",
+        "× 60 ergibt Minuten"
       ],
       gen: function (v) {
         v = v || {};
@@ -933,9 +1118,18 @@ const RECHNEN = (function () {
     mtbf: {
       label: "Verfügbarkeit aus MTBF und MTTR",
       formeln: [
-        "Verfügbarkeit = MTBF / (MTBF + MTTR) * 100   (in %)",
-        "MTBF = mittlere Betriebsdauer zwischen zwei Ausfällen",
-        "MTTR = mittlere Reparaturdauer"
+        "MTBF = Mean Time Between Failures = mittlere Betriebsdauer zwischen zwei Ausfällen",
+        "MTTR = Mean Time To Repair = mittlere Reparaturdauer",
+        "Verfügbarkeit (%) = MTBF ÷ (MTBF + MTTR) × 100",
+        "Achtung: im Nenner steht die SUMME aus MTBF und MTTR, nicht die MTBF allein - sonst käme immer 100 % heraus.",
+        "Merksatz: Betriebszeit geteilt durch Betriebszeit plus Reparaturzeit."
+      ],
+      flow: [
+        "MTBF (Betriebsdauer zwischen Ausfällen)",
+        "MTTR (Reparaturdauer)",
+        "Gesamtzeit = MTBF + MTTR",
+        "MTBF ÷ Gesamtzeit",
+        "× 100 ergibt Verfügbarkeit in %"
       ],
       gen: function (v) {
         v = v || {};
@@ -970,9 +1164,24 @@ const RECHNEN = (function () {
     sla_budget: {
       label: "SLA-Ausfallbudget",
       formeln: [
-        "Monat (30 Tage) = 30 * 24 * 60 = 43.200 Minuten",
-        "Budget = 43.200 * (100 - SLA) / 100   (Minuten)",
-        "Rest = Budget - bereits verbrauchte Ausfallminuten"
+        "SLA = Service Level Agreement = vertraglich zugesicherte Verfügbarkeit",
+        "Minuten im Monat (30 Tage) = 30 × 24 × 60 = 43.200 Minuten",
+        "Ausfall (%) = 100 - SLA (%)",
+        "Ausfallbudget (Minuten) = 43.200 × Ausfall(%) ÷ 100",
+        "Rest = Budget - bereits verbrauchte Ausfallminuten",
+        "Beispiel: SLA 99,9 % ergibt Ausfall 0,1 % und 43.200 × 0,1 ÷ 100 = 43,2 Minuten",
+        "Beispiel: bei bereits 20 Minuten Ausfall bleiben 43,2 - 20 = 23,2 Minuten Rest",
+        "Achtung: der Zeitraum muss zum SLA passen - ein Monatsbudget rechnet mit 43.200 Minuten, nicht mit den 525.600 eines Jahres.",
+        "Merksatz: 99,9 % im Monat sind 43,2 Minuten Ausfall - nicht mehr."
+      ],
+      flow: [
+        "SLA in % (zugesicherte Verfügbarkeit)",
+        "100 % minus SLA",
+        "Ausfall in %",
+        "× 43.200 Minuten ÷ 100",
+        "Ausfallbudget in Minuten",
+        "minus bereits verbrauchte Minuten",
+        "Restbudget"
       ],
       gen: function (v) {
         v = v || {};

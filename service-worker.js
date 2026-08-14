@@ -9,7 +9,7 @@
 /*  Private Einzelnutzung: kein manuelles Hochzählen einer Versionsnr.   */
 /*  nötig – der Cache wird ohnehin bei jedem Online-Abruf erneuert.      */
 /* ===================================================================== */
-const CACHE = "fisi-os-v15";          // v15: AP1-Rechenaufgaben + Formelsammlung + rechnen_data.js
+const CACHE = "fisi-os-v16";          // v16: Formeln ausgeschrieben + Flowcharts in der Formelsammlung
 const ASSETS = [
   "./",
   "./index.html",
