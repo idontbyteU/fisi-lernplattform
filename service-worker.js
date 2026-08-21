@@ -88,6 +88,7 @@ const ASSETS = [
   "./img/uml/sol_state_ampel.png",
   "./lf4_it_sicherheit.html",
   "./lf_isms_grundschutz.html",
+  "./lf4_bedrohungen.html",
   "./lzk.html"
 ];
 
