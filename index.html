@@ -144,7 +144,13 @@
       <p>Programmierung &amp; Modellierung: Python, UML, BPMN, Vorgehensmodelle, Struktogramme, JSON, Datenbanken, SQL, Softwaretests – als Themen-Hub.</p>
       <span class="meta st-ok"><span class="dot"></span>Themen-Hub</span>
     </a>
-    <a class="tile" data-lf="7" style="--i:5" href="lf7_protokolle.html" data-tags="lf7 iot cps cyber-physische systeme protokolle uebertragungstechniken mqtt coap http opc ua amqp lwm2m ssi tcp udp osi 6lowpan ipv6 lorawan nb-iot sigfox lpwan zigbee z-wave bluetooth ble nfc rfid wlan ethernet tsn feldbus profibus modbus can mobilfunk 2g 5g mesh funk">
+    <div class="tile ghost" style="--i:5" data-tags="lf6 lernfeld 6 geplant">
+      <span class="ic">📒</span>
+      <h3>Lernfeld 6</h3>
+      <p>Inhalte folgen – Modul ist noch nicht angelegt.</p>
+      <span class="meta"><span class="dot"></span>Geplant</span>
+    </div>
+    <a class="tile" data-lf="7" style="--i:6" href="lf7_protokolle.html" data-tags="lf7 iot cps cyber-physische systeme protokolle uebertragungstechniken mqtt coap http opc ua amqp lwm2m ssi tcp udp osi 6lowpan ipv6 lorawan nb-iot sigfox lpwan zigbee z-wave bluetooth ble nfc rfid wlan ethernet tsn feldbus profibus modbus can mobilfunk 2g 5g mesh funk">
       <span class="ic">📡</span><h3>Lernfeld 7</h3>
       <p>Cyber-physische Systeme &amp; IoT: Protokolle (MQTT, CoAP, OPC UA), TCP/UDP, OSI-Einordnung, Funk- und Kabeltechniken, LPWAN.</p>
       <span class="meta st-ok"><span class="dot"></span>Aufdeck-Tabellen · 8 Übungsaufgaben</span>
@@ -163,7 +169,7 @@ document.getElementById('cdAP2').textContent=daysTo(AP2);
 
 /* ===== SUCHE + FILTER ===== */
 const tiles=[...document.querySelectorAll('.tile')];
-const chipDefs=[["Alle",""],["AP1","ap1"],["AP2","ap2"],["Python","python"],["LF 1","lf1"],["LF 2","lf2"],["LF 3","lf3"],["LF 4","lf4"],["LF 5","lf5"]];
+const chipDefs=[["Alle",""],["AP1","ap1"],["AP2","ap2"],["Python","python"],["LF 1","lf1"],["LF 2","lf2"],["LF 3","lf3"],["LF 4","lf4"],["LF 5","lf5"],["LF 6","lf6"],["LF 7","lf7"]];
 const chips=document.getElementById('chips');let active="";
 chipDefs.forEach(([label,tag],i)=>{const c=document.createElement('button');c.className="chip"+(i===0?" on":"");c.textContent=label;c.onclick=()=>{active=tag;[...chips.children].forEach(x=>x.classList.remove('on'));c.classList.add('on');apply();};chips.appendChild(c);});
 const search=document.getElementById('search');

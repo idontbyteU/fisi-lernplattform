@@ -9,7 +9,7 @@
 /*  Private Einzelnutzung: kein manuelles Hochzählen einer Versionsnr.   */
 /*  nötig – der Cache wird ohnehin bei jedem Online-Abruf erneuert.      */
 /* ===================================================================== */
-const CACHE = "fisi-os-v17";          // v17: LF7 - Protokolle & Uebertragungstechniken (Aufdeck-Tabellen)
+const CACHE = "fisi-os-v18";          // v18: Filter-Chips LF6/LF7 + Ghost-Kachel LF6 auf der Startseite
 const ASSETS = [
   "./",
   "./index.html",
