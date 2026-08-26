@@ -13,7 +13,7 @@
   --line:#2a333d; --glass:rgba(16,20,36,.62); --glass2:rgba(20,26,46,.7);
   --ok:#27f59a; --warn:#ffb43b; --danger:#ff2a6d;
   /* Lernfeld-Neon */
-  --lf1:#2de2e6; --lf2:#27f59a; --lf3:#ffb43b; --lf4:#ff2a6d; --lf5:#b66bff;
+  --lf1:#2de2e6; --lf2:#27f59a; --lf3:#ffb43b; --lf4:#ff2a6d; --lf5:#b66bff; --lf7:#9dff52;
   --fdisp:"Orbitron",sans-serif; --fui:"Segoe UI",system-ui,sans-serif; --fmono:Consolas,monospace;
   /* Aliase, damit alter Seiten-Code mit grünem Branding weiterläuft */
   --green:var(--cyan); --green-d:var(--cyan); --green-soft:rgba(45,226,230,.1);
@@ -35,6 +35,7 @@ html[data-theme="light"]{
   --warn:#b8801f; --danger:#c81e5a;
   --green:var(--cyan); --green-d:var(--cyan); --green-soft:rgba(8,146,165,.10); --blue:var(--cyan); --blue-soft:rgba(8,146,165,.10);
   --card:#ffffff; --shadow:0 6px 20px rgba(30,50,80,.10);
+  --lf7:#5e8f1b;       /* LF7 hell: lesbares Oliv-Gruen statt Neon-Lime */
   --code-bg:#eef3f8;   /* helle Code-/Editor-Fläche (Wert aus lf3_ipv6 Light) */
   --card-face:#eef3f8; /* DECKENDE Karteikarten-Fläche hell (opak, = heller --glass2) */
 }
@@ -186,7 +187,7 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
 .tile.ghost .ic{filter:none;opacity:.6}.tile.ghost h3{color:#8b96b0;text-shadow:none}
 .tile[data-lf="1"]{--ac:var(--lf1)} .tile[data-lf="2"]{--ac:var(--lf2)}
 .tile[data-lf="3"]{--ac:var(--lf3)} .tile[data-lf="4"]{--ac:var(--lf4)}
-.tile[data-lf="5"]{--ac:var(--lf5)}
+.tile[data-lf="5"]{--ac:var(--lf5)} .tile[data-lf="7"]{--ac:var(--lf7)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
 /* ---------- BUTTONS ---------- */

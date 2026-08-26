@@ -24,6 +24,7 @@ Vor dem Commit jeder neuen/umgestellten Seite abhaken:
 
 ## Lernfeld-Akzentfarben (feste Zuordnung)
 LF1 cyan #2de2e6 | LF2 gruen #27f59a | LF3 amber #ffb43b | LF4 magenta #ff2a6d | LF5 lila #b66bff
+LF7 lime #9dff52 (hell: #5e8f1b -- einziges LF-Token mit Hell-Override, Neon-Lime waere auf Weiss unlesbar)
 Akzent kommt automatisch aus data-lf="N" -> .tile[data-lf=N]{--ac:var(--lfN)}.
 Seiten-Akzent entsprechend dem Lernfeld setzen (USV/LF3=amber, UML/LF5=lila).
 

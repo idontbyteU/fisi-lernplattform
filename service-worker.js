@@ -9,7 +9,7 @@
 /*  Private Einzelnutzung: kein manuelles Hochzählen einer Versionsnr.   */
 /*  nötig – der Cache wird ohnehin bei jedem Online-Abruf erneuert.      */
 /* ===================================================================== */
-const CACHE = "fisi-os-v16";          // v16: Formeln ausgeschrieben + Flowcharts in der Formelsammlung
+const CACHE = "fisi-os-v17";          // v17: LF7 - Protokolle & Uebertragungstechniken (Aufdeck-Tabellen)
 const ASSETS = [
   "./",
   "./index.html",
@@ -53,6 +53,7 @@ const ASSETS = [
   "./lf5_sql_syntax.html",
   "./lf5_sql_abfragen.html",
   "./lf5_sql_probleme.html",
+  "./lf7_protokolle.html",
   "./img/db/db_sensor_aufgabe.png",
   "./img/db/db_sensor_loesung.png",
   "./img/db/db_sensor_relational.png",

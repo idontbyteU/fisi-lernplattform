@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protokolle &amp; Übertragungstechniken · LF7 · FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+/* ===== Werkzeugleiste über den Tabellen (Muster aus lf3_osi_modell.html) ===== */
+.rvtools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.2rem 0 1.3rem}
+.rvtools .hint{font-family:var(--fmono);font-size:12px;color:var(--dim)}
+.rvtools .sp{flex:1}
+
+/* ===== Aufdeck-Mechanik für Tabellenzellen ===== */
+td.rv{position:relative;cursor:pointer;user-select:none;min-width:88px}
+td.rv .val{visibility:hidden}
+td.rv.shown .val{visibility:visible}
+td.rv::after{content:"?";position:absolute;inset:2px;display:flex;
+  align-items:center;justify-content:center;border-radius:4px;
+  font-family:var(--fmono);font-size:13px;color:var(--lf7);
+  background:var(--bg2);
+  background-image:repeating-linear-gradient(45deg,rgba(120,180,220,.10),rgba(120,180,220,.10) 7px,rgba(120,180,220,.20) 7px,rgba(120,180,220,.20) 14px);
+  transition:.1s}
+td.rv.shown::after{display:none}
+td.rv:hover::after{color:var(--cyan)}
+html[data-theme="light"] td.rv::after{background:#eef3f8;
+  background-image:repeating-linear-gradient(45deg,#dde6f0,#dde6f0 7px,#c8d6e6 7px,#c8d6e6 14px)}
+
+/* ===== Aufdeck-Mechanik für ganze Textblöcke ===== */
+.rvb{position:relative;cursor:pointer;user-select:none;border:1px dashed var(--line);
+  border-radius:6px;background:var(--bg2);padding:.7rem .85rem;margin:.2rem 0;
+  font-size:16.5px;line-height:1.6;color:var(--read);min-height:46px;transition:.12s}
+.rvb .val{visibility:hidden}
+.rvb.shown .val{visibility:visible}
+.rvb.shown{border-style:solid;cursor:default}
+.rvb::after{content:"Aufdecken";position:absolute;inset:2px;display:flex;
+  align-items:center;justify-content:center;border-radius:5px;
+  font-family:var(--fmono);font-size:13px;letter-spacing:.5px;color:var(--lf7);
+  background:var(--bg2);
+  background-image:repeating-linear-gradient(45deg,rgba(120,180,220,.10),rgba(120,180,220,.10) 7px,rgba(120,180,220,.20) 7px,rgba(120,180,220,.20) 14px)}
+.rvb.shown::after{display:none}
+.rvb:hover::after{color:var(--cyan)}
+html[data-theme="light"] .rvb::after{background:#eef3f8;
+  background-image:repeating-linear-gradient(45deg,#dde6f0,#dde6f0 7px,#c8d6e6 7px,#c8d6e6 14px)}
+.rvb b{color:var(--ink)}
+
+/* ===== Tabellen horizontal scrollbar halten ===== */
+.tw{overflow-x:auto;margin:0 0 1.1rem}
+
+/* ===== Übungsaufgaben ===== */
+.task{background:var(--glass);border:1px solid var(--line);border-radius:6px;
+  padding:.95rem 1.05rem;margin-bottom:.9rem;transition:.15s}
+.task.done{border-color:var(--lf7);opacity:.62}
+.task-q{font-family:var(--fdisp);font-size:17px;font-weight:700;letter-spacing:.2px;
+  color:var(--ink);line-height:1.4;margin-bottom:.6rem}
+.task.done .task-q{color:var(--lf7);text-decoration:line-through}
+.task-done{display:flex;align-items:center;justify-content:flex-end;gap:.5rem;
+  margin-top:.4rem;padding:.5rem 0;min-height:40px;
+  font-family:var(--fmono);font-size:13px;color:var(--muted);cursor:pointer}
+.task-done .chk{width:20px;height:20px}
+.task-done .chk:checked::after{font-size:14px}
+
+/* ===== Glossar-Links ===== */
+.wlink{font-family:var(--fmono);font-size:12.5px;color:var(--cyan);text-decoration:none;white-space:nowrap}
+.wlink:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="index.html">← Startseite</a>
+    <div>
+      <h1><span class="tag" style="background:var(--lf7)">LF7</span>Protokolle &amp; Übertragungstechniken</h1>
+      <div class="sub">IoT-Protokolle · OSI-Einordnung · Funk &amp; Kabel · Klausur-Training</div>
+    </div>
+    <div class="sp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="sum">
+
+  <div class="rvtools">
+    <button class="tbtn" id="rvShow" type="button">Alles aufdecken</button>
+    <button class="tbtn" id="rvHide" type="button">Alles abdecken</button>
+    <span class="sp"></span>
+    <span class="hint">Feld anklicken = aufdecken · nochmal klicken = abdecken</span>
+  </div>
+
+  <!-- ==================== GLOSSAR ==================== -->
+  <h2 class="h-sec"><span class="ico">📖</span>Glossar · Abkürzungen &amp; Erklärungen</h2>
+  <details>
+    <summary>Alle Abkürzungen anzeigen<span class="ar">›</span></summary>
+    <div class="det-c">
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Abkürzung</th><th>Vollständiger Name / Erklärung</th><th>Link</th></tr></thead>
+        <tbody>
+        <tr><td class="lg">2G/3G/4G/5G</td><td>Mobilfunkstandards der 2. bis 5. Generation.</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Mobilfunkstandard" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">6LoWPAN</td><td>IPv6 over Low-Power Wireless Personal Area Networks (IPv6-Pakete in winzigen Funkrahmen).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/6LoWPAN" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">AMQP</td><td>Advanced Message Queuing Protocol (echte Nachrichtenwarteschlangen, Cloud/IT).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">BLE</td><td>Bluetooth Low Energy (sehr stromsparend).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Bluetooth_Low_Energy" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">CoAP</td><td>Constrained Application Protocol (abgespecktes HTTP auf UDP-Basis).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Constrained_Application_Protocol" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">DTLS</td><td>Datagram Transport Layer Security (Verschlüsselung für UDP).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Datagram_Transport_Layer_Security" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">HTTP/REST</td><td>Hypertext Transfer Protocol / Representational State Transfer (Web-Standard).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">IoT</td><td>Internet of Things (Internet der Dinge).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Internet_der_Dinge" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">IPv4 / IPv6</td><td>Internet Protocol Version 4/6 (Adressierung, Schicht 3).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Internet_Protocol" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">LoRaWAN</td><td>Long Range Wide Area Network (LPWAN für große Reichweiten bei minimalem Strom).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Long_Range_Wide_Area_Network" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">LPWAN</td><td>Low-Power Wide-Area Network (Kategorie: z. B. LoRaWAN, NB-IoT).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Low_Power_Wide_Area_Network" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">LwM2M</td><td>Lightweight Machine-to-Machine (Geräteverwaltung: Updates, Konfiguration).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/OMA_LWM2M" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">MQTT</td><td>Message Queuing Telemetry Transport (sparsames Pub/Sub-Protokoll via Broker).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/MQTT" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">NB-IoT</td><td>NarrowBand IoT (LPWAN-Technik über lizensierte Mobilfunkfrequenzen).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/NarrowBand_IoT" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">NFC</td><td>Near Field Communication (beidseitiger Funk, wenige cm, z. B. Bezahlen).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Near_Field_Communication" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">OPC UA</td><td>Open Platform Communications Unified Architecture (Industriestandard).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/OPC_Unified_Architecture" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">OSI</td><td>Open Systems Interconnection (Referenzmodell für Netzwerke, 7 Schichten).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/OSI-Modell" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">PoE</td><td>Power over Ethernet (Stromversorgung über Netzwerkkabel).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Power_over_Ethernet" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">RFID</td><td>Radio-Frequency Identification (Auslesen passiver Tags).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/RFID" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">TCP</td><td>Transmission Control Protocol (verbindungsorientiert, garantiert Zustellung/Reihenfolge).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Transmission_Control_Protocol" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">TSN</td><td>Time-Sensitive Networking (Ethernet-Erweiterung für garantierte/Echtzeit-Zeiten).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Time-Sensitive_Networking" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">UDP</td><td>User Datagram Protocol (verbindungslos, schnell, keine Zustellgarantie).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/User_Datagram_Protocol" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">WLAN</td><td>Wireless Local Area Network (IEEE 802.11).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Wireless_Local_Area_Network" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">ZigBee / Z-Wave</td><td>Kurzstrecken-Mesh-Funkprotokolle fürs Smart Home.</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/ZigBee" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">SSI</td><td>Simple Sensor Interface (einfaches Echtzeit-Protokoll Sensor ↔ Rechner).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Simple_Sensor_Interface_Protocol" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">GPRS / EDGE</td><td>Paketdatendienste in GSM-Netzen (2.5G/2.75G), Vorläufer von UMTS/3G.</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/General_Packet_Radio_Service" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">MAC</td><td>Media Access Control, Teilschicht von OSI-Schicht 2.</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/Medium_Access_Control" target="_blank" rel="noopener">Wiki</a></td></tr>
+        <tr><td class="lg">OASIS / OMA</td><td>Standardisierungsgremien (OASIS: AMQP; OMA: LwM2M).</td><td><a class="wlink" href="https://de.wikipedia.org/wiki/OASIS_(Organisation)" target="_blank" rel="noopener">Wiki</a></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- ==================== 1 · PROTOKOLLE & ÜBERTRAGUNGSTECHNIKEN ==================== -->
+  <h2 class="h-sec"><span class="ico">📡</span>1 · IoT-Protokolle &amp; Übertragungstechniken</h2>
+
+  <div class="h-sub">1.1 · Zielkonflikte &amp; Entscheidungsfragen</div>
+  <p class="lead">Die Anforderungen widersprechen sich. Wenn Sie das eine wollen, bezahlen Sie mit dem anderen:</p>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th style="width:40%">Wenn Sie das wollen</th><th>bezahlen Sie mit …</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">große Reichweite</td><td class="rv"><span class="val">geringer Datenrate</span></td></tr>
+      <tr><td class="lg">hohe Datenrate</td><td class="rv"><span class="val">hohem Energieverbrauch</span></td></tr>
+      <tr><td class="lg">geringer Energieverbrauch</td><td class="rv"><span class="val">seltenem Senden, wenig Daten</span></td></tr>
+      <tr><td class="lg">garantierte Zustellung</td><td class="rv"><span class="val">Zeit und Datenvolumen</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="h-sub">1.2 · Einordnung ins OSI-Modell</div>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Schicht</th><th>Typische Vertreter im IoT</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">7 Anwendung</td><td class="rv"><span class="val">MQTT, CoAP, LwM2M, HTTP/REST, AMQP, OPC UA</span></td></tr>
+      <tr><td class="lg">4 Transport</td><td class="rv"><span class="val">TCP, UDP</span></td></tr>
+      <tr><td class="lg">3 Vermittlung</td><td class="rv"><span class="val">IPv4, IPv6, 6LoWPAN</span></td></tr>
+      <tr><td class="lg">2 Sicherung</td><td class="rv"><span class="val">IEEE 802.15.4 MAC, LoRaWAN-MAC, Ethernet-MAC</span></td></tr>
+      <tr><td class="lg">1 Bitübertragung</td><td class="rv"><span class="val">WLAN, Bluetooth, LoRa, NFC, RFID, Ethernet, Mobilfunk</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> Das OSI-Modell ist ein Ordnungsschema, kein Gesetz. Deckt eine Technik (z. B. WLAN, LoRaWAN) Schicht 1 und 2 ab, ist das kein Fehler.</div></div>
+
+  <div class="h-sub">1.3 · Anwendungsprotokolle im Vergleich</div>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Merkmal</th><th>MQTT</th><th>CoAP</th><th>HTTP</th><th>OPC UA</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">Modell</td><td class="rv"><span class="val">Publish/Subscribe</span></td><td class="rv"><span class="val">Request/Response</span></td><td class="rv"><span class="val">Request/Response</span></td><td class="rv"><span class="val">Client/Server + PubSub</span></td></tr>
+      <tr><td class="lg">Transport</td><td class="rv"><span class="val">TCP</span></td><td class="rv"><span class="val">UDP</span></td><td class="rv"><span class="val">TCP</span></td><td class="rv"><span class="val">TCP</span></td></tr>
+      <tr><td class="lg">Zentrale Stelle</td><td class="rv"><span class="val">Broker zwingend</span></td><td class="rv"><span class="val">keine</span></td><td class="rv"><span class="val">Server</span></td><td class="rv"><span class="val">keine (bei C/S)</span></td></tr>
+      <tr><td class="lg">Einsatz</td><td>Sensornetze, Cloud</td><td>sehr kleine Geräte</td><td>Web-APIs</td><td>Maschinen/Anlagen</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <details>
+    <summary>Weitere Anwendungsprotokolle: LwM2M, AMQP, SSI<span class="ar">›</span></summary>
+    <div class="det-c">
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Protokoll</th><th>Kernfakt</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">LwM2M</td><td class="rv"><span class="val">Setzt auf CoAP auf. Zweck: Geräteverwaltung (Fernkonfiguration, Firmware-Updates, Statusabfrage, Sperrung), nicht Messwerte. Standard: OMA. Einsatz: Zähler in Energie-/Versorgungswirtschaft.</span></td></tr>
+          <tr><td class="lg">AMQP</td><td class="rv"><span class="val">OASIS-Standard. Echte Nachrichtenwarteschlangen, mehr Zustellgarantien als MQTT, höherer Overhead. Einsatz: Unternehmens-IT, Cloud-Backends.</span></td></tr>
+          <tr><td class="lg">SSI</td><td class="rv"><span class="val">Einfaches Echtzeit-Protokoll Sensor ↔ Rechner, geringer Aufwand, in der Praxis selten.</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </details>
+
+  <div class="h-sub">1.4 · Transport: TCP vs. UDP</div>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Merkmal</th><th>TCP</th><th>UDP</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">Verbindung</td><td class="rv"><span class="val">verbindungsorientiert (Handschlag)</span></td><td class="rv"><span class="val">verbindungslos (Pakete direkt raus)</span></td></tr>
+      <tr><td class="lg">Bestätigung</td><td class="rv"><span class="val">ja, jedes Paket quittiert</span></td><td class="rv"><span class="val">nein</span></td></tr>
+      <tr><td class="lg">Verluste</td><td class="rv"><span class="val">werden erneut gesendet</span></td><td class="rv"><span class="val">sind verloren</span></td></tr>
+      <tr><td class="lg">Reihenfolge</td><td class="rv"><span class="val">sichergestellt</span></td><td class="rv"><span class="val">nicht sichergestellt</span></td></tr>
+      <tr><td class="lg">Overhead</td><td class="rv"><span class="val">höher, 20 Byte Header</span></td><td class="rv"><span class="val">gering, 8 Byte Header</span></td></tr>
+      <tr><td class="lg">Einsatz im IoT</td><td class="rv"><span class="val">Industrieautomatisierung, Gesundheitswesen, sicherheitskritisch</span></td><td class="rv"><span class="val">Video-Streaming, VoIP, CoAP</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> TCP fragt „ist es angekommen?“. UDP fragt nicht nach. Bei Messwerten im Sekundentakt ist Nachfragen oft teurer als der Verlust.</div></div>
+
+  <div class="h-sub">1.5 · Vermittlung: IPv4/IPv6, 6LoWPAN</div>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Begriff</th><th>Kernfakt</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">IPv4 vs. IPv6</td><td class="rv"><span class="val">IPv4: ~4,3 Mrd. Adressen. IPv6: Zahl mit 39 Stellen — nötig bei Milliarden vernetzter Geräte.</span></td></tr>
+      <tr><td class="lg">6LoWPAN</td><td class="rv"><span class="val">IPv6-Paket bis 1280 Byte, IEEE-802.15.4-Funkrahmen nur 127 Byte. 6LoWPAN komprimiert Kopfdaten, zerlegt Pakete in kleine Stücke.</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="h-sub">1.6 · Übertragungstechniken (Gesamtübersicht)</div>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Technik</th><th>Reichweite</th><th>Datenrate</th><th>Energie</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">NFC</td><td>Zentimeter</td><td>gering</td><td class="rv"><span class="val">sehr gering</span></td></tr>
+      <tr><td class="lg">RFID</td><td>cm bis m</td><td>gering</td><td class="rv"><span class="val">passiv möglich</span></td></tr>
+      <tr><td class="lg">Bluetooth/BLE</td><td>~10 m</td><td>mittel</td><td class="rv"><span class="val">sehr gering</span></td></tr>
+      <tr><td class="lg">ZigBee / Z-Wave</td><td>10–100 m, Mesh</td><td>gering</td><td class="rv"><span class="val">gering</span></td></tr>
+      <tr><td class="lg">WLAN</td><td>einige 10 m</td><td>hoch</td><td class="rv"><span class="val">hoch</span></td></tr>
+      <tr><td class="lg">Ethernet</td><td>100 m/Segment</td><td>sehr hoch</td><td class="rv"><span class="val">Netzbetrieb</span></td></tr>
+      <tr><td class="lg">LoRaWAN</td><td>km</td><td>sehr gering</td><td class="rv"><span class="val">sehr gering</span></td></tr>
+      <tr><td class="lg">NB-IoT</td><td>km</td><td>gering</td><td class="rv"><span class="val">sehr gering</span></td></tr>
+      <tr><td class="lg">4G/5G</td><td>km</td><td>hoch</td><td class="rv"><span class="val">hoch</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <details>
+    <summary>Nahbereich: NFC vs. RFID<span class="ar">›</span></summary>
+    <div class="det-c">
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Merkmal</th><th>NFC</th><th>RFID</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">Reichweite</td><td class="rv"><span class="val">wenige cm</span></td><td class="rv"><span class="val">cm bis mehrere m</span></td></tr>
+          <tr><td class="lg">Energie</td><td class="rv"><span class="val">passiv möglich, Lesegerät versorgt Chip</span></td><td class="rv"><span class="val">passive Tags ohne eigene Stromquelle</span></td></tr>
+          <tr><td class="lg">Datenrichtung</td><td class="rv"><span class="val">beidseitig</span></td><td class="rv"><span class="val">überwiegend Lesen</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Mesh-Prinzip (ZigBee, Z-Wave)<span class="ar">›</span></summary>
+    <div class="det-c">
+      <div class="rvb"><span class="val">Jedes netzbetriebene Gerät leitet Nachrichten für andere weiter. Fällt eines aus, sucht die Nachricht einen anderen Weg. Reichweite und Ausfallsicherheit wachsen mit jedem Gerät. WLAN kann das nicht — dort hängt jedes Gerät einzeln am Access Point.</span></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>LPWAN-Familie: LoRaWAN, NB-IoT, Sigfox<span class="ar">›</span></summary>
+    <div class="det-c">
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Merkmal</th><th>LoRaWAN</th><th>NB-IoT</th><th>Sigfox</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">Frequenz</td><td class="rv"><span class="val">868 MHz, lizenzfrei</span></td><td class="rv"><span class="val">Mobilfunkband, lizenziert</span></td><td class="rv"><span class="val">868 MHz, lizenzfrei</span></td></tr>
+          <tr><td class="lg">Netzbetrieb</td><td class="rv"><span class="val">eigenes Netz möglich</span></td><td class="rv"><span class="val">Mobilfunkanbieter, Vertrag nötig</span></td><td class="rv"><span class="val">Anbieternetz, Vertrag nötig</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> Der entscheidende Unterschied LoRaWAN/NB-IoT liegt im Betriebsmodell, nicht in der Technik — lizenzfrei + eigenes Netz vs. lizenziert + Providervertrag.</div></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Mobilfunk-Generationen 2G–5G<span class="ar">›</span></summary>
+    <div class="det-c">
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Generation</th><th>Rolle im IoT</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">2G/GPRS/EDGE</td><td class="rv"><span class="val">lange günstigste Lösung, wird zunehmend abgeschaltet</span></td></tr>
+          <tr><td class="lg">3G</td><td class="rv"><span class="val">in Deutschland bereits abgeschaltet</span></td></tr>
+          <tr><td class="lg">4G/LTE</td><td class="rv"><span class="val">Fahrzeuge, mobile Geräte, Video</span></td></tr>
+          <tr><td class="lg">5G</td><td class="rv"><span class="val">autonomes Fahren, Campusnetze, Echtzeitsteuerung</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Kabelgebunden: Ethernet, Feldbusse, TSN<span class="ar">›</span></summary>
+    <div class="det-c">
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Technik</th><th>Einsatz</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">Ethernet</td><td class="rv"><span class="val">Industrie 4.0, Smart Building, PoE möglich</span></td></tr>
+          <tr><td class="lg">Feldbusse (Profibus, Modbus, CAN)</td><td class="rv"><span class="val">Sensoren/Aktoren/Steuerungen in Anlagen, echtzeitnah</span></td></tr>
+          <tr><td class="lg">TSN</td><td class="rv"><span class="val">Ethernet-Erweiterung, garantierte Zeiten, löst Feldbusse zunehmend ab</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- ==================== 2 · ÜBUNGSAUFGABEN ==================== -->
+  <h2 class="h-sec"><span class="ico">📝</span>2 · Übungsaufgaben (Klausur-Training)</h2>
+
+  <div class="task" id="t1">
+    <div class="task-q">1 · Welches konkrete technische Problem löst 6LoWPAN?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Ein normales IPv6-Paket darf bis zu 1280 Byte groß sein, ein IEEE-802.15.4-Funkrahmen fasst aber nur 127 Byte. 6LoWPAN komprimiert die Kopfdaten und zerlegt das Paket, damit IPv6 auf winzigen Geräten nutzbar wird.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t1"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t2">
+    <div class="task-q">2 · ZigBee und Z-Wave bilden ein Mesh-Netz, WLAN nicht. Erläutern Sie den Unterschied und nennen Sie zwei Vorteile.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>Unterschied:</b> Im Mesh leitet jedes netzbetriebene Gerät Nachrichten für andere weiter. Bei WLAN hängt jedes Gerät direkt am Access Point.<br><b>Vorteile:</b> 1. Die Reichweite wächst mit jedem Gerät. 2. Höhere Ausfallsicherheit (Nachrichten suchen sich bei Störung einen anderen Weg).</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t2"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t3">
+    <div class="task-q">3 · LoRaWAN und NB-IoT (LPWAN): Der entscheidende Unterschied liegt nicht in der Technik, sondern im Betriebsmodell. Erklären Sie dies.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>LoRaWAN</b> nutzt ein lizenzfreies Frequenzband. Man kann ein eigenes Gateway aufstellen und sein eigenes Netz betreiben (keine laufenden Kosten/Verträge).<br><b>NB-IoT</b> nutzt lizensierte Mobilfunkfrequenzen. Man benötigt einen Vertrag beim Provider, hat dafür aber sofort Abdeckung (überall wo es Mobilfunk gibt).</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t3"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t4">
+    <div class="task-q">4 · Was ist der Unterschied zwischen RFID und NFC?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>NFC</b> ist beidseitig (Geräte können senden und empfangen, z. B. Smartphones). Die Reichweite ist extrem kurz (Sicherheitsmerkmal).<br>Bei <b>RFID</b> liest ein aktives Lesegerät meist nur passive Tags aus (größere Reichweite möglich, z. B. Logistik).</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t4"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t5">
+    <div class="task-q">5 · Ein Lieferant bietet ein günstiges Silo-Sensormodul mit 2G-Funkmodul an. Bewerten Sie das Angebot.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Ablehnen. 2G-/3G-Netze werden zunehmend oder sind bereits abgeschaltet. Ein 2G-Modul hat eine stark begrenzte Restlaufzeit (Obsoleszenzrisiko).</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t5"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="h-sub">Szenarien · Technikwahl begründen</div>
+  <p class="lead">Wählen Sie eine Technik und begründen Sie mit den vier Fragen: <b>Reichweite, Strom, Datenmenge, Häufigkeit.</b></p>
+
+  <div class="task" id="t6">
+    <div class="task-q">Szenario A · Acht Granulatsilos auf dem Werksgelände melden alle 30 Min ihren Füllstand. Die Sensoren laufen auf Batterie (Soll: 5 Jahre).</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>Wahl: LoRaWAN oder NB-IoT (LPWAN)</b><br>· Reichweite: Werksgelände (km) → groß<br>· Strom: Batterie, lange Lebensdauer → sehr geringer Verbrauch nötig<br>· Daten: nur Füllstand, alle 30 Min → extrem wenig Daten.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t6"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t7">
+    <div class="task-q">Szenario B · Vier Silos des 40 km entfernten Zweigwerks sollen überwacht werden. Die Firma will dort KEIN eigenes Netz aufbauen.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>Wahl: NB-IoT oder LTE/Mobilfunk</b><br>· Reichweite: 40 km → WAN/Mobilfunknetz nötig.<br>· Betriebsmodell: kein eigenes Netz gewünscht → Vertrag beim Provider (daher fällt eigenes LoRaWAN weg).</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t7"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t8">
+    <div class="task-q">Szenario C · Zwölf Spritzgießmaschinen liefern im Sekundentakt Prozessdaten an das Leitsystem. Ausfälle sind NICHT hinnehmbar.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>Wahl: Ethernet (TSN) oder Feldbusse — kabelgebunden</b><br>· Daten/Häufigkeit: Sekundentakt, sehr kritisch.<br>· Begründung: Kabel ist stabil, extrem ausfallsicher, keine Funkstörungen, geringste Latenz (TSN garantiert Zeiten). Strom ist an den Maschinen ohnehin vorhanden. (Alternativ: 5G-Campusnetz.)</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t8"> Aufgabe verstanden</label>
+  </div>
+
+</div>
+</div>
+
+<script>
+/* ===================================================================== */
+/*  Aufdeck-Mechanik (rein visuell, kein localStorage)                    */
+/* ===================================================================== */
+document.querySelectorAll("td.rv, .rvb").forEach(function (el) {
+  el.addEventListener("click", function () { el.classList.toggle("shown"); });
+});
+
+document.getElementById("rvShow").onclick = function () {
+  document.querySelectorAll("td.rv, .rvb").forEach(function (el) { el.classList.add("shown"); });
+  document.querySelectorAll("details.sol").forEach(function (d) { d.open = true; });
+};
+document.getElementById("rvHide").onclick = function () {
+  document.querySelectorAll("td.rv.shown, .rvb.shown").forEach(function (el) { el.classList.remove("shown"); });
+  document.querySelectorAll("details.sol").forEach(function (d) { d.open = false; });
+};
+
+/* ===================================================================== */
+/*  Aufgaben-Fortschritt (localStorage, eigener Key)                      */
+/* ===================================================================== */
+var DKEY = "fisi_lf7_protokolle_v1";
+
+function loadDone() {
+  try { return JSON.parse(localStorage.getItem(DKEY) || "{}"); } catch (e) { return {}; }
+}
+function saveDone(state) {
+  try { localStorage.setItem(DKEY, JSON.stringify(state)); } catch (e) {}
+}
+
+var doneState = loadDone();
+
+document.querySelectorAll(".task-done .chk").forEach(function (cb) {
+  var id = cb.dataset.task;
+  var box = document.getElementById(id);
+  if (doneState[id]) { cb.checked = true; box.classList.add("done"); }
+  cb.addEventListener("change", function () {
+    if (cb.checked) { doneState[id] = 1; box.classList.add("done"); }
+    else { delete doneState[id]; box.classList.remove("done"); }
+    saveDone(doneState);
+  });
+});
+
+/* ===================================================================== */
+/*  Service Worker                                                        */
+/* ===================================================================== */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("service-worker.js").catch(function () {});
+  });
+}
+</script>
+</body>
+</html>
