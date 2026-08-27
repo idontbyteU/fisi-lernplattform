@@ -748,3 +748,22 @@ html[data-theme="light"] .drw-body code{background:rgba(8,146,165,.10)}
   .pyhub-seg{order:3;margin-left:0;width:100%;justify-content:center}
   .pyhub-seg a{flex:1;text-align:center;padding:8px 10px}
 }
+
+/* ===================================================================== */
+/*  IOT-MODUL · Tab-Leiste (LF7-Zusatzmaterial Pyramide/MQTT/OPC UA)      */
+/*  Feste Reihenfolge auf allen drei Seiten, aktive Seite leuchtet in     */
+/*  --lf7 (Lime = "gruen") auf. Zentral hier, damit alle drei Dateien     */
+/*  exakt gleich aussehen.                                                */
+/* ===================================================================== */
+.iot-tabs{display:flex;gap:8px;flex-wrap:wrap;max-width:880px;margin:0 auto;padding:14px 16px 0}
+.iot-tab{flex:1;min-width:110px;text-align:center;padding:10px 14px;border-radius:8px;
+  border:1px solid var(--line);background:var(--glass2);color:var(--ink);
+  font-family:var(--fui);font-weight:600;font-size:.92rem;text-decoration:none;transition:.15s}
+.iot-tab:hover{border-color:var(--lf7);color:var(--lf7)}
+.iot-tab.active{border-color:var(--lf7);color:var(--lf7);background:rgba(157,255,82,.14);
+  box-shadow:0 0 12px rgba(157,255,82,.35)}
+html[data-theme="light"] .iot-tab.active{background:rgba(94,143,27,.12);box-shadow:none}
+@media(max-width:560px){
+  .iot-tabs{padding:12px 10px 0}
+  .iot-tab{min-width:88px;font-size:.85rem;padding:8px 10px}
+}

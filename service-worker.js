@@ -9,7 +9,7 @@
 /*  Private Einzelnutzung: kein manuelles Hochzählen einer Versionsnr.   */
 /*  nötig – der Cache wird ohnehin bei jedem Online-Abruf erneuert.      */
 /* ===================================================================== */
-const CACHE = "fisi-os-v18";          // v18: Filter-Chips LF6/LF7 + Ghost-Kachel LF6 auf der Startseite
+const CACHE = "fisi-os-v19";          // v19: LF7-Zusatzmodul IoT-Pyramide/MQTT/OPC UA
 const ASSETS = [
   "./",
   "./index.html",
@@ -54,6 +54,9 @@ const ASSETS = [
   "./lf5_sql_abfragen.html",
   "./lf5_sql_probleme.html",
   "./lf7_protokolle.html",
+  "./lf7_iot_pyramide.html",
+  "./lf7_iot_mqtt.html",
+  "./lf7_iot_opcua.html",
   "./img/db/db_sensor_aufgabe.png",
   "./img/db/db_sensor_loesung.png",
   "./img/db/db_sensor_relational.png",
