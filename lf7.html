@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FISI//OS · Lernfeld 7</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+/* LF7-Akzent fuer alle Kacheln dieses Hubs */
+.tile[data-lf="7"]{--ac:var(--lf7)}
+</style>
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="index.html">&larr; FISI</a>
+    <div class="brand">
+      <span class="led"></span>
+      <div>
+        <h1>Lernfeld 7</h1>
+        <p>Cyber-physische Systeme &middot; IoT &middot; Industrie 4.0</p>
+      </div>
+    </div>
+    <div class="sp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ===================================================================== -->
+  <!--  KACHEL-HUB im Startseiten-Stil. Neue LF7-Themen einfach als weitere   -->
+  <!--  <a class="tile" data-lf="7" …> ergaenzen und in den data-tags der     -->
+  <!--  LF7-Sammelkachel auf index.html sowie in service-worker.js nachziehen.-->
+  <!--  Bewusst KEINE leeren Platzhalter-Kacheln.                             -->
+  <!-- ===================================================================== -->
+  <div class="sek"><h2>Themen</h2><div class="sl"></div></div>
+  <div class="grid">
+
+    <a class="tile" data-lf="7" style="--i:0" href="lf7_zusammenfassung.html" data-tags="lf7 zusammenfassung ihk pruefungsvorbereitung merkblatt ueberblick glossar praxisbeispiele osi opc ua mqtt automatisierungspyramide cps industrie 4.0 retrofitting thread matter kacheln aufklappbar">
+      <span class="ic">📋</span><h3>Zusammenfassung</h3>
+      <p>Der komplette Stoff als aufklappbare Kacheln – OSI, OPC UA, MQTT, Pyramide, CPS, Retrofitting, Thread &amp; Matter, dazu ein Glossar mit Praxisbeispielen.</p>
+      <span class="meta st-ok"><span class="dot"></span>8 Kacheln · zum Nachschlagen</span>
+    </a>
+
+    <a class="tile" data-lf="7" style="--i:1" href="lf7_automatisierungspyramide.html" data-tags="lf7 automatisierungspyramide ebenen erp mes scada hmi dcs sps feldebene steuerungsebene prozessleitebene betriebsleitebene unternehmensleitebene retrofitting thread matter zigbee border router csa industrie 4.0 cps">
+      <span class="ic">🏗️</span><h3>Automatisierungs&shy;pyramide</h3>
+      <p>Die fünf Ebenen von der Feldebene bis zum ERP, der klassische Datenfluss, was CPS daran ändern — plus Retrofitting, Thread und Matter.</p>
+      <span class="meta st-ok"><span class="dot"></span>6 Kapitel · 9 Übungsaufgaben</span>
+    </a>
+
+    <a class="tile" data-lf="7" style="--i:2" href="lf7_mqtt.html" data-tags="lf7 mqtt message queuing telemetry transport publish subscribe broker mosquitto hivemq client topic wildcard payload retained persistent session keep alive lwt last will testament websockets qos quality of service puback pubrec pubrel pubcomp port 1883 8883 m2m isa-95">
+      <span class="ic">📨</span><h3>MQTT</h3>
+      <p>Publish/Subscribe über den Broker, Topics und Wildcards, Payload, Verbindungsmanagement mit LWT und Keep Alive, die drei QoS-Stufen.</p>
+      <span class="meta st-ok"><span class="dot"></span>8 Kapitel · 10 Übungsaufgaben</span>
+    </a>
+
+    <a class="tile" data-lf="7" style="--i:3" href="lf7_opcua.html" data-tags="lf7 opc ua open platform communications unified architecture opc foundation node namespace baumstruktur attribute server client informationsmodell semantik euromap profibus profinet rs232 rs485 canbus auffindbarkeit abonnements methoden ereignisse iec 62541">
+      <span class="ic">🧬</span><h3>OPC UA</h3>
+      <p>Welches Problem der Standard löst und was er ausdrücklich nicht ersetzt, die Kernfunktionen, Server/Client sowie Nodes und Namespaces.</p>
+      <span class="meta st-ok"><span class="dot"></span>6 Kapitel · 9 Übungsaufgaben</span>
+    </a>
+
+    <a class="tile" data-lf="7" style="--i:4" href="lf7_protokolle.html" data-tags="lf7 protokolle uebertragungstechniken iot coap http rest amqp lwm2m ssi tcp udp osi 6lowpan ipv6 lorawan nb-iot sigfox lpwan zigbee z-wave bluetooth ble nfc rfid wlan ethernet tsn feldbus modbus can mobilfunk 2g 5g mesh funk zielkonflikt">
+      <span class="ic">📡</span><h3>Protokolle &amp; Übertragungs&shy;techniken</h3>
+      <p>Zielkonflikte der Funktechnik, OSI-Einordnung, Anwendungsprotokolle im Vergleich, TCP vs. UDP und die komplette Technik-Übersicht von NFC bis 5G.</p>
+      <span class="meta st-ok"><span class="dot"></span>Glossar · 8 Übungsaufgaben</span>
+    </a>
+
+  </div>
+
+  <div class="sek"><h2>Verwandt</h2><div class="sl"></div></div>
+  <div class="grid">
+    <a class="tile" data-lf="3" style="--i:5" href="lf3_osi_modell.html" data-tags="lf3 osi modell schichten tcp ip protokolle geraete karteikarten">
+      <span class="ic">🕸️</span><h3>OSI-Modell</h3>
+      <p>Grundlage für alles hier: die sieben Schichten mit Einheiten, Protokollen und Geräten — als Aufdeck-Tabelle und Karteikarten in LF3.</p>
+      <span class="meta st-ok"><span class="dot"></span>zu Lernfeld 3</span>
+    </a>
+  </div>
+
+  <footer>FISI//OS · <span>Lernfeld 7 · Cyber-physische Systeme</span></footer>
+</div>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("service-worker.js").catch(function () {});
+  });
+}
+</script>
+</body>
+</html>

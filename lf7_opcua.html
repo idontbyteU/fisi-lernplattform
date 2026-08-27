@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPC UA · LF7 · FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+/* Seiten-Akzent; Aufdeck-/Aufgaben-Mechanik liegt in theme.css */
+.sum{--ac:var(--lf7)}
+
+/* Stapel Client -> Server -> Feldprotokolle */
+.stack{display:grid;gap:.5rem;margin:.8rem 0 1.2rem}
+.stack .s{border:1px solid var(--line);border-left:3px solid var(--ac);border-radius:5px;
+  background:var(--glass);padding:.65rem .85rem;font-size:15.5px;color:var(--read)}
+.stack .s b{color:var(--ink)}
+.stack .s .k{font-family:var(--fmono);font-size:12px;color:var(--ac);
+  text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:.2rem}
+.stack .fan{display:flex;flex-wrap:wrap;gap:6px;margin-top:.45rem}
+.stack .fan span{font-family:var(--fmono);font-size:13px;background:rgba(120,180,220,.08);
+  border:1px solid var(--line);border-radius:99px;padding:4px 11px;color:var(--read)}
+</style>
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="lf7.html">← Lernfeld 7</a>
+    <div>
+      <h1><span class="tag" style="background:var(--lf7)">LF7</span>OPC UA</h1>
+      <div class="sub">Aufgabe &amp; Abgrenzung · Kernfunktionen · Server/Client · Nodes &amp; Namespaces</div>
+    </div>
+    <div class="sp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="sum">
+
+  <div class="rvtools">
+    <button class="tbtn" id="rvShow" type="button">Alles aufdecken</button>
+    <button class="tbtn" id="rvHide" type="button">Alles abdecken</button>
+    <span class="sp"></span>
+    <span class="hint">Feld anklicken = aufdecken · nochmal klicken = abdecken</span>
+  </div>
+
+  <!-- ==================== 1 ==================== -->
+  <h2 class="h-sec"><span class="ico">🧩</span>1 · Das Ausgangsproblem</h2>
+  <p class="lead">Damit eine PC-Anwendung (z. B. ein Assistenz- oder Produktleitsystem) mit einer Maschine — etwa einer Spritzgießmaschine oder einem Extruder — kommunizieren kann, muss bekannt sein, <b>in welchem Datenmodell</b> die Anlage ihre Signale sendet.</p>
+  <p class="lead">Historisch haben sich pro Systemwelt unterschiedliche Standards etabliert: PC-Systeme arbeiten standardmäßig mit <b>TCP/IP über Ethernet</b>, während ältere Maschinensteuerungen häufig über <b>Profibus</b> (z. B. RS485) erreichbar sind. Genau hier setzt OPC UA an.</p>
+  <div class="callout tip"><span class="ci">💡</span><div>Grundlage jeder digitalen Kommunikation ist das <b>OSI-Modell</b> (eingeführt 1984, sieben hierarchische Schichten). Beim Versand durchlaufen die Daten alle Stufen von 7 nach 1, beim Empfang wieder zurück. → <a href="lf3_osi_modell.html">Zur OSI-Seite in LF3</a></div></div>
+
+  <details>
+    <summary>Kurz-Auffrischung: die 7 OSI-Schichten<span class="ar">›</span></summary>
+    <div class="det-c">
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>#</th><th>Schicht</th><th>Aufgabe</th><th>Beispiel</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">7</td><td>Anwendung</td><td class="rv"><span class="val">Was der Benutzer sieht und bedient; wandelt Eingaben in Datenformate um.</span></td><td class="rv"><span class="val">Webbrowser, E-Mail-Programm</span></td></tr>
+          <tr><td class="lg">6</td><td>Darstellung</td><td class="rv"><span class="val">Übersetzer zwischen Datenformaten: wandelt das Anzeigeformat (z. B. ASCII) in eine unabhängige Form für den syntaktisch korrekten Austausch.</span></td><td class="rv"><span class="val">ISO 8822 / X.216</span></td></tr>
+          <tr><td class="lg">5</td><td>Sitzung</td><td class="rv"><span class="val">Baut die Sitzung auf und synchronisiert sie; Check-Points erlauben es, eine unterbrochene Kommunikation nahtlos fortzusetzen.</span></td><td class="rv"><span class="val">ISO 8326</span></td></tr>
+          <tr><td class="lg">4</td><td>Transport</td><td class="rv"><span class="val">Segmentiert die Daten in Pakete, stimmt sie organisatorisch ab und vermeidet Staus.</span></td><td class="rv"><span class="val">TCP, UDP</span></td></tr>
+          <tr><td class="lg">3</td><td>Vermittlung</td><td class="rv"><span class="val">Weg-Suchen und Weitervermittlung über Knoten (Routing); Verbindung aufbauen, trennen, überwachen.</span></td><td class="rv"><span class="val">IP, IPsec</span></td></tr>
+          <tr><td class="lg">2</td><td>Sicherung</td><td class="rv"><span class="val">Teilt den Bit-Datenstrom in Blöcke (Frames) und fügt Prüfsummen hinzu, damit fehlerhafte Blöcke erkannt und neu übertragen werden.</span></td><td class="rv"><span class="val">MAC, LLC · Hardware: Switch</span></td></tr>
+          <tr><td class="lg">1</td><td>Bitübertragung</td><td class="rv"><span class="val">Physischer Aufbau: Einsen und Nullen von Endpunkt zu Endpunkt.</span></td><td class="rv"><span class="val">IEEE 802.3 / Ethernet · Kabel, Stecker</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="callout"><span class="ci">ℹ️</span><div>Für jede Schicht gibt es <b>mehrere</b> mögliche Dienste: als Transport TCP, UDP, aber auch Profibus, Modbus oder Profinet; als Übertragung Ethernet oder WLAN. Jeder Dienst hat seine eigenen Besonderheiten.</div></div>
+    </div>
+  </details>
+
+  <!-- ==================== 2 ==================== -->
+  <h2 class="h-sec"><span class="ico">🎯</span>2 · Welche Aufgabe OPC UA löst</h2>
+  <p class="lead">Ziel ist eine <b>sichere, einfache und robuste Kommunikation zwischen unterschiedlichsten Systemen</b> — unabhängig davon, welches Protokoll dort verwendet wird.</p>
+
+  <div class="callout warn"><span class="ci">⚠️</span><div><b>Wichtigste Abgrenzung:</b> OPC UA <b>ersetzt keine</b> etablierten Kommunikationsprotokolle wie TCP/IP, Profibus, RS232 oder RS485. Es definiert einen <b>Rahmen</b>, wie verschiedene Systeme unabhängig von ihren Protokollen miteinander kommunizieren können — es legt fest, <b>WAS</b> über die jeweilige Schnittstelle <b>WIE</b> übertragen werden muss.</div></div>
+
+  <div class="h-sub">Beispiel: eine Software visualisiert Daten aus mehreren Anlagen</div>
+  <div class="stack">
+    <div class="s"><span class="k">Oben</span><b>Benutzerinterface der Software</b></div>
+    <div class="s"><span class="k">↓</span>Software fungiert als <b>OPC Client</b> (integriert oder extern)</div>
+    <div class="s"><span class="k">↓</span>OPC Client kommuniziert mit <b>OPC UA Server</b> (integriert oder extern)</div>
+    <div class="s"><span class="k">↓ Server spricht nach unten über</span>
+      <div class="fan"><span>Profibus → SPS</span><span>Profinet → SPS</span><span>CAN-Bus → SPS</span><span>TCP/IP → SPS/PC</span><span>RS232 → SPS/PC</span><span>RS485 → SPS/PC</span></div>
+    </div>
+  </div>
+  <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> OPC UA ist <b>kein Dienst, keine Software und keine Protokollbeschreibung</b> wie TCP oder IP. Es beschreibt nur, wie die Daten zu strukturieren sind, welche Formate und Dienste eingesetzt werden und wie diese kombiniert werden dürfen.</div></div>
+
+  <!-- ==================== 3 ==================== -->
+  <h2 class="h-sec"><span class="ico">🧰</span>3 · Kernfunktionen des Standards</h2>
+
+  <div class="h-sub">Grundfunktionen</div>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Funktion</th><th>Bedeutung</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">Auffindbarkeit</td><td class="rv"><span class="val">OPC-UA-fähige Systeme sollen für andere Systeme problemlos im Netzwerk auffindbar sein.</span></td></tr>
+      <tr><td class="lg">Strukturen</td><td class="rv"><span class="val">Alle Datenstrukturen sind einheitlich, so dass Datei- und Ordnerstrukturen erhalten bleiben und keine unstrukturierten Listen entstehen.</span></td></tr>
+      <tr><td class="lg">Zugriff</td><td class="rv"><span class="val">Der Zugriff auf die Strukturen lässt sich durch Zugangsberechtigungen kontrollieren.</span></td></tr>
+      <tr><td class="lg">Abonnements</td><td class="rv"><span class="val">Daten können abonniert werden und werden dann automatisiert permanent übertragen, statt immer abgefragt werden zu müssen.</span></td></tr>
+      <tr><td class="lg">Ereignisse</td><td class="rv"><span class="val">Es lässt sich festlegen, welche Ereignisse automatisiert gemeldet werden.</span></td></tr>
+      <tr><td class="lg">Methoden</td><td class="rv"><span class="val">Unterschiedliche Funktionen können aus der Ferne gestartet werden.</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <details>
+    <summary>Plattform-Unabhängigkeit, Sicherheit, Transport, Erweiterbarkeit<span class="ar">›</span></summary>
+    <div class="det-c">
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Bereich</th><th>Was der Standard zusagt</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">Plattform-Unabhängigkeit</td><td class="rv"><span class="val">Kompatibel zu PC-Systemen, cloudbasierten Servern, beliebigen SPS-Steuerungen und Mikrocontrollern — und zu allen Betriebssystemen: Windows, macOS, Android, Linux.</span></td></tr>
+          <tr><td class="lg">Sicherheit</td><td class="rv"><span class="val">Firewall-freundliche Gestaltung, Kontrollmöglichkeiten.</span></td></tr>
+          <tr><td class="lg">Transport</td><td class="rv"><span class="val">Vielzahl von Protokollen von binärem Transport bis JSON; Sitzungsverschlüsselung und verschlüsselte Datenübertragung; Nachrichtensignaturen zur Prüfung von Herkunft und Integrität; Authentifizierung und Zertifizierung der Zugriffserlaubnisse; Benutzerkontrolle mit Zugriffsrechtdefinitionen; Protokollierung aller Zugriffe.</span></td></tr>
+          <tr><td class="lg">Erweiterbarkeit</td><td class="rv"><span class="val">Offene und wachsende Plattform, in die neue Kommunikationsmöglichkeiten kontinuierlich eingebunden werden.</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- ==================== 4 ==================== -->
+  <h2 class="h-sec"><span class="ico">🔁</span>4 · Server-Client-Modell</h2>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Rolle</th><th>Aufgabe</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">OPC Server</td><td class="rv"><span class="val">Bildet die Basis der Kommunikation. Hier sind der OPC-Standard, die OPC-Schnittstelle und ein Kommunikationsprotokoll zur Steuerung implementiert.</span></td></tr>
+      <tr><td class="lg">OPC Client</td><td class="rv"><span class="val">Das logische Gegenstück. Kann sich aufgrund des implementierten OPC-Standards mit beliebigen Servern verbinden und die Daten anwendungsspezifisch auslesen.</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout tip"><span class="ci">💡</span><div>Ein System kann <b>beide Rollen</b> einnehmen — es empfängt dann Daten von allen OPC-UA-fähigen Systemen und sendet zugleich an sie.</div></div>
+
+  <!-- ==================== 5 ==================== -->
+  <h2 class="h-sec"><span class="ico">🌳</span>5 · Die Datenstruktur: Nodes und Namespaces</h2>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Begriff</th><th>Bedeutung</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">Node</td><td class="rv"><span class="val">Das grundlegendste Element der OPC-UA-Datenstruktur — ein Datenpunkt. Am ehesten vergleichbar mit einem <b>Objekt aus der objektorientierten Programmierung</b>.</span></td></tr>
+      <tr><td class="lg">Attribute</td><td class="rv"><span class="val">Jeder Node besitzt Attribute. Das können Nutzdaten oder Metadaten sein.</span></td></tr>
+      <tr><td class="lg">Namespace</td><td class="rv"><span class="val">Alle Nodes stehen in Relation zueinander und werden über Namensräume in einer <b>Baumstruktur</b> organisiert. Innerhalb eines Namespace ist jeder Node eindeutig bezeichnet; in einem anderen Namespace steht dieselbe Bezeichnung wieder zur Verfügung.</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout warn"><span class="ci">⚠️</span><div>Namensräume sorgen für große Flexibilität und dynamischen Code — schaffen aber auch <b>komplexe Datenmodelle</b>.</div></div>
+
+  <div class="h-sub">Vergleich: proprietäre Schnittstelle vs. OPC UA</div>
+  <p class="lead">Dieselben Maschinenwerte, einmal ohne und einmal mit Struktur:</p>
+
+  <div class="h-sub" style="margin-top:1rem">Proprietär — Werte ohne Bedeutung</div>
+  <div class="rvcode">"HT1, 210.5, HT2, 211.5, HT3, 222.3, HT4, 221.0, UM, 75.9, STR, 55, NB, 33, SE, 1278936756123"</div>
+  <div class="rvb"><span class="val">Die Daten sind zwar lesbar, aber es fehlen die Strukturen und es ist oft nicht erkennbar, um welche Art von Information es sich handelt. Der <b>Hersteller</b> weiß, dass sich hinter „HT3" die Temperatur der Heizzone 3 in °C verbirgt. Wer diese Information nicht hat, muss sie aufwändig entschlüsseln.</span></div>
+
+  <div class="h-sub" style="margin-top:1rem">OPC UA — Baumstruktur mit Bedeutung</div>
+  <div class="rvcode"><b>Extr:</b>
+  <b>Extr_Zyl_Temp</b>
+      Extr_Zyl_Temp_1:        210.5
+      Extr_Zyl_Temp_2:        205.3
+      Extr_Zyl_Temp_3:        207.4
+  <b>Extr_Antr_Data</b>
+      Extr_Antr_Data_Drehz:    75.9
+      Extr_Antr_Data_Str:      55</div>
+  <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> In der OPC-UA-Struktur — besonders mit einer Branchenspezifizierung wie <b>EUROMAP</b> — ist genau festgelegt, welcher Wert mit welcher Bezeichnung und Struktur übertragen wird. Übertragen wird nicht nur der Wert, sondern seine <b>Bedeutung</b>.</div></div>
+
+  <!-- ==================== 6 ==================== -->
+  <h2 class="h-sec"><span class="ico">🏛️</span>6 · Wer dahintersteht</h2>
+  <p class="lead"><b>OPC UA</b> = <b>Open Platform Communications Unified Architecture</b>, entwickelt von der gleichnamigen <b>OPC Foundation</b>, einer unabhängigen Institution. Die Beschreibung ist vollkommen <b>offen</b> und für jeden zugänglich — es gibt keine herstellerspezifischen Besonderheiten oder Geheimnisse wie bei einer proprietären Kommunikationsschnittstelle. Wer OPC UA beherrscht, kann mit jedem anderen OPC-UA-System kommunizieren.</p>
+
+  <!-- ==================== AUFGABEN ==================== -->
+  <h2 class="h-sec"><span class="ico">📝</span>Übungsaufgaben (Klausur-Training)</h2>
+
+  <div class="task" id="t1">
+    <div class="task-q">1 · Ein Kollege sagt: „OPC UA ist ein Ersatz für Profibus und TCP/IP." Korrigieren Sie ihn.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Falsch. OPC UA <b>ersetzt keine</b> Kommunikationsprotokolle — es setzt darauf auf. Es definiert einen Rahmen, wie Systeme unabhängig von ihrem Protokoll kommunizieren: Es legt fest, <b>WAS</b> über die jeweilige Schnittstelle <b>WIE</b> übertragen werden muss. Profibus, RS485, RS232 und TCP/IP bleiben als Transportwege bestehen.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t1"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t2">
+    <div class="task-q">2 · Wofür steht OPC UA, und wer entwickelt den Standard?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>Open Platform Communications Unified Architecture</b>, entwickelt von der <b>OPC Foundation</b>, einer unabhängigen Institution. Die Spezifikation ist offen und für jeden zugänglich — keine herstellerspezifischen Geheimnisse.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t2"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t3">
+    <div class="task-q">3 · Nennen Sie vier der sechs Grundfunktionen, die im Standard festgelegt sind.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>Auffindbarkeit</b> (Systeme sind im Netz findbar), <b>Strukturen</b> (einheitliche Datenstrukturen statt unstrukturierter Listen), <b>Zugriff</b> (Zugangsberechtigungen), <b>Abonnements</b> (Daten werden automatisch geliefert statt abgefragt), <b>Ereignisse</b> (automatisierte Meldungen), <b>Methoden</b> (Funktionen aus der Ferne starten).</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t3"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t4">
+    <div class="task-q">4 · Was ist ein Node, und womit lässt er sich am ehesten vergleichen?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Ein <b>Node</b> ist das grundlegendste Element der OPC-UA-Datenstruktur — ein Datenpunkt. Er lässt sich am ehesten mit einem <b>Objekt aus der objektorientierten Programmierung</b> gleichsetzen: Er besitzt <b>Attribute</b> (Nutz- oder Metadaten) und steht in Relation zu anderen Nodes.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t4"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t5">
+    <div class="task-q">5 · Wozu dienen Namespaces, und welchen Nachteil bringen sie mit?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Namespaces organisieren alle Nodes in einer <b>Baumstruktur</b>. Innerhalb eines Namespace ist jeder Node eindeutig bezeichnet, in einem anderen Namespace steht dieselbe Bezeichnung wieder zur Verfügung. Das sorgt für <b>große Flexibilität und dynamischen Code</b> — schafft aber auch <b>komplexe Datenmodelle</b>.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t5"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t6">
+    <div class="task-q">6 · Eine Maschine liefert den String „HT3, 222.3". Warum ist das für ein Fremdsystem problematisch, und was ändert OPC UA daran?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Der Wert ist zwar lesbar, aber <b>ohne Struktur und ohne Bedeutung</b>. Nur der Hersteller weiß, dass „HT3" die Temperatur der Heizzone 3 in °C ist — ein Fremdsystem müsste das aufwändig entschlüsseln.<br>OPC UA überträgt den Wert in einer <b>benannten Baumstruktur</b> (z. B. Extr → Extr_Zyl_Temp → Extr_Zyl_Temp_3: 207.4). In Kombination mit einer Branchenspezifizierung wie <b>EUROMAP</b> ist genau festgelegt, welcher Wert wie und mit welcher Bezeichnung übertragen wird.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t6"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t7">
+    <div class="task-q">7 · Nennen Sie vier Sicherheitsmerkmale, die OPC UA im Bereich Transport zusagt.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>Sitzungsverschlüsselung</b> und verschlüsselte Datenübertragung, <b>Nachrichtensignaturen</b> zur Prüfung von Herkunft und Integrität, <b>Authentifizierung</b> und Zertifizierung der Zugriffserlaubnisse, <b>Benutzerkontrolle</b> mit Zugriffsrechtdefinitionen sowie <b>Protokollierung</b> aller Zugriffe. Zusätzlich ist der Standard firewall-freundlich gestaltet.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t7"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t8">
+    <div class="task-q">8 · Grenzen Sie MQTT und OPC UA gegeneinander ab. Wann setzen Sie welches ein?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>MQTT</b> ist ein schlankes Transport-Protokoll nach Publish/Subscribe über einen Broker. Es überträgt eine Payload — was darin steht, legt MQTT <b>nicht</b> fest. Stark bei vielen kleinen, batteriebetriebenen Geräten und unzuverlässigen Netzen.<br><b>OPC UA</b> ist ein Rahmen mit <b>Informationsmodell</b>: Es überträgt die Bedeutung der Daten mit, regelt Zugriffsrechte, Methodenaufrufe und Ereignisse. Stark in Anlagen mit vielen Datenpunkten und heterogenen Steuerungen.<br><b>Faustregel:</b> Sensor-Telemetrie in die Cloud → MQTT. Maschinenanbindung mit semantisch beschriebenen Datenpunkten → OPC UA.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t8"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t9">
+    <div class="task-q">9 · Eine 15 Jahre alte SPS soll an ein Leitsystem angebunden werden. Wie hilft OPC UA hier, und wo liegt die Grenze?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Im Rahmen des <b>Retrofittings</b> lässt sich die vorhandene Steuerung „anzapfen": Sie bekommt eine Schnittstelle, z. B. einen <b>OPC-UA-Server</b>. Das Leitsystem spricht dann als OPC Client mit diesem Server, ganz gleich ob darunter Profibus, Profinet oder RS485 liegt.<br><b>Grenze:</b> Das geht nur, wenn die Steuerung das unterstützt oder ein passendes Zusatzmodul existiert. Sonst bleibt nur externe Sensorik (misst nur von außen Messbares) oder der Austausch der Steuerung (teuer, Stillstand, oft Neuabnahme).</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t9"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="detail-links">
+    <div class="dl-title">Weiter im Lernfeld</div>
+    <a class="dl-link" href="lf7_mqtt.html">📨 MQTT</a>
+    <a class="dl-link" href="lf7_automatisierungspyramide.html">🏗️ Automatisierungspyramide</a>
+    <a class="dl-link" href="lf3_osi_modell.html">🕸️ OSI-Modell (LF3)</a>
+  </div>
+
+</div>
+</div>
+
+<script>
+/* ===================================================================== */
+/*  Aufdeck-Mechanik (rein visuell, kein localStorage)                    */
+/* ===================================================================== */
+document.querySelectorAll("td.rv, .rvb").forEach(function (el) {
+  el.addEventListener("click", function () { el.classList.toggle("shown"); });
+});
+
+document.getElementById("rvShow").onclick = function () {
+  document.querySelectorAll("td.rv, .rvb").forEach(function (el) { el.classList.add("shown"); });
+  document.querySelectorAll("details.sol").forEach(function (d) { d.open = true; });
+};
+document.getElementById("rvHide").onclick = function () {
+  document.querySelectorAll("td.rv.shown, .rvb.shown").forEach(function (el) { el.classList.remove("shown"); });
+  document.querySelectorAll("details.sol").forEach(function (d) { d.open = false; });
+};
+
+/* ===================================================================== */
+/*  Aufgaben-Fortschritt (localStorage, eigener Key)                      */
+/* ===================================================================== */
+var DKEY = "fisi_lf7_opcua_v1";
+
+function loadDone() {
+  try { return JSON.parse(localStorage.getItem(DKEY) || "{}"); } catch (e) { return {}; }
+}
+function saveDone(state) {
+  try { localStorage.setItem(DKEY, JSON.stringify(state)); } catch (e) {}
+}
+
+var doneState = loadDone();
+
+document.querySelectorAll(".task-done .chk").forEach(function (cb) {
+  var id = cb.dataset.task;
+  var box = document.getElementById(id);
+  if (doneState[id]) { cb.checked = true; box.classList.add("done"); }
+  cb.addEventListener("change", function () {
+    if (cb.checked) { doneState[id] = 1; box.classList.add("done"); }
+    else { delete doneState[id]; box.classList.remove("done"); }
+    saveDone(doneState);
+  });
+});
+
+/* ===================================================================== */
+/*  Service Worker                                                        */
+/* ===================================================================== */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("service-worker.js").catch(function () {});
+  });
+}
+</script>
+</body>
+</html>

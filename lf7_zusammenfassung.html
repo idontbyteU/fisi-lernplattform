@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zusammenfassung · LF7 · FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+/* Seiten-Akzent */
+.sum{--ac:var(--lf7)}
+
+/* ===== Aufklappbare Kacheln ===== */
+.ktiles{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin:.4rem 0 1rem}
+
+.ktile{border:1px solid var(--line);border-radius:6px;background:var(--glass);
+  margin:0;overflow:hidden;position:relative;transition:border-color .2s,box-shadow .2s;
+  animation:fadeUp .5s both;animation-delay:calc(var(--i,0)*70ms)}
+.ktile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--ac);opacity:.85}
+.ktile:hover{border-color:var(--ac)}
+.ktile[open]{grid-column:1/-1;border-color:var(--ac)}
+
+.ktile > summary{display:flex;align-items:center;gap:.75rem;list-style:none;
+  cursor:pointer;padding:1rem 1.1rem 1rem 1.25rem;background:none;color:var(--read)}
+.ktile > summary::-webkit-details-marker{display:none}
+.ktile[open] > summary{background:none;color:var(--read);
+  border-bottom:1px solid var(--line)}
+
+.kic{font-size:25px;line-height:1;flex:0 0 auto}
+.ktx{flex:1;min-width:0}
+.ktx b{display:block;font-family:var(--fdisp);font-size:18px;font-weight:700;
+  letter-spacing:.4px;color:var(--ac);line-height:1.25}
+.ktx i{display:block;font-style:normal;font-size:14.5px;color:var(--muted);
+  line-height:1.4;margin-top:.2rem}
+.kar{flex:0 0 auto;font-family:var(--fmono);font-size:19px;color:var(--muted);
+  transition:transform .2s}
+.ktile[open] .kar{transform:rotate(90deg);color:var(--ac)}
+
+.kbody{padding:1rem 1.15rem 1.2rem}
+.kbody > *:first-child{margin-top:0}
+
+/* Tabellen in den Kacheln */
+.tw{overflow-x:auto;margin:0 0 1.1rem}
+
+/* Codebeispiel */
+.zcode{font-family:var(--fmono);font-size:13.5px;line-height:1.7;color:var(--read);
+  background:var(--code-bg);border:1px solid var(--line);border-radius:8px;
+  padding:.75rem .9rem;margin:.6rem 0 1rem;overflow-x:auto;white-space:pre}
+.zcode b{color:var(--ac);font-weight:700}
+
+/* Quellen-/Wiki-Link */
+.wl{font-family:var(--fmono);font-size:12px;color:var(--cyan);text-decoration:none;
+  display:block;margin-top:.25rem}
+.wl:hover{text-decoration:underline}
+
+/* Praxisbeispiel-Zelle */
+.bsp{font-size:15px;color:var(--read);font-style:italic;line-height:1.5}
+
+/* Werkzeugleiste */
+.ztools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.2rem 0 1.3rem}
+.ztools .hint{font-family:var(--fmono);font-size:12px;color:var(--dim)}
+.ztools .sp{flex:1}
+
+@media(max-width:560px){
+  .ktiles{grid-template-columns:1fr}
+  .ktx b{font-size:16.5px}
+}
+@media print{
+  .ktile{break-inside:avoid}
+  .ztools{display:none}
+}
+</style>
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="lf7.html">← Lernfeld 7</a>
+    <div>
+      <h1><span class="tag" style="background:var(--lf7)">LF7</span>Zusammenfassung</h1>
+      <div class="sub">OSI · OPC UA · MQTT · Automatisierungspyramide · Glossar</div>
+    </div>
+    <div class="sp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="sum">
+
+  <p class="lead">Kompakte Prüfungsvorbereitung als aufklappbare Kacheln. Enthält den vollständigen Stoff aus den drei Quellunterlagen — inklusive der Punkte, die in der ursprünglichen Kurzfassung fehlten. Zum aktiven Üben mit Aufdeck-Tabellen und Aufgaben siehe die <a href="lf7.html">Modulseiten im Hub</a>.</p>
+
+  <div class="ztools">
+    <button class="tbtn" id="kOpen" type="button">Alle aufklappen</button>
+    <button class="tbtn" id="kClose" type="button">Alle zuklappen</button>
+    <span class="sp"></span>
+    <span class="hint">Kachel anklicken = aufklappen</span>
+  </div>
+
+  <div class="ktiles">
+
+  <!-- ============================================================ 1 -->
+  <details class="ktile" style="--i:0">
+    <summary>
+      <span class="kic">🕸️</span>
+      <span class="ktx"><b>OSI-Modell</b><i>7 Schichten · Grundlage jeder digitalen Kommunikation</i></span>
+      <span class="kar">›</span>
+    </summary>
+    <div class="kbody">
+      <p class="lead">Das OSI-Modell (Open Systems Interconnection) wurde <b>1984 von der ISO</b> eingeführt und standardisiert die Kommunikation in <b>sieben aufeinander aufbauenden Schichten</b>. Ein gesendetes Paket durchläuft die Schichten von 7 nach 1, beim Empfänger wieder von 1 nach 7.</p>
+
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Schicht</th><th>Aufgabe</th><th>Beispiele / Protokolle</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">7 Anwendung</td><td>Schnittstelle zur Anwendung, hier entstehen die Daten und finden Interaktionen statt.</td><td>Webbrowser, E-Mail-Client, HTTP, <b>MQTT</b>, <b>OPC UA</b></td></tr>
+          <tr><td class="lg">6 Darstellung</td><td>Übersetzer: wandelt lokale Formate (z. B. ASCII) in systemunabhängige Standardformate.</td><td>ISO 8822 / X.216, JPEG, Verschlüsselung</td></tr>
+          <tr><td class="lg">5 Sitzung</td><td>Kommunikationssteuerung: baut Sitzungen auf, synchronisiert, setzt Checkpoints zur Wiederaufnahme nach Abbruch.</td><td>ISO 8326, RPC</td></tr>
+          <tr><td class="lg">4 Transport</td><td>Segmentiert die Daten in Pakete, stimmt sie ab, vermeidet Staus.</td><td><b>TCP</b> (zuverlässig), <b>UDP</b> (schnell, verbindungslos)</td></tr>
+          <tr><td class="lg">3 Vermittlung</td><td>Wegbestimmung (Routing) und Adressierung über Knotenpunkte.</td><td><b>IP</b> (IPv4, IPv6), IPsec</td></tr>
+          <tr><td class="lg">2 Sicherung</td><td>Fehlerfreie Übertragung: Bit-Strom wird in Blöcke (Frames) geteilt, Prüfsummen erkennen fehlerhafte Blöcke.</td><td>MAC, LLC · Hardware: Switch</td></tr>
+          <tr><td class="lg">1 Bitübertragung</td><td>Physische Übertragung der Bits (0 und 1) über das Medium.</td><td>IEEE 802.3 / Ethernet, WLAN, Bluetooth · Kabel, Stecker</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="callout tip"><span class="ci">💡</span><div><b>Das Dienst-Prinzip:</b> Eine Anwendung wie ein E-Mail-Programm bringt <b>keine eigene Kommunikationslösung</b> mit. Sie spricht Dienste des Betriebssystems an (Windows, Linux, Android, macOS). Bild aus der Quelle: wie die Stromversorgung eines Produktionsbetriebes — man nutzt sie, statt Strom selbst zu erzeugen.</div></div>
+
+      <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> Pro Schicht gibt es <b>mehrere mögliche Dienste</b>. Als Transport kann TCP stehen, aber auch UDP, Profibus, Modbus oder Profinet; als Übertragung Ethernet oder WLAN. Das Modell schreibt die Aufgabe vor, nicht das Produkt.</div></div>
+    </div>
+  </details>
+
+  <!-- ============================================================ 2 -->
+  <details class="ktile" style="--i:1">
+    <summary>
+      <span class="kic">🧬</span>
+      <span class="ktx"><b>OPC UA</b><i>Herstellerunabhängiger M2M-Standard der Industrie</i></span>
+      <span class="kar">›</span>
+    </summary>
+    <div class="kbody">
+      <p class="lead"><b>Open Platform Communications Unified Architecture</b>, entwickelt von der <b>OPC Foundation</b>, einer unabhängigen Institution. Die Spezifikation ist vollständig offen und für jeden zugänglich — keine herstellerspezifischen Geheimnisse wie bei einer proprietären Schnittstelle.</p>
+
+      <div class="h-sub">Das Problem</div>
+      <p class="lead">Eine Anwendung soll mit einer Spritzgießmaschine, einem Extruder oder übergeordneten Systemen (Produktleitsystem, BDE) sprechen. Historisch nutzt jede Systemwelt ihre eigene Sprache: PC-Systeme <b>TCP/IP über Ethernet</b>, ältere Maschinensteuerungen <b>Profibus</b> (z. B. RS485). Eine zentrale Software müsste jede davon einzeln übersetzen.</p>
+
+      <div class="callout warn"><span class="ci">⚠️</span><div><b>Die wichtigste Abgrenzung:</b> OPC UA ist <b>kein Dienst, keine Software und keine Protokollbeschreibung</b> wie TCP oder IP. Es <b>ersetzt nichts</b> — es definiert einen Rahmen und legt fest, <b>WAS</b> über die jeweilige Schnittstelle <b>WIE</b> übertragen werden muss.</div></div>
+
+      <div class="h-sub">Wie das im Aufbau aussieht</div>
+      <div class="zcode">Benutzerinterface der Software
+  ↓
+<b>OPC Client</b>  (integriert oder extern)
+  ↓
+<b>OPC UA Server</b>  (integriert oder extern)
+  ↓  spricht nach unten über
+     Profibus · Profinet · CAN-Bus · TCP/IP · RS232 · RS485</div>
+      <p class="lead">Ein System kann dabei <b>beide Rollen zugleich</b> einnehmen — es empfängt von allen OPC-UA-fähigen Systemen und sendet ebenso an sie.</p>
+
+      <div class="h-sub">Die sechs Grundfunktionen</div>
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Funktion</th><th>Bedeutung</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">Auffindbarkeit</td><td>OPC-UA-fähige Systeme sind für andere problemlos im Netzwerk auffindbar.</td></tr>
+          <tr><td class="lg">Strukturen</td><td>Alle Datenstrukturen sind einheitlich — Datei- und Ordnerstrukturen bleiben erhalten, es entstehen keine unstrukturierten Listen.</td></tr>
+          <tr><td class="lg">Zugriff</td><td>Der Zugriff auf die Strukturen lässt sich über Zugangsberechtigungen kontrollieren.</td></tr>
+          <tr><td class="lg">Abonnements</td><td>Daten können abonniert werden und kommen dann automatisiert permanent — statt immer abgefragt werden zu müssen.</td></tr>
+          <tr><td class="lg">Ereignisse</td><td>Es lässt sich festlegen, welche Ereignisse automatisiert gemeldet werden.</td></tr>
+          <tr><td class="lg">Methoden</td><td>Funktionen können aus der Ferne gestartet werden.</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="h-sub">Plattform, Sicherheit, Transport, Erweiterbarkeit</div>
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Bereich</th><th>Zusage des Standards</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">Plattform</td><td>Kompatibel zu PC-Systemen, cloudbasierten Servern, beliebigen SPS und Mikrocontrollern — und zu Windows, macOS, Android, Linux.</td></tr>
+          <tr><td class="lg">Sicherheit</td><td><b>Firewall-freundliche</b> Gestaltung, Kontrollmöglichkeiten.</td></tr>
+          <tr><td class="lg">Transport</td><td>Vielzahl von Protokollen von <b>binärem Transport bis JSON</b>; Sitzungsverschlüsselung; <b>Nachrichtensignaturen</b> zur Prüfung von Herkunft und Integrität; Authentifizierung und Zertifizierung; Benutzerkontrolle mit Zugriffsrechten; <b>Protokollierung</b> aller Zugriffe.</td></tr>
+          <tr><td class="lg">Erweiterbarkeit</td><td>Offene, wachsende Plattform — neue Kommunikationsmöglichkeiten werden kontinuierlich eingebunden.</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="h-sub">Datenstruktur: Nodes und Namespaces</div>
+      <ul class="clean">
+        <li><b>Node</b> — das grundlegendste Element, ein Datenpunkt. Am ehesten vergleichbar mit einem <b>Objekt aus der objektorientierten Programmierung</b>.</li>
+        <li><b>Attribute</b> — jeder Node besitzt welche; das können Nutz- oder Metadaten sein.</li>
+        <li><b>Namespace</b> — organisiert alle Nodes in einer <b>Baumstruktur</b>. Innerhalb eines Namespace ist jeder Node eindeutig; in einem anderen Namespace steht dieselbe Bezeichnung wieder zur Verfügung.</li>
+      </ul>
+      <div class="callout warn"><span class="ci">⚠️</span><div><b>Der Preis dafür:</b> Namensräume sorgen für große Flexibilität und dynamischen Code — schaffen aber auch <b>komplexe Datenmodelle</b>. Das ist der Nachteil, nach dem in Prüfungen gern gefragt wird.</div></div>
+
+      <div class="h-sub">Proprietär gegen OPC UA — dieselben Werte</div>
+      <p class="lead">Ohne Struktur, wie eine proprietäre Schnittstelle sie liefert:</p>
+      <div class="zcode">"HT1, 210.5, HT2, 211.5, HT3, 222.3, HT4, 221.0,
+ UM, 75.9, STR, 55, NB, 33, SE, 1278936756123"</div>
+      <p class="lead">Lesbar, aber ohne Bedeutung. Nur der Hersteller weiß, dass <b>HT3</b> die Temperatur der Heizzone 3 in °C ist. Alle anderen müssen es aufwändig entschlüsseln.</p>
+      <div class="zcode"><b>Extr:</b>
+  <b>Extr_Zyl_Temp</b>
+      Extr_Zyl_Temp_1:        210.5
+      Extr_Zyl_Temp_2:        205.3
+      Extr_Zyl_Temp_3:        207.4
+  <b>Extr_Antr_Data</b>
+      Extr_Antr_Data_Drehz:    75.9
+      Extr_Antr_Data_Str:      55</div>
+      <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> OPC UA überträgt nicht nur den <b>Wert</b>, sondern seine <b>Bedeutung</b>. Mit einer Branchenspezifizierung wie <b>EUROMAP</b> ist genau festgelegt, welcher Wert mit welcher Bezeichnung und Struktur übertragen wird.</div></div>
+    </div>
+  </details>
+
+  <!-- ============================================================ 3 -->
+  <details class="ktile" style="--i:2">
+    <summary>
+      <span class="kic">📨</span>
+      <span class="ktx"><b>MQTT</b><i>Publish/Subscribe über den Broker · Topics · QoS</i></span>
+      <span class="kar">›</span>
+    </summary>
+    <div class="kbody">
+      <p class="lead"><b>Message Queuing Telemetry Transport</b> — bevorzugtes Protokoll für die <b>M2M</b>-Kommunikation, weil es nur geringe Bandbreite und Speicherressourcen braucht. Publisher und Subscriber sind <b>entkoppelt</b>: Sie kennen einander nicht, beide kennen nur den Broker.</p>
+
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Eckdaten</th><th>Wert</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">Modell</td><td>Publish/Subscribe über einen zentralen Broker</td></tr>
+          <tr><td class="lg">Transportprotokoll</td><td><b>TCP</b></td></tr>
+          <tr><td class="lg">Port unverschlüsselt</td><td><b>1883</b></td></tr>
+          <tr><td class="lg">Port verschlüsselt</td><td><b>8883</b></td></tr>
+          <tr><td class="lg">OSI-Schicht</td><td>7 (Anwendung)</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="h-sub">Broker und Client</div>
+      <p class="lead">Der <b>Broker</b> ist die zentrale Vermittlungsstelle: Er sortiert, filtert und verteilt die Nachrichten. Produkte: <b>Mosquitto</b> (Open Source, in C, von Eclipse unterstützt), <b>HiveMQ</b> (kommerziell, Cluster-Unterstützung, Enterprise-Integrationen), außerdem EMQ X, RabbitMQ, VerneMQ, ActiveMQ.</p>
+      <p class="lead">Ein <b>Client</b> ist ein beliebiges Gerät — Mikrocontroller, Laptop, Smartphone, Raspberry Pi — und kann <b>Publisher und Subscriber zugleich</b> sein. Voraussetzung: eine MQTT-Bibliothek und eine Netzwerkverbindung zum Broker.</p>
+
+      <div class="h-sub">Topics</div>
+      <p class="lead">Ein Topic ist eine hierarchische <b>UTF-8-Zeichenkette</b>, die Nachrichten filtert. Ebenen werden durch Schrägstriche getrennt.</p>
+      <div class="zcode">werk01/linie01/maschine01/temperatur</div>
+      <div class="callout warn"><span class="ci">⚠️</span><div>Ein Topic ist <b>keine Adresse zum Sensor</b>. Es ist der Zugriff auf die zuletzt übermittelten Daten.</div></div>
+
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Benennungsregel</th><th>Was gilt</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">Groß-/Kleinschreibung</td><td>Wird unterschieden: <span style="font-family:var(--fmono)">werk01/linie01/Maschine01</span> und <span style="font-family:var(--fmono)">…/maschine01</span> sind zwei verschiedene Topics.</td></tr>
+          <tr><td class="lg">UTF-8</td><td>Nur gültige UTF-8-Zeichen. „+" und „#" (Wildcards) sowie „$" (System-Topics) nicht wahllos verwenden.</td></tr>
+          <tr><td class="lg">Konsistenz</td><td>Einheitlich benennen, idealerweise nach <b>ISA-95</b>: <span style="font-family:var(--fmono)">enterprise/werk01/assemblyline01/linie01/Maschine01</span></td></tr>
+          <tr><td class="lg">Eindeutigkeit</td><td>Keine Duplikate — besonders wichtig, wenn Broker über <b>MQTT-Bridges</b> Daten austauschen. Verhindert Topic-Konflikte.</td></tr>
+          <tr><td class="lg">Versionierung</td><td>Version in die Hierarchie aufnehmen: <span style="font-family:var(--fmono)">mySpec_v1/…/areaID/lineID/cellID</span> — erhält die Rückwärtskompatibilität.</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="h-sub">Payload</div>
+      <p class="lead">Der eigentliche Dateninhalt der Nachricht — der Teil, den die Clients interpretieren. Vier typische Inhalte: <b>Sensorwerte</b> (Temperatur, Luftfeuchtigkeit, Druck, Helligkeit), <b>Steuerbefehle</b> (ein-/ausschalten, Einstellungen ändern), <b>Statusinformationen</b> (Zustände, Fehler, Warnungen) und <b>Nachrichten</b> (Text zwischen Anwendungen). Verarbeitet wird sie clientseitig: Anzeige auf einem Dashboard, Auslösen von Aktionen, Speichern in einer Datenbank.</p>
+
+      <div class="h-sub">Wildcards</div>
+      <div class="callout warn"><span class="ci">⚠️</span><div>Wildcards <b>nur beim Abonnieren</b> — niemals beim Veröffentlichen.</div></div>
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Abonnement</th><th>Was ankommt</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">Daheim/Erdgeschoss/Wohnzimmer/Temperatur</td><td>nur genau dieses Topic</td></tr>
+          <tr><td class="lg">Daheim/+/+/Temperatur</td><td><b>+</b> ersetzt genau <b>eine</b> Ebene → Temperaturdaten aller Zimmer auf jeder Etage</td></tr>
+          <tr><td class="lg">Daheim/Erdgeschoss/#</td><td><b>#</b> deckt alles Folgende ab und muss <b>am Ende</b> stehen → alle Infos fürs Erdgeschoss</td></tr>
+          <tr><td class="lg">#</td><td>abonniert wirklich alles — <b>nicht empfohlen</b></td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="h-sub">Verbindungsmanagement</div>
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Funktion</th><th>Was sie tut</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">Retained Message</td><td>Die zuletzt als „retain" markierte Nachricht eines Topics wird gespeichert und neuen Abonnenten <b>sofort</b> ausgeliefert — kein Warten auf den nächsten Wert.</td></tr>
+          <tr><td class="lg">Persistent Session</td><td>Verbindung über die physikalische Netzverbindung hinaus. Nach Neustart oder Ausfall bekommt der Client die <b>verpassten</b> Nachrichten nachgeliefert.</td></tr>
+          <tr><td class="lg">Keep Alive</td><td>Der Client sendet <b>PINGREQ</b>, wenn sonst nichts läuft. Kommt beim Broker innerhalb der <b>1,5-fachen</b> Keep-Alive-Zeit nichts an, trennt er. Bleibt <b>PINGRESP</b> aus, schließt der Client — was meist das LWT auslöst. Wichtig in unzuverlässigen Netzen (Mobilfunk).</td></tr>
+          <tr><td class="lg">MQTT over WebSockets</td><td>Nötig für Push-Nachrichten an einen Browser — der Browser verbindet sich damit direkt mit dem Broker.</td></tr>
+          <tr><td class="lg">Last Will (LWT)</td><td>Der Client definiert <b>beim Verbindungsaufbau</b> ein LWT-Topic. Der Broker veröffentlicht es, wenn der Client <b>ohne DISCONNECT-Paket</b> schließt (Verbindungsverlust, Stromausfall). Typisch: <span style="font-family:var(--fmono)">sensor/1/status</span> auf „offline".</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="h-sub">Eigenschaften</div>
+      <ul class="clean">
+        <li><b>Performance</b> — für Netze mit großer Verzögerungszeit und kleiner Bandbreite; Header-Felder werden ressourcenschonend als <b>Binärwerte</b> gespeichert.</li>
+        <li><b>Skalierbarkeit</b> — viele kleine Geräte an nur einem Server.</li>
+        <li><b>Sicherheit</b> — eigene Absicherung nur über Benutzername und Passwort; Verschlüsselung per <b>SSL/TLS auf Transportebene</b>; zusätzlich Broker-/Client-Zertifikate zur Authentifizierung.</li>
+      </ul>
+
+      <div class="h-sub">Quality of Service</div>
+      <p class="lead">MQTT war ursprünglich für <b>instabile Netzwerke</b> gedacht — daher drei Zustellgarantien.</p>
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Stufe</th><th>Zusage</th><th>Ablauf</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">QoS 0</td><td>höchstens einmal</td><td>Fire and Forget — einmal gesendet, Bestätigung wird ignoriert. Schnell, keine Garantie.</td></tr>
+          <tr><td class="lg">QoS 1</td><td>mindestens einmal</td><td>Sender wartet auf <b>PUBACK</b>; bleibt es aus, wird erneut gesendet. Kann doppelt ankommen.</td></tr>
+          <tr><td class="lg">QoS 2</td><td>genau einmal</td><td>Zweistufig: <b>PUBREC → PUBREL → PUBCOMP</b>. Langsamste Variante, dafür exakt eine Zustellung.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> Der effektiv genutzte QoS ist immer der <b>niedrigere</b> Wert von Publisher und Subscriber. Abonniert der Subscriber mit QoS 0, kommt die Nachricht auch dann höchstens mit QoS 0 an, wenn der Publisher mit QoS 2 sendet.</div></div>
+    </div>
+  </details>
+
+  <!-- ============================================================ 4 -->
+  <details class="ktile" style="--i:3">
+    <summary>
+      <span class="kic">🏗️</span>
+      <span class="ktx"><b>Automatisierungspyramide</b><i>5 Ebenen · Zeit als Unterscheidungsmerkmal</i></span>
+      <span class="kar">›</span>
+    </summary>
+    <div class="kbody">
+      <p class="lead">In einem Produktionsbetrieb entstehen Daten mit sehr unterschiedlicher Geschwindigkeit. Ein <b>Endschalter an einer Presse</b> muss in Millisekunden ausgewertet werden, sonst fährt der Stempel in ein noch nicht positioniertes Werkstück. Die Frage, wie viele Pressen im nächsten Quartal gebraucht werden, beantwortet man einmal im Vierteljahr.</p>
+      <div class="callout merk"><span class="ci">🧠</span><div>Ein System, das Quartalsplanungen rechnet, ist zu langsam für Millisekunden. Ein System, das Millisekunden schafft, kann keine Buchhaltung. <b>Die Ebenen unterscheiden sich vor allem in der Zeit</b> — unten Millisekunden, oben Monate.</div></div>
+
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Ebene</th><th>Systeme</th><th>Aufgabe</th><th>Zeitverhalten</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">5 Unternehmensleitebene</td><td>ERP</td><td>Aufträge, Material, Personal, Finanzen, Kapazitätsplanung</td><td>Tage bis Monate</td></tr>
+          <tr><td class="lg">4 Betriebsleitebene</td><td>MES</td><td>Feinplanung, Auftragsfreigabe, BDE/MDE, Qualitätsdaten</td><td>Minuten bis Stunden</td></tr>
+          <tr><td class="lg">3 Prozessleitebene</td><td>SCADA, HMI, DCS</td><td>Anlage visualisieren, bedienen, Messwerte aufzeichnen, Alarme</td><td>Sekunden</td></tr>
+          <tr><td class="lg">2 Steuerungsebene</td><td>SPS</td><td>Ablauf einer Maschine steuern und regeln</td><td>Millisekunden</td></tr>
+          <tr><td class="lg">1 Feldebene</td><td>Sensoren, Aktoren, Feldbus</td><td>Messen und stellen — die eigentliche physische Wirkung</td><td>Millisekunden und schneller</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="h-sub">So greifen die Ebenen ineinander</div>
+      <p class="lead">Das <b>ERP</b> weiß: Kunde X will 4.000 Etiketten bis Freitag. Das <b>MES</b> übersetzt das in konkrete Arbeitsgänge: Linie 2, Schicht Früh, Maschine 7, Rüstzeit 20 Minuten. <b>SCADA</b> zeigt dem Anlagenfahrer, was gerade passiert, das <b>HMI</b> ist das Touchpanel an der Maschine, die <b>SPS</b> steuert den Ablauf.</p>
+
+      <div class="h-sub">Die zentrale Regel — und ihr Preis</div>
+      <div class="chain"><span>SPS</span><span>→ SCADA</span><span>→ MES</span><span>→ ERP</span></div>
+      <p class="lead">Jede Ebene spricht <b>nur mit ihrer direkten Nachbarebene</b>. Ein Temperaturwert vom Sensor durchläuft vier Stationen, bevor er in einer Auswertung der Geschäftsführung ankommt.</p>
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Vorteile</th><th>Nachteil</th></tr></thead>
+        <tbody>
+          <tr><td>Klare Zuständigkeiten · überschaubare Schnittstellen · ein Ausfall oben legt die Produktion unten nicht lahm</td><td>Jede Ebene kostet Zeit — und kann Informationen verlieren, weil sie nur weitergibt, was ihre Schnittstelle vorsieht</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="h-sub">Fallbeispiel: Kluge Kunststofftechnik GmbH</div>
+      <p class="lead">Der Drucksensor im Spritzgusswerkzeug misst alle <b>2 Millisekunden</b>. Die SPS wertet den Verlauf aus und meldet je Schuss nur ein Ergebnis ans SCADA: i. O. oder Ausschuss. SCADA meldet dem MES stündlich die Stückzahlen, das MES dem ERP am Schichtende die Fertigmenge.</p>
+      <p class="lead">Der Qualitätsleiter will nun wissen, ob Druckverlauf und Reklamationen zusammenhängen. <b>Das geht nicht:</b> Die Reklamationen stehen im ERP, die Druckverläufe hat die SPS ausgewertet und danach verworfen. Sie waren nie dafür gedacht, nach oben zu wandern.</p>
+      <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> In der klassischen Pyramide geht auf jeder Ebene Information verloren. Was oben ankommt, ist ein <b>Ergebnis</b>, keine Rohdatenspur.</div></div>
+    </div>
+  </details>
+
+  <!-- ============================================================ 5 -->
+  <details class="ktile" style="--i:4">
+    <summary>
+      <span class="kic">🕹️</span>
+      <span class="ktx"><b>CPS &amp; Industrie 4.0</b><i>Aus der Pyramide wird ein Netz</i></span>
+      <span class="kar">›</span>
+    </summary>
+    <div class="kbody">
+      <p class="lead">Ein <b>cyber-physisches System</b> bringt Rechenleistung, Speicher und eine Netzwerkschnittstelle direkt an das Bauteil. Der Sensor ist nicht mehr nur ein Draht, der eine Spannung liefert, sondern ein <b>adressierbarer Teilnehmer im Netz</b>. Damit fällt die Regel weg, dass nur Nachbarebenen miteinander sprechen dürfen.</p>
+
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Merkmal</th><th>Klassische Pyramide</th><th>Vernetzung mit CPS</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">Kommunikationsweg</td><td>nur zur Nachbarebene</td><td>jeder mit jedem, auch Feldgerät direkt in die Cloud</td></tr>
+          <tr><td class="lg">Intelligenz</td><td>zentral in SPS und Leitsystem</td><td>dezentral, auch im Sensor selbst</td></tr>
+          <tr><td class="lg">Datenmenge oben</td><td>verdichtete Ergebnisse</td><td>Rohdaten stehen bei Bedarf zur Verfügung</td></tr>
+          <tr><td class="lg">Änderung einer Maschine</td><td>Eingriff über mehrere Ebenen</td><td>Gerät wird konfiguriert und meldet sich im Netz an</td></tr>
+          <tr><td class="lg">Verkabelung</td><td>Feldbus, oft herstellerspezifisch</td><td>IP-Netz, Standardprotokolle</td></tr>
+          <tr><td class="lg">Angriffsfläche</td><td>klein, oft physisch getrennt</td><td><b>groß</b> — jedes Gerät ist erreichbar</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="callout warn"><span class="ci">⚠️</span><div><b>Häufiges Missverständnis:</b> Die Pyramide verschwindet <b>nicht</b>. ERP und MES bleiben, Buchhaltung und Feinplanung fallen ja nicht weg. Was verschwindet, ist der Zwang, dass jede Information alle Zwischenstationen durchlaufen muss.</div></div>
+      <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> Die <b>Funktionen</b> der Pyramide bleiben. Der starre <b>Kommunikationsweg</b> zwischen ihnen fällt weg.</div></div>
+    </div>
+  </details>
+
+  <!-- ============================================================ 6 -->
+  <details class="ktile" style="--i:5">
+    <summary>
+      <span class="kic">🔧</span>
+      <span class="ktx"><b>Retrofitting</b><i>Bestandsmaschinen nachrüsten · 3 Wege mit Grenzen</i></span>
+      <span class="kar">›</span>
+    </summary>
+    <div class="kbody">
+      <p class="lead">Kaum ein Betrieb tauscht seinen Maschinenpark aus, nur weil es Industrie 4.0 gibt. Eine Werkzeugmaschine hat eine Nutzungsdauer von <b>15 bis 25 Jahren</b>. Der übliche Weg heißt deshalb Retrofitting.</p>
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Vorgehen</th><th>Was gemacht wird</th><th>Grenze</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">Externe Sensorik anbringen</td><td>Vibrations-, Strom- oder Temperatursensor wird außen montiert und funkt an ein Gateway. Kein Eingriff in die Maschinensteuerung.</td><td>Man misst nur, was von außen messbar ist. <b>Kein Zugriff auf interne Steuerungswerte.</b></td></tr>
+          <tr><td class="lg">Steuerung anzapfen</td><td>Vorhandene SPS bekommt eine Schnittstelle, z. B. einen <b>OPC-UA-Server</b> als Zusatzmodul.</td><td>Nur möglich, wenn die Steuerung das unterstützt oder ein Zusatzmodul existiert.</td></tr>
+          <tr><td class="lg">Steuerung ersetzen</td><td>Neue SPS mit Netzwerkanbindung.</td><td>Teuer, Stillstand, Neuprogrammierung, oft <b>Neuabnahme</b> nötig.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- ============================================================ 7 -->
+  <details class="ktile" style="--i:6">
+    <summary>
+      <span class="kic">🏠</span>
+      <span class="ktx"><b>Thread &amp; Matter</b><i>Smart Home · IP-basiertes Mesh und Semantik</i></span>
+      <span class="kar">›</span>
+    </summary>
+    <div class="kbody">
+      <div class="h-sub">Thread — ein Funknetz, kein Anwendungsprotokoll</div>
+      <p class="lead">Gepflegt von der <b>Thread Group</b>, einem Industriekonsortium unter anderem mit Apple, Google, Amazon, Samsung und Nordic Semiconductor.</p>
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Merkmal</th><th>Wert</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">Reichweite</td><td>10–30 m</td></tr>
+          <tr><td class="lg">Datenrate</td><td>250 kbit/s</td></tr>
+          <tr><td class="lg">Energie</td><td>sehr gering</td></tr>
+          <tr><td class="lg">Einsatz</td><td>Smart Home — Sensoren und Aktoren im Gebäude</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="h-sub">Der entscheidende Unterschied zu ZigBee</div>
+      <p class="lead">Beide funken nach <b>IEEE 802.15.4</b>, beide bilden ein Mesh. Der Unterschied liegt <i>darüber</i>:</p>
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th></th><th>ZigBee</th><th>Thread</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">IP-basiert?</td><td>nein — eigener vollständiger Stack bis Schicht 7</td><td><b>ja</b></td></tr>
+          <tr><td class="lg">Rolle des Gateways</td><td>Herstellereigenes Gateway muss zwischen ZigBee- und IP-Welt <b>übersetzen</b></td><td><b>Border Router</b> leitet nur weiter, wie ein Router zwischen zwei IP-Netzen</td></tr>
+          <tr><td class="lg">Aus dem Heimnetz erreichbar?</td><td>nicht direkt</td><td>direkt vom Smartphone adressierbar</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="h-sub">Matter — Anwendungsprotokoll samt Datenmodell (Schicht 7)</div>
+      <p class="lead">Entwickelt von der <b>Connectivity Standards Alliance (CSA)</b> — der <b>früheren ZigBee Alliance</b> —, getragen unter anderem von Apple, Google, Amazon und Samsung. Der Quellcode steht unter <b>Apache-Lizenz</b>, die Spezifikation wird von der CSA lizenziert.</p>
+      <p class="lead">Matter löst im Smart Home dieselbe Aufgabe wie OPC UA in der Industrie: Es überträgt nicht nur Werte, sondern deren <b>Bedeutung</b>. Ein Matter-Thermostat meldet nicht „21.5", sondern eine Ist-Temperatur eines <b>definierten Gerätetyps in festgelegter Einheit</b> — deshalb funktioniert es ohne Herstellerapp in einer fremden Zentrale.</p>
+      <div class="callout tip"><span class="ci">💡</span><div><b>Abgrenzung zu OPC UA:</b> OPC UA regelt zusätzlich <b>Zugriffsrechte, Methodenaufrufe und Ereignisse</b> und ist für Anlagen mit <b>Tausenden</b> Datenpunkten ausgelegt. Matter beschränkt sich bewusst auf einen überschaubaren Katalog von Gerätetypen fürs Wohnumfeld.</div></div>
+    </div>
+  </details>
+
+  <!-- ============================================================ 8 -->
+  <details class="ktile" style="--i:7">
+    <summary>
+      <span class="kic">📖</span>
+      <span class="ktx"><b>Fachglossar</b><i>12 Begriffe mit Praxisbeispiel aus dem echten Leben</i></span>
+      <span class="kar">›</span>
+    </summary>
+    <div class="kbody">
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Kürzel</th><th>Definition</th><th>Beispiel aus dem realen Leben</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="lg">CPS</td>
+            <td>Cyber-physisches System. Verbund informatischer (Software) und physischer Komponenten, die über Netzwerke kommunizieren.<a class="wl" href="https://de.wikipedia.org/wiki/Cyber-physisches_System" target="_blank" rel="noopener">Wikipedia ↗</a></td>
+            <td><span class="bsp">Eine intelligente Heizungspumpe, die nicht nur physisch Wasser pumpt, sondern per WLAN Außentemperaturen abruft und ihren Status an eine App meldet.</span></td>
+          </tr>
+          <tr>
+            <td class="lg">DCS</td>
+            <td>Distributed Control System. Prozessleitsystem für große verfahrenstechnische Anlagen; vereint Steuerung, Visualisierung, Alarmierung und Benutzerverwaltung.<a class="wl" href="https://de.wikipedia.org/wiki/Prozessleitsystem" target="_blank" rel="noopener">Wikipedia ↗</a></td>
+            <td><span class="bsp">Die zentrale Leitwarte in einer riesigen Chemiefabrik, von der aus Dutzende Reaktoren und Pipelines gleichzeitig überwacht werden.</span></td>
+          </tr>
+          <tr>
+            <td class="lg">ERP</td>
+            <td>Enterprise Resource Planning. Kaufmännisches Gesamtsystem zur Ressourcenplanung — Aufträge, Material, Personal, Finanzen.<a class="wl" href="https://de.wikipedia.org/wiki/Enterprise-Resource-Planning" target="_blank" rel="noopener">Wikipedia ↗</a></td>
+            <td><span class="bsp">SAP-System: Die Buchhaltung sieht, dass ein Kunde 4.000 Autoreifen bestellt und bezahlt hat, und das System bestellt automatisch Kautschuk nach.</span></td>
+          </tr>
+          <tr>
+            <td class="lg">HMI</td>
+            <td>Human Machine Interface. Die Bedieneinheit an der Maschine selbst, oft ein Touchpanel.<a class="wl" href="https://de.wikipedia.org/wiki/Mensch-Maschine-System" target="_blank" rel="noopener">Wikipedia ↗</a></td>
+            <td><span class="bsp">Das Touch-Display direkt an der CNC-Fräsmaschine, auf dem der Facharbeiter das Programm für das aktuelle Werkstück startet.</span></td>
+          </tr>
+          <tr>
+            <td class="lg">Matter</td>
+            <td>IP-basiertes Anwendungsprotokoll samt Datenmodell (Schicht 7) für Smart-Home-Geräte, getragen von der CSA.<a class="wl" href="https://de.wikipedia.org/wiki/Matter_(Standard)" target="_blank" rel="noopener">Wikipedia ↗</a></td>
+            <td><span class="bsp">Du kaufst eine smarte Philips-Glühbirne und steuerst sie sofort in der Apple-HomeKit-App, ohne eine Hersteller-App zu installieren — beide sprechen „Matter".</span></td>
+          </tr>
+          <tr>
+            <td class="lg">MES</td>
+            <td>Manufacturing Execution System. Betriebsleitsystem für die produktionsnahe Feinplanung und Datenerfassung.<a class="wl" href="https://de.wikipedia.org/wiki/Manufacturing_Execution_System" target="_blank" rel="noopener">Wikipedia ↗</a></td>
+            <td><span class="bsp">Der Schichtleiter am PC sieht: Der Großauftrag für die Reifen wird heute um 14 Uhr auf Produktionslinie 2 eingeplant.</span></td>
+          </tr>
+          <tr>
+            <td class="lg">MQTT</td>
+            <td>Message Queuing Telemetry Transport. Leichtgewichtiges IoT-Protokoll nach Publish/Subscribe über einen Broker, Transport per TCP.<a class="wl" href="https://de.wikipedia.org/wiki/MQTT" target="_blank" rel="noopener">Wikipedia ↗</a></td>
+            <td><span class="bsp">Ein batteriebetriebener Parkplatzsensor am Flughafen sendet einmal pro Minute „Frei" oder „Belegt" an den zentralen Server; die Navi-App der Autofahrer abonniert diese Infos.</span></td>
+          </tr>
+          <tr>
+            <td class="lg">OPC UA</td>
+            <td>Open Platform Communications Unified Architecture. M2M-Kommunikationsstandard der Industrie, überträgt Werte samt Bedeutung.<a class="wl" href="https://de.wikipedia.org/wiki/OPC_Unified_Architecture" target="_blank" rel="noopener">Wikipedia ↗</a></td>
+            <td><span class="bsp">Ein Roboter von KUKA (Hersteller A) und ein Fließband von Siemens (Hersteller B) arbeiten problemlos zusammen, weil beide OPC UA als „Dolmetscher" nutzen.</span></td>
+          </tr>
+          <tr>
+            <td class="lg">OSI</td>
+            <td>Open Systems Interconnection Model. 7-Schichten-Referenzmodell der Netzwerkkommunikation, 1984 von der ISO eingeführt.<a class="wl" href="https://de.wikipedia.org/wiki/OSI-Modell" target="_blank" rel="noopener">Wikipedia ↗</a></td>
+            <td><span class="bsp">Das Erklärungsmodell, um bei der Fehlersuche systematisch vorzugehen — „Ist das Kabel drin?" ist ein Schicht-1-Fehler.</span></td>
+          </tr>
+          <tr>
+            <td class="lg">SCADA</td>
+            <td>Supervisory Control and Data Acquisition. System zur Visualisierung und Überwachung technischer Prozesse.<a class="wl" href="https://de.wikipedia.org/wiki/SCADA" target="_blank" rel="noopener">Wikipedia ↗</a></td>
+            <td><span class="bsp">Der Bildschirm in der Leitwarte eines Wasserwerks, auf dem der Anlagenfahrer sieht, wenn ein Tank überläuft — woraufhin ein roter Alarm aufpoppt.</span></td>
+          </tr>
+          <tr>
+            <td class="lg">SPS</td>
+            <td>Speicherprogrammierbare Steuerung (engl. PLC). Robuster, echtzeitfähiger Steuerungscomputer einer Maschine.<a class="wl" href="https://de.wikipedia.org/wiki/Speicherprogrammierbare_Steuerung" target="_blank" rel="noopener">Wikipedia ↗</a></td>
+            <td><span class="bsp">Der kleine, robuste graue Kasten im Schaltschrank einer Waschanlage, der genau steuert, wann das Wasser angeht und wann die Bürsten rotieren.</span></td>
+          </tr>
+          <tr>
+            <td class="lg">Thread</td>
+            <td>IP-basiertes Low-Power-Mesh-Funknetz auf Basis IEEE 802.15.4 fürs Smart Home. Kein Anwendungsprotokoll.<a class="wl" href="https://de.wikipedia.org/wiki/Thread_(Netzwerkprotokoll)" target="_blank" rel="noopener">Wikipedia ↗</a></td>
+            <td><span class="bsp">Zehn smarte Rauchmelder im Haus funken ihre Daten weiter (Mesh). Da Thread IP-basiert ist, erreicht man jeden einzelnen direkt vom Smartphone — ohne Übersetzer-Box.</span></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </details>
+
+  </div>
+
+  <div class="detail-links">
+    <div class="dl-title">Zum aktiven Üben</div>
+    <a class="dl-link" href="lf7_automatisierungspyramide.html">🏗️ Automatisierungspyramide</a>
+    <a class="dl-link" href="lf7_mqtt.html">📨 MQTT</a>
+    <a class="dl-link" href="lf7_opcua.html">🧬 OPC UA</a>
+    <a class="dl-link" href="lf7_protokolle.html">📡 Protokolle &amp; Übertragungstechniken</a>
+  </div>
+
+</div>
+</div>
+
+<script>
+/* ===================================================================== */
+/*  Alle Kacheln auf-/zuklappen                                          */
+/* ===================================================================== */
+document.getElementById("kOpen").onclick = function () {
+  document.querySelectorAll("details.ktile").forEach(function (d) { d.open = true; });
+};
+document.getElementById("kClose").onclick = function () {
+  document.querySelectorAll("details.ktile").forEach(function (d) { d.open = false; });
+};
+
+/* ===================================================================== */
+/*  Service Worker                                                       */
+/* ===================================================================== */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("service-worker.js").catch(function () {});
+  });
+}
+</script>
+</body>
+</html>

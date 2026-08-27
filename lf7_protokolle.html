@@ -12,63 +12,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
-/* ===== Werkzeugleiste über den Tabellen (Muster aus lf3_osi_modell.html) ===== */
-.rvtools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.2rem 0 1.3rem}
-.rvtools .hint{font-family:var(--fmono);font-size:12px;color:var(--dim)}
-.rvtools .sp{flex:1}
-
-/* ===== Aufdeck-Mechanik für Tabellenzellen ===== */
-td.rv{position:relative;cursor:pointer;user-select:none;min-width:88px}
-td.rv .val{visibility:hidden}
-td.rv.shown .val{visibility:visible}
-td.rv::after{content:"?";position:absolute;inset:2px;display:flex;
-  align-items:center;justify-content:center;border-radius:4px;
-  font-family:var(--fmono);font-size:13px;color:var(--lf7);
-  background:var(--bg2);
-  background-image:repeating-linear-gradient(45deg,rgba(120,180,220,.10),rgba(120,180,220,.10) 7px,rgba(120,180,220,.20) 7px,rgba(120,180,220,.20) 14px);
-  transition:.1s}
-td.rv.shown::after{display:none}
-td.rv:hover::after{color:var(--cyan)}
-html[data-theme="light"] td.rv::after{background:#eef3f8;
-  background-image:repeating-linear-gradient(45deg,#dde6f0,#dde6f0 7px,#c8d6e6 7px,#c8d6e6 14px)}
-
-/* ===== Aufdeck-Mechanik für ganze Textblöcke ===== */
-.rvb{position:relative;cursor:pointer;user-select:none;border:1px dashed var(--line);
-  border-radius:6px;background:var(--bg2);padding:.7rem .85rem;margin:.2rem 0;
-  font-size:16.5px;line-height:1.6;color:var(--read);min-height:46px;transition:.12s}
-.rvb .val{visibility:hidden}
-.rvb.shown .val{visibility:visible}
-.rvb.shown{border-style:solid;cursor:default}
-.rvb::after{content:"Aufdecken";position:absolute;inset:2px;display:flex;
-  align-items:center;justify-content:center;border-radius:5px;
-  font-family:var(--fmono);font-size:13px;letter-spacing:.5px;color:var(--lf7);
-  background:var(--bg2);
-  background-image:repeating-linear-gradient(45deg,rgba(120,180,220,.10),rgba(120,180,220,.10) 7px,rgba(120,180,220,.20) 7px,rgba(120,180,220,.20) 14px)}
-.rvb.shown::after{display:none}
-.rvb:hover::after{color:var(--cyan)}
-html[data-theme="light"] .rvb::after{background:#eef3f8;
-  background-image:repeating-linear-gradient(45deg,#dde6f0,#dde6f0 7px,#c8d6e6 7px,#c8d6e6 14px)}
-.rvb b{color:var(--ink)}
-
-/* ===== Tabellen horizontal scrollbar halten ===== */
-.tw{overflow-x:auto;margin:0 0 1.1rem}
-
-/* ===== Übungsaufgaben ===== */
-.task{background:var(--glass);border:1px solid var(--line);border-radius:6px;
-  padding:.95rem 1.05rem;margin-bottom:.9rem;transition:.15s}
-.task.done{border-color:var(--lf7);opacity:.62}
-.task-q{font-family:var(--fdisp);font-size:17px;font-weight:700;letter-spacing:.2px;
-  color:var(--ink);line-height:1.4;margin-bottom:.6rem}
-.task.done .task-q{color:var(--lf7);text-decoration:line-through}
-.task-done{display:flex;align-items:center;justify-content:flex-end;gap:.5rem;
-  margin-top:.4rem;padding:.5rem 0;min-height:40px;
-  font-family:var(--fmono);font-size:13px;color:var(--muted);cursor:pointer}
-.task-done .chk{width:20px;height:20px}
-.task-done .chk:checked::after{font-size:14px}
-
-/* ===== Glossar-Links ===== */
-.wlink{font-family:var(--fmono);font-size:12.5px;color:var(--cyan);text-decoration:none;white-space:nowrap}
-.wlink:hover{text-decoration:underline}
+/* Seiten-Akzent; Aufdeck-/Aufgaben-Mechanik liegt in theme.css */
+.sum{--ac:var(--lf7)}
 </style>
 </head>
 <body>
@@ -76,7 +21,7 @@ html[data-theme="light"] .rvb::after{background:#eef3f8;
 
 <header class="hdr">
   <div class="hdr-in">
-    <a class="back" href="index.html">← Startseite</a>
+    <a class="back" href="lf7.html">← Lernfeld 7</a>
     <div>
       <h1><span class="tag" style="background:var(--lf7)">LF7</span>Protokolle &amp; Übertragungstechniken</h1>
       <div class="sub">IoT-Protokolle · OSI-Einordnung · Funk &amp; Kabel · Klausur-Training</div>

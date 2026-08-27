@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Automatisierungspyramide · LF7 · FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+/* Seiten-Akzent; Aufdeck-/Aufgaben-Mechanik liegt in theme.css */
+.sum{--ac:var(--lf7)}
+
+/* Pyramiden-Grafik: 5 Ebenen, unten breit */
+.pyr{display:flex;flex-direction:column;align-items:center;gap:4px;margin:1rem 0 1.4rem}
+.pyr .lvl{display:flex;align-items:center;gap:.7rem;border:1px solid var(--line);
+  border-left:3px solid var(--ac);border-radius:5px;background:var(--glass);
+  padding:.6rem .85rem;font-size:15.5px;color:var(--read)}
+.pyr .lvl .n{font-family:var(--fmono);font-size:12.5px;color:var(--ac);flex:0 0 auto}
+.pyr .lvl .t{font-family:var(--fdisp);font-weight:700;color:var(--ink);font-size:15px}
+.pyr .lvl .z{font-family:var(--fmono);font-size:12px;color:var(--dim);margin-left:auto;white-space:nowrap}
+.pyr .l5{width:52%}.pyr .l4{width:64%}.pyr .l3{width:76%}.pyr .l2{width:88%}.pyr .l1{width:100%}
+@media(max-width:640px){.pyr .lvl{width:100%!important;flex-wrap:wrap}
+  .pyr .lvl .z{margin-left:0;flex-basis:100%}}
+</style>
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="lf7.html">← Lernfeld 7</a>
+    <div>
+      <h1><span class="tag" style="background:var(--lf7)">LF7</span>Automatisierungspyramide</h1>
+      <div class="sub">5 Ebenen · ERP/MES/SCADA/SPS · Wandel durch CPS · Retrofitting</div>
+    </div>
+    <div class="sp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="sum">
+
+  <div class="rvtools">
+    <button class="tbtn" id="rvShow" type="button">Alles aufdecken</button>
+    <button class="tbtn" id="rvHide" type="button">Alles abdecken</button>
+    <span class="sp"></span>
+    <span class="hint">Feld anklicken = aufdecken · nochmal klicken = abdecken</span>
+  </div>
+
+  <!-- ==================== 1 ==================== -->
+  <h2 class="h-sec"><span class="ico">⏱️</span>1 · Warum es überhaupt Ebenen gibt</h2>
+  <p class="lead">In einem Produktionsbetrieb entstehen Daten mit sehr unterschiedlicher Geschwindigkeit. Ein Endschalter an einer Presse muss innerhalb von <b>Millisekunden</b> ausgewertet werden, sonst fährt der Stempel in ein Werkstück, das noch nicht positioniert ist. Die Frage, wie viele Pressen im nächsten Quartal gebraucht werden, beantwortet man einmal im <b>Vierteljahr</b>.</p>
+  <p class="lead">Beides in einem System zu verarbeiten wäre unsinnig: Ein System, das Quartalsplanungen rechnet, ist zu langsam für Millisekunden. Ein System, das Millisekunden schafft, kann keine Buchhaltung. Deshalb hat man die Aufgaben auf Ebenen verteilt — die klassische Automatisierungspyramide.</p>
+  <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> Die Ebenen der Pyramide unterscheiden sich vor allem in einer Größe: der <b>Zeit</b>. Ganz unten Millisekunden, ganz oben Monate.</div></div>
+
+  <!-- ==================== 2 ==================== -->
+  <h2 class="h-sec"><span class="ico">🏗️</span>2 · Die fünf Ebenen</h2>
+
+  <div class="pyr">
+    <div class="lvl l5"><span class="n">5</span><span class="t">Unternehmensleitebene</span><span class="z">Tage – Monate</span></div>
+    <div class="lvl l4"><span class="n">4</span><span class="t">Betriebsleitebene</span><span class="z">Minuten – Stunden</span></div>
+    <div class="lvl l3"><span class="n">3</span><span class="t">Prozessleitebene</span><span class="z">Sekunden</span></div>
+    <div class="lvl l2"><span class="n">2</span><span class="t">Steuerungsebene</span><span class="z">Millisekunden</span></div>
+    <div class="lvl l1"><span class="n">1</span><span class="t">Feldebene</span><span class="z">ms und schneller</span></div>
+  </div>
+
+  <div class="h-sub">Welches System sitzt auf welcher Ebene?</div>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Ebene</th><th>Typische Systeme</th><th>Aufgabe</th><th>Zeitverhalten</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">5 Unternehmensleitebene</td><td class="rv"><span class="val">ERP</span></td><td class="rv"><span class="val">Aufträge, Material, Personal, Finanzen, Kapazitätsplanung</span></td><td class="rv"><span class="val">Tage bis Monate</span></td></tr>
+      <tr><td class="lg">4 Betriebsleitebene</td><td class="rv"><span class="val">MES</span></td><td class="rv"><span class="val">Feinplanung, Auftragsfreigabe, Betriebs- und Maschinendatenerfassung, Qualitätsdaten</span></td><td class="rv"><span class="val">Minuten bis Stunden</span></td></tr>
+      <tr><td class="lg">3 Prozessleitebene</td><td class="rv"><span class="val">SCADA, HMI, DCS</span></td><td class="rv"><span class="val">Anlage visualisieren, bedienen, Messwerte aufzeichnen, Alarme anzeigen</span></td><td class="rv"><span class="val">Sekunden</span></td></tr>
+      <tr><td class="lg">2 Steuerungsebene</td><td class="rv"><span class="val">SPS</span></td><td class="rv"><span class="val">Ablauf einer Maschine steuern und regeln</span></td><td class="rv"><span class="val">Millisekunden</span></td></tr>
+      <tr><td class="lg">1 Feldebene</td><td class="rv"><span class="val">Sensoren, Aktoren, Feldbus</span></td><td class="rv"><span class="val">Messen und stellen, also die eigentliche physische Wirkung</span></td><td class="rv"><span class="val">Millisekunden und schneller</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <details>
+    <summary>Die Abkürzungen im Klartext<span class="ar">›</span></summary>
+    <div class="det-c">
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Kürzel</th><th>Bedeutung</th><th>Was es konkret tut</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">ERP</td><td>Enterprise Resource Planning</td><td class="rv"><span class="val">Kaufmännisches Gesamtsystem. Weiß, dass Kunde 4.000 Etiketten bis Freitag bestellt hat.</span></td></tr>
+          <tr><td class="lg">MES</td><td>Manufacturing Execution System</td><td class="rv"><span class="val">Übersetzt den Auftrag in konkrete Arbeitsgänge: Linie 2, Schicht Früh, Maschine 7, Rüstzeit 20 Minuten.</span></td></tr>
+          <tr><td class="lg">SCADA</td><td>Supervisory Control and Data Acquisition</td><td class="rv"><span class="val">Zeigt dem Anlagenfahrer auf dem Bildschirm, was die Anlage gerade macht, und zeichnet die Werte auf.</span></td></tr>
+          <tr><td class="lg">HMI</td><td>Human Machine Interface</td><td class="rv"><span class="val">Die Bedieneinheit an der Maschine selbst, oft ein Touchpanel.</span></td></tr>
+          <tr><td class="lg">DCS</td><td>Distributed Control System</td><td class="rv"><span class="val">Prozessleitsystem für große verfahrenstechnische Anlagen, z. B. Chemie. Vereint Steuerung, Visualisierung, Alarmierung und Benutzerverwaltung.</span></td></tr>
+          <tr><td class="lg">SPS</td><td>Speicherprogrammierbare Steuerung</td><td class="rv"><span class="val">Der eigentliche Steuerungscomputer der Maschine. Robust, echtzeitfähig, läuft jahrelang durch.</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- ==================== 3 ==================== -->
+  <h2 class="h-sec"><span class="ico">🪜</span>3 · Datenfluss in der klassischen Pyramide</h2>
+  <p class="lead">Die entscheidende Eigenschaft der klassischen Pyramide ist nicht, <i>dass</i> es Ebenen gibt. Es ist die Regel, dass jede Ebene <b>nur mit ihrer direkten Nachbarebene</b> spricht.</p>
+  <div class="chain"><span>SPS</span><span>→ SCADA</span><span>→ MES</span><span>→ ERP</span></div>
+  <p class="lead">Ein Temperaturwert vom Sensor muss vier Stationen durchlaufen, bevor er in einer Auswertung der Geschäftsführung ankommt.</p>
+
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Vorteile</th><th>Nachteil</th></tr></thead>
+    <tbody>
+      <tr><td class="rv"><span class="val">Klare Zuständigkeiten, überschaubare Schnittstellen, ein Ausfall oben legt die Produktion unten nicht lahm.</span></td><td class="rv"><span class="val">Jede Ebene kostet Zeit — und jede Ebene kann Informationen verlieren, weil sie nur weitergibt, was ihre Schnittstelle vorsieht.</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <details>
+    <summary>Beispiel: Kluge Kunststofftechnik GmbH<span class="ar">›</span></summary>
+    <div class="det-c">
+      <p class="lead">Eine Spritzgussmaschine läuft. Der Drucksensor im Werkzeug misst alle <b>2 Millisekunden</b>. Die SPS wertet den Verlauf aus und meldet nach jedem Schuss ein Ergebnis an das SCADA-System: Teil in Ordnung oder Ausschuss. Das SCADA meldet dem MES stündlich die Stückzahlen. Das MES meldet dem ERP am Schichtende die Fertigmenge.</p>
+      <p class="lead">Der Qualitätsleiter möchte nun wissen, ob es einen Zusammenhang zwischen dem Druckverlauf und den Reklamationen gibt.</p>
+      <div class="h-sub">Warum das nicht geht</div>
+      <div class="rvb"><span class="val">Die Reklamationen stehen im ERP. Die Druckverläufe hat die SPS ausgewertet und danach <b>verworfen</b>. Sie waren nie dafür gedacht, nach oben zu wandern.</span></div>
+    </div>
+  </details>
+
+  <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> In der klassischen Pyramide geht auf jeder Ebene Information verloren. Was oben ankommt, ist ein <b>Ergebnis</b>, keine Rohdatenspur.</div></div>
+
+  <!-- ==================== 4 ==================== -->
+  <h2 class="h-sec"><span class="ico">🕸️</span>4 · Was cyber-physische Systeme daran ändern</h2>
+  <p class="lead">Ein cyber-physisches System bringt Rechenleistung, Speicher und eine Netzwerkschnittstelle direkt an das Bauteil. Der Sensor ist nicht mehr nur ein Draht, der eine Spannung liefert, sondern ein <b>adressierbarer Teilnehmer im Netz</b>. Damit fällt die Regel weg, dass nur Nachbarebenen miteinander sprechen dürfen. Aus der Pyramide wird ein Netz.</p>
+
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Merkmal</th><th>Klassische Pyramide</th><th>Vernetzung mit CPS</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">Kommunikationsweg</td><td class="rv"><span class="val">nur zur Nachbarebene</span></td><td class="rv"><span class="val">jeder mit jedem, auch Feldgerät direkt in die Cloud</span></td></tr>
+      <tr><td class="lg">Intelligenz</td><td class="rv"><span class="val">zentral in SPS und Leitsystem</span></td><td class="rv"><span class="val">dezentral, auch im Sensor selbst</span></td></tr>
+      <tr><td class="lg">Datenmenge oben</td><td class="rv"><span class="val">verdichtete Ergebnisse</span></td><td class="rv"><span class="val">Rohdaten stehen bei Bedarf zur Verfügung</span></td></tr>
+      <tr><td class="lg">Änderung einer Maschine</td><td class="rv"><span class="val">Eingriff über mehrere Ebenen</span></td><td class="rv"><span class="val">Gerät wird konfiguriert und meldet sich im Netz an</span></td></tr>
+      <tr><td class="lg">Verkabelung</td><td class="rv"><span class="val">Feldbus, oft herstellerspezifisch</span></td><td class="rv"><span class="val">IP-Netz, Standardprotokolle</span></td></tr>
+      <tr><td class="lg">Angriffsfläche</td><td class="rv"><span class="val">klein, oft physisch getrennt</span></td><td class="rv"><span class="val">groß, jedes Gerät ist erreichbar</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="callout warn"><span class="ci">⚠️</span><div><b>Häufiges Missverständnis:</b> Die Pyramide verschwindet <b>nicht</b>. ERP und MES gibt es weiterhin, die Aufgaben Buchhaltung und Feinplanung fallen ja nicht weg. Was verschwindet, ist der Zwang, dass jede Information den Weg über alle Zwischenstationen nehmen muss.</div></div>
+  <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> Die <b>Funktionen</b> der Pyramide bleiben. Der starre <b>Kommunikationsweg</b> zwischen ihnen fällt weg.</div></div>
+
+  <!-- ==================== 5 ==================== -->
+  <h2 class="h-sec"><span class="ico">🔧</span>5 · Retrofitting in der Industrie</h2>
+  <p class="lead">Kaum ein Betrieb tauscht seinen Maschinenpark aus, nur weil es Industrie 4.0 gibt. Eine Werkzeugmaschine hat eine Nutzungsdauer von <b>15 bis 25 Jahren</b>. Der übliche Weg heißt deshalb <b>Retrofitting</b>: Bestandsmaschinen werden nachgerüstet.</p>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Vorgehen</th><th>Was gemacht wird</th><th>Grenze</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">Externe Sensorik anbringen</td><td class="rv"><span class="val">Vibrations-, Strom- oder Temperatursensor wird außen montiert und funkt an ein Gateway.</span></td><td class="rv"><span class="val">Man misst nur, was von außen messbar ist. Kein Zugriff auf interne Steuerungswerte.</span></td></tr>
+      <tr><td class="lg">Steuerung anzapfen</td><td class="rv"><span class="val">Vorhandene SPS bekommt eine Schnittstelle, z. B. einen OPC-UA-Server.</span></td><td class="rv"><span class="val">Nur möglich, wenn die Steuerung das unterstützt oder ein Zusatzmodul existiert.</span></td></tr>
+      <tr><td class="lg">Steuerung ersetzen</td><td class="rv"><span class="val">Neue SPS mit Netzwerkanbindung.</span></td><td class="rv"><span class="val">Teuer, Stillstand, Neuprogrammierung, oft Neuabnahme nötig.</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- ==================== 6 ==================== -->
+  <h2 class="h-sec"><span class="ico">🏠</span>6 · Ergänzung: Thread und Matter</h2>
+
+  <div class="h-sub">Thread — ein Funknetz, kein Anwendungsprotokoll</div>
+  <p class="lead">Thread wird von der <b>Thread Group</b> gepflegt, einem Industriekonsortium unter anderem mit Apple, Google, Amazon, Samsung und Nordic Semiconductor.</p>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Merkmal</th><th>Wert</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">Reichweite</td><td class="rv"><span class="val">10–30 m</span></td></tr>
+      <tr><td class="lg">Datenrate</td><td class="rv"><span class="val">250 kbit/s</span></td></tr>
+      <tr><td class="lg">Energie</td><td class="rv"><span class="val">sehr gering</span></td></tr>
+      <tr><td class="lg">Einsatz</td><td class="rv"><span class="val">Smart Home: Sensoren und Aktoren im Gebäude</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="h-sub">Der entscheidende Unterschied zu ZigBee</div>
+  <p class="lead">Beide funken nach <b>IEEE 802.15.4</b>, beide bilden ein Mesh. Der Unterschied liegt <i>darüber</i>:</p>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th></th><th>ZigBee</th><th>Thread</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">IP-basiert?</td><td class="rv"><span class="val">nein — eigener vollständiger Stack bis Schicht 7</span></td><td class="rv"><span class="val">ja</span></td></tr>
+      <tr><td class="lg">Rolle des Gateways</td><td class="rv"><span class="val">Herstellereigenes Gateway muss zwischen ZigBee-Welt und IP-Welt übersetzen.</span></td><td class="rv"><span class="val">Border Router leitet nur weiter, wie ein Router zwischen zwei IP-Netzen.</span></td></tr>
+      <tr><td class="lg">Aus dem Heimnetz erreichbar?</td><td class="rv"><span class="val">nicht direkt</span></td><td class="rv"><span class="val">direkt vom Smartphone adressierbar</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="h-sub">Matter — Anwendungsprotokoll samt Datenmodell (Schicht 7)</div>
+  <p class="lead">Entwickelt von der <b>Connectivity Standards Alliance (CSA)</b>, der früheren ZigBee Alliance, getragen unter anderem von Apple, Google, Amazon und Samsung. Der Quellcode steht unter Apache-Lizenz, die Spezifikation wird von der CSA lizenziert.</p>
+  <div class="rvb"><span class="val">Matter löst im Smart Home dieselbe Aufgabe, die <b>OPC UA</b> in der Industrie löst: Es überträgt nicht nur Werte, sondern deren <b>Bedeutung</b>. Ein Matter-Thermostat meldet nicht „21.5“, sondern eine Ist-Temperatur eines definierten Gerätetyps in einer festgelegten Einheit. Genau deshalb funktioniert ein Matter-Gerät ohne Herstellerapp in einer fremden Zentrale.</span></div>
+  <div class="callout tip"><span class="ci">💡</span><div><b>Abgrenzung:</b> OPC UA regelt zusätzlich Zugriffsrechte, Methodenaufrufe und Ereignisse und ist für Anlagen mit <b>Tausenden</b> Datenpunkten ausgelegt. Matter beschränkt sich bewusst auf einen überschaubaren Katalog von Gerätetypen für das Wohnumfeld.</div></div>
+
+  <!-- ==================== AUFGABEN ==================== -->
+  <h2 class="h-sec"><span class="ico">📝</span>Übungsaufgaben (Klausur-Training)</h2>
+
+  <div class="task" id="t1">
+    <div class="task-q">1 · Wodurch unterscheiden sich die Ebenen der Automatisierungspyramide in erster Linie? Nennen Sie die Spanne von unten nach oben.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Durch das <b>Zeitverhalten</b>. Feldebene und Steuerungsebene arbeiten im Millisekundenbereich, die Prozessleitebene im Sekundenbereich, das MES in Minuten bis Stunden, das ERP in Tagen bis Monaten.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t1"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t2">
+    <div class="task-q">2 · Ordnen Sie zu: ERP, MES, SCADA, SPS — welche Ebene, welche Aufgabe?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>ERP</b> — Ebene 5, kaufmännisches Gesamtsystem (Aufträge, Material, Personal, Finanzen).<br><b>MES</b> — Ebene 4, Feinplanung und Auftragsfreigabe, Betriebs- und Maschinendatenerfassung.<br><b>SCADA</b> — Ebene 3, Anlage visualisieren und bedienen, Messwerte aufzeichnen, Alarme.<br><b>SPS</b> — Ebene 2, Ablauf einer Maschine steuern und regeln.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t2"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t3">
+    <div class="task-q">3 · Nennen Sie die zentrale Kommunikationsregel der klassischen Pyramide und den daraus folgenden Nachteil.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>Regel:</b> Jede Ebene spricht nur mit ihrer direkten Nachbarebene (SPS → SCADA → MES → ERP).<br><b>Nachteil:</b> Jede Ebene kostet Zeit und verdichtet die Daten. Was oben ankommt, ist ein Ergebnis — die Rohdatenspur ist unterwegs verloren gegangen.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t3"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t4">
+    <div class="task-q">4 · Der Qualitätsleiter will Druckverläufe aus der SPS mit Reklamationen aus dem ERP korrelieren. Warum scheitert das in der klassischen Pyramide?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Die SPS wertet den Druckverlauf aus und meldet nur das Ergebnis „i. O. / Ausschuss" nach oben — die Rohwerte werden danach verworfen. Sie waren nie dafür vorgesehen, die Ebenen zu durchlaufen. Im ERP liegen also die Reklamationen, aber die zugehörige Rohdatenspur existiert nicht mehr.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t4"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t5">
+    <div class="task-q">5 · „Durch Industrie 4.0 verschwindet die Automatisierungspyramide." Nehmen Sie Stellung.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Die Aussage ist so <b>falsch</b>. Die <b>Funktionen</b> bleiben — Buchhaltung, Feinplanung, Visualisierung und Steuerung fallen nicht weg, ERP und MES existieren weiter. Was wegfällt, ist der starre <b>Kommunikationsweg</b>: Ein CPS-Feldgerät ist ein adressierbarer Netzteilnehmer und kann direkt mit der Cloud sprechen, statt sich durch alle Zwischenebenen zu arbeiten.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t5"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t6">
+    <div class="task-q">6 · Nennen Sie zwei Nachteile, die durch die CPS-Vernetzung gegenüber der klassischen Pyramide entstehen.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">1. <b>Deutlich größere Angriffsfläche</b> — in der klassischen Pyramide war der Feldbus klein und oft physisch getrennt, jetzt ist jedes Gerät im IP-Netz erreichbar.<br>2. Der Wegfall der klaren Ebenengrenzen bedeutet auch <b>weniger klar abgegrenzte Zuständigkeiten und Schnittstellen</b>; ein Ausfall wirkt sich nicht mehr automatisch nur lokal aus.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t6"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t7">
+    <div class="task-q">7 · Ein Betrieb hat eine 18 Jahre alte Werkzeugmaschine ohne Netzwerkanschluss und will Zustandsdaten erfassen. Nennen Sie drei Retrofitting-Wege mit je einer Grenze.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>1. Externe Sensorik</b> (Vibration, Strom, Temperatur außen montiert, funkt an ein Gateway) — Grenze: nur von außen Messbares, kein Zugriff auf interne Steuerungswerte.<br><b>2. Steuerung anzapfen</b> (vorhandene SPS bekommt z. B. einen OPC-UA-Server) — Grenze: nur möglich, wenn die Steuerung das unterstützt oder ein Zusatzmodul existiert.<br><b>3. Steuerung ersetzen</b> (neue SPS mit Netzwerkanbindung) — Grenze: teuer, Stillstand, Neuprogrammierung, oft Neuabnahme nötig.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t7"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t8">
+    <div class="task-q">8 · ZigBee und Thread funken beide nach IEEE 802.15.4 und bilden ein Mesh. Worin liegt der entscheidende Unterschied?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>Thread ist IP-basiert, ZigBee nicht.</b> ZigBee bringt einen eigenen vollständigen Stack bis Schicht 7 mit; ein herstellereigenes Gateway muss zwischen ZigBee-Welt und IP-Welt übersetzen, und das Gerät ist aus dem Heimnetz nicht direkt erreichbar. Beim Thread-Border-Router entfällt die Übersetzung — er leitet weiter wie ein Router zwischen zwei IP-Netzen, das Gerät ist direkt vom Smartphone adressierbar.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t8"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t9">
+    <div class="task-q">9 · Welche Aufgabe erfüllt Matter im Smart Home, und welchem Industriestandard entspricht das funktional?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Matter überträgt nicht nur Werte, sondern deren <b>Bedeutung</b> (Semantik): Ein Thermostat meldet nicht „21.5", sondern eine Ist-Temperatur eines definierten Gerätetyps in festgelegter Einheit — deshalb läuft es ohne Herstellerapp in einer fremden Zentrale. Funktional entspricht das <b>OPC UA</b> in der Industrie. Unterschied: OPC UA regelt zusätzlich Zugriffsrechte, Methodenaufrufe und Ereignisse und skaliert auf Tausende Datenpunkte; Matter beschränkt sich auf einen Katalog von Gerätetypen fürs Wohnumfeld.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t9"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="detail-links">
+    <div class="dl-title">Weiter im Lernfeld</div>
+    <a class="dl-link" href="lf7_opcua.html">🧬 OPC UA</a>
+    <a class="dl-link" href="lf7_mqtt.html">📨 MQTT</a>
+    <a class="dl-link" href="lf7_protokolle.html">📡 Protokolle &amp; Übertragungstechniken</a>
+  </div>
+
+</div>
+</div>
+
+<script>
+/* ===================================================================== */
+/*  Aufdeck-Mechanik (rein visuell, kein localStorage)                    */
+/* ===================================================================== */
+document.querySelectorAll("td.rv, .rvb").forEach(function (el) {
+  el.addEventListener("click", function () { el.classList.toggle("shown"); });
+});
+
+document.getElementById("rvShow").onclick = function () {
+  document.querySelectorAll("td.rv, .rvb").forEach(function (el) { el.classList.add("shown"); });
+  document.querySelectorAll("details.sol").forEach(function (d) { d.open = true; });
+};
+document.getElementById("rvHide").onclick = function () {
+  document.querySelectorAll("td.rv.shown, .rvb.shown").forEach(function (el) { el.classList.remove("shown"); });
+  document.querySelectorAll("details.sol").forEach(function (d) { d.open = false; });
+};
+
+/* ===================================================================== */
+/*  Aufgaben-Fortschritt (localStorage, eigener Key)                      */
+/* ===================================================================== */
+var DKEY = "fisi_lf7_pyramide_v1";
+
+function loadDone() {
+  try { return JSON.parse(localStorage.getItem(DKEY) || "{}"); } catch (e) { return {}; }
+}
+function saveDone(state) {
+  try { localStorage.setItem(DKEY, JSON.stringify(state)); } catch (e) {}
+}
+
+var doneState = loadDone();
+
+document.querySelectorAll(".task-done .chk").forEach(function (cb) {
+  var id = cb.dataset.task;
+  var box = document.getElementById(id);
+  if (doneState[id]) { cb.checked = true; box.classList.add("done"); }
+  cb.addEventListener("change", function () {
+    if (cb.checked) { doneState[id] = 1; box.classList.add("done"); }
+    else { delete doneState[id]; box.classList.remove("done"); }
+    saveDone(doneState);
+  });
+});
+
+/* ===================================================================== */
+/*  Service Worker                                                        */
+/* ===================================================================== */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("service-worker.js").catch(function () {});
+  });
+}
+</script>
+</body>
+</html>

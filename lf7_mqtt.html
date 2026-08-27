@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MQTT · LF7 · FISI Lernplattform</title>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070710">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+/* Seiten-Akzent; Aufdeck-/Aufgaben-Mechanik liegt in theme.css */
+.sum{--ac:var(--lf7)}
+
+/* Pub/Sub-Schema */
+.flow{display:flex;align-items:stretch;gap:.6rem;flex-wrap:wrap;margin:.8rem 0 1.2rem}
+.flow .box{flex:1 1 150px;border:1px solid var(--line);border-radius:6px;
+  background:var(--glass);padding:.7rem .8rem;text-align:center}
+.flow .box.mid{border-color:var(--ac);border-width:2px}
+.flow .box h4{font-family:var(--fdisp);font-size:14.5px;color:var(--ac);margin-bottom:.3rem}
+.flow .box p{font-size:14px;color:var(--read);line-height:1.45}
+.flow .arr{display:flex;align-items:center;font-family:var(--fmono);color:var(--dim);font-size:18px}
+@media(max-width:640px){.flow{flex-direction:column}.flow .arr{justify-content:center;transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+<div class="scan"></div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="back" href="lf7.html">← Lernfeld 7</a>
+    <div>
+      <h1><span class="tag" style="background:var(--lf7)">LF7</span>MQTT</h1>
+      <div class="sub">Publish/Subscribe · Broker &amp; Topics · Wildcards · QoS · LWT</div>
+    </div>
+    <div class="sp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="sum">
+
+  <div class="rvtools">
+    <button class="tbtn" id="rvShow" type="button">Alles aufdecken</button>
+    <button class="tbtn" id="rvHide" type="button">Alles abdecken</button>
+    <span class="sp"></span>
+    <span class="hint">Feld anklicken = aufdecken · nochmal klicken = abdecken</span>
+  </div>
+
+  <!-- ==================== 1 ==================== -->
+  <h2 class="h-sec"><span class="ico">📨</span>1 · Was MQTT ist</h2>
+  <p class="lead"><b>MQTT</b> steht für <b>Message Queuing Telemetry Transport</b>. Es gilt als bevorzugtes Protokoll für die <b>M2M</b>-Kommunikation (Machine-to-Machine), weil es nur geringe Bandbreite und Speicherressourcen erfordert — ideal für ressourcenbeschränkte IoT-Geräte.</p>
+  <p class="lead">Durch das <b>Publish/Subscribe-Modell</b> können Geräte Nachrichten senden und empfangen, <b>ohne direkt miteinander verbunden zu sein</b>. Das erhöht Skalierbarkeit und Flexibilität. Die Kommunikation läuft über <b>Topics</b> als Kanäle; als Transportprotokoll dient <b>TCP</b>, um eine zuverlässige Übertragung sicherzustellen.</p>
+
+  <div class="flow">
+    <div class="box"><h4>Publisher</h4><p>veröffentlicht Werte auf ein Topic</p></div>
+    <div class="arr">▸</div>
+    <div class="box mid"><h4>Broker</h4><p>sortiert, filtert, verteilt</p></div>
+    <div class="arr">▸</div>
+    <div class="box"><h4>Subscriber</h4><p>abonniert Topics und empfängt</p></div>
+  </div>
+
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Eckdaten</th><th>Wert</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">Modell</td><td class="rv"><span class="val">Publish/Subscribe (entkoppelt), nicht Client-Server</span></td></tr>
+      <tr><td class="lg">Transportprotokoll</td><td class="rv"><span class="val">TCP</span></td></tr>
+      <tr><td class="lg">Port unverschlüsselt</td><td class="rv"><span class="val">1883</span></td></tr>
+      <tr><td class="lg">Port verschlüsselt</td><td class="rv"><span class="val">8883</span></td></tr>
+      <tr><td class="lg">OSI-Schicht</td><td class="rv"><span class="val">7 (Anwendung)</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> Beim Client-Server-Modell kennen sich Sender und Empfänger. Bei Pub/Sub kennen beide nur den <b>Broker</b> — deshalb lässt sich das System beliebig erweitern, ohne bestehende Geräte anzufassen.</div></div>
+
+  <!-- ==================== 2 ==================== -->
+  <h2 class="h-sec"><span class="ico">🗄️</span>2 · Broker und Client</h2>
+
+  <div class="h-sub">MQTT-Broker</div>
+  <p class="lead">Der Broker ist die <b>zentrale Vermittlungsstelle</b> (Server). Er sortiert, filtert und verteilt die Nachrichten zwischen den Clients nach dem Publish/Subscribe-Modell — die Nachrichtenzentrale für smarte Anwendungen.</p>
+
+  <details>
+    <summary>Broker-Produkte: Mosquitto, HiveMQ &amp; Co.<span class="ar">›</span></summary>
+    <div class="det-c">
+      <p class="lead">Beispiele sind <b>Mosquitto, HiveMQ, EMQ X, RabbitMQ, VerneMQ</b> und <b>ActiveMQ</b>. Die Wahl hängt von Skalierbarkeit, Zuverlässigkeit, verwendeter Programmiersprache und Funktionsumfang ab.</p>
+      <div class="tw">
+      <table class="ltbl">
+        <thead><tr><th>Broker</th><th>Kernfakt</th></tr></thead>
+        <tbody>
+          <tr><td class="lg">Mosquitto</td><td class="rv"><span class="val">Open Source, in C geschrieben, von Eclipse unterstützt. Weit verbreitet, läuft auf vielen Plattformen.</span></td></tr>
+          <tr><td class="lg">HiveMQ</td><td class="rv"><span class="val">Kommerziell, auf hohe Leistung und Zuverlässigkeit ausgelegt. Erweiterte Funktionen wie Cluster-Unterstützung und Enterprise-Integrationen.</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </details>
+
+  <div class="h-sub">MQTT-Client</div>
+  <div class="rvb"><span class="val">Ein Client ist ein beliebiges Gerät — Mikrocontroller, Laptop, Smartphone, Raspberry Pi. Er kann <b>Publisher und Subscriber zugleich</b> sein. Voraussetzung: Auf dem Gerät läuft eine MQTT-Bibliothek und es ist über ein Netzwerk mit einem Broker verbunden.</span></div>
+
+  <!-- ==================== 3 ==================== -->
+  <h2 class="h-sec"><span class="ico">🏷️</span>3 · Topics</h2>
+  <p class="lead">Ein <b>Topic</b> ist eine UTF-8-Zeichenkette, die Nachrichten für einen verbundenen Client filtert. Es besteht aus einer oder mehreren <b>Ebenen</b>, getrennt durch einen Schrägstrich (Topic-Level-Trennzeichen).</p>
+  <div class="rvcode">Daheim/Erdgeschoss/Wohnzimmer/Temperatur</div>
+  <div class="callout warn"><span class="ci">⚠️</span><div>Ein Topic ist <b>keine Adresse zum Sensor</b>. Es ist der Zugriff auf die zuletzt übermittelten Sensordaten.</div></div>
+
+  <div class="h-sub">Regeln für die Benennung</div>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Regel</th><th>Was gilt</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">Groß-/Kleinschreibung</td><td class="rv"><span class="val">Topics unterscheiden Groß- und Kleinschreibung. <span style="font-family:var(--fmono)">werk01/linie01/Maschine01</span> und <span style="font-family:var(--fmono)">werk01/linie01/maschine01</span> sind zwei verschiedene Topics.</span></td></tr>
+      <tr><td class="lg">UTF-8-Zeichen</td><td class="rv"><span class="val">Topics müssen aus gültigen UTF-8-Zeichen bestehen. „+" und „#" (Wildcards) sowie „$" (MQTT-System-Topics) dürfen nicht wahllos verwendet werden — sie haben spezielle Funktionen.</span></td></tr>
+      <tr><td class="lg">Konsistenz</td><td class="rv"><span class="val">Einheitliche Benennung vermeidet Verwirrung und Kommunikationsfehler. Hilfreich: Anlehnung an Standards wie ISA-95, z. B. enterprise/werk01/assemblyline01/linie01/Maschine01</span></td></tr>
+      <tr><td class="lg">Eindeutigkeit</td><td class="rv"><span class="val">Keine Duplikate — besonders wichtig, wenn Broker über standardisierte MQTT-Bridges Daten austauschen. Eindeutige Namen verhindern Topic-Konflikte.</span></td></tr>
+      <tr><td class="lg">Versionierung</td><td class="rv"><span class="val">Version in die Hierarchie integrieren, z. B. mySpec_v1/.../areaID/lineID/cellID. Erleichtert Änderungen und erhält die Rückwärtskompatibilität.</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- ==================== 4 ==================== -->
+  <h2 class="h-sec"><span class="ico">📦</span>4 · Payload</h2>
+  <p class="lead">Die <b>Payload</b> ist der eigentliche Dateninhalt einer MQTT-Nachricht — der Teil, den die Clients interpretieren und verarbeiten.</p>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Inhaltstyp</th><th>Beispiele</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">Sensorwerte</td><td class="rv"><span class="val">Temperatur, Luftfeuchtigkeit, Druck, Helligkeit</span></td></tr>
+      <tr><td class="lg">Steuerbefehle</td><td class="rv"><span class="val">Geräte ein-/ausschalten, Einstellungen ändern</span></td></tr>
+      <tr><td class="lg">Statusinformationen</td><td class="rv"><span class="val">Aktuelle Zustände, Fehlermeldungen, Warnungen</span></td></tr>
+      <tr><td class="lg">Nachrichten</td><td class="rv"><span class="val">Textnachrichten zwischen Anwendungen oder Geräten</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="lead">Die Verarbeitung übernehmen die Clients — etwa Anzeige auf einem Dashboard, Auslösen von Aktionen oder Speichern in einer Datenbank.</p>
+
+  <!-- ==================== 5 ==================== -->
+  <h2 class="h-sec"><span class="ico">✳️</span>5 · Wildcards</h2>
+  <p class="lead">Wildcards sind Platzhalter, mit denen sich viele Topics auf einmal abonnieren lassen, ohne jedes einzeln zu definieren.</p>
+  <div class="callout warn"><span class="ci">⚠️</span><div>Wildcards <b>nur beim Abonnieren</b> verwenden — <b>nie</b> beim Veröffentlichen von Nachrichten.</div></div>
+
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Zeichen</th><th>Bedeutung</th><th>Beispiel &amp; Wirkung</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">+</td><td class="rv"><span class="val">Platzhalter für genau <b>eine</b> Ebene</span></td><td class="rv"><span class="val">fertigung/werk01/+/maschine01/status — Status von Maschine01 aus jeder Fertigungslinie innerhalb von Werk01</span></td></tr>
+      <tr><td class="lg">#</td><td class="rv"><span class="val">Multi-Level-Wildcard, deckt alles nach der Position ab. Muss <b>immer am Ende</b> stehen.</span></td><td class="rv"><span class="val">fertigung/werk01/# — alle Nachrichten für Werk01, egal von welcher Linie oder Maschine</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="h-sub">Abonnier-Beispiele</div>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Abonnement</th><th>Was ankommt</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">Daheim/Erdgeschoss/Wohnzimmer/Temperatur</td><td class="rv"><span class="val">nur genau dieses Topic</span></td></tr>
+      <tr><td class="lg">Daheim/+/+/Temperatur</td><td class="rv"><span class="val">Temperaturdaten für alle Zimmer auf jeder Etage</span></td></tr>
+      <tr><td class="lg">Daheim/Erdgeschoss/#</td><td class="rv"><span class="val">alle verfügbaren Informationen für das Erdgeschoss</span></td></tr>
+      <tr><td class="lg">#</td><td class="rv"><span class="val">abonniert wirklich alles — nicht empfohlen</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- ==================== 6 ==================== -->
+  <h2 class="h-sec"><span class="ico">🔌</span>6 · Verbindungsmanagement</h2>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Funktion</th><th>Was sie tut</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">Retained Message</td><td class="rv"><span class="val">Die zuletzt als „retain" markierte Nachricht eines Topics wird vom Broker gespeichert und neuen Abonnenten <b>sofort</b> ausgeliefert (z. B. letzter Temperaturwert). Der Abonnent muss nicht auf einen neuen Wert warten.</span></td></tr>
+      <tr><td class="lg">Persistent Session</td><td class="rv"><span class="val">Eine dauerhafte Verbindung über die physikalische Netzwerkverbindung hinaus. Wird der Empfänger ausgeschaltet oder neu gestartet, kann er verpasste Nachrichten nachträglich vom Broker empfangen.</span></td></tr>
+      <tr><td class="lg">Keep Alive</td><td class="rv"><span class="val">Der Client sendet ein kleines <b>PINGREQ</b>-Paket, wenn sonst nichts gesendet wird, damit der Broker weiß, dass er noch lebt. Erhält der Broker innerhalb der <b>1,5-fachen</b> Keep-Alive-Zeit nichts, trennt er die Verbindung. Antwortet der Broker nicht mit PINGRESP, wird die Verbindung geschlossen — was oft eine LWT-Nachricht auslöst. Wichtig in unzuverlässigen Netzen (Mobilfunk).</span></td></tr>
+      <tr><td class="lg">MQTT over WebSockets</td><td class="rv"><span class="val">Nötig, um eine Push-Nachricht vom Broker an einen beliebigen Browser zu schicken. Damit können Webbrowser direkt eine Verbindung zum Broker aufbauen.</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="h-sub">Last Will and Testament (LWT)</div>
+  <div class="rvb"><span class="val">LWT sendet bei <b>unerwartetem</b> Verbindungsabbruch eines Clients automatisch eine vordefinierte „Letzter-Wille"-Nachricht über den Broker an die Abonnenten. So lässt sich der Online-/Offline-Status überwachen. Der Client definiert beim Verbindungsaufbau ein LWT-Topic; der Broker veröffentlicht die Nachricht, wenn der Client die Verbindung <b>nicht ordnungsgemäß</b> (also ohne DISCONNECT-Paket) schließt — etwa durch Verbindungsverlust oder Stromausfall. Oft genutzt, um ein Status-Topic wie <span style="font-family:var(--fmono)">sensor/1/status</span> auf „offline" zu setzen.</span></div>
+
+  <!-- ==================== 7 ==================== -->
+  <h2 class="h-sec"><span class="ico">⚙️</span>7 · Eigenschaften</h2>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Eigenschaft</th><th>Ausprägung</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">Performance</td><td class="rv"><span class="val">Für Netzwerke mit großer Verzögerungszeit und kleiner Bandbreite. Kleine Nachrichten schnell und in großen Mengen; Header-Felder werden ressourcenschonend als Binärwerte gespeichert.</span></td></tr>
+      <tr><td class="lg">Skalierbarkeit</td><td class="rv"><span class="val">Geeignet für viele kleine Geräte mit nur einem Server.</span></td></tr>
+      <tr><td class="lg">Sicherheit</td><td class="rv"><span class="val">Eigene Absicherung nur über Benutzername und Passwort. Verschlüsselung mit SSL/TLS auf Transportebene; zusätzliche Sicherheit durch Broker-/Client-Zertifikate für die Authentifizierung.</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- ==================== 8 ==================== -->
+  <h2 class="h-sec"><span class="ico">✅</span>8 · Quality of Service (QoS)</h2>
+  <p class="lead">MQTT war ursprünglich für instabile Netzwerke gedacht. Deshalb gibt es drei Servicequalitäten — eine Art Prüfsystem, das sich die versendete Nachricht bestätigen lässt.</p>
+  <div class="tw">
+  <table class="ltbl">
+    <thead><tr><th>Stufe</th><th>Zusage</th><th>Ablauf &amp; Folge</th></tr></thead>
+    <tbody>
+      <tr><td class="lg">QoS 0</td><td class="rv"><span class="val">höchstens einmal (Fire and Forget)</span></td><td class="rv"><span class="val">Nachricht wird genau einmal gesendet, eine Bestätigung wird ignoriert. Keine Garantien, dafür schnell und ressourcenschonend.</span></td></tr>
+      <tr><td class="lg">QoS 1</td><td class="rv"><span class="val">mindestens einmal geliefert</span></td><td class="rv"><span class="val">Der Sender wartet auf <b>PUBACK</b>; bleibt die Bestätigung aus, wird erneut gesendet. Die Nachricht kann dadurch doppelt ankommen.</span></td></tr>
+      <tr><td class="lg">QoS 2</td><td class="rv"><span class="val">genau einmal</span></td><td class="rv"><span class="val">Langsamste Variante. Zweistufige Bestätigung <b>PUBREC → PUBREL → PUBCOMP</b>, damit exakt eine Zustellung garantiert ist.</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="callout merk"><span class="ci">🧠</span><div><b>Merksatz:</b> Der effektiv genutzte QoS ergibt sich immer aus dem <b>niedrigeren</b> Wert von Publisher und Subscriber. Abonniert ein Subscriber nur mit QoS 0, kommt die Nachricht auch dann höchstens mit QoS 0 an, wenn der Publisher mit QoS 2 sendet.</div></div>
+
+  <!-- ==================== AUFGABEN ==================== -->
+  <h2 class="h-sec"><span class="ico">📝</span>Übungsaufgaben (Klausur-Training)</h2>
+
+  <div class="task" id="t1">
+    <div class="task-q">1 · Wofür steht MQTT, und warum eignet es sich besonders für IoT-Geräte?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>Message Queuing Telemetry Transport.</b> Es erfordert nur geringe Bandbreite und Speicherressourcen und ist damit ideal für ressourcenbeschränkte Geräte. Durch das Publish/Subscribe-Modell müssen Geräte nicht direkt miteinander verbunden sein, was Skalierbarkeit und Flexibilität erhöht.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t1"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t2">
+    <div class="task-q">2 · Welche Rolle hat der Broker, und welches Transportprotokoll nutzt MQTT? Nennen Sie beide Ports.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Der <b>Broker</b> ist die zentrale Vermittlungsstelle (Server): Er sortiert, filtert und verteilt die Nachrichten zwischen den Clients. Transport ist <b>TCP</b> — Port <b>1883</b> unverschlüsselt, Port <b>8883</b> verschlüsselt.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t2"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t3">
+    <div class="task-q">3 · Ein Kollege behauptet, ein Topic sei die Adresse eines Sensors. Korrigieren Sie ihn.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Falsch. Ein Topic ist eine UTF-8-Zeichenkette, die Nachrichten filtert — sie adressiert nicht das Gerät, sondern gibt Zugriff auf die <b>zuletzt übermittelten Daten</b>. Publisher und Subscriber kennen einander gar nicht, beide kennen nur den Broker.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t3"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t4">
+    <div class="task-q">4 · Was liefert das Abonnement <span style="font-family:var(--fmono)">Daheim/+/+/Temperatur</span>, was <span style="font-family:var(--fmono)">Daheim/Erdgeschoss/#</span>?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>+</b> ersetzt genau eine Ebene: Das erste Abonnement liefert die Temperaturdaten <b>aller Zimmer auf jeder Etage</b>.<br><b>#</b> ist eine Multi-Level-Wildcard und deckt alles ab, was folgt: Das zweite Abonnement liefert <b>alle verfügbaren Informationen für das Erdgeschoss</b>. Das # muss immer am Ende stehen.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t4"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t5">
+    <div class="task-q">5 · Ein Entwickler will Messwerte auf <span style="font-family:var(--fmono)">werk01/+/temperatur</span> veröffentlichen. Bewerten Sie.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Nicht zulässig. Wildcards dürfen <b>nur beim Abonnieren</b> verwendet werden, niemals beim Veröffentlichen. Beim Publish muss das Topic vollständig und eindeutig angegeben werden, z. B. <span style="font-family:var(--fmono)">werk01/linie01/temperatur</span>.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t5"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t6">
+    <div class="task-q">6 · Erklären Sie die drei QoS-Stufen und nennen Sie je einen sinnvollen Einsatz.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>QoS 0</b> — höchstens einmal, Fire and Forget, keine Bestätigung. Für unkritische Messwerte im Sekundentakt, bei denen ein verlorener Wert egal ist.<br><b>QoS 1</b> — mindestens einmal, Sender wartet auf PUBACK und sendet ggf. erneut; Nachricht kann doppelt ankommen. Für Meldungen, die ankommen müssen, wo Duplikate aber verkraftbar sind.<br><b>QoS 2</b> — genau einmal, zweistufige Bestätigung PUBREC → PUBREL → PUBCOMP, langsamste Variante. Für Vorgänge, die sich nicht wiederholen dürfen, z. B. Abrechnungs- oder Zählerdaten.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t6"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t7">
+    <div class="task-q">7 · Ein Publisher sendet mit QoS 2, der Subscriber hat mit QoS 0 abonniert. Mit welchem QoS kommt die Nachricht an?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Mit <b>QoS 0</b>. Der effektiv genutzte QoS ist immer der <b>niedrigere</b> Wert von Publisher und Subscriber.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t7"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t8">
+    <div class="task-q">8 · Wozu dient Last Will and Testament, und wann genau löst der Broker es aus?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">LWT dient der <b>Online-/Offline-Überwachung</b> von Clients. Der Client definiert beim Verbindungsaufbau ein LWT-Topic mit Nachricht. Der Broker veröffentlicht diese, wenn der Client die Verbindung <b>nicht ordnungsgemäß</b> schließt — also ohne DISCONNECT-Paket, etwa bei Verbindungsverlust oder Stromausfall. Typisch: Status-Topic auf „offline" setzen.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t8"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t9">
+    <div class="task-q">9 · Ein neu verbundener Subscriber soll den letzten Temperaturwert sofort sehen, ohne auf die nächste Messung zu warten. Welche Funktion nutzen Sie — und wie grenzt sie sich von der Persistent Session ab?</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c"><b>Retained Message.</b> Der Broker speichert die zuletzt als „retain" markierte Nachricht eines Topics und liefert sie neuen Abonnenten sofort aus.<br><b>Abgrenzung:</b> Die <b>Persistent Session</b> löst ein anderes Problem — sie sorgt dafür, dass ein <b>bereits bekannter</b> Client nach Neustart oder Ausfall die zwischenzeitlich verpassten Nachrichten nachgeliefert bekommt.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t9"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="task" id="t10">
+    <div class="task-q">10 · Wie stellt MQTT sicher, dass der Broker einen stillen, aber lebenden Client nicht trennt? Nennen Sie Paket und Zeitregel.</div>
+    <details class="sol"><summary>Lösung anzeigen<span class="ar">›</span></summary>
+      <div class="det-c">Über <b>Keep Alive</b>: Sendet der Client sonst nichts, schickt er ein <b>PINGREQ</b>-Paket. Erhält der Broker innerhalb der <b>1,5-fachen</b> Keep-Alive-Zeit keine Nachricht, trennt er die Verbindung. Antwortet der Broker nicht mit PINGRESP, schließt der Client die Verbindung — was typischerweise die LWT-Nachricht auslöst.</div>
+    </details>
+    <label class="task-done"><input type="checkbox" class="chk" data-task="t10"> Aufgabe verstanden</label>
+  </div>
+
+  <div class="detail-links">
+    <div class="dl-title">Weiter im Lernfeld</div>
+    <a class="dl-link" href="lf7_opcua.html">🧬 OPC UA</a>
+    <a class="dl-link" href="lf7_automatisierungspyramide.html">🏗️ Automatisierungspyramide</a>
+    <a class="dl-link" href="lf7_protokolle.html">📡 Protokolle &amp; Übertragungstechniken</a>
+  </div>
+
+</div>
+</div>
+
+<script>
+/* ===================================================================== */
+/*  Aufdeck-Mechanik (rein visuell, kein localStorage)                    */
+/* ===================================================================== */
+document.querySelectorAll("td.rv, .rvb").forEach(function (el) {
+  el.addEventListener("click", function () { el.classList.toggle("shown"); });
+});
+
+document.getElementById("rvShow").onclick = function () {
+  document.querySelectorAll("td.rv, .rvb").forEach(function (el) { el.classList.add("shown"); });
+  document.querySelectorAll("details.sol").forEach(function (d) { d.open = true; });
+};
+document.getElementById("rvHide").onclick = function () {
+  document.querySelectorAll("td.rv.shown, .rvb.shown").forEach(function (el) { el.classList.remove("shown"); });
+  document.querySelectorAll("details.sol").forEach(function (d) { d.open = false; });
+};
+
+/* ===================================================================== */
+/*  Aufgaben-Fortschritt (localStorage, eigener Key)                      */
+/* ===================================================================== */
+var DKEY = "fisi_lf7_mqtt_v1";
+
+function loadDone() {
+  try { return JSON.parse(localStorage.getItem(DKEY) || "{}"); } catch (e) { return {}; }
+}
+function saveDone(state) {
+  try { localStorage.setItem(DKEY, JSON.stringify(state)); } catch (e) {}
+}
+
+var doneState = loadDone();
+
+document.querySelectorAll(".task-done .chk").forEach(function (cb) {
+  var id = cb.dataset.task;
+  var box = document.getElementById(id);
+  if (doneState[id]) { cb.checked = true; box.classList.add("done"); }
+  cb.addEventListener("change", function () {
+    if (cb.checked) { doneState[id] = 1; box.classList.add("done"); }
+    else { delete doneState[id]; box.classList.remove("done"); }
+    saveDone(doneState);
+  });
+});
+
+/* ===================================================================== */
+/*  Service Worker                                                        */
+/* ===================================================================== */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("service-worker.js").catch(function () {});
+  });
+}
+</script>
+</body>
+</html>
